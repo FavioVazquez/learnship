@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # learnship — Run all tests
 
-set -e
-
 TESTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OVERALL_PASS=0
 OVERALL_FAIL=0
@@ -17,9 +15,9 @@ run_suite() {
   echo "════════════════════════════════════════════════════════════════════════"
 
   if bash "$script"; then
-    ((OVERALL_PASS++))
+    OVERALL_PASS=$((OVERALL_PASS+1))
   else
-    ((OVERALL_FAIL++))
+    OVERALL_FAIL=$((OVERALL_FAIL+1))
   fi
 }
 
