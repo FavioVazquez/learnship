@@ -25,3 +25,4 @@ Thumbs.db
 
 # Private release tooling (not for public repo)
 publish-first-release.md
+.windsurf/workflows/release.md
