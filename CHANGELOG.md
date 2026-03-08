@@ -9,6 +9,32 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.3.0] — Simplified UX, smarter entry points, Gemini-generated image
+
+**Released:** 2026-03-08
+
+### Added
+
+- **`/ls` workflow** — new primary entry point: shows project status + next step + offers to run it immediately; bootstraps new users to `/new-project` automatically
+- **`/next` workflow** — auto-pilot: reads project state and runs the correct next workflow without user needing to remember command names
+- **`assets/quick-start-flow.png`** — Gemini Imagen-generated diagram showing the 5-command entry surface with `/ls` as hub
+- **`tests/validate_ux.sh`** — new test suite (24 checks) validating `/ls`, `/next`, README documentation, `help.md` Start Here block, and `SKILL.md` references
+
+### Changed
+
+- **README fully restructured** — new-user path first (install → `/ls` → 5 commands → phase loop → how it works), advanced reference below; all 8 images wired to their correct sections; emoji section headings; duplicate sections removed
+- **`progress.md` Step 5** — now offers to run the next workflow immediately after displaying it
+- **`help.md`** — new "Start Here" table with the 5 essential commands at the top
+- **`resume-work.md`** — enriched description with natural language triggers ("continue", "where were we", "pick up where we left off")
+- **`SKILL.md`** — `/ls` and `/next` added as primary entry points in workflow suggestions table
+- **`tests/validate_workflows.sh`** — `ls.md` and `next.md` added to required workflows; minimum count bumped 30 → 32
+- **`tests/validate_package.sh`** — `assets/quick-start-flow.png` added to required assets
+- **`tests/run_all.sh`** — `validate_ux.sh` registered as Suite 4
+- **`generate_images.py`** — `quick_start_flow` image definition added
+- Badge count updated: 40 → 42 workflows
+
+---
+
 ## [v1.2.2] — Complete parallel/agent accuracy sweep
 
 **Released:** 2026-03-08

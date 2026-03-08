@@ -72,6 +72,8 @@ REQUIRED_WORKFLOWS=(
   "debug.md"
   "quick.md"
   "progress.md"
+  "ls.md"
+  "next.md"
   "help.md"
   "update.md"
   "health.md"
@@ -95,13 +97,13 @@ done
 # Check workflow count is at least 30
 echo ""
 echo "─── Workflow Count ─────────────────────────────────────────────────────"
-if [ "$WORKFLOW_COUNT" -ge 30 ]; then
-  echo "  ✓ Workflow count ($WORKFLOW_COUNT) meets minimum (30)"
+if [ "$WORKFLOW_COUNT" -ge 32 ]; then
+  echo "  ✓ Workflow count ($WORKFLOW_COUNT) meets minimum (32)"
   PASS=$((PASS+1))
 else
-  echo "  ✗ Workflow count ($WORKFLOW_COUNT) below minimum (30)"
+  echo "  ✗ Workflow count ($WORKFLOW_COUNT) below minimum (32)"
   FAIL=$((FAIL+1))
-  ERRORS+=("Workflow count $WORKFLOW_COUNT < 30")
+  ERRORS+=("Workflow count $WORKFLOW_COUNT < 32")
 fi
 
 echo ""

@@ -21,8 +21,10 @@ The following workflows are available as Windsurf slash commands. Suggest the ap
 | `/plan-phase [N]` | After discussing a phase — create executable plans |
 | `/execute-phase [N]` | Plans exist and are ready to run |
 | `/verify-work [N]` | Phase execution complete — time for user acceptance testing |
+| `/ls` | User asks "where are we?", "what's next?", or starts a new session — primary entry point |
+| `/next` | User wants to just keep moving without deciding what to do |
 | `/quick [task]` | Small ad-hoc task that doesn't need full phase ceremony |
-| `/progress` | User asks "where are we?" or "what's next?" |
+| `/progress` | Same as `/ls` — status overview and routing |
 | `/pause-work` | User is stopping mid-phase |
 | `/resume-work` | User is returning to an in-progress project |
 | `/complete-milestone` | All phases in the current milestone are done |

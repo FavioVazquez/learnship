@@ -8,248 +8,174 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e.svg" alt="License: MIT"></a>
   <a href="https://github.com/FavioVazquez/learnship/stargazers"><img src="https://img.shields.io/github/stars/FavioVazquez/learnship?style=flat&color=f59e0b" alt="Stars"></a>
   <img src="https://img.shields.io/badge/Windsurf-native-0ea5e9" alt="Windsurf native">
-  <img src="https://img.shields.io/badge/workflows-40-3b82f6" alt="40 workflows">
+  <img src="https://img.shields.io/badge/workflows-42-3b82f6" alt="42 workflows">
 </p>
 
 <p align="center">
   <strong>Agentic engineering done right.</strong><br>
-  <a href="#install">Install</a> ·
-  <a href="#what-is-learnship">What is learnship?</a> ·
-  <a href="#how-it-works">How it works</a> ·
-  <a href="#workflow-reference">Workflows</a> ·
-  <a href="#configuration">Configuration</a> ·
+  <a href="#-get-started-in-30-seconds">Get Started</a> ·
+  <a href="#-how-it-works">How it works</a> ·
+  <a href="#-the-phase-loop">Phase Loop</a> ·
+  <a href="#-workflow-reference--advanced">All Workflows</a> ·
+  <a href="#-configuration">Configuration</a> ·
   <a href="CONTRIBUTING.md">Contributing</a> ·
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 ---
 
-## What is learnship?
+## ⚡ Get Started in 30 Seconds
 
-**learnship** is a Windsurf-native platform for **agentic engineering** — the discipline of working with AI agents deliberately, with structure, context, and intent.
+### 1. Install
 
-It is the direct opposite of vibe coding.
+![Install learnship](assets/install.png)
 
-![Vibe coding vs Agentic engineering](assets/vibe-vs-agentic.png)
+```bash
+# Recommended — runs directly from GitHub, no clone needed
+npx github:FavioVazquez/learnship
+```
 
-**Vibe coding** is fast and fun — you describe something, an agent generates it, you move on. The problem: you accumulate software you don't understand, decisions that were never made consciously, and context that evaporates between sessions. The agent starts each conversation blind. You lose ownership of your own codebase.
+Choose **global** (all Windsurf projects) or **local** (current project only).
 
-**Agentic engineering** is different. It treats AI agents as powerful collaborators that need — and deserve — proper context, clear specifications, and structured feedback loops. It means:
+```bash
+npx github:FavioVazquez/learnship --global   # all projects
+npx github:FavioVazquez/learnship --local    # this project only
+```
 
-- **Intent over prompts.** You define what you're building and why before any code is written. Requirements, architecture decisions, phase scope — all captured, all readable by the agent.
-- **Context engineering.** Every agent invocation is loaded with the right context: project goals, prior decisions, current phase, tech stack, conventions. Nothing is guessed.
-- **Judgment as a first-class concern.** The platform surfaces decisions explicitly — what to build, how to build it, what to defer — so you stay in control of the direction.
-- **Learning as a byproduct of building.** Understanding what you built, why it works, and what trade-offs were made is not optional. It's part of the process.
+### 2. Open Windsurf and type
 
-![Context engineering](assets/context-engineering.png)
+```
+/ls
+```
 
-learnship provides the structure for all of this: 40 workflows that implement the full agentic engineering lifecycle, a neuroscience-backed learning partner woven into each phase transition, and a design system that prevents AI aesthetics from producing forgettable interfaces.
-
-**You come out with a product you shipped and a codebase you understand.**
+That's it. `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
 
 ---
 
-## How It Works
+## 🗺️ The 5 Commands You Actually Need
+
+![5 commands diagram](assets/quick-start-flow.png)
+
+learnship has 42 workflows. You don't need to know them all. Start with these five — everything else surfaces naturally from `/ls`.
+
+| Command | What it does | When to use |
+|---------|-------------|-------------|
+| `/ls` | Show status, recent work, and next step — offer to run it | **Start every session here** |
+| `/next` | Read state and immediately run the right next workflow | When you just want to keep moving |
+| `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
+| `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
+| `/help` | All 42 workflows organized by category | Discovering capabilities |
+
+> **Tip:** `/ls` works for both new and returning users. New user with no project? It explains learnship and offers to run `/new-project`. Returning user? It shows your progress and suggests exactly what to do next.
+
+---
+
+## 🔄 The Phase Loop
+
+![Phase loop](assets/phase-loop.png)
+
+Once you have a project, every feature ships through the same four-step loop:
+
+```mermaid
+flowchart LR
+    DP["/discuss-phase N\nCapture decisions"]
+    PP["/plan-phase N\nResearch + plans"]
+    EP["/execute-phase N\nBuild + commit"]
+    VW["/verify-work N\nUAT + diagnose"]
+
+    DP --> PP --> EP --> VW
+    VW -->|"next phase"| DP
+    VW -->|"all done"| DONE["✓ /complete-milestone"]
+```
+
+| Step | Command | What happens |
+|------|---------|-------------|
+| **1. Discuss** | `/discuss-phase N` | You and the agent align on implementation decisions before any code |
+| **2. Plan** | `/plan-phase N` | Agent researches the domain, creates executable plans, verifies them |
+| **3. Execute** | `/execute-phase N` | Plans run in dependency order — atomic commit per task |
+| **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
+
+**Just starting?** `/ls` or `/next` will route you into the right step automatically.
+
+---
+
+## 🏗️ How It Works
 
 ![How it works](assets/how-it-works.png)
 
 Three integrated layers that reinforce each other:
 
+| Layer | What it does |
+|-------|-------------|
+| **Workflow Engine** | Spec-driven phases → context-engineered plans → wave-ordered execution → verified delivery |
+| **Learning Partner** | Neuroscience-backed checkpoints at every phase transition — retrieval, reflection, spacing, struggle |
+| **Design System** | 17 impeccable steering commands for production-grade UI — `/audit`, `/critique`, `/polish`, and more |
+
 ```mermaid
 graph LR
-    WE["Workflow Engine<br/>Spec-driven phases<br/>Context-engineered plans<br/>Atomic execution"] --> LP["Learning Partner<br/>Neuroscience-backed<br/>Woven into workflows<br/>Builds real understanding"]
-    WE --> DS["Design System<br/>Production-grade UI<br/>Impeccable aesthetics<br/>Anti-AI-slop standards"]
+    WE["Workflow Engine\nSpec-driven phases\nContext-engineered plans\nAtomic execution"] --> LP["Learning Partner\nNeuroscience-backed\nWoven into workflows\nBuilds real understanding"]
+    WE --> DS["Design System\nProduction-grade UI\nImpeccable aesthetics\nAnti-AI-slop standards"]
     LP --> DS
     DS --> LP
 ```
 
-| Layer | What it does |
-|-------|-------------|
-| **Workflow Engine** | Breaks projects into spec-driven phases, creates executable plans, executes wave-ordered plans, verifies goals are met |
-| **Learning Partner** | Offers neuroscience-backed learning actions at natural workflow transitions — retrieval, reflection, spacing, struggle |
-| **Design System** | Provides design direction, anti-patterns, and steering commands for building distinctive, production-grade interfaces |
+---
+
+## 🆚 Agentic Engineering vs Vibe Coding
+
+![Vibe coding vs Agentic engineering](assets/vibe-vs-agentic.png)
+
+| | Vibe coding | Agentic engineering |
+|-|------------|--------------------|
+| **Context** | Resets every session | Engineered into every agent call |
+| **Decisions** | Implicit, forgotten | Tracked in `DECISIONS.md`, honored by the agent |
+| **Plans** | Ad-hoc prompts | Spec-driven, verifiable, wave-ordered |
+| **Outcome** | Code you shipped | Code you shipped **and understand** |
 
 ---
 
-<a name="install"></a>
-## Quick Start
+## 🧠 Context Engineering
 
-### Install
+![Context engineering](assets/context-engineering.png)
 
-```bash
-# Recommended — runs directly from GitHub, no clone needed
-npx github:FavioVazquez/learnship
-
-# Or via curl
-curl -fsSL https://raw.githubusercontent.com/FavioVazquez/learnship/main/install.sh | bash
-
-# Or clone and run manually
-git clone https://github.com/FavioVazquez/learnship.git
-bash learnship/install.sh
-```
-
-Choose **global** to install to all Windsurf projects, or **local** for the current project only.
-
-```bash
-# Non-interactive flags
-npx github:FavioVazquez/learnship --local     # current project only (.windsurf/)
-npx github:FavioVazquez/learnship --global    # all Windsurf projects (~/.codeium/windsurf/)
-
-# Uninstall
-npx github:FavioVazquez/learnship --uninstall --local
-npx github:FavioVazquez/learnship --uninstall --global
-```
-
-### Start a project
-
-![Install](assets/install.png)
-
-```
-/new-project
-```
-
-Answer the questions. Approve the roadmap. Then follow the phase loop:
-
-```
-/discuss-phase 1  →  /plan-phase 1  →  /execute-phase 1  →  /verify-work 1
-```
-
-Repeat for each phase. When all phases are done: `/complete-milestone`.
-
----
-
-## Full Project Lifecycle
-
-![Phase loop](assets/phase-loop.png)
-
-```mermaid
-flowchart TD
-    NP["/new-project<br/>Questioning → Research<br/>Requirements → Roadmap"]
-    NP --> DP
-
-    subgraph PHASE["For each phase"]
-        DP["/discuss-phase N<br/>Capture implementation decisions"]
-        PP["/plan-phase N<br/>Research + Plan + Verify"]
-        EP["/execute-phase N<br/>Wave-ordered plan execution"]
-        VW["/verify-work N<br/>Manual UAT + auto-diagnosis"]
-        DP --> PP --> EP --> VW
-        VW -->|"More phases?"| DP
-    end
-
-    VW -->|"All phases done"| AM
-    AM["/audit-milestone<br/>Requirement coverage + stub detection"]
-    AM --> CM["/complete-milestone<br/>Archive · Tag release · Prepare next"]
-    CM -->|"Another milestone?"| NM["/new-milestone"]
-    NM --> DP
-```
-
----
-
-## Planning Agent Coordination
-
-```mermaid
-flowchart TD
-    PPN["/plan-phase N"]
-
-    subgraph RESEARCH["Phase Research"]
-        R1["Stack researcher"]
-        R2["Features researcher"]
-        R3["Architecture researcher"]
-        R4["Pitfalls researcher"]
-    end
-
-    PPN --> RESEARCH
-    RESEARCH --> RMD["RESEARCH.md"]
-    RMD --> PL["Planner<br/>Reads: PROJECT · REQUIREMENTS<br/>CONTEXT · RESEARCH"]
-    PL --> CHK["Plan Checker"]
-    CHK -->|"Issues found (max 3x)"| PL
-    CHK -->|"VERIFICATION PASSED"| PLANS["PLAN files ready"]
-```
-
----
-
-## Execution Wave Model
+Every agent invocation in learnship is loaded with structured context — nothing is guessed:
 
 ```mermaid
 flowchart LR
-    EPN["/execute-phase N<br/>Analyze dependencies"]
-
-    subgraph W1["Wave 1 — independent plans (any order)"]
-        E1["Plan A<br/>execute → commit"]
-        E2["Plan B<br/>execute → commit"]
+    subgraph CONTEXT["Loaded into every agent call"]
+        A["AGENTS.md\nProject soul + current phase"]
+        B["REQUIREMENTS.md\nWhat we're building"]
+        C["DECISIONS.md\nEvery architectural choice"]
+        D["Phase CONTEXT.md\nImplementation preferences"]
     end
-
-    subgraph W2["Wave 2 — depends on Wave 1"]
-        E3["Plan C<br/>execute → commit"]
-    end
-
-    VER["Verifier<br/>Check must_haves<br/>vs. actual codebase"]
-
-    EPN --> W1 --> W2 --> VER
-    VER -->|"PASS"| DONE["VERIFICATION.md ✓"]
-    VER -->|"FAIL"| UAT["/verify-work gaps"]
+    CONTEXT --> AGENT["AI Agent"]
+    AGENT --> P["Executable PLAN.md"]
+    AGENT --> S["Commits + SUMMARY.md"]
 ```
 
 ---
 
-## Learning Checkpoint Map
+## 🗂️ AGENTS.md — Persistent Project Memory
 
-```mermaid
-flowchart LR
-    NP["new-project<br/>requirements approved"] -->|"auto"| B["@agentic-learning brainstorm<br/>Validate mental model"]
-    DP["discuss-phase<br/>complete"] -->|"auto"| EO["@agentic-learning either-or<br/>Log decisions made"]
-    PP["plan-phase<br/>plans created"] -->|"auto"| CL["@agentic-learning cognitive-load<br/>Decompose scope"]
-    EP["execute-phase<br/>complete"] -->|"auto"| RF["@agentic-learning reflect<br/>Consolidate learning"]
-    VW["verify-work<br/>passed"] -->|"auto"| SP["@agentic-learning space<br/>Schedule review"]
-    QK["quick<br/>complex task"] -->|"auto"| ST["@agentic-learning struggle<br/>Try it yourself"]
+![AGENTS.md](assets/agents-md.png)
+
+`/new-project` generates an `AGENTS.md` at your project root. Windsurf reads it as a persistent system rule for every conversation — so Cascade always knows where the project stands without you repeating yourself.
+
 ```
-
-*Checkpoints fire automatically when `learning_mode: "auto"` (default). Set to `"manual"` to only trigger explicitly.*
-
----
-
-## Quick Task Flow
-
-```mermaid
-flowchart TD
-    Q["/quick description"]
-    Q --> FLAGS{Flags?}
-    FLAGS -->|"--discuss"| DISC["Identify gray areas<br/>Capture decisions<br/>Write CONTEXT.md"]
-    FLAGS -->|"none"| PLAN
-    DISC --> PLAN["Planner<br/>Create 1-3 task PLAN.md"]
-    PLAN --> CHECK{--full?}
-    CHECK -->|"yes"| CHKR["Plan Checker<br/>max 2 revisions"]
-    CHECK -->|"no"| EXEC
-    CHKR --> EXEC["Executor<br/>atomic commits"]
-    EXEC --> VER{--full?}
-    VER -->|"yes"| VERIFY["Verifier<br/>check must_haves"]
-    VER -->|"no"| STATE["Update STATE.md<br/>Final commit"]
-    VERIFY --> STATE
+AGENTS.md                   ← Windsurf reads this every conversation
+├── Soul & Principles        # Pair-programmer framing, 10 working principles
+├── Platform Context         # Points to .planning/, explains the phase loop
+├── Current Phase            # Updated automatically by workflows
+├── Project Structure        # Filled during new-project from your answers
+├── Tech Stack               # Filled from research results
+└── Regressions              # Updated by /debug when bugs are fixed
 ```
 
 ---
 
-## Brownfield Workflow
+## 📖 Workflow Reference — Advanced
 
-```mermaid
-flowchart LR
-    MC["/map-codebase<br/>Structured analysis"]
-
-    subgraph MAPS["Codebase mapping"]
-        S["STACK.md"]
-        A["ARCHITECTURE.md"]
-        C["CONVENTIONS.md"]
-        CO["CONCERNS.md"]
-    end
-
-    MC --> MAPS
-    MAPS --> NP["/new-project<br/>Questions focus on<br/>what you're ADDING"]
-    NP --> PHASE["Normal phase workflow"]
-```
-
----
-
-## Workflow Reference
+> These are all 40+ workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
 
 ### Core Workflow
 
@@ -268,7 +194,9 @@ flowchart LR
 
 | Workflow | Purpose | When to use |
 |----------|---------|-------------|
-| `/progress` | Status overview + smart routing to next step | "Where am I?" |
+| `/ls` | Status + next step + offer to run it | Start every session here |
+| `/next` | Auto-pilot: reads state and runs the right workflow | When you just want to keep moving |
+| `/progress` | Same as `/ls` — status overview + smart routing | "Where am I?" |
 | `/resume-work` | Restore full context from last session | Starting a new session |
 | `/pause-work` | Save handoff file mid-phase | Stopping mid-phase |
 | `/quick [description]` | Ad-hoc task with full guarantees | Bug fixes, small features |
@@ -328,7 +256,7 @@ flowchart LR
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 Project settings live in `.planning/config.json`. Set during `/new-project` or edit with `/settings`.
 
@@ -407,7 +335,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 
 ---
 
-## Learning Partner
+## 🧩 Learning Partner
 
 The learning partner is woven into the platform, not bolted on. It fires at natural workflow transitions to build genuine understanding — not just fluent answers.
 
@@ -438,7 +366,7 @@ learning_mode: "manual"  → only when you explicitly invoke @agentic-learning
 
 ---
 
-## Design System
+## 🎨 Design System
 
 The **impeccable** skill suite is always active as project context for any UI work. It provides design direction, anti-patterns, and 17 steering commands that prevent generic AI aesthetics. Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
 
@@ -468,7 +396,7 @@ The **impeccable** skill suite is always active as project context for any UI wo
 
 ---
 
-## Usage Examples
+## 💡 Usage Examples
 
 ### New greenfield project
 
@@ -506,9 +434,11 @@ The **impeccable** skill suite is always active as project context for any UI wo
 ### Resuming after a break
 
 ```
-/progress                 # See where you left off and what's next
+/ls                       # See where you left off — offers to run next step
 # or
-/resume-work              # Full context restoration + recommended action
+/next                     # Just pick up and go — auto-pilot
+# or
+/resume-work              # Full context restoration
 ```
 
 ### Scope change mid-milestone
@@ -535,35 +465,7 @@ The **impeccable** skill suite is always active as project context for any UI wo
 
 ---
 
-## AGENTS.md — Living Project Context
-
-![AGENTS.md](assets/agents-md.png)
-
-`new-project` generates an `AGENTS.md` at your project root. Windsurf reads it as a persistent system rule for every conversation, so Cascade always knows where the project stands — without you repeating yourself.
-
-```
-AGENTS.md                   ← Windsurf reads this every conversation
-├── Soul & Principles        # Pair-programmer framing, 10 working principles
-├── Platform Context         # Points to .planning/, explains the phase loop
-├── Current Phase            # Updated automatically by workflows
-├── Project Structure        # Filled during new-project from your answers
-├── Tech Stack               # Filled from research results
-└── Regressions              # Updated by /debug when bugs are fixed
-```
-
-**Auto-updated by the platform:**
-
-| Trigger | What updates |
-|---------|--------------|
-| `plan-phase [N]` | Current Phase → "planning phase N" |
-| `execute-phase [N]` | Current Phase → "executing phase N" |
-| `debug` (session close) | Regressions section — root cause + lesson |
-| `complete-milestone` | Current Phase → milestone shipped |
-| `new-milestone` | Current Phase reset for new cycle |
-
----
-
-## Decision Intelligence
+## 🧭 Decision Intelligence
 
 Every project accumulates decisions — architecture choices, library picks, scope trade-offs. The platform tracks them in a structured register so future sessions understand *why* the project is built the way it is.
 
@@ -591,7 +493,7 @@ Status: active
 
 ---
 
-## Planning Artifacts
+## 📁 Planning Artifacts
 
 Every project creates a structured `.planning/` directory:
 
@@ -640,7 +542,7 @@ Every project creates a structured `.planning/` directory:
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### "Project already initialized"
 `/new-project` found `.planning/PROJECT.md` already exists. If you want to start over, delete `.planning/` first. To continue, use `/progress` or `/resume-work`.
@@ -655,7 +557,7 @@ Run `/discuss-phase [N]` before planning. Most plan quality issues come from unr
 Plans with more than 3 tasks are too large for reliable single-context execution. Re-plan with smaller scope: `/plan-phase [N]` with finer granularity.
 
 ### Lost track of where you are
-Run `/progress`. It reads all state files and tells you exactly where you are and what to do next.
+Run `/ls`. It reads all state files, shows your progress, and offers to run the next step.
 
 ### Need to change something after execution
 Use `/quick` for targeted fixes, or `/verify-work` to systematically identify and fix issues through UAT. Do not re-run `/execute-phase` on a phase that already has summaries.
@@ -674,11 +576,11 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 
 ---
 
-## Recovery Quick Reference
+## 🚑 Recovery Quick Reference
 
 | Problem | Solution |
 |---------|----------|
-| Lost context / new session | `/resume-work` or `/progress` |
+| Lost context / new session | `/ls` or `/next` |
 | Phase went wrong | `git revert` the phase commits, re-plan |
 | Need to change scope | `/add-phase`, `/insert-phase`, or `/remove-phase` |
 | Milestone audit found gaps | `/plan-milestone-gaps` |
@@ -689,12 +591,12 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 
 ---
 
-## Repository Structure
+## 📂 Repository Structure
 
 ```
 learnship/
 ├── .windsurf/
-│   ├── workflows/          # 40 workflows (Windsurf slash commands)
+│   ├── workflows/          # 42 workflows (Windsurf slash commands)
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references)
 │       └── impeccable/         # Design suite: 17 skills (audit, critique, polish, colorize + more)
@@ -718,7 +620,7 @@ learnship/
 
 ---
 
-## Inspiration & Credits
+## 🙏 Inspiration & Credits
 
 **learnship** was built on top of ideas and work from three open-source projects:
 

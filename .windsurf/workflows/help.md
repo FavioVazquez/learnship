@@ -6,6 +6,22 @@ description: Show all available workflows with descriptions and when to use them
 
 Show all available workflows, organized by category.
 
+## Start Here
+
+You only need to remember **5 commands** to use learnship effectively:
+
+| Command | When to use |
+|---------|-------------|
+| `/ls` | "Where am I? What's next?" — works for new and returning users |
+| `/next` | Auto-pilot — reads state and runs the right workflow for you |
+| `/new-project` | Starting a brand new project |
+| `/quick "..."` | One-off task with atomic commit, no ceremony |
+| `/help` | This screen — see all 40+ commands |
+
+Everything else below is discoverable from `/ls` as you go.
+
+---
+
 ## All Workflows
 
 ### Core Workflow — build products phase by phase

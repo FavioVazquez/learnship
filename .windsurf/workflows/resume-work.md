@@ -1,5 +1,5 @@
 ---
-description: Restore full project context and continue from where you left off
+description: Restore full project context and continue from where you left off — use when returning after a break, or when you say "continue", "where were we", "pick up where we left off", or "what were we doing"
 ---
 
 # Resume Work

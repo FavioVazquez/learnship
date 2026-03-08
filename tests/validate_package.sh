@@ -139,6 +139,7 @@ REQUIRED_ASSETS=(
   "assets/install.png"
   "assets/context-engineering.png"
   "assets/vibe-vs-agentic.png"
+  "assets/quick-start-flow.png"
 )
 
 for asset in "${REQUIRED_ASSETS[@]}"; do

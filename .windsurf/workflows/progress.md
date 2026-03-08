@@ -103,6 +103,16 @@ Context: [✓ CONTEXT.md exists | — not yet]
 
 5. **Summaries = plans AND plans > 0** → phase complete
    - If more phases remain: `▶ Next: discuss-phase [X+1]`
-   - If all phases done: `▶ Next: complete-milestone`
+   - If all phases done: `▶ Next: audit-milestone`
 
-Present the recommended next step clearly with the exact workflow name to run.
+After presenting the recommended next step, ask:
+
+```
+▶ Next: [workflow-name] [args if any]
+
+  Run it now? Type "yes" to proceed, or just keep chatting.
+```
+
+If the user responds with "yes", "go", "do it", "run it", or "proceed" — immediately invoke that workflow.
+
+For full auto-pilot with no prompt, use `/next` instead.
