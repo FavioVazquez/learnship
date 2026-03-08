@@ -16,6 +16,16 @@ test -f .planning/PROJECT.md && echo "EXISTS" || echo "NEW"
 
 **If EXISTS:** Stop. Project already initialized. Use the `progress` workflow to see where you are.
 
+Check if `.windsurf/` is already in `.gitignore`:
+```bash
+grep -q '.windsurf' .gitignore 2>/dev/null && echo "IGNORED" || echo "NOT_IGNORED"
+```
+
+**If NOT_IGNORED:** Add it now (regardless of whether the project is new or existing):
+```bash
+echo '.windsurf/' >> .gitignore
+```
+
 Check if git is initialized:
 
 ```bash
@@ -25,6 +35,11 @@ test -d .git && echo "HAS_GIT" || echo "NO_GIT"
 **If NO_GIT:**
 ```bash
 git init
+```
+
+Immediately add `.windsurf/` to `.gitignore` so the AI platform files are not tracked in the project repo:
+```bash
+echo '.windsurf/' >> .gitignore
 ```
 
 Create the planning directory:
@@ -64,6 +79,10 @@ Ask: "Commit planning docs to git?"
 - **Yes** (recommended) — Planning docs tracked in version control
 - **No** — Keep `.planning/` local-only
 
+Ask: "When should learnship commit files to git?"
+- **Automatically** (recommended) — Commit after each workflow step completes (config, requirements, roadmap, AGENTS.md)
+- **Manually** — I'll commit when I say so; skip all git commit steps
+
 Create `.planning/config.json` with all settings:
 
 ```json
@@ -71,6 +90,7 @@ Create `.planning/config.json` with all settings:
   "mode": "yolo|interactive",
   "granularity": "coarse|standard|fine",
   "commit_docs": true|false,
+  "commit_mode": "auto|manual",
   "learning_mode": "auto|manual",
   "workflow": {
     "research": true|false,
@@ -85,9 +105,16 @@ If `commit_docs` is false, add `.planning/` to `.gitignore`:
 echo ".planning/" >> .gitignore
 ```
 
-Commit config:
+**If `commit_mode` is `auto`:** Stage and commit the initial setup now:
 ```bash
-git add .planning/config.json && git commit -m "chore: add project config"
+git add .gitignore .planning/config.json
+git commit -m "chore: initialize learnship project setup"
+```
+
+**If `commit_mode` is `manual`:** Show this message and skip all future commit steps:
+```
+→ Manual commit mode — I will not run any git commits.
+  Stage and commit whenever you are ready.
 ```
 
 ## Step 3: Deep Questioning
@@ -123,7 +150,7 @@ Loop until ready.
 
 Synthesize all gathered context into `.planning/PROJECT.md` using `@./templates/project.md` as the template.
 
-Commit:
+**If `commit_mode` is `auto`:**
 ```bash
 git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 ```
@@ -188,7 +215,7 @@ Create `.planning/REQUIREMENTS.md` with v1 requirements (with REQ-IDs like `AUTH
 
 Present the full list for confirmation. If user wants adjustments, iterate.
 
-Commit:
+**If `commit_mode` is `auto`:**
 ```bash
 git add .planning/REQUIREMENTS.md && git commit -m "docs: define v1 requirements"
 ```
@@ -230,7 +257,7 @@ Ask for approval:
 - **Adjust phases** → get feedback, revise, re-present
 - **Review full file** → show raw ROADMAP.md, then re-ask
 
-Commit after approval:
+**If `commit_mode` is `auto`:**
 ```bash
 git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git commit -m "docs: create roadmap ([N] phases)"
 ```
@@ -263,10 +290,9 @@ Status: planning
 Last updated: [today's date]
 ```
 
-Commit:
+**If `commit_mode` is `auto`:**
 ```bash
-git add AGENTS.md
-git commit -m "docs: add AGENTS.md with project context"
+git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 ```
 
 ## Step 9: Done
