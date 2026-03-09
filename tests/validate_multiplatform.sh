@@ -505,6 +505,151 @@ else
 fi
 
 # ──────────────────────────────────────────────────────────────────────────
+# 8. Additional conversion correctness checks (via external node script)
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [8] Conversion correctness (new bug-fix checks)"
+echo "  ─────────────────────────────────────────────────"
+
+# Write a self-contained node test script to avoid shell quoting hell
+TMPSCRIPT=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const {
+  convertToOpencode, convertAgentForGemini, convertToGeminiToml,
+  replacePaths, parseJsonc, mergeCodexConfig, generateCodexConfigBlock,
+  LEARNSHIP_CODEX_MARKER,
+} = require(REPO + '/bin/install.js');
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. convertToOpencode: inline tools: field
+check('convertToOpencode inline tools: Read, Write, Bash', () => {
+  const input = '---\nname: learnship-executor\ndescription: Executes plans\ntools: Read, Write, Bash\ncolor: yellow\n---\n\nAgent body';
+  const out = convertToOpencode(input);
+  assert(out.includes('read: true'), 'missing read: true; got:\n' + out);
+  assert(out.includes('write: true'), 'missing write: true');
+  assert(out.includes('bash: true'), 'missing bash: true');
+  assert(!out.includes('tools: Read'), 'inline tools field not converted');
+});
+
+// 2. convertAgentForGemini: inline tools: field
+check('convertAgentForGemini inline tools: Read, Write, Bash', () => {
+  const input = '---\nname: learnship-executor\ndescription: Executor\ntools: Read, Write, Bash\ncolor: cyan\n---\n\nbody';
+  const out = convertAgentForGemini(input);
+  assert(out.includes('read_file'), 'missing read_file; got:\n' + out);
+  assert(out.includes('write_file'), 'missing write_file');
+  assert(out.includes('run_shell_command'), 'missing run_shell_command');
+  assert(!out.includes('color:'), 'color not stripped');
+  assert(!out.includes('tools: Read'), 'inline tools field not converted');
+});
+
+// 3. replacePaths: replaces bare ~/.claude/
+check('replacePaths replaces bare ~/.claude/ and $HOME/.claude/', () => {
+  const input = 'See ~/.claude/ for config. Also $HOME/.claude/ docs.';
+  const out = replacePaths(input, '/custom/path/', 'opencode');
+  assert(!out.includes('~/.claude/'), 'tilde path not replaced; got:\n' + out);
+  assert(!out.includes('$HOME/.claude/'), '$HOME path not replaced');
+  assert(out.includes('/custom/path/'), 'pathPrefix not in output');
+});
+
+// 4. replacePaths: replaces ~/.opencode/ for opencode
+check('replacePaths replaces ~/.opencode/ for opencode platform', () => {
+  const input = 'Config at ~/.opencode/settings.json';
+  const out = replacePaths(input, '/custom/opencode/', 'opencode');
+  assert(!out.includes('~/.opencode/'), '~/.opencode/ not replaced; got:\n' + out);
+});
+
+// 5. parseJsonc: handles // comments and trailing commas
+check('parseJsonc handles // comments and trailing commas', () => {
+  const input = '{\n// comment\n"key": "value", // inline\n"arr": [1, 2,]\n}';
+  const obj = parseJsonc(input);
+  assert(obj.key === 'value', 'key not parsed; got: ' + JSON.stringify(obj));
+  assert(Array.isArray(obj.arr) && obj.arr.length === 2, 'arr not parsed correctly');
+});
+
+// 6. convertToOpencode: /learnship:cmd → /learnship-cmd
+check('convertToOpencode converts /learnship:cmd to /learnship-cmd', () => {
+  const input = '---\ndescription: test\n---\nRun /learnship:new-project to start.';
+  const out = convertToOpencode(input);
+  assert(!out.includes('/learnship:new-project'), 'slash cmd not converted');
+  assert(out.includes('/learnship-new-project'), 'converted form not found');
+});
+
+// 7. convertToGeminiToml: escapes ${VAR} → $VAR
+check('convertToGeminiToml escapes ${VAR} to $VAR', () => {
+  const input = '---\ndescription: Test\n---\nUse ${PHASE} and ${PLAN} in scripts.';
+  const out = convertToGeminiToml(input);
+  assert(!out.includes('${PHASE}'), '${VAR} not escaped; got:\n' + out);
+  assert(out.includes('$PHASE'), '$VAR form not found');
+});
+
+// 8. mergeCodexConfig Case 1: creates new file
+check('mergeCodexConfig Case 1: creates new config.toml', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-test-'));
+  const configPath = path.join(tmp, 'config.toml');
+  const block = generateCodexConfigBlock([{name: 'learnship-executor', description: 'Executor'}]);
+  mergeCodexConfig(configPath, block);
+  const out = fs.readFileSync(configPath, 'utf8');
+  fs.rmSync(tmp, { recursive: true });
+  assert(out.includes(LEARNSHIP_CODEX_MARKER), 'marker missing');
+  assert(out.includes('multi_agent = true'), 'features missing');
+  assert(out.includes('[agents.learnship-executor]'), 'agent entry missing');
+});
+
+// 9. mergeCodexConfig Case 2: updates existing file with marker
+check('mergeCodexConfig Case 2: updates file with existing marker', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-test-'));
+  const configPath = path.join(tmp, 'config.toml');
+  fs.writeFileSync(configPath, 'user_setting = true\n\n' + LEARNSHIP_CODEX_MARKER + '\n[agents]\nmax_threads = 4\n');
+  const block = generateCodexConfigBlock([{name: 'learnship-planner', description: 'Planner'}]);
+  mergeCodexConfig(configPath, block);
+  const out = fs.readFileSync(configPath, 'utf8');
+  fs.rmSync(tmp, { recursive: true });
+  assert(out.includes('user_setting = true'), 'user content lost');
+  assert(out.includes('[agents.learnship-planner]'), 'new agent not written');
+  assert(out.includes(LEARNSHIP_CODEX_MARKER), 'marker missing');
+});
+
+// 10. mergeCodexConfig Case 3: appends to file without marker
+check('mergeCodexConfig Case 3: appends to file without marker', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-test-'));
+  const configPath = path.join(tmp, 'config.toml');
+  fs.writeFileSync(configPath, 'existing_key = "hello"\n');
+  const block = generateCodexConfigBlock([{name: 'learnship-debugger', description: 'Debugger'}]);
+  mergeCodexConfig(configPath, block);
+  const out = fs.readFileSync(configPath, 'utf8');
+  fs.rmSync(tmp, { recursive: true });
+  assert(out.includes('existing_key'), 'existing content lost');
+  assert(out.includes(LEARNSHIP_CODEX_MARKER), 'marker not appended');
+  assert(out.includes('[agents.learnship-debugger]'), 'agent not appended');
+});
+
+console.log('\nSECTION8_PASS=' + pass);
+console.log('SECTION8_FAIL=' + fail);
+NODEEOF
+
+S8_OUTPUT=$(node "$TMPSCRIPT" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT"
+
+# Parse and report each result
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S8_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""

@@ -243,6 +243,7 @@ function convertToOpencode(content) {
     .replace(/~\/\.claude\//g, '~/.config/opencode/')
     .replace(/\$HOME\/\.claude\//g, '$HOME/.config/opencode/')
     .replace(/\bAskUserQuestion\b/g, 'question')
+    .replace(/\bSlashCommand\b/g, 'skill')
     .replace(/\bTodoWrite\b/g, 'todowrite')
     .replace(/subagent_type="general-purpose"/g, 'subagent_type="general"');
 
@@ -258,6 +259,20 @@ function convertToOpencode(content) {
     const t = line.trim();
     if (t.startsWith('name:')) continue; // OpenCode uses filename for command name
     if (t.startsWith('allowed-tools:')) { inTools = true; continue; }
+    // Handle inline tools: field (comma-separated string, e.g. agents use 'tools: Read, Write')
+    if (t.startsWith('tools:')) {
+      const toolsValue = t.substring(6).trim();
+      if (toolsValue) {
+        // Inline comma-separated: tools: Read, Write, Bash
+        for (const tool of toolsValue.split(',').map(s => s.trim()).filter(Boolean)) {
+          tools.push(tool);
+        }
+      } else {
+        // YAML array follows
+        inTools = true;
+      }
+      continue;
+    }
     // Convert color names to hex
     if (t.startsWith('color:')) {
       const colorVal = t.substring(6).trim().toLowerCase();
@@ -407,9 +422,22 @@ function convertAgentForGemini(content) {
 
   for (const line of lines) {
     const t = line.trim();
-    if (t.startsWith('color:')) continue;
-    if (t.startsWith('allowed-tools:') || t.startsWith('tools:')) {
-      inTools = true; continue;
+    if (t.startsWith('color:')) continue; // Gemini rejects color field
+    if (t.startsWith('allowed-tools:')) { inTools = true; continue; }
+    // Handle inline tools: field (comma-separated, used by agent frontmatter)
+    if (t.startsWith('tools:')) {
+      const toolsValue = t.substring(6).trim();
+      if (toolsValue) {
+        // Inline: tools: Read, Write, Bash
+        for (const tool of toolsValue.split(',').map(s => s.trim()).filter(Boolean)) {
+          const mapped = toGeminiToolName(tool);
+          if (mapped) tools.push(mapped);
+        }
+      } else {
+        // YAML array follows
+        inTools = true;
+      }
+      continue;
     }
     if (inTools) {
       if (t.startsWith('- ')) {
@@ -471,10 +499,22 @@ function copyDir(srcDir, destDir, pathPrefix, platform) {
 }
 
 function replacePaths(content, pathPrefix, platform) {
-  // Replace both tilde and $HOME forms so bash code blocks stay portable
-  return content
-    .replace(/~\/\.claude\/learnship\//g, pathPrefix)
-    .replace(/\$HOME\/\.claude\/learnship\//g, toHomePrefix(pathPrefix));
+  const dirName = getDirName(platform);
+  let c = content
+    // Source files use ~/.claude/ and $HOME/.claude/ as canonical paths
+    .replace(/~\/\.claude\//g, pathPrefix)
+    .replace(/\$HOME\/\.claude\//g, toHomePrefix(pathPrefix))
+    // Local ./.claude/ refs → ./<dirName>/
+    .replace(/\.\/.claude\//g, `./${dirName}/`);
+  // Also replace platform-specific dir refs that may appear in source
+  if (platform === 'opencode') {
+    c = c.replace(/~\/\.opencode\//g, pathPrefix);
+  } else if (platform === 'gemini') {
+    c = c.replace(/~\/\.gemini\//g, pathPrefix);
+  } else if (platform === 'codex') {
+    c = c.replace(/~\/\.codex\//g, pathPrefix);
+  }
+  return c;
 }
 
 /** Install Claude Code / Windsurf commands (commands/learnship/ → target/commands/learnship/) */
@@ -713,14 +753,46 @@ function installAgents(agentsSrcDir, targetDir, pathPrefix, platform) {
   return count;
 }
 
+/**
+ * Parse JSONC (JSON with Comments) by stripping comments and trailing commas.
+ * OpenCode supports JSONC so users may have // comments in opencode.json.
+ */
+function parseJsonc(content) {
+  if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1); // strip BOM
+  let result = '';
+  let inString = false;
+  let i = 0;
+  while (i < content.length) {
+    const char = content[i];
+    const next = content[i + 1];
+    if (inString) {
+      result += char;
+      if (char === '\\' && i + 1 < content.length) { result += next; i += 2; continue; }
+      if (char === '"') inString = false;
+      i++;
+    } else {
+      if (char === '"') { inString = true; result += char; i++; }
+      else if (char === '/' && next === '/') { while (i < content.length && content[i] !== '\n') i++; }
+      else if (char === '/' && next === '*') {
+        i += 2;
+        while (i < content.length - 1 && !(content[i] === '*' && content[i + 1] === '/')) i++;
+        i += 2;
+      } else { result += char; i++; }
+    }
+  }
+  result = result.replace(/,(\s*[}\]])/g, '$1'); // remove trailing commas
+  return JSON.parse(result);
+}
+
 /** Configure OpenCode permissions to allow reading learnship reference docs */
 function configureOpencodePermissions(targetDir, learnshipDir) {
   const configPath = path.join(targetDir, 'opencode.json');
   let config = {};
   if (fs.existsSync(configPath)) {
-    try { config = JSON.parse(fs.readFileSync(configPath, 'utf8')); }
+    try { config = parseJsonc(fs.readFileSync(configPath, 'utf8')); }
     catch (e) {
       console.log(`  ${yellow}⚠${reset} Could not parse opencode.json — skipping permission config`);
+      console.log(`    ${dim}Reason: ${e.message}${reset}`);
       console.log(`    ${dim}Your config was NOT modified. Fix the syntax manually if needed.${reset}`);
       return;
     }
@@ -1047,6 +1119,9 @@ if (process.env.LEARNSHIP_TEST_MODE) {
     stripLearnshipFromCodexConfig,
     mergeCodexConfig,
     installCodexAgents,
+    parseJsonc,
+    replacePaths,
+    toHomePrefix,
     LEARNSHIP_CODEX_MARKER,
     CODEX_AGENT_SANDBOX,
   };
