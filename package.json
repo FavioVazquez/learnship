@@ -23,7 +23,8 @@
     "agents",
     "references",
     "templates",
-    "install.sh"
+    "install.sh",
+    ".windsurf/skills"
   ],
   "homepage": "https://github.com/FavioVazquez/learnship#readme",
   "bugs": {

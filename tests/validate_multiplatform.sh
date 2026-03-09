@@ -40,6 +40,13 @@ else
   fail "bin/install.js has syntax errors"
 fi
 
+# .windsurf/skills must be in package.json "files" — otherwise npx strips it and skills are never found
+if node -e "const pkg=require('$REPO/package.json'); process.exit(pkg.files && pkg.files.includes('.windsurf/skills') ? 0 : 1);" 2>/dev/null; then
+  ok "package.json files includes .windsurf/skills (required for npx delivery)"
+else
+  fail "package.json files missing .windsurf/skills — skills will be absent when installed via npx"
+fi
+
 # Check key functions exist in installer
 for fn in convertToOpencode convertToGeminiToml convertToCodexSkill convertClaudeAgentToCodexAgent \
           convertAgentForGemini generateCodexConfigBlock stripLearnshipFromCodexConfig mergeCodexConfig \
