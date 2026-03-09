@@ -81,6 +81,8 @@ Each platform gets the best experience it supports:
 | Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
 | Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
 | Specialist agent pool | — | ✓ | ✓ | ✓ | ✓ |
+| Skills (native `@invoke`) | ✓ | — | — | — | — |
+| Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave — each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": true` in `.planning/config.json`. All platforms default to sequential (always safe).
 
@@ -400,6 +402,13 @@ learning_mode: "manual"  → only when you explicitly invoke @agentic-learning
 
 **Core principle:** Fluent answers from an AI are not the same as learning. Every action makes you do the cognitive work — with support, not shortcuts.
 
+### Skills across platforms
+
+| Platform | How `agentic-learning` works |
+|----------|-----------------------------|
+| **Windsurf** | Native skill — invoke with `@agentic-learning learn`, `@agentic-learning quiz`, etc. |
+| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as a context file in `learnship/skills/agentic-learning/`. The AI reads and applies the techniques automatically — reference it explicitly with `use the agentic-learning skill` or just work normally and it activates at checkpoints. |
+
 ---
 
 ## 🎨 Design System
@@ -429,6 +438,13 @@ The **impeccable** skill suite is always active as project context for any UI wo
 | `/onboard` | Design onboarding flows, empty states, first-time user experiences |
 
 **The AI Slop Test:** If you showed the interface to someone and said "AI made this" — would they believe you immediately? If yes, that's the problem. Use `/critique` to find out.
+
+### Skills across platforms
+
+| Platform | How `impeccable` works |
+|----------|-----------------------|
+| **Windsurf** | Native skills — invoke each command directly: `/audit`, `/polish`, `/critique`, etc. |
+| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/impeccable/`. The AI reads the design principles and anti-patterns automatically. Reference commands explicitly: `run the /audit impeccable skill` or just ask for UI work and it applies the standards. |
 
 ---
 
@@ -634,13 +650,14 @@ learnship/
 ├── .windsurf/
 │   ├── workflows/          # 42 workflows as Windsurf slash commands
 │   └── skills/
-│       ├── agentic-learning/   # Learning partner (SKILL.md + references)
-│       └── impeccable/         # Design suite: 17 skills (audit, critique, polish, colorize + more)
+│       ├── agentic-learning/   # Learning partner (SKILL.md + references) — native on Windsurf
+│       └── impeccable/         # Design suite: 17 skills — native on Windsurf
 │           ├── frontend-design/ #   Base skill + 7 reference files (typography, color, motion…)
 │           ├── audit/           #   /audit
 │           ├── critique/        #   /critique
 │           ├── polish/          #   /polish
-│           └── …15 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
+│           └── …14 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
+│                               # → on non-Windsurf: both skills copied to learnship/skills/ as context files
 ├── commands/               # 42 Claude Code-style slash command wrappers
 │   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
 ├── learnship/              # Payload — installed into the target platform config dir
