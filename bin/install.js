@@ -864,6 +864,7 @@ function install(platform, isGlobal) {
   const learnshipSrc = path.join(src, 'learnship');
   const commandsSrc  = path.join(src, 'commands', 'learnship');
   const agentsSrc    = path.join(src, 'agents');
+  const skillsSrc    = path.join(src, '.windsurf', 'skills');
   const failures = [];
 
   // 1. Install learnship/ payload (workflows, references, templates)
@@ -876,6 +877,23 @@ function install(platform, isGlobal) {
   // 2. Write VERSION file into learnship/ dir
   fs.writeFileSync(path.join(learnshipDest, 'VERSION'), pkg.version);
   console.log(`  ${green}✓${reset} Wrote VERSION (${pkg.version})`);
+
+  // 2b. Install skills as context files for non-Windsurf platforms
+  // Windsurf has native skill support via .windsurf/skills/ — no copy needed.
+  // All other platforms get them as learnship/skills/ so the AI loads them as context.
+  if (platform !== 'windsurf' && fs.existsSync(skillsSrc)) {
+    const skillsDest = path.join(learnshipDest, 'skills');
+    fs.mkdirSync(skillsDest, { recursive: true });
+    let skillCount = 0;
+    for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      copyDir(path.join(skillsSrc, entry.name), path.join(skillsDest, entry.name), pathPrefix, platform);
+      skillCount++;
+    }
+    if (skillCount > 0) {
+      console.log(`  ${green}✓${reset} Installed ${skillCount} skills to learnship/skills/ (context files)`);
+    }
+  }
 
   // 3. Install commands (platform-specific format)
   if (platform === 'windsurf') {
