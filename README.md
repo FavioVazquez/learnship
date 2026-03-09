@@ -7,7 +7,7 @@
   <a href="https://github.com/FavioVazquez/learnship/releases/latest"><img src="https://img.shields.io/github/v/release/FavioVazquez/learnship?color=3b82f6&label=release" alt="Latest release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e.svg" alt="License: MIT"></a>
   <a href="https://github.com/FavioVazquez/learnship/stargazers"><img src="https://img.shields.io/github/stars/FavioVazquez/learnship?style=flat&color=f59e0b" alt="Stars"></a>
-  <img src="https://img.shields.io/badge/Windsurf-native-0ea5e9" alt="Windsurf native">
+  <img src="https://img.shields.io/badge/platforms-5-0ea5e9" alt="5 platforms">
   <img src="https://img.shields.io/badge/workflows-42-3b82f6" alt="42 workflows">
 </p>
 
@@ -35,20 +35,22 @@
 npx github:FavioVazquez/learnship
 ```
 
-Choose **global** (all Windsurf projects) or **local** (current project only).
+The installer auto-detects your platform. Choose **global** (all projects) or **local** (current project only):
 
 ```bash
 npx github:FavioVazquez/learnship --global   # all projects
 npx github:FavioVazquez/learnship --local    # this project only
 ```
 
-### 2. Open Windsurf and type
+Or specify your platform explicitly — see [Platform Support](#-platform-support) below.
+
+### 2. Start your AI agent and type
 
 ```
 /ls
 ```
 
-That's it. `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
+(or the platform equivalent — see the table below). `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
 
 ---
 
@@ -191,10 +193,10 @@ flowchart LR
 
 ![AGENTS.md](assets/agents-md.png)
 
-`/new-project` generates an `AGENTS.md` at your project root. Windsurf reads it as a persistent system rule for every conversation — so Cascade always knows where the project stands without you repeating yourself.
+`/new-project` generates an `AGENTS.md` at your project root. Your AI agent reads it as a persistent system rule for every conversation — so it always knows where the project stands without you repeating yourself.
 
 ```
-AGENTS.md                   ← Windsurf reads this every conversation
+AGENTS.md                   ← your AI agent reads this every conversation
 ├── Soul & Principles        # Pair-programmer framing, 10 working principles
 ├── Platform Context         # Points to .planning/, explains the phase loop
 ├── Current Phase            # Updated automatically by workflows
@@ -347,15 +349,17 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 ### Model Profiles
 
 | Agent | `quality` | `balanced` | `budget` |
-|-------|-----------|------------|---------|
-| Planner | Opus | Opus | Sonnet |
-| Executor | Opus | Sonnet | Sonnet |
-| Phase Researcher | Opus | Sonnet | Haiku |
-| Project Researcher | Opus | Sonnet | Haiku |
-| Verifier | Sonnet | Sonnet | Haiku |
-| Plan Checker | Sonnet | Sonnet | Haiku |
-| Debugger | Opus | Sonnet | Sonnet |
-| Codebase Mapper | Sonnet | Haiku | Haiku |
+|-------|-----------|------------|----------|
+| Planner | large | large | medium |
+| Executor | large | medium | medium |
+| Phase Researcher | large | medium | small |
+| Project Researcher | large | medium | small |
+| Verifier | medium | medium | small |
+| Plan Checker | medium | medium | small |
+| Debugger | large | medium | medium |
+| Codebase Mapper | medium | small | small |
+
+> **Platform note:** `large` = Claude Opus / Gemini 2.5 Pro / GPT-4o, `medium` = Claude Sonnet / Gemini 2.0 Flash, `small` = Claude Haiku / Gemini Flash Lite. Exact model used depends on your platform.
 
 ### Speed vs. Quality Presets
 
@@ -628,7 +632,7 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 ```
 learnship/
 ├── .windsurf/
-│   ├── workflows/          # 42 workflows (Windsurf slash commands)
+│   ├── workflows/          # 42 workflows as Windsurf slash commands
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references)
 │       └── impeccable/         # Design suite: 17 skills (audit, critique, polish, colorize + more)
@@ -637,14 +641,20 @@ learnship/
 │           ├── critique/        #   /critique
 │           ├── polish/          #   /polish
 │           └── …15 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
-├── agents/                 # 5 agent personas (planner, researcher, executor, verifier, debugger)
+├── commands/               # 42 Claude Code-style slash command wrappers
+│   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
+├── learnship/              # Payload — installed into the target platform config dir
+│   ├── workflows/          # 42 workflow markdown files (the actual instructions)
+│   ├── references/         # Reference docs (questioning, verification, git, design, learning)
+│   └── templates/          # Document templates for .planning/ + AGENTS.md template
+├── agents/                 # 6 agent personas (planner, researcher, executor, verifier, debugger, plan-checker)
 ├── assets/                 # Brand images (banner, explainers, diagrams)
 ├── bin/
-│   └── learnship.js        # npx entry point
-├── references/             # Reference docs (questioning, verification, git, design, learning)
-├── templates/              # Document templates for .planning/ + AGENTS.md template
-├── SKILL.md                # Meta-skill: platform context loaded by Cascade
-├── install.sh              # Installation script (local or global)
+│   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
+├── tests/
+│   └── validate_multiplatform.sh  # 94-check test suite
+├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
+├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)
 ├── CHANGELOG.md            # Version history
 └── CONTRIBUTING.md         # How to extend the platform
@@ -660,7 +670,7 @@ learnship/
 - **[agentic-learn](https://github.com/faviovazquez/agentic-learn)** — the learning partner skill whose neuroscience-backed techniques (retrieval, spacing, generation, reflection) power the Learning Partner layer
 - **[impeccable](https://github.com/pbakaus/impeccable)** — the frontend design skill that raised the bar on UI quality standards and powers the Design System layer
 
-learnship adapts, combines, and extends these into a unified, Windsurf-native system. All three are used as inspiration — learnship is original work built on their shoulders.
+learnship adapts, combines, and extends these into a unified, multi-platform system. All three are used as inspiration — learnship is original work built on their shoulders.
 
 ---
 
