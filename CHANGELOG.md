@@ -9,6 +9,17 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.5.2] — Fix skills not installed for Windsurf
+
+**Released:** 2026-03-09
+
+### Fixed
+
+- **`bin/install.js`** — Skills (`agentic-learning`, `impeccable`) were not installed for Windsurf at all. The guard `platform !== 'windsurf'` was wrong — Windsurf needs skills copied to `targetDir/skills/` (i.e. `.windsurf/skills/`) so Cascade can invoke them natively. Other platforms still get them at `learnship/skills/` as context files.
+- **`tests/validate_multiplatform.sh`** — Updated test 7 in section [9] to verify Windsurf gets skills at `skills/` (native) and others at `learnship/skills/`. **102 checks, 0 failures**.
+
+---
+
 ## [v1.5.1] — Fix local Windsurf install path
 
 **Released:** 2026-03-09

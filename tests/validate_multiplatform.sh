@@ -136,8 +136,11 @@ else
 fi
 
 # Local Windsurf must use .windsurf, NOT .codeium/windsurf (Cascade reads .windsurf/)
-if grep -q "windsurf.*return '.windsurf'" "$REPO/bin/install.js" || \
-   node -e "process.env.LEARNSHIP_TEST_MODE=1; const {install} = {}; const src=require('fs').readFileSync('$REPO/bin/install.js','utf8'); const m=src.match(/getDirName[\s\S]*?windsurf.*?return '([^']+)'/); process.exit(m && m[1]==='.windsurf' ? 0 : 1);" 2>/dev/null; then
+if node -e "
+const src = require('fs').readFileSync('$REPO/bin/install.js', 'utf8');
+const m = src.match(/getDirName\\([^)]*\\)[\\s\\S]*?windsurf.*?return '([^']+)'/);
+process.exit(m && m[1] === '.windsurf' ? 0 : 1);
+" 2>/dev/null; then
   ok "local Windsurf install uses .windsurf/ (not .codeium/windsurf/)"
 else
   fail "local Windsurf install path wrong — must be .windsurf not .codeium/windsurf"
@@ -658,11 +661,11 @@ while IFS= read -r line; do
 done <<< "$S8_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
-# 9. Skills installation on non-Windsurf platforms
+# 9. Skills installation (all platforms)
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
-echo "  [9] Skills installation (non-Windsurf platforms)"
-echo "  ─────────────────────────────────────────────────"
+echo "  [9] Skills installation (all platforms)"
+echo "  ────────────────────────────────────────"
 
 TMPSCRIPT9=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
 cat > "$TMPSCRIPT9" << 'NODEEOF'
@@ -756,14 +759,15 @@ check('impeccable/frontend-design: SKILL.md present', () => {
   assert(content.includes('name: frontend-design'), 'name field missing');
 });
 
-// 7. Skills NOT installed for Windsurf (Windsurf uses native .windsurf/skills/)
-check('Windsurf install: skills NOT copied to learnship/skills/ (uses native .windsurf/skills/)', () => {
-  // Simulate: Windsurf install skips the skills copy step (platform === 'windsurf')
-  // We verify this by checking that the conditional in install.js is correct
+// 7. Windsurf gets skills at targetDir/skills/ (native .windsurf/skills/), not learnship/skills/
+check('Windsurf install: skills copied to skills/ (native), not learnship/skills/', () => {
   const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  // Must use targetDir/skills for windsurf and learnshipDest/skills for others
   assert(
-    installSrc.includes("platform !== 'windsurf'") && installSrc.includes('skillsSrc'),
-    "install.js does not guard skills copy with platform !== 'windsurf'"
+    installSrc.includes("platform === 'windsurf'") &&
+    installSrc.includes('path.join(targetDir, \'skills\')') &&
+    installSrc.includes('path.join(learnshipDest, \'skills\')'),
+    "install.js does not route Windsurf skills to targetDir/skills/ vs learnshipDest/skills/"
   );
 });
 

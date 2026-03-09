@@ -878,11 +878,13 @@ function install(platform, isGlobal) {
   fs.writeFileSync(path.join(learnshipDest, 'VERSION'), pkg.version);
   console.log(`  ${green}✓${reset} Wrote VERSION (${pkg.version})`);
 
-  // 2b. Install skills as context files for non-Windsurf platforms
-  // Windsurf has native skill support via .windsurf/skills/ — no copy needed.
-  // All other platforms get them as learnship/skills/ so the AI loads them as context.
-  if (platform !== 'windsurf' && fs.existsSync(skillsSrc)) {
-    const skillsDest = path.join(learnshipDest, 'skills');
+  // 2b. Install skills
+  // Windsurf: native skill support — copy to targetDir/skills/ (i.e. .windsurf/skills/)
+  // Others:   copy to learnship/skills/ so the AI loads them as context files
+  if (fs.existsSync(skillsSrc)) {
+    const skillsDest = platform === 'windsurf'
+      ? path.join(targetDir, 'skills')
+      : path.join(learnshipDest, 'skills');
     fs.mkdirSync(skillsDest, { recursive: true });
     let skillCount = 0;
     for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
@@ -891,7 +893,8 @@ function install(platform, isGlobal) {
       skillCount++;
     }
     if (skillCount > 0) {
-      console.log(`  ${green}✓${reset} Installed ${skillCount} skills to learnship/skills/ (context files)`);
+      const loc = platform === 'windsurf' ? 'skills/' : 'learnship/skills/';
+      console.log(`  ${green}✓${reset} Installed ${skillCount} skills to ${loc}`);
     }
   }
 
