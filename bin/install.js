@@ -41,11 +41,12 @@ const CODEX_AGENT_SANDBOX = {
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────
-const cyan  = '\x1b[36m';
-const green = '\x1b[32m';
-const yellow= '\x1b[33m';
-const dim   = '\x1b[2m';
-const reset = '\x1b[0m';
+const cyan   = '\x1b[36m';
+const purple = '\x1b[38;5;135m';
+const green  = '\x1b[32m';
+const yellow = '\x1b[33m';
+const dim    = '\x1b[2m';
+const reset  = '\x1b[0m';
 
 // ─── Argument parsing ──────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -73,8 +74,15 @@ if (hasAll) {
 
 // ─── Banner ────────────────────────────────────────────────────────────────
 const banner = `
-${cyan}  learnship${reset} ${dim}v${pkg.version}${reset}
-  Agentic development platform for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
+${purple}  ██╗     ███████╗ █████╗ ██████╗ ███╗   ██╗███████╗██╗  ██╗██╗██████╗
+  ██║     ██╔════╝██╔══██╗██╔══██╗████╗  ██║██╔════╝██║  ██║██║██╔══██╗
+  ██║     █████╗  ███████║██████╔╝██╔██╗ ██║███████╗███████║██║██████╔╝
+  ██║     ██╔══╝  ██╔══██║██╔══██╗██║╚██╗██║╚════██║██╔══██║██║██╔═══╝
+  ███████╗███████╗██║  ██║██║  ██║██║ ╚████║███████║██║  ██║██║██║
+  ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝${reset}
+
+  ${dim}Learn as you build. Build with intent.${reset}
+  ${dim}v${pkg.version} · Windsurf · Claude Code · OpenCode · Gemini CLI · Codex CLI${reset}
 `;
 
 // ─── Help text ─────────────────────────────────────────────────────────────
