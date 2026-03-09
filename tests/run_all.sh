@@ -25,6 +25,7 @@ run_suite "Package & Installer"  "$TESTS_DIR/validate_package.sh"
 run_suite "Workflow Files"        "$TESTS_DIR/validate_workflows.sh"
 run_suite "Skills Structure"      "$TESTS_DIR/validate_skills.sh"
 run_suite "UX Entry Points"       "$TESTS_DIR/validate_ux.sh"
+run_suite "Multi-Platform"        "$TESTS_DIR/validate_multiplatform.sh"
 
 echo ""
 echo "════════════════════════════════════════════════════════════════════════"

@@ -1,16 +1,29 @@
 {
   "name": "learnship",
-  "version": "1.3.2",
-  "description": "Learn as you build. Build with intent. — A Windsurf-native platform for structured agentic engineering: spec-driven workflows, integrated learning, and production-grade design.",
+  "version": "1.4.0",
+  "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex: spec-driven workflows, integrated learning, and production-grade design.",
   "keywords": [
     "agentic",
     "development",
     "windsurf",
+    "claude-code",
+    "opencode",
+    "gemini-cli",
+    "codex",
     "workflow",
     "ai",
     "learning",
     "planning",
     "cascade"
+  ],
+  "files": [
+    "bin",
+    "commands",
+    "learnship",
+    "agents",
+    "references",
+    "templates",
+    "install.sh"
   ],
   "homepage": "https://github.com/FavioVazquez/learnship#readme",
   "bugs": {
@@ -23,7 +36,7 @@
   "license": "MIT",
   "author": "Favio Vazquez",
   "bin": {
-    "learnship": "./bin/learnship.js"
+    "learnship": "./bin/install.js"
   },
   "scripts": {
     "start": "node bin/learnship.js",

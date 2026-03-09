@@ -9,6 +9,37 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.4.0] — Multi-platform support: Claude Code, OpenCode, Gemini CLI, Codex CLI
+
+**Released:** 2026-03-08
+
+### Added
+
+- **Multi-platform installer** — `bin/install.js` Node.js installer replacing bash-only `install.sh`. Supports `--windsurf`, `--claude`, `--opencode`, `--gemini`, `--codex`, `--all` flags with `--global`/`--local` scope.
+- **`commands/learnship/`** — 42 Claude Code format command wrappers (`/learnship:ls`, `/learnship:new-project`, etc.) auto-converted to platform-specific formats at install time.
+- **`learnship/`** — Payload directory with all 42 workflows, references, and templates installed to each platform's config dir.
+- **`agents/learnship-executor.md`** — Spawnable plan executor for Claude Code, OpenCode, Codex (atomic per-task commits, SUMMARY.md, STATE.md updates).
+- **`agents/learnship-planner.md`** — Spawnable planner agent for phase plan creation.
+- **`agents/learnship-phase-researcher.md`** — Spawnable research agent for pre-planning domain investigation.
+- **`agents/learnship-plan-checker.md`** — Spawnable plan verifier (goal coverage, requirements, wave correctness).
+- **`agents/learnship-verifier.md`** — Spawnable phase verifier (must_haves, integration links, requirement traceability).
+- **`agents/learnship-debugger.md`** — Spawnable debugger with scientific method root-cause investigation.
+- **Platform-enhanced workflows** — `execute-phase`, `plan-phase`, and `debug` now detect `parallelization` in config and spawn real subagents on capable platforms (Claude Code, OpenCode, Codex). Sequential fallback always available.
+- **`tests/validate_multiplatform.sh`** — Full multi-platform test suite: installer, command wrappers, learnship/ payload, agent files, conversion functions.
+- **README Platform Support section** — Install commands and capability matrix for all 5 platforms.
+
+### Platform command format
+
+| Platform | Commands | Invoked as |
+|----------|----------|-----------|
+| Windsurf | `.windsurf/workflows/` | `/ls`, `/new-project` |
+| Claude Code | `commands/learnship/` | `/learnship:ls` |
+| OpenCode | `command/learnship-*.md` | `/learnship-ls` |
+| Gemini CLI | `commands/learnship/*.toml` | `/learnship:ls` |
+| Codex CLI | `skills/learnship-*/` | `$learnship-ls` |
+
+---
+
 ## [v1.3.2] — Fix Mermaid \n rendering and npm badge
 
 **Released:** 2026-03-08

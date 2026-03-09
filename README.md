@@ -52,6 +52,38 @@ That's it. `/ls` detects whether you have a project, walks you through starting 
 
 ---
 
+## 🌐 Platform Support
+
+learnship works on **5 platforms**. Pick your tool:
+
+| Platform | Install command | Invoke commands as |
+|----------|----------------|-------------------|
+| **Windsurf** | `npx github:FavioVazquez/learnship --windsurf --global` | `/ls`, `/new-project` |
+| **Claude Code** | `npx github:FavioVazquez/learnship --claude --global` | `/learnship:ls`, `/learnship:new-project` |
+| **OpenCode** | `npx github:FavioVazquez/learnship --opencode --global` | `/learnship-ls`, `/learnship-new-project` |
+| **Gemini CLI** | `npx github:FavioVazquez/learnship --gemini --global` | `/learnship:ls`, `/learnship:new-project` |
+| **Codex CLI** | `npx github:FavioVazquez/learnship --codex --global` | `$learnship-ls`, `$learnship-new-project` |
+
+```bash
+# All platforms at once
+npx github:FavioVazquez/learnship --all --global
+```
+
+### 🤖 Platform capabilities
+
+Each platform gets the best experience it supports:
+
+| Feature | Windsurf | Claude Code | OpenCode | Gemini CLI | Codex CLI |
+|---------|----------|-------------|----------|------------|-----------|
+| Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
+| Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
+| Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
+| Specialist agent pool | — | ✓ | ✓ | ✓ | ✓ |
+
+**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave — each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": true` in `.planning/config.json`. All platforms default to sequential (always safe).
+
+---
+
 ## 🗺️ The 5 Commands You Actually Need
 
 ![5 commands diagram](assets/quick-start-flow.png)
