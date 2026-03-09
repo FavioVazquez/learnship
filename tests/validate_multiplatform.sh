@@ -650,6 +650,130 @@ while IFS= read -r line; do
 done <<< "$S8_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# 9. Skills installation on non-Windsurf platforms
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [9] Skills installation (non-Windsurf platforms)"
+echo "  ─────────────────────────────────────────────────"
+
+TMPSCRIPT9=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT9" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+const skillsSrc = path.join(REPO, '.windsurf', 'skills');
+
+// Helper: simulate the skills install step from install()
+function installSkills(targetDir) {
+  const learnshipDest = path.join(targetDir, 'learnship');
+  const skillsDest = path.join(learnshipDest, 'skills');
+  fs.mkdirSync(skillsDest, { recursive: true });
+  function copyDir(from, to) {
+    fs.mkdirSync(to, { recursive: true });
+    for (const e of fs.readdirSync(from, { withFileTypes: true })) {
+      const s = path.join(from, e.name), d = path.join(to, e.name);
+      if (e.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d);
+    }
+  }
+  let count = 0;
+  for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    copyDir(path.join(skillsSrc, entry.name), path.join(skillsDest, entry.name));
+    count++;
+  }
+  return { skillsDest, count };
+}
+
+// 1. Skills source exists and contains exactly the expected skill dirs
+check('skills source has agentic-learning and impeccable (no frontend-design top-level)', () => {
+  assert(fs.existsSync(skillsSrc), 'skills source dir missing: ' + skillsSrc);
+  const dirs = fs.readdirSync(skillsSrc, { withFileTypes: true })
+    .filter(e => e.isDirectory()).map(e => e.name).sort();
+  assert(dirs.includes('agentic-learning'), 'agentic-learning missing from skills src');
+  assert(dirs.includes('impeccable'), 'impeccable missing from skills src');
+  assert(!dirs.includes('frontend-design'), 'frontend-design still exists as top-level skill (should be deleted)');
+});
+
+// 2. Skills are copied to learnship/skills/ on install
+check('skills install: agentic-learning and impeccable copied to learnship/skills/', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDest, count } = installSkills(tmp);
+  fs.rmSync(tmp, { recursive: true });
+  assert(count === 2, 'expected 2 skills, got ' + count);
+});
+
+// 3. agentic-learning has SKILL.md and references/
+check('agentic-learning: SKILL.md and references/ present', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDest } = installSkills(tmp);
+  const alDir = path.join(skillsDest, 'agentic-learning');
+  assert(fs.existsSync(path.join(alDir, 'SKILL.md')), 'agentic-learning/SKILL.md missing');
+  assert(fs.existsSync(path.join(alDir, 'references')), 'agentic-learning/references/ missing');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 4. agentic-learning SKILL.md has correct name and no Windsurf-specific invocation
+check('agentic-learning SKILL.md: name field correct, platform-agnostic compatibility', () => {
+  const skillMd = fs.readFileSync(path.join(skillsSrc, 'agentic-learning', 'SKILL.md'), 'utf8');
+  assert(skillMd.includes('name: agentic-learning'), 'name field missing or wrong');
+  assert(!skillMd.includes('Windsurf only'), 'contains Windsurf-only restriction');
+});
+
+// 5. impeccable has frontend-design sub-skill and at least 10 sub-skill dirs
+check('impeccable: frontend-design sub-skill present, at least 10 sub-skills', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDest } = installSkills(tmp);
+  const impDir = path.join(skillsDest, 'impeccable');
+  const subSkills = fs.readdirSync(impDir, { withFileTypes: true }).filter(e => e.isDirectory());
+  assert(subSkills.some(e => e.name === 'frontend-design'), 'impeccable/frontend-design/ missing');
+  assert(subSkills.length >= 10, 'expected >=10 impeccable sub-skills, got ' + subSkills.length);
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 6. impeccable/frontend-design has SKILL.md
+check('impeccable/frontend-design: SKILL.md present', () => {
+  const skillMd = path.join(skillsSrc, 'impeccable', 'frontend-design', 'SKILL.md');
+  assert(fs.existsSync(skillMd), 'impeccable/frontend-design/SKILL.md missing');
+  const content = fs.readFileSync(skillMd, 'utf8');
+  assert(content.includes('name: frontend-design'), 'name field missing');
+});
+
+// 7. Skills NOT installed for Windsurf (Windsurf uses native .windsurf/skills/)
+check('Windsurf install: skills NOT copied to learnship/skills/ (uses native .windsurf/skills/)', () => {
+  // Simulate: Windsurf install skips the skills copy step (platform === 'windsurf')
+  // We verify this by checking that the conditional in install.js is correct
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(
+    installSrc.includes("platform !== 'windsurf'") && installSrc.includes('skillsSrc'),
+    "install.js does not guard skills copy with platform !== 'windsurf'"
+  );
+});
+
+console.log('\nSECTION9_PASS=' + pass);
+console.log('SECTION9_FAIL=' + fail);
+NODEEOF
+
+S9_OUTPUT=$(node "$TMPSCRIPT9" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT9"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S9_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
