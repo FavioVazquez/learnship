@@ -9,6 +9,18 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.5.3] — Fix skills missing on npx install
+
+**Released:** 2026-03-10
+
+### Fixed
+
+- **`package.json`** — Added `.windsurf/skills` to the `files` array. It was missing, so `npx github:FavioVazquez/learnship` stripped the skills directory entirely — `fs.existsSync(skillsSrc)` returned false and skills were silently skipped for all platforms.
+- **`package.json`** — Bumped version to `1.5.3` so the banner correctly displays the current version.
+- **`tests/validate_multiplatform.sh`** — Added regression test in section [1]: verifies `package.json` `files` includes `.windsurf/skills`. **103 checks, 0 failures**.
+
+---
+
 ## [v1.5.2] — Fix skills not installed for Windsurf
 
 **Released:** 2026-03-09
