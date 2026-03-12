@@ -9,6 +9,26 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.6.0] — Claude Code native plugin skills
+
+**Released:** 2026-03-12
+
+### Added
+
+- **`bin/install.js` — `installClaudePlugins()`** — New function that installs skills as a native Claude Code plugin under `~/.claude/plugins/learnship/`. Creates:
+  - `.claude-plugin/plugin.json` — plugin manifest with name, description, author
+  - `skills/agentic-learning/` — full copy with `SKILL.md` + `references/`
+  - `skills/<sub-skill>/` — all 18 impeccable sub-skills flattened directly into `skills/` (no `impeccable/` wrapper): `adapt`, `animate`, `audit`, `bolder`, `clarify`, `colorize`, `critique`, `delight`, `distill`, `extract`, `frontend-design`, `harden`, `normalize`, `onboard`, `optimize`, `polish`, `quieter`, `teach-impeccable`
+- **Uninstall** — `plugins/learnship/` is now removed on `--uninstall` for the `claude` platform.
+- **Section [10] tests** — 8 new checks verifying plugin structure, manifest fields, flattened sub-skills, full skill count (19), and uninstall guard. Test suite now covers **111 checks, 0 failures**.
+
+### Notes
+
+- The existing `learnship/skills/` context file copy is preserved for backwards compatibility (workflows reference those paths via `@file` syntax).
+- SKILL.md files are copied verbatim — no path replacement applied.
+
+---
+
 ## [v1.5.3] — Fix skills missing on npx install
 
 **Released:** 2026-03-10

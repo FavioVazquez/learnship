@@ -541,6 +541,59 @@ function installClaudeCommands(srcDir, targetDir, pathPrefix) {
   return count;
 }
 
+/** Install Claude Code native plugin skills (plugins/learnship/skills/) */
+function installClaudePlugins(skillsSrc, targetDir) {
+  const pluginDir = path.join(targetDir, 'plugins', 'learnship');
+  const pluginSkillsDir = path.join(pluginDir, 'skills');
+  const pluginMetaDir = path.join(pluginDir, '.claude-plugin');
+
+  // Clean install
+  if (fs.existsSync(pluginDir)) fs.rmSync(pluginDir, { recursive: true });
+  fs.mkdirSync(pluginSkillsDir, { recursive: true });
+  fs.mkdirSync(pluginMetaDir, { recursive: true });
+
+  // Write plugin manifest
+  const manifest = {
+    name: 'learnship',
+    description: 'Learnship skills — agentic-learning partner and impeccable design system',
+    author: { name: 'favio-vazquez' },
+  };
+  fs.writeFileSync(
+    path.join(pluginMetaDir, 'plugin.json'),
+    JSON.stringify(manifest, null, 2) + '\n'
+  );
+
+  let count = 0;
+
+  for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const skillName = entry.name;
+    const srcPath = path.join(skillsSrc, skillName);
+
+    if (skillName === 'impeccable') {
+      // impeccable is a meta-skill — flatten its sub-skills into plugin/skills/
+      for (const sub of fs.readdirSync(srcPath, { withFileTypes: true })) {
+        if (!sub.isDirectory()) continue;
+        const subSrc = path.join(srcPath, sub.name);
+        const subDest = path.join(pluginSkillsDir, sub.name);
+        if (fs.existsSync(path.join(subSrc, 'SKILL.md'))) {
+          copyDir(subSrc, subDest, '', 'claude');
+          count++;
+        }
+      }
+    } else {
+      // agentic-learning and any future top-level skills
+      const dest = path.join(pluginSkillsDir, skillName);
+      if (fs.existsSync(path.join(srcPath, 'SKILL.md'))) {
+        copyDir(srcPath, dest, '', 'claude');
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
 /** Install OpenCode commands (flat: learnship-*.md) */
 function installOpencodeCommands(srcDir, targetDir, pathPrefix) {
   const destDir = path.join(targetDir, 'command');
@@ -917,6 +970,12 @@ function install(platform, isGlobal) {
     const aCount = installAgents(agentsSrc, targetDir, pathPrefix, 'claude');
     if (aCount > 0) console.log(`  ${green}✓${reset} Installed ${aCount} agents to agents/`);
     else failures.push('agents/');
+    const pCount = installClaudePlugins(skillsSrc, targetDir);
+    if (pCount > 0) {
+      console.log(`  ${green}✓${reset} Installed ${pCount} skills to plugins/learnship/skills/`);
+    } else {
+      failures.push('plugins/learnship/skills/');
+    }
   } else if (platform === 'opencode') {
     const count = installOpencodeCommands(commandsSrc, targetDir, pathPrefix);
     console.log(`  ${green}✓${reset} Installed ${count} commands to command/ (flat)`);
@@ -991,6 +1050,14 @@ function uninstall(platform, isGlobal) {
   if (platform === 'claude' || platform === 'windsurf') {
     const commandsDir = path.join(targetDir, 'commands', 'learnship');
     if (fs.existsSync(commandsDir)) { fs.rmSync(commandsDir, { recursive: true }); removed++; console.log(`  ${green}✓${reset} Removed commands/learnship/`); }
+  }
+  if (platform === 'claude') {
+    const pluginDir = path.join(targetDir, 'plugins', 'learnship');
+    if (fs.existsSync(pluginDir)) {
+      fs.rmSync(pluginDir, { recursive: true });
+      removed++;
+      console.log(`  ${green}✓${reset} Removed plugins/learnship/`);
+    }
   }
   if (platform === 'opencode') {
     const commandDir = path.join(targetDir, 'command');

@@ -793,6 +793,162 @@ while IFS= read -r line; do
 done <<< "$S9_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# 10. Claude Code native plugin structure
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [10] Claude Code native plugin structure"
+echo "  ─────────────────────────────────────────"
+
+TMPSCRIPT10=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT10" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+const skillsSrc = path.join(REPO, '.windsurf', 'skills');
+
+// Simulate installClaudePlugins against a temp dir
+function runInstallClaudePlugins(tmpDir) {
+  const pluginDir = path.join(tmpDir, 'plugins', 'learnship');
+  const pluginSkillsDir = path.join(pluginDir, 'skills');
+  const pluginMetaDir = path.join(pluginDir, '.claude-plugin');
+
+  if (fs.existsSync(pluginDir)) require('fs').rmSync(pluginDir, { recursive: true });
+  fs.mkdirSync(pluginSkillsDir, { recursive: true });
+  fs.mkdirSync(pluginMetaDir, { recursive: true });
+
+  const manifest = {
+    name: 'learnship',
+    description: 'Learnship skills — agentic-learning partner and impeccable design system',
+    author: { name: 'favio-vazquez' },
+  };
+  fs.writeFileSync(path.join(pluginMetaDir, 'plugin.json'), JSON.stringify(manifest, null, 2) + '\n');
+
+  function copyDir(src, dest) {
+    fs.mkdirSync(dest, { recursive: true });
+    for (const e of fs.readdirSync(src, { withFileTypes: true })) {
+      const s = path.join(src, e.name), d = path.join(dest, e.name);
+      if (e.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d);
+    }
+  }
+
+  let count = 0;
+  for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const skillName = entry.name;
+    const srcPath = path.join(skillsSrc, skillName);
+    if (skillName === 'impeccable') {
+      for (const sub of fs.readdirSync(srcPath, { withFileTypes: true })) {
+        if (!sub.isDirectory()) continue;
+        const subSrc = path.join(srcPath, sub.name);
+        const subDest = path.join(pluginSkillsDir, sub.name);
+        if (fs.existsSync(path.join(subSrc, 'SKILL.md'))) { copyDir(subSrc, subDest); count++; }
+      }
+    } else {
+      const dest = path.join(pluginSkillsDir, skillName);
+      if (fs.existsSync(path.join(srcPath, 'SKILL.md'))) { copyDir(srcPath, dest); count++; }
+    }
+  }
+  return { pluginDir, pluginSkillsDir, pluginMetaDir, count };
+}
+
+// 1. installClaudePlugins function exists in install.js
+check('installClaudePlugins function exists in install.js', () => {
+  const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(src.includes('function installClaudePlugins'), 'installClaudePlugins function missing');
+});
+
+// 2. installClaudePlugins is called in the claude platform block
+check('installClaudePlugins is called in the claude platform block', () => {
+  const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(src.includes("installClaudePlugins(skillsSrc, targetDir)"), 'installClaudePlugins not called in claude block');
+});
+
+// 3. plugin.json manifest is created with correct fields
+check('plugin.json created with name, description, author', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { pluginMetaDir } = runInstallClaudePlugins(tmp);
+  const manifest = JSON.parse(fs.readFileSync(path.join(pluginMetaDir, 'plugin.json'), 'utf8'));
+  assert(manifest.name === 'learnship', 'manifest.name wrong');
+  assert(typeof manifest.description === 'string' && manifest.description.length > 0, 'manifest.description missing');
+  assert(manifest.author && manifest.author.name === 'favio-vazquez', 'manifest.author wrong');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 4. agentic-learning is installed as a top-level plugin skill
+check('agentic-learning installed at plugins/learnship/skills/agentic-learning/', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
+  const alDir = path.join(pluginSkillsDir, 'agentic-learning');
+  assert(fs.existsSync(alDir), 'agentic-learning dir missing');
+  assert(fs.existsSync(path.join(alDir, 'SKILL.md')), 'agentic-learning/SKILL.md missing');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 5. impeccable sub-skills are flattened (no impeccable/ dir, sub-skills directly in skills/)
+check('impeccable sub-skills flattened — no impeccable/ dir, sub-skills at top level', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
+  assert(!fs.existsSync(path.join(pluginSkillsDir, 'impeccable')), 'impeccable/ dir should not exist (sub-skills should be flattened)');
+  assert(fs.existsSync(path.join(pluginSkillsDir, 'frontend-design')), 'frontend-design sub-skill missing');
+  assert(fs.existsSync(path.join(pluginSkillsDir, 'audit')), 'audit sub-skill missing');
+  assert(fs.existsSync(path.join(pluginSkillsDir, 'polish')), 'polish sub-skill missing');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 6. all expected impeccable sub-skills are present
+check('all 18 impeccable sub-skills present in plugins/learnship/skills/', () => {
+  const expected = ['adapt','animate','audit','bolder','clarify','colorize','critique',
+    'delight','distill','extract','frontend-design','harden','normalize','onboard',
+    'optimize','polish','quieter','teach-impeccable'];
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
+  const missing = expected.filter(s => !fs.existsSync(path.join(pluginSkillsDir, s, 'SKILL.md')));
+  fs.rmSync(tmp, { recursive: true });
+  assert(missing.length === 0, 'missing sub-skills: ' + missing.join(', '));
+});
+
+// 7. total skill count = 1 (agentic-learning) + 18 (impeccable sub-skills) = 19
+check('total plugin skill count is 19 (1 agentic-learning + 18 impeccable)', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { count } = runInstallClaudePlugins(tmp);
+  fs.rmSync(tmp, { recursive: true });
+  assert(count === 19, 'expected 19 skills, got ' + count);
+});
+
+// 8. uninstall block removes plugins/learnship/ for claude
+check('uninstall removes plugins/learnship/ for claude platform', () => {
+  const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(
+    src.includes("platform === 'claude'") && src.includes("'plugins', 'learnship'") && src.includes('rmSync'),
+    'uninstall block missing plugins/learnship/ cleanup for claude'
+  );
+});
+
+console.log('\nSECTION10_PASS=' + pass);
+console.log('SECTION10_FAIL=' + fail);
+NODEEOF
+
+S10_OUTPUT=$(node "$TMPSCRIPT10" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT10"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S10_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
