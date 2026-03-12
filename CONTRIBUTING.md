@@ -8,7 +8,7 @@ How to extend learnship — add new workflows, update agent personas, add templa
 
 ```
 .windsurf/
-├── workflows/          # Windsurf slash commands — one file per workflow
+├── workflows/          # slash commands — one file per workflow
 └── skills/
     ├── agentic-learning/   # Learning partner skill
     └── frontend-design/    # Design system skill
@@ -40,7 +40,7 @@ description: One sentence explaining what this workflow does and when to use it
 ---
 ```
 
-The `description` field appears in `/help` and in Windsurf's command palette.
+The `description` field appears in `/help` and in the agent's command palette.
 
 ### 3. Workflow structure
 
@@ -82,11 +82,11 @@ Read `learning_mode` from `.planning/config.json`.
 > `@agentic-learning [action]` — [what it does here]
 ```
 
-### 4. Windsurf-native rules
+### 4. Workflow rules
 
 - **No binary calls** — use bash and git commands directly, never external binaries.
 - **Relative paths only** — reference platform files as `@./agents/planner.md`, not absolute paths.
-- **No `AskUserQuestion` tool** — use plain prose to ask questions. Cascade handles the conversation.
+- **No `AskUserQuestion` tool** — use plain prose to ask questions. The agent handles the conversation.
 - **No `Task()` spawning syntax** — describe parallel work as "run these agents in parallel" in prose.
 - **Learning checkpoints** — include at natural completion points where reflection adds value.
 
@@ -212,11 +212,11 @@ To update a skill:
 
 ## Testing a Workflow
 
-Since workflows run in Windsurf Cascade:
+To test a workflow:
 
-1. Install locally: `bash install.sh --local`
-2. Open a test project in Windsurf
-3. Run `/your-workflow` in Cascade
+1. Install locally: `npx . --windsurf --local` (or `--claude`, `--opencode`, etc.)
+2. Open a test project in your target platform
+3. Run `/your-workflow` (Windsurf) or the equivalent command
 4. Walk through all steps, including error paths
 5. Verify bash commands produce expected output
 6. Verify the learning checkpoint fires correctly when `learning_mode: "auto"`
@@ -243,7 +243,7 @@ chore: update CHANGELOG for v[X.Y]
 
 Keep these principles when contributing:
 
-- **Windsurf-native** — workflows should feel natural in Cascade, not like ported scripts
+- **Platform-native** — workflows should feel natural in the target agent, not like ported scripts
 - **Learning-integrated** — any significant workflow should have a learning checkpoint
 - **Minimal prose** — workflow steps should be clear and scannable, not essays
 - **Goal-backward** — every step should serve the workflow's stated goal

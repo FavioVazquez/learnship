@@ -109,7 +109,7 @@ Task(
 
 Spawn all plans in the wave before waiting. Wait for all agents to complete, then proceed to spot-checks.
 
-**If `parallelization` is `false` (sequential mode — Windsurf, Gemini, or user preference):**
+**If `parallelization` is `false` (sequential mode — Windsurf, Gemini CLI, or user preference):**
 
 For each plan in the wave, using `@./agents/executor.md` as your execution persona:
 

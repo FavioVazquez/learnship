@@ -1,6 +1,6 @@
 {
   "name": "learnship",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex: spec-driven workflows, integrated learning, and production-grade design.",
   "keywords": [
     "agentic",

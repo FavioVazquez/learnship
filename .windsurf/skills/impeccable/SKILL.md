@@ -7,7 +7,7 @@ description: >
   critique, delight, distill, extract, frontend-design, harden, normalize,
   onboard, optimize, polish, quieter, or teach-impeccable.
 license: MIT
-compatibility: Works with Windsurf Cascade and any AgentSkills-compatible agent.
+compatibility: Works with Windsurf Cascade, Claude Code, and any AgentSkills-compatible agent.
 metadata:
   author: favio-vazquez
   version: "1.0"

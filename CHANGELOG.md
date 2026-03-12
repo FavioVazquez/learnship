@@ -9,6 +9,25 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.6.1] — Platform-agnostic language sweep
+
+**Released:** 2026-03-12
+
+### Changed
+
+- **`SKILL.md`** (root) — "Windsurf-native platform" → "multi-platform agentic engineering system"; workflow list intro updated to mention all platforms.
+- **`templates/agents.md`** + **`learnship/templates/agents.md`** — "Windsurf reads this file" → "Your AI agent reads this file".
+- **`learnship/workflows/ls.md`** + **`.windsurf/workflows/ls.md`** — "Windsurf-native platform" → "multi-platform agentic engineering system".
+- **`learnship/workflows/new-project.md`** + **`.windsurf/workflows/new-project.md`** — "Windsurf reads this every conversation" → "your AI agent reads this every conversation".
+- **`learnship/workflows/execute-phase.md`** — sequential mode comment now says "Windsurf, Gemini CLI" (was "Windsurf, Gemini").
+- **`agents/learnship-executor.md`** — "Windsurf/Codex projects" → "Windsurf, Codex, or any platform that uses AGENTS.md".
+- **`CONTRIBUTING.md`** — "Windsurf slash commands" → "slash commands"; "Windsurf's command palette" → "the agent's command palette"; "Windsurf-native rules" section heading → "Workflow rules"; testing instructions updated to show multi-platform install; "Windsurf-native" philosophy bullet → "Platform-native".
+- **`README.md`** — repository structure comments updated: "Windsurf slash commands" → "slash commands"; skill native platform comments updated to include Claude Code; "non-Windsurf" → "OpenCode/Gemini/Codex".
+- **`.windsurf/skills/agentic-learning/SKILL.md`** + **`.windsurf/skills/impeccable/SKILL.md`** — `compatibility` field updated to include Claude Code.
+- **`publish-first-release.md`** — "Windsurf-native platform" → "multi-platform agentic engineering system".
+
+---
+
 ## [v1.6.0] — Claude Code native plugin skills
 
 **Released:** 2026-03-12

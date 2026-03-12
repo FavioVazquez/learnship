@@ -25,7 +25,7 @@ test -f .planning/PROJECT.md && echo "EXISTS" || echo "MISSING"
 
 No project found in this directory.
 
-learnship is a Windsurf-native platform for agentic engineering —
+learnship is a multi-platform agentic engineering system —
 spec-driven phases, context-engineered plans, atomic execution,
 and a learning partner woven into every phase transition.
 

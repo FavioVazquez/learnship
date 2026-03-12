@@ -305,7 +305,7 @@ git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 **[Project Name]** — [N] phases, [X] requirements
 
 Files created:
-- AGENTS.md            ← Windsurf reads this every conversation
+- AGENTS.md            ← your AI agent reads this every conversation
 - .planning/PROJECT.md
 - .planning/REQUIREMENTS.md
 - .planning/ROADMAP.md

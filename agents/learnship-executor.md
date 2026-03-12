@@ -19,7 +19,7 @@ If the prompt contains a `<files_to_read>` block, you MUST use the Read tool to 
 <project_context>
 Before executing, load project context:
 
-1. Read `./AGENTS.md` if it exists (Windsurf/Codex projects)
+1. Read `./AGENTS.md` if it exists (Windsurf, Codex, or any platform that uses AGENTS.md)
 2. Read `./CLAUDE.md` if it exists (Claude Code projects)
 3. Read `./GEMINI.md` if it exists (Gemini CLI projects)
 4. Read `.planning/STATE.md` for current phase, decisions, blockers

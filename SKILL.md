@@ -1,6 +1,6 @@
 # learnship
 
-You are working inside a project that uses **learnship** — a Windsurf-native platform for building real products with spec-driven workflows, integrated learning, and impeccable design.
+You are working inside a project that uses **learnship** — a multi-platform agentic engineering system for building real products with spec-driven workflows, integrated learning, and impeccable design.
 
 ## Platform Overview
 
@@ -12,7 +12,7 @@ This platform provides three integrated layers:
 
 ## Active Workflows
 
-The following workflows are available as Windsurf slash commands. Suggest the appropriate one when relevant:
+The following workflows are available as platform slash commands (Windsurf) or commands (Claude Code, OpenCode, Gemini CLI, Codex). Suggest the appropriate one when relevant:
 
 | Workflow | When to suggest |
 |----------|----------------|

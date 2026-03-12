@@ -648,16 +648,16 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 ```
 learnship/
 ├── .windsurf/
-│   ├── workflows/          # 42 workflows as Windsurf slash commands
+│   ├── workflows/          # 42 workflows as slash commands
 │   └── skills/
-│       ├── agentic-learning/   # Learning partner (SKILL.md + references) — native on Windsurf
-│       └── impeccable/         # Design suite: 17 skills — native on Windsurf
+│       ├── agentic-learning/   # Learning partner (SKILL.md + references) — native on Windsurf + Claude Code
+│       └── impeccable/         # Design suite: 18 skills — native on Windsurf + Claude Code
 │           ├── frontend-design/ #   Base skill + 7 reference files (typography, color, motion…)
 │           ├── audit/           #   /audit
 │           ├── critique/        #   /critique
 │           ├── polish/          #   /polish
 │           └── …14 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
-│                               # → on non-Windsurf: both skills copied to learnship/skills/ as context files
+│                               # → on OpenCode/Gemini/Codex: both skills copied to learnship/skills/ as context files
 ├── commands/               # 42 Claude Code-style slash command wrappers
 │   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
 ├── learnship/              # Payload — installed into the target platform config dir

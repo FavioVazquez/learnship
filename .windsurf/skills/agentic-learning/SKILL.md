@@ -9,7 +9,7 @@ description: >
   Invoke with @agentic-learning followed by one of: learn, quiz, reflect, space,
   brainstorm, explain-first, struggle, either-or, explain, interleave, or cognitive-load.
 license: MIT
-compatibility: Works with Windsurf Cascade and any AgentSkills-compatible agent.
+compatibility: Works with Windsurf Cascade, Claude Code, and any AgentSkills-compatible agent.
 metadata:
   author: favio-vazquez
   version: "1.3"
