@@ -570,24 +570,33 @@ function installClaudePlugins(skillsSrc, targetDir) {
     const skillName = entry.name;
     const srcPath = path.join(skillsSrc, skillName);
 
+    if (!fs.existsSync(path.join(srcPath, 'SKILL.md'))) continue;
+
+    const dest = path.join(pluginSkillsDir, skillName);
+
     if (skillName === 'impeccable') {
-      // impeccable is a meta-skill — flatten its sub-skills into plugin/skills/
+      // impeccable: copy root SKILL.md (rewriting sibling paths → references/ paths),
+      // then copy each sub-skill dir into references/
+      fs.mkdirSync(dest, { recursive: true });
+      let skillMdContent = fs.readFileSync(path.join(srcPath, 'SKILL.md'), 'utf8');
+      // Rewrite repo-relative sibling links (e.g. adapt/SKILL.md) to post-install references/ paths
+      skillMdContent = skillMdContent.replace(/\]\((?!references\/)([^/)][^)]*\/SKILL\.md)\)/g, '](references/$1)');
+      fs.writeFileSync(path.join(dest, 'SKILL.md'), skillMdContent);
+      const refsDest = path.join(dest, 'references');
+      fs.mkdirSync(refsDest, { recursive: true });
       for (const sub of fs.readdirSync(srcPath, { withFileTypes: true })) {
         if (!sub.isDirectory()) continue;
         const subSrc = path.join(srcPath, sub.name);
-        const subDest = path.join(pluginSkillsDir, sub.name);
+        const subDest = path.join(refsDest, sub.name);
         if (fs.existsSync(path.join(subSrc, 'SKILL.md'))) {
           copyDir(subSrc, subDest, '', 'claude');
-          count++;
         }
       }
+      count++;
     } else {
-      // agentic-learning and any future top-level skills
-      const dest = path.join(pluginSkillsDir, skillName);
-      if (fs.existsSync(path.join(srcPath, 'SKILL.md'))) {
-        copyDir(srcPath, dest, '', 'claude');
-        count++;
-      }
+      // agentic-learning and any future top-level skills — copy verbatim
+      copyDir(srcPath, dest, '', 'claude');
+      count++;
     }
   }
 

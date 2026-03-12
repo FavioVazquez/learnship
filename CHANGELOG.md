@@ -15,17 +15,19 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ### Added
 
-- **`bin/install.js` — `installClaudePlugins()`** — New function that installs skills as a native Claude Code plugin under `~/.claude/plugins/learnship/`. Creates:
-  - `.claude-plugin/plugin.json` — plugin manifest with name, description, author
+- **`bin/install.js` — `installClaudePlugins()`** — New function that installs skills as a native Claude Code plugin under `~/.claude/plugins/learnship/`. Creates exactly **2 skills**:
   - `skills/agentic-learning/` — full copy with `SKILL.md` + `references/`
-  - `skills/<sub-skill>/` — all 18 impeccable sub-skills flattened directly into `skills/` (no `impeccable/` wrapper): `adapt`, `animate`, `audit`, `bolder`, `clarify`, `colorize`, `critique`, `delight`, `distill`, `extract`, `frontend-design`, `harden`, `normalize`, `onboard`, `optimize`, `polish`, `quieter`, `teach-impeccable`
+  - `skills/impeccable/` — root `SKILL.md` (dispatcher) + all 18 sub-skills copied into `references/`: `adapt`, `animate`, `audit`, `bolder`, `clarify`, `colorize`, `critique`, `delight`, `distill`, `extract`, `frontend-design`, `harden`, `normalize`, `onboard`, `optimize`, `polish`, `quieter`, `teach-impeccable`
+  - `.claude-plugin/plugin.json` — plugin manifest
+- **`.windsurf/skills/impeccable/SKILL.md`** — New root skill file. Links to sub-skills using sibling paths (`adapt/SKILL.md`) which work for Windsurf. The installer rewrites these to `references/adapt/SKILL.md` when copying to the Claude Code plugin dir.
 - **Uninstall** — `plugins/learnship/` is now removed on `--uninstall` for the `claude` platform.
-- **Section [10] tests** — 8 new checks verifying plugin structure, manifest fields, flattened sub-skills, full skill count (19), and uninstall guard. Test suite now covers **111 checks, 0 failures**.
+- **Section [10] tests** — 10 new checks verifying plugin structure, manifest fields, two-skill count, path rewriting, all 18 references, no flattening, and uninstall guard. Test suite now covers **113 checks, 0 failures**.
 
 ### Notes
 
-- The existing `learnship/skills/` context file copy is preserved for backwards compatibility (workflows reference those paths via `@file` syntax).
-- SKILL.md files are copied verbatim — no path replacement applied.
+- The existing `learnship/skills/` context file copy is preserved for backwards compatibility.
+- Windsurf reads `impeccable/SKILL.md` directly with correct sibling-relative paths.
+- Claude Code gets the same content with paths rewritten to `references/` to match the installed layout.
 
 ---
 
