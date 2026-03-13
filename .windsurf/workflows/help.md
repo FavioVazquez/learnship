@@ -106,6 +106,7 @@ Everything else below is discoverable from `/ls` as you go.
 | `/cleanup` | Archive completed milestone phase directories |
 | `/update` | Update the platform itself to the latest version |
 | `/reapply-patches` | Restore local edits after an update |
+| `/sync-upstream-skills` | Pull latest agentic-learning + impeccable from their upstream repos and re-deploy to all platforms |
 
 ---
 

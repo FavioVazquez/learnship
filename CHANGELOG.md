@@ -13,6 +13,16 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 **Released:** 2026-03-12
 
+### Added
+
+- **`/sync-upstream-skills` workflow** — New workflow that pulls the latest skill content from both upstream repos into learnship's skill tree, then re-runs the installer so all platforms receive the update:
+  - `FavioVazquez/agentic-learn` → replaces `.windsurf/skills/agentic-learning/SKILL.md` + `references/` verbatim
+  - `pbakaus/impeccable` → replaces each of the 18 sub-skill dirs under `.windsurf/skills/impeccable/` from `source/skills/`
+  - **Preserves** `.windsurf/skills/impeccable/SKILL.md` (learnship's own dispatcher — not in upstream)
+  - Backs up current skills before overwriting; auto-restores on integrity failure
+  - Re-runs `node bin/install.js --all` to propagate to Claude Code plugins, Windsurf, and context-file platforms
+  - Prompts to review if upstream added new actions/sub-skills that need learnship's dispatcher updated
+
 ### Changed
 
 - **`SKILL.md`** (root) — "Windsurf-native platform" → "multi-platform agentic engineering system"; workflow list intro updated to mention all platforms.
