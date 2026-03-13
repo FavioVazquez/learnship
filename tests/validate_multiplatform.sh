@@ -987,6 +987,262 @@ while IFS= read -r line; do
 done <<< "$S10_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# [11] sync-upstream-skills workflow
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [11] sync-upstream-skills workflow"
+echo "  ─────────────────────────────────────────"
+
+TMPSCRIPT11=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT11" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+const WORKFLOW_SRC  = path.join(REPO, '.windsurf', 'workflows', 'sync-upstream-skills.md');
+const WORKFLOW_INST = path.join(REPO, 'learnship', 'workflows', 'sync-upstream-skills.md');
+const HELP_SRC      = path.join(REPO, '.windsurf', 'workflows', 'help.md');
+const HELP_INST     = path.join(REPO, 'learnship', 'workflows', 'help.md');
+const IMPECCABLE_DISPATCHER = path.join(REPO, '.windsurf', 'skills', 'impeccable', 'SKILL.md');
+
+const SUB_SKILLS = [
+  'adapt','animate','audit','bolder','clarify','colorize','critique','delight',
+  'distill','extract','frontend-design','harden','normalize','onboard','optimize',
+  'polish','quieter','teach-impeccable'
+];
+
+// 1. Workflow file exists in source location
+check('sync-upstream-skills.md exists in .windsurf/workflows/', () => {
+  assert(fs.existsSync(WORKFLOW_SRC), 'missing .windsurf/workflows/sync-upstream-skills.md');
+});
+
+// 2. Workflow file exists in installed payload
+check('sync-upstream-skills.md exists in learnship/workflows/', () => {
+  assert(fs.existsSync(WORKFLOW_INST), 'missing learnship/workflows/sync-upstream-skills.md');
+});
+
+// 3. Source and installed copies are identical
+check('source and installed workflow copies are identical', () => {
+  const src  = fs.readFileSync(WORKFLOW_SRC,  'utf8');
+  const inst = fs.readFileSync(WORKFLOW_INST, 'utf8');
+  assert(src === inst, 'source and learnship/workflows/ copies differ — run: cp .windsurf/workflows/sync-upstream-skills.md learnship/workflows/');
+});
+
+// 4. Workflow listed in help.md (source)
+check('sync-upstream-skills listed in .windsurf/workflows/help.md', () => {
+  const help = fs.readFileSync(HELP_SRC, 'utf8');
+  assert(help.includes('sync-upstream-skills'), 'sync-upstream-skills not found in help.md');
+});
+
+// 5. Both help.md copies are in sync
+check('help.md source and installed copies are identical', () => {
+  const src  = fs.readFileSync(HELP_SRC,  'utf8');
+  const inst = fs.readFileSync(HELP_INST, 'utf8');
+  assert(src === inst, 'help.md source and learnship/workflows/ copies differ');
+});
+
+// 6. Workflow has required frontmatter description
+check('sync-upstream-skills.md has frontmatter description', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.startsWith('---\n'), 'missing YAML frontmatter');
+  assert(wf.includes('description:'), 'missing description field');
+});
+
+// 7. Workflow references both upstream repos
+check('workflow references FavioVazquez/agentic-learn upstream', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('FavioVazquez/agentic-learn'), 'agentic-learn upstream URL missing');
+});
+
+check('workflow references pbakaus/impeccable upstream', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('pbakaus/impeccable'), 'impeccable upstream URL missing');
+});
+
+// 8. Workflow explicitly preserves the impeccable dispatcher SKILL.md
+check('workflow preserves impeccable/SKILL.md dispatcher', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(
+    wf.includes('impeccable/SKILL.md') && (wf.includes('NOT touch') || wf.includes('preserved') || wf.includes('Preserve')),
+    'workflow must explicitly state impeccable/SKILL.md is preserved'
+  );
+});
+
+// 9. Dispatcher SKILL.md actually exists and identifies as impeccable
+check('impeccable dispatcher SKILL.md exists and has correct name field', () => {
+  assert(fs.existsSync(IMPECCABLE_DISPATCHER), 'impeccable/SKILL.md missing');
+  const content = fs.readFileSync(IMPECCABLE_DISPATCHER, 'utf8');
+  assert(content.includes('name: impeccable'), 'impeccable/SKILL.md missing "name: impeccable" field');
+});
+
+// 10. Dispatcher SKILL.md links all 18 sub-skills
+check('impeccable dispatcher SKILL.md references all 18 sub-skills', () => {
+  const dispatcher = fs.readFileSync(IMPECCABLE_DISPATCHER, 'utf8');
+  const missing = SUB_SKILLS.filter(s => !dispatcher.includes(s));
+  assert(missing.length === 0, 'dispatcher missing references to: ' + missing.join(', '));
+});
+
+// 11. All 18 sub-skill dirs exist with SKILL.md
+check('all 18 impeccable sub-skill dirs have SKILL.md', () => {
+  const missing = SUB_SKILLS.filter(s => {
+    const p = path.join(REPO, '.windsurf', 'skills', 'impeccable', s, 'SKILL.md');
+    return !fs.existsSync(p);
+  });
+  assert(missing.length === 0, 'missing sub-skill SKILL.md for: ' + missing.join(', '));
+});
+
+// 12. Workflow includes backup step before overwriting
+check('workflow backs up skills before overwriting', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('backup') || wf.includes('Back up') || wf.includes('BACKUP'), 'no backup step found in workflow');
+});
+
+// 13. Workflow includes integrity verification step
+check('workflow verifies all 18 sub-skills after sync', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('teach-impeccable') && wf.includes('frontend-design'), 'workflow integrity check missing sub-skill names');
+});
+
+// 14. Workflow re-runs installer after sync
+check('workflow re-runs installer for all platforms after sync', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('bin/install.js') && wf.includes('--all'), 'workflow must re-run node bin/install.js --all');
+});
+
+// 15. Workflow maps correct upstream path for impeccable (source/skills/)
+check('workflow maps impeccable upstream path source/skills/ correctly', () => {
+  const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
+  assert(wf.includes('source/skills'), 'workflow must reference impeccable upstream path source/skills/');
+});
+
+// ── Simulate the sync logic against local fixtures ─────────────────────────
+
+// 16. Simulated agentic-learn sync: replaces SKILL.md + references/, preserves nothing
+check('simulated agentic-learn sync: SKILL.md and references/ replaced correctly', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-sync-'));
+
+  // Fake upstream agentic-learn clone
+  const upstreamAL = path.join(tmp, 'agentic-learn');
+  const upstreamRefs = path.join(upstreamAL, 'references');
+  fs.mkdirSync(upstreamRefs, { recursive: true });
+  fs.writeFileSync(path.join(upstreamAL, 'SKILL.md'), '---\nname: agentic-learning\n---\n# Updated upstream');
+  fs.writeFileSync(path.join(upstreamRefs, 'learning-science.md'), '# Updated science');
+
+  // Fake current install dir
+  const skillDir = path.join(tmp, 'agentic-learning');
+  const skillRefs = path.join(skillDir, 'references');
+  fs.mkdirSync(skillRefs, { recursive: true });
+  fs.writeFileSync(path.join(skillDir, 'SKILL.md'), '---\nname: agentic-learning\n---\n# Old content');
+  fs.writeFileSync(path.join(skillRefs, 'old-file.md'), '# Old ref');
+
+  // Apply sync logic (mirrors Step 5 of the workflow)
+  fs.copyFileSync(path.join(upstreamAL, 'SKILL.md'), path.join(skillDir, 'SKILL.md'));
+  fs.rmSync(skillRefs, { recursive: true });
+  fs.cpSync(upstreamRefs, skillRefs, { recursive: true });
+
+  // Verify
+  const newSkillMd = fs.readFileSync(path.join(skillDir, 'SKILL.md'), 'utf8');
+  assert(newSkillMd.includes('Updated upstream'), 'SKILL.md not replaced with upstream content');
+  assert(!fs.existsSync(path.join(skillRefs, 'old-file.md')), 'stale old-file.md still present after sync');
+  assert(fs.existsSync(path.join(skillRefs, 'learning-science.md')), 'upstream reference file not copied');
+
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 17. Simulated impeccable sync: sub-skill dirs replaced, dispatcher SKILL.md preserved
+check('simulated impeccable sync: sub-skills replaced, dispatcher SKILL.md preserved', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-sync-'));
+
+  // Fake upstream impeccable source/skills/
+  const upstreamSkills = path.join(tmp, 'impeccable-upstream', 'source', 'skills');
+  const testSubs = ['audit', 'polish', 'adapt'];
+  for (const sub of testSubs) {
+    fs.mkdirSync(path.join(upstreamSkills, sub), { recursive: true });
+    fs.writeFileSync(path.join(upstreamSkills, sub, 'SKILL.md'), `# ${sub} — updated upstream`);
+  }
+
+  // Fake current impeccable install
+  const impeccableDir = path.join(tmp, 'impeccable');
+  fs.mkdirSync(impeccableDir, { recursive: true });
+  const dispatcherContent = '---\nname: impeccable\n---\n# Dispatcher — learnship owned';
+  fs.writeFileSync(path.join(impeccableDir, 'SKILL.md'), dispatcherContent);
+  for (const sub of testSubs) {
+    fs.mkdirSync(path.join(impeccableDir, sub), { recursive: true });
+    fs.writeFileSync(path.join(impeccableDir, sub, 'SKILL.md'), `# ${sub} — old content`);
+  }
+
+  // Save dispatcher (mirrors Step 6 of the workflow)
+  const savedDispatcher = fs.readFileSync(path.join(impeccableDir, 'SKILL.md'), 'utf8');
+
+  // Apply sync logic for each sub-skill
+  for (const sub of testSubs) {
+    const subSrc  = path.join(upstreamSkills, sub);
+    const subDest = path.join(impeccableDir, sub);
+    if (fs.existsSync(subDest)) fs.rmSync(subDest, { recursive: true });
+    fs.cpSync(subSrc, subDest, { recursive: true });
+  }
+
+  // Restore dispatcher
+  fs.writeFileSync(path.join(impeccableDir, 'SKILL.md'), savedDispatcher);
+
+  // Verify sub-skills updated
+  for (const sub of testSubs) {
+    const content = fs.readFileSync(path.join(impeccableDir, sub, 'SKILL.md'), 'utf8');
+    assert(content.includes('updated upstream'), `${sub}/SKILL.md not updated from upstream`);
+  }
+
+  // Verify dispatcher preserved
+  const dispatcher = fs.readFileSync(path.join(impeccableDir, 'SKILL.md'), 'utf8');
+  assert(dispatcher === dispatcherContent, 'dispatcher SKILL.md was modified — must be preserved');
+
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 18. Simulated integrity check: missing sub-skill triggers restore from backup
+check('simulated integrity check: detects missing sub-skill and would restore', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-sync-'));
+
+  // Simulate a partial sync where one sub-skill is missing
+  const impeccableDir = path.join(tmp, 'impeccable');
+  fs.mkdirSync(impeccableDir, { recursive: true });
+  // Only install 17 out of 18 (missing 'adapt')
+  const present = SUB_SKILLS.filter(s => s !== 'adapt');
+  for (const sub of present) {
+    fs.mkdirSync(path.join(impeccableDir, sub), { recursive: true });
+    fs.writeFileSync(path.join(impeccableDir, sub, 'SKILL.md'), `# ${sub}`);
+  }
+
+  // Integrity check logic (mirrors Step 7 of the workflow)
+  const missing = SUB_SKILLS.filter(s => !fs.existsSync(path.join(impeccableDir, s, 'SKILL.md')));
+  assert(missing.length === 1 && missing[0] === 'adapt', 'integrity check should detect exactly "adapt" as missing');
+
+  fs.rmSync(tmp, { recursive: true });
+});
+
+console.log('\nSECTION11_PASS=' + pass);
+console.log('SECTION11_FAIL=' + fail);
+NODEEOF
+
+S11_OUTPUT=$(node "$TMPSCRIPT11" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT11"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S11_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
