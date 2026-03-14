@@ -9,6 +9,19 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.6.2] — Subagent dispatch for plan-phase, execute-phase, and debug
+
+**Released:** 2026-03-14
+
+### Changed
+
+- **`plan-phase` workflow** — Now reads `parallelization` from `.planning/config.json`. When `true`, spawns three dedicated subagents (`learnship-phase-researcher`, `learnship-planner`, `learnship-plan-checker`) each with a fresh context budget. When `false` (default), all stages run inline using agent persona files (unchanged behavior).
+- **`execute-phase` workflow** — Now reads `parallelization` from `.planning/config.json`. When `true`, dispatches each plan in a wave to a dedicated `learnship-executor` subagent; spawns all wave plans before waiting. When `false` (default), sequential persona-based execution unchanged.
+- **`debug` workflow** — Now reads `parallelization` from `.planning/config.json`. When `true`, spawns a dedicated `learnship-debugger` subagent with a fresh context budget for deep root-cause investigation. When `false` (default), inline debugger persona unchanged.
+- Both `.windsurf/workflows/` and `learnship/workflows/` copies updated in sync.
+
+---
+
 ## [v1.6.1] — Platform-agnostic language sweep
 
 **Released:** 2026-03-12

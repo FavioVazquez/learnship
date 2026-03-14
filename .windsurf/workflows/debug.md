@@ -71,6 +71,35 @@ Ask: "Does any of these match what you're seeing? Or should I investigate a diff
 
 ## Step 4: Investigate
 
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
+**If `parallelization` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+
+Spawn a dedicated debugger agent with a fresh context budget for deep investigation:
+```
+Task(
+  subagent_type="learnship-debugger",
+  prompt="
+    <objective>
+    Investigate the bug described in [session_file].
+    Trace from the user-facing symptom inward to find the root cause.
+    Find the specific file and line where behavior diverges from expected.
+    Confirm: 'If this were fixed, would the symptom go away?'
+    Write investigation findings back to [session_file].
+    </objective>
+
+    <files_to_read>
+    - [session_file] (debug session with triage + hypotheses)
+    - ./AGENTS.md or ./CLAUDE.md or ./GEMINI.md (project context, whichever exists)
+    </files_to_read>
+  "
+)
+```
+
+Wait for agent to complete, then read the updated session file.
+
+**If `parallelization` is `false` (sequential mode):**
+
 Using `@./agents/debugger.md` as your investigation persona:
 
 For the most likely hypothesis, investigate the codebase (read-only):

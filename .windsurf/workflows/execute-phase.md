@@ -1,14 +1,16 @@
 ---
-description: Execute all plans in a phase using wave-based ordered execution
+description: Execute all plans in a phase using wave-based ordered execution — spawns subagents per plan where the platform supports it
 ---
 
 # Execute Phase
 
-Execute all plans in a phase. Plans run in waves — ordered by dependencies, sequential between waves.
+Execute all plans in a phase. Plans run in waves — ordered by dependencies. On platforms with subagent support (Claude Code, OpenCode, Codex), plans within a wave are dispatched to dedicated executor agents. On all other platforms, plans execute sequentially.
 
 **Usage:** `execute-phase [N]`
 
-**Core principle:** Orchestrate, don't implement directly. Describe each plan's objective clearly, execute each plan in sequence, collect results.
+**Core principle:** Orchestrate, don't implement directly. Describe each plan's objective clearly, execute each plan in sequence (or in parallel via subagents), collect results.
+
+> **Platform note:** This workflow detects whether subagent spawning is available by reading `parallelization` from `.planning/config.json`. Set `"parallelization": true` to enable parallel agent spawning on supported platforms. Defaults to `false` (sequential — always safe).
 
 ## Step 1: Initialize
 
@@ -53,6 +55,8 @@ Report the execution plan:
 
 ## Step 3: Execute Waves
 
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
 For each wave, in sequence:
 
 ### Before each wave
@@ -71,6 +75,41 @@ Executing [count] plan(s)...
 ```
 
 ### Execute the plans
+
+**If `parallelization` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+
+For each plan in the wave, spawn a dedicated executor subagent. Pass paths only — each executor reads files itself with a fresh context budget.
+
+```
+Task(
+  subagent_type="learnship-executor",
+  prompt="
+    <objective>
+    Execute plan [plan_id] of phase [phase_number]-[phase_name].
+    Commit each task atomically. Create SUMMARY.md. Update STATE.md and ROADMAP.md.
+    </objective>
+
+    <files_to_read>
+    Read these files at execution start using the Read tool:
+    - [phase_dir]/[plan_file] (Plan)
+    - .planning/STATE.md (State)
+    - .planning/config.json (Config, if exists)
+    - ./AGENTS.md or ./CLAUDE.md or ./GEMINI.md (Project context, whichever exists)
+    </files_to_read>
+
+    <success_criteria>
+    - [ ] All tasks executed
+    - [ ] Each task committed individually
+    - [ ] SUMMARY.md created in plan directory
+    - [ ] STATE.md updated
+    </success_criteria>
+  "
+)
+```
+
+Spawn all plans in the wave before waiting. Wait for all agents to complete, then proceed to spot-checks.
+
+**If `parallelization` is `false` (sequential mode — Windsurf, Gemini CLI, or user preference):**
 
 For each plan in the wave, using `@./agents/executor.md` as your execution persona:
 

@@ -1,12 +1,16 @@
 ---
-description: Research + create + verify plans for a phase
+description: Research + create + verify plans for a phase — spawns specialist subagents where supported
 ---
 
 # Plan Phase
 
 Create executable plans for a roadmap phase. Default flow: Research → Plan → Verify → Done.
 
+On platforms with subagent support (Claude Code, OpenCode, Codex), each stage spawns a dedicated specialist agent with its own full context budget. On all other platforms, all stages run sequentially in the same context.
+
 **Usage:** `plan-phase [N]` — optionally add `--skip-research` or `--skip-verify`
+
+> **Platform note:** Read `parallelization` from `.planning/config.json`. When `true`, researcher/planner/checker each run as a spawned subagent. When `false` (default), all stages run inline using agent persona files.
 
 ## Step 1: Initialize
 
@@ -60,6 +64,32 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+**If `parallelization` is `true` (subagent mode):**
+
+Spawn a dedicated researcher agent:
+```
+Task(
+  subagent_type="learnship-phase-researcher",
+  prompt="
+    <objective>
+    Research how to implement Phase [phase_number]: [phase_name].
+    Answer: 'What do I need to know to PLAN this phase well?'
+    Write RESEARCH.md to [phase_dir]/[padded_phase]-RESEARCH.md.
+    </objective>
+
+    <files_to_read>
+    - [context_path] (user decisions, if exists)
+    - .planning/REQUIREMENTS.md
+    - .planning/STATE.md
+    </files_to_read>
+  "
+)
+```
+
+Wait for agent to complete, then verify RESEARCH.md was written.
+
+**If `parallelization` is `false` (sequential mode):**
+
 Using `@./agents/researcher.md` as your research persona, investigate how to implement this phase. Read:
 - The CONTEXT.md (user decisions)
 - `.planning/REQUIREMENTS.md` (which requirements this phase covers)
@@ -90,6 +120,34 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+**If `parallelization` is `true` (subagent mode):**
+
+Spawn a dedicated planner agent:
+```
+Task(
+  subagent_type="learnship-planner",
+  prompt="
+    <objective>
+    Create 2-4 executable PLAN.md files for Phase [phase_number]: [phase_name].
+    Write plans to [phase_dir]/[padded_phase]-NN-PLAN.md.
+    </objective>
+
+    <files_to_read>
+    - .planning/STATE.md
+    - .planning/ROADMAP.md
+    - .planning/REQUIREMENTS.md
+    - [context_path] (if exists)
+    - [research_path] (if exists)
+    - $LEARNSHIP_DIR/templates/plan.md
+    </files_to_read>
+  "
+)
+```
+
+Wait for agent to complete, then verify PLAN.md files were written.
+
+**If `parallelization` is `false` (sequential mode):**
+
 Using `@./agents/planner.md` as your planning persona, read all available context:
 - `.planning/STATE.md`
 - `.planning/ROADMAP.md`
@@ -100,7 +158,7 @@ Using `@./agents/planner.md` as your planning persona, read all available contex
 Create 2-4 PLAN.md files in the phase directory. Each plan:
 - Covers a single logical unit of work executable in one context window
 - Has YAML frontmatter: `wave`, `depends_on`, `files_modified`, `autonomous`
-- Contains tasks in XML format (see `@./templates/plan.md`)
+- Contains tasks in XML format (see `$LEARNSHIP_DIR/templates/plan.md`)
 - Has `must_haves` section with observable verification criteria
 
 **Wave assignment:**
@@ -120,6 +178,34 @@ Display:
  learnship ► VERIFYING PLANS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+**If `parallelization` is `true` (subagent mode):**
+
+Spawn a plan-checker agent:
+```
+Task(
+  subagent_type="learnship-plan-checker",
+  prompt="
+    <objective>
+    Verify all PLAN.md files in [phase_dir] for Phase [phase_number]: [phase_name].
+    Check: phase goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, wave correctness.
+    Return: PASS or list of specific issues per plan.
+    </objective>
+
+    <files_to_read>
+    - [phase_dir]/*-PLAN.md (all plans)
+    - .planning/ROADMAP.md
+    - .planning/REQUIREMENTS.md
+    - [context_path] (if exists)
+    </files_to_read>
+  "
+)
+```
+
+If issues returned: revise affected plans, re-spawn checker. Max 3 iterations.
+If still failing after 3 iterations: present issues and ask — **Force proceed** / **Provide guidance and retry** / **Abandon**.
+
+**If `parallelization` is `false` (sequential mode):**
 
 Using `@./agents/verifier.md` as your verification persona, check the plans against:
 - The phase goal from ROADMAP.md
