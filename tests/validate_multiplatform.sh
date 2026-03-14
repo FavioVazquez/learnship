@@ -1528,11 +1528,11 @@ check('README.md contains link to faviovazquez.github.io/learnship', () => {
   assert(readme.includes('faviovazquez.github.io/learnship'), 'README.md missing link to docs site');
 });
 
-// 10. generate_images.py has at least 14 image definitions (8 original + 6+ new)
-check('generate_images.py has at least 14 image definitions', () => {
-  const genPy = fs.readFileSync(path.join(REPO, 'generate_images.py'), 'utf8');
-  const matches = (genPy.match(/"filename":/g) || []).length;
-  assert(matches >= 14, 'Expected at least 14 image definitions, found ' + matches);
+// 10. assets/ directory has at least 14 PNG images (8 original + 6+ new doc images)
+check('assets/ has at least 14 PNG images', () => {
+  const files = fs.readdirSync(path.join(REPO, 'assets'));
+  const pngs = files.filter(f => f.endsWith('.png'));
+  assert(pngs.length >= 14, 'Expected at least 14 PNG images in assets/, found ' + pngs.length);
 });
 
 console.log('\nSECTION13_PASS=' + pass);
