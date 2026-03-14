@@ -9,6 +9,17 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.7.1] — Fix AGENTS.md not generated on Windsurf new-project
+
+**Released:** 2026-03-14
+
+### Fixed
+
+- **Windsurf installer** now copies `templates/` and `references/` subdirectories into `workflows/` so `@./templates/agents.md` and `@./references/questioning.md` references resolve correctly on Windsurf. Previously, `new-project` Step 8 silently skipped writing `AGENTS.md` because the template file path was broken on Windsurf (other platforms were unaffected).
+- **Tests** — added coverage for `learnship/templates/agents.md` and `learnship/references/questioning.md` existence
+
+---
+
 ## [v1.7.0] — Full documentation site (MkDocs + GitHub Pages)
 
 **Released:** 2026-03-14
