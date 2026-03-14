@@ -1,6 +1,6 @@
 ---
-title: Design System: impeccable
-description: All 17 impeccable steering commands for production-grade UI: prevent AI slop before it ships.
+title: "Design System: impeccable"
+description: "All 17 impeccable steering commands for production-grade UI: prevent AI slop before it ships."
 ---
 
 # Design System

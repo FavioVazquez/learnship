@@ -1,6 +1,6 @@
 ---
 title: Planning Artifacts
-description: Deep dive into the .planning/ directory: every file, its purpose, and how workflows use it.
+description: "Deep dive into the .planning/ directory: every file, its purpose, and how workflows use it."
 ---
 
 # Planning Artifacts

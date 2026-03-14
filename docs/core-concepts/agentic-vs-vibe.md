@@ -1,6 +1,6 @@
 ---
 title: Agentic Engineering vs Vibe Coding
-description: The philosophy behind learnship: why structured intent beats prompt-and-hope.
+description: "The philosophy behind learnship: why structured intent beats prompt-and-hope."
 ---
 
 # Agentic Engineering vs Vibe Coding

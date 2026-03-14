@@ -1,6 +1,6 @@
 ---
 title: Maintenance
-description: Reference for maintenance workflows: settings, health, update, cleanup, sync-upstream-skills.
+description: "Reference for maintenance workflows: settings, health, update, cleanup, sync-upstream-skills."
 ---
 
 # Maintenance

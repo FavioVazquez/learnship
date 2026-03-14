@@ -1,6 +1,6 @@
 ---
 title: Milestone Workflows
-description: Reference for milestone lifecycle workflows: new-milestone, audit, complete, and retrospective.
+description: "Reference for milestone lifecycle workflows: new-milestone, audit, complete, and retrospective."
 ---
 
 # Milestone Workflows

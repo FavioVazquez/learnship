@@ -1,6 +1,6 @@
 ---
 title: Windsurf
-description: learnship on Windsurf: native skills, slash commands, and Cascade-specific tips.
+description: "learnship on Windsurf: native skills, slash commands, and Cascade-specific tips."
 ---
 
 # Windsurf

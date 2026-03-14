@@ -1,6 +1,6 @@
 ---
 title: The Phase Loop
-description: How learnship structures work into phases: discuss, plan, execute, verify, and repeat.
+description: "How learnship structures work into phases: discuss, plan, execute, verify, and repeat."
 ---
 
 # The Phase Loop

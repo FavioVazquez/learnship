@@ -1,6 +1,6 @@
 ---
 title: Phase Management
-description: Reference for scope management workflows: add, insert, remove phases, research, and assumptions.
+description: "Reference for scope management workflows: add, insert, remove phases, research, and assumptions."
 ---
 
 # Phase Management

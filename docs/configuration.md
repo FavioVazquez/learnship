@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: Full reference for .planning/config.json: every setting, toggle, and preset explained.
+description: "Full reference for .planning/config.json: every setting, toggle, and preset explained."
 ---
 
 # Configuration

@@ -1,6 +1,6 @@
 ---
 title: Brownfield Project
-description: Adding features to an existing codebase with learnship: map-codebase first, then the normal phase loop.
+description: "Adding features to an existing codebase with learnship: map-codebase first, then the normal phase loop."
 ---
 
 # Brownfield Project

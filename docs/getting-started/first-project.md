@@ -1,6 +1,6 @@
 ---
 title: Your First Project
-description: Walk through creating a new project with learnship from scratch: new-project through verify-work.
+description: "Walk through creating a new project with learnship from scratch: new-project through verify-work."
 ---
 
 # Your First Project

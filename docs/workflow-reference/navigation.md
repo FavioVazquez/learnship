@@ -1,6 +1,6 @@
 ---
 title: Navigation
-description: Reference for learnship navigation and utility workflows: ls, next, quick, resume-work, pause-work.
+description: "Reference for learnship navigation and utility workflows: ls, next, quick, resume-work, pause-work."
 ---
 
 # Navigation

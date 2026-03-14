@@ -1,6 +1,6 @@
 ---
 title: Contributing
-description: How to extend learnship: add workflows, improve skills, submit PRs.
+description: "How to extend learnship: add workflows, improve skills, submit PRs."
 ---
 
 # Contributing

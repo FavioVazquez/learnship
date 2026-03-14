@@ -1,6 +1,6 @@
 ---
 title: Decision Intelligence
-description: Reference for decision tracking workflows: decision-log, knowledge-base, discuss-milestone.
+description: "Reference for decision tracking workflows: decision-log, knowledge-base, discuss-milestone."
 ---
 
 # Decision Intelligence

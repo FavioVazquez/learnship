@@ -1,6 +1,6 @@
 ---
 title: Quick Tasks
-description: Using /quick for one-off fixes, experiments, and small features: patterns and flags.
+description: "Using /quick for one-off fixes, experiments, and small features: patterns and flags."
 ---
 
 # Quick Tasks

@@ -1,6 +1,6 @@
 ---
 title: Claude Code
-description: learnship on Claude Code: slash command prefixes, skills as context, and parallel subagents.
+description: "learnship on Claude Code: slash command prefixes, skills as context, and parallel subagents."
 ---
 
 # Claude Code

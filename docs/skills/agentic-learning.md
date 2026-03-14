@@ -1,5 +1,5 @@
 ---
-title: Learning Partner: @agentic-learning
+title: "Learning Partner: @agentic-learning"
 description: All 11 @agentic-learning actions, when to use each, and the neuroscience behind them.
 ---
 

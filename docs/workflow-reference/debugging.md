@@ -1,6 +1,6 @@
 ---
 title: Debugging
-description: Reference for debugging and brownfield workflows: debug, diagnose-issues, map-codebase, discovery-phase.
+description: "Reference for debugging and brownfield workflows: debug, diagnose-issues, map-codebase, discovery-phase."
 ---
 
 # Debugging

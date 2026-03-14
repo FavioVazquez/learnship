@@ -1,6 +1,6 @@
 ---
 title: Core Workflow
-description: Reference for the 8 core learnship workflows: new-project through complete-milestone.
+description: "Reference for the 8 core learnship workflows: new-project through complete-milestone."
 ---
 
 # Core Workflow
