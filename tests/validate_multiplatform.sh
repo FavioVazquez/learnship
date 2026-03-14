@@ -1435,6 +1435,121 @@ while IFS= read -r line; do
 done <<< "$S12_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# [13] Documentation site integrity
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [13] Documentation site integrity"
+echo "  ─────────────────────────────────────────"
+
+TMPSCRIPT13=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT13" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+const MKDOCS = path.join(REPO, 'mkdocs.yml');
+const DOCS   = path.join(REPO, 'docs');
+
+// 1. mkdocs.yml exists
+check('mkdocs.yml exists at repo root', () => {
+  assert(fs.existsSync(MKDOCS), 'mkdocs.yml not found at repo root');
+});
+
+// 2. mkdocs.yml has required keys
+check('mkdocs.yml has site_name, theme, and nav', () => {
+  const content = fs.readFileSync(MKDOCS, 'utf8');
+  assert(content.includes('site_name:'), 'site_name missing from mkdocs.yml');
+  assert(content.includes('theme:'),     'theme missing from mkdocs.yml');
+  assert(content.includes('nav:'),       'nav missing from mkdocs.yml');
+});
+
+// 3. mkdocs.yml references GitHub Pages URL
+check('mkdocs.yml references faviovazquez.github.io/learnship', () => {
+  const content = fs.readFileSync(MKDOCS, 'utf8');
+  assert(content.includes('faviovazquez.github.io/learnship'), 'GitHub Pages URL missing from mkdocs.yml');
+});
+
+// 4. docs/index.md exists and contains install command
+check('docs/index.md exists and contains npx install command', () => {
+  const indexPath = path.join(DOCS, 'index.md');
+  assert(fs.existsSync(indexPath), 'docs/index.md not found');
+  const content = fs.readFileSync(indexPath, 'utf8');
+  assert(content.includes('npx github:FavioVazquez/learnship'), 'install command missing from docs/index.md');
+});
+
+// 5. All 5 platform guide pages exist
+check('all 5 platform guide pages exist in docs/platform-guide/', () => {
+  const platforms = ['windsurf', 'claude-code', 'opencode', 'gemini-cli', 'codex-cli'];
+  const missing = platforms.filter(p =>
+    !fs.existsSync(path.join(DOCS, 'platform-guide', p + '.md'))
+  );
+  assert(missing.length === 0, 'Missing platform pages: ' + missing.join(', '));
+});
+
+// 6. All 11 @agentic-learning actions documented
+check('all 11 @agentic-learning actions documented in docs/skills/agentic-learning.md', () => {
+  const skillPath = path.join(DOCS, 'skills', 'agentic-learning.md');
+  assert(fs.existsSync(skillPath), 'docs/skills/agentic-learning.md not found');
+  const content = fs.readFileSync(skillPath, 'utf8');
+  const actions = ['learn', 'quiz', 'reflect', 'space', 'brainstorm', 'struggle', 'either-or', 'explain-first', 'explain', 'interleave', 'cognitive-load'];
+  const missing = actions.filter(a => !content.includes('`' + a + '`') && !content.includes('@agentic-learning ' + a));
+  assert(missing.length === 0, 'Missing actions in agentic-learning.md: ' + missing.join(', '));
+});
+
+// 7. All impeccable commands documented (spot-check 8 key ones)
+check('key impeccable commands documented in docs/skills/impeccable.md', () => {
+  const skillPath = path.join(DOCS, 'skills', 'impeccable.md');
+  assert(fs.existsSync(skillPath), 'docs/skills/impeccable.md not found');
+  const content = fs.readFileSync(skillPath, 'utf8');
+  const commands = ['/audit', '/critique', '/polish', '/colorize', '/animate', '/harden', '/delight', '/adapt'];
+  const missing = commands.filter(c => !content.includes(c));
+  assert(missing.length === 0, 'Missing impeccable commands: ' + missing.join(', '));
+});
+
+// 8. docs.yml GitHub Actions workflow exists and references gh-pages
+check('.github/workflows/docs.yml exists and deploys to gh-pages', () => {
+  const docsYml = path.join(REPO, '.github', 'workflows', 'docs.yml');
+  assert(fs.existsSync(docsYml), '.github/workflows/docs.yml not found');
+  const content = fs.readFileSync(docsYml, 'utf8');
+  assert(content.includes('gh-pages') || content.includes('gh-deploy'), 'docs.yml does not reference gh-pages deploy');
+});
+
+// 9. README.md contains link to GitHub Pages docs site
+check('README.md contains link to faviovazquez.github.io/learnship', () => {
+  const readme = fs.readFileSync(path.join(REPO, 'README.md'), 'utf8');
+  assert(readme.includes('faviovazquez.github.io/learnship'), 'README.md missing link to docs site');
+});
+
+// 10. generate_images.py has at least 14 image definitions (8 original + 6+ new)
+check('generate_images.py has at least 14 image definitions', () => {
+  const genPy = fs.readFileSync(path.join(REPO, 'generate_images.py'), 'utf8');
+  const matches = (genPy.match(/"filename":/g) || []).length;
+  assert(matches >= 14, 'Expected at least 14 image definitions, found ' + matches);
+});
+
+console.log('\nSECTION13_PASS=' + pass);
+console.log('SECTION13_FAIL=' + fail);
+NODEEOF
+
+S13_OUTPUT=$(node "$TMPSCRIPT13" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT13"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S13_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""

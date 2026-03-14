@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://github.com/FavioVazquez/learnship/actions/workflows/ci.yml"><img src="https://github.com/FavioVazquez/learnship/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://github.com/FavioVazquez/learnship/releases/latest"><img src="https://img.shields.io/github/v/release/FavioVazquez/learnship?color=3b82f6&label=release" alt="Latest release"></a>
+  <a href="https://faviovazquez.github.io/learnship/"><img src="https://img.shields.io/badge/docs-faviovazquez.github.io%2Flearnship-2563eb" alt="Documentation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e.svg" alt="License: MIT"></a>
   <a href="https://github.com/FavioVazquez/learnship/stargazers"><img src="https://img.shields.io/github/stars/FavioVazquez/learnship?style=flat&color=f59e0b" alt="Stars"></a>
   <img src="https://img.shields.io/badge/platforms-5-0ea5e9" alt="5 platforms">
@@ -13,6 +14,7 @@
 
 <p align="center">
   <strong>Agentic engineering done right.</strong><br>
+  <a href="https://faviovazquez.github.io/learnship/">📚 Full Docs</a> ·
   <a href="#-get-started-in-30-seconds">Get Started</a> ·
   <a href="#-how-it-works">How it works</a> ·
   <a href="#-the-phase-loop">Phase Loop</a> ·

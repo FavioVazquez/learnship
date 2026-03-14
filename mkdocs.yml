@@ -1,0 +1,143 @@
+site_name: learnship
+site_description: Learn as you build. Build with intent. — Agentic engineering for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
+site_url: https://faviovazquez.github.io/learnship/
+repo_url: https://github.com/FavioVazquez/learnship
+repo_name: FavioVazquez/learnship
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/FavioVazquez/learnship
+      name: learnship on GitHub
+  generator: false
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: FavioVazquez
+      repo: learnship
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Your First Project: getting-started/first-project.md
+    - The 5 Commands: getting-started/five-commands.md
+  - Platform Guide:
+    - Windsurf: platform-guide/windsurf.md
+    - Claude Code: platform-guide/claude-code.md
+    - OpenCode: platform-guide/opencode.md
+    - Gemini CLI: platform-guide/gemini-cli.md
+    - Codex CLI: platform-guide/codex-cli.md
+  - Core Concepts:
+    - The Phase Loop: core-concepts/phase-loop.md
+    - Context Engineering: core-concepts/context-engineering.md
+    - Planning Artifacts: core-concepts/planning-artifacts.md
+    - Agentic vs Vibe Coding: core-concepts/agentic-vs-vibe.md
+  - Skills:
+    - Learning Partner: skills/agentic-learning.md
+    - Design System: skills/impeccable.md
+  - Workflow Reference:
+    - Core Workflow: workflow-reference/core.md
+    - Navigation: workflow-reference/navigation.md
+    - Phase Management: workflow-reference/phase-management.md
+    - Debugging: workflow-reference/debugging.md
+    - Decision Intelligence: workflow-reference/decision-intelligence.md
+    - Milestone: workflow-reference/milestone.md
+    - Maintenance: workflow-reference/maintenance.md
+  - Configuration: configuration.md
+  - Examples:
+    - Greenfield Project: examples/greenfield.md
+    - Brownfield Project: examples/brownfield.md
+    - Quick Tasks: examples/quick-tasks.md
+    - Multi-Session Work: examples/multi-session.md
+  - Contributing: contributing.md
