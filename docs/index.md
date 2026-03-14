@@ -63,11 +63,11 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
 ## Works on 5 platforms
 
 <div class="ls-platform-row">
-  <span class="ls-platform-badge native">Windsurf</span>
-  <span class="ls-platform-badge">Claude Code</span>
-  <span class="ls-platform-badge">OpenCode</span>
-  <span class="ls-platform-badge">Gemini CLI</span>
-  <span class="ls-platform-badge">Codex CLI</span>
+  <a href="platform-guide/windsurf.md" class="ls-platform-badge native">Windsurf</a>
+  <a href="platform-guide/claude-code.md" class="ls-platform-badge">Claude Code</a>
+  <a href="platform-guide/opencode.md" class="ls-platform-badge">OpenCode</a>
+  <a href="platform-guide/gemini-cli.md" class="ls-platform-badge">Gemini CLI</a>
+  <a href="platform-guide/codex-cli.md" class="ls-platform-badge">Codex CLI</a>
 </div>
 
 ```bash
