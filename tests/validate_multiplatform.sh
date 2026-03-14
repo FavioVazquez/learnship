@@ -1243,6 +1243,198 @@ while IFS= read -r line; do
 done <<< "$S11_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# [12] agentic-learning integration across workflows
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [12] agentic-learning integration across workflows"
+echo "  ─────────────────────────────────────────────────────"
+
+TMPSCRIPT12=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT12" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+function readWF(name) {
+  return fs.readFileSync(path.join(REPO, '.windsurf', 'workflows', name + '.md'), 'utf8');
+}
+function readInstalled(name) {
+  return fs.readFileSync(path.join(REPO, 'learnship', 'workflows', name + '.md'), 'utf8');
+}
+
+// Helper: all workflows that should have a Learning Checkpoint section
+const WORKFLOWS_WITH_CHECKPOINTS = [
+  'execute-phase', 'plan-phase', 'research-phase', 'discuss-phase',
+  'verify-work', 'debug', 'quick', 'pause-work', 'resume-work',
+  'new-project', 'discuss-milestone', 'new-milestone', 'milestone-retrospective',
+];
+
+// 1. All key workflows have a Learning Checkpoint section
+check('all key workflows have a Learning Checkpoint section', () => {
+  const missing = [];
+  for (const wf of WORKFLOWS_WITH_CHECKPOINTS) {
+    const content = readWF(wf);
+    if (!content.includes('## Learning Checkpoint')) {
+      missing.push(wf);
+    }
+  }
+  assert(missing.length === 0, 'Missing Learning Checkpoint in: ' + missing.join(', '));
+});
+
+// 2. All Learning Checkpoints read learning_mode from config
+check('all Learning Checkpoints read learning_mode from config.json', () => {
+  const missing = [];
+  for (const wf of WORKFLOWS_WITH_CHECKPOINTS) {
+    const content = readWF(wf);
+    if (!content.includes('learning_mode')) {
+      missing.push(wf);
+    }
+  }
+  assert(missing.length === 0, 'Missing learning_mode read in: ' + missing.join(', '));
+});
+
+// 3. All Learning Checkpoints have both auto and manual branches
+check('all Learning Checkpoints have auto and manual branches', () => {
+  const missing = [];
+  for (const wf of WORKFLOWS_WITH_CHECKPOINTS) {
+    const content = readWF(wf);
+    const hasAuto   = content.includes('**If `auto`');
+    const hasManual = content.includes('**If `manual`');
+    if (!hasAuto || !hasManual) {
+      missing.push(wf + (hasAuto ? '' : ' (no auto)') + (hasManual ? '' : ' (no manual)'));
+    }
+  }
+  assert(missing.length === 0, 'Missing auto/manual branches in: ' + missing.join(', '));
+});
+
+// 4. execute-phase has reflect + quiz + interleave
+check('execute-phase Learning Checkpoint offers reflect, quiz, and interleave', () => {
+  const wf = readWF('execute-phase');
+  assert(wf.includes('@agentic-learning reflect'), 'reflect missing from execute-phase');
+  assert(wf.includes('@agentic-learning quiz'),    'quiz missing from execute-phase');
+  assert(wf.includes('@agentic-learning interleave'), 'interleave missing from execute-phase');
+});
+
+// 5. plan-phase has explain-first + cognitive-load + quiz
+check('plan-phase Learning Checkpoint offers explain-first, cognitive-load, and quiz', () => {
+  const wf = readWF('plan-phase');
+  assert(wf.includes('@agentic-learning explain-first'), 'explain-first missing from plan-phase');
+  assert(wf.includes('@agentic-learning cognitive-load'), 'cognitive-load missing from plan-phase');
+  assert(wf.includes('@agentic-learning quiz'),           'quiz missing from plan-phase');
+});
+
+// 6. research-phase has learn + explain-first + quiz
+check('research-phase Learning Checkpoint offers learn, explain-first, and quiz', () => {
+  const wf = readWF('research-phase');
+  assert(wf.includes('@agentic-learning learn'),         'learn missing from research-phase');
+  assert(wf.includes('@agentic-learning explain-first'), 'explain-first missing from research-phase');
+  assert(wf.includes('@agentic-learning quiz'),          'quiz missing from research-phase');
+});
+
+// 7. debug has learn + struggle + either-or (not just either-or)
+check('debug Learning Checkpoint offers learn, struggle, and either-or', () => {
+  const wf = readWF('debug');
+  assert(wf.includes('@agentic-learning learn'),     'learn missing from debug');
+  assert(wf.includes('@agentic-learning struggle'),  'struggle missing from debug');
+  assert(wf.includes('@agentic-learning either-or'), 'either-or missing from debug');
+});
+
+// 8. verify-work has both pass-path (space+quiz) and bug-path (learn+space)
+check('verify-work Learning Checkpoint covers both pass and issue-found paths', () => {
+  const wf = readWF('verify-work');
+  assert(wf.includes('UAT passed with no issues'), 'pass-path condition missing from verify-work');
+  assert(wf.includes('issues were found'),         'bug-path condition missing from verify-work');
+  assert(wf.includes('@agentic-learning space'),   'space missing from verify-work');
+  assert(wf.includes('@agentic-learning quiz'),    'quiz missing from verify-work');
+  assert(wf.includes('@agentic-learning learn'),   'learn missing from verify-work bug-path');
+});
+
+// 9. discuss-phase has either-or + brainstorm + explain-first
+check('discuss-phase Learning Checkpoint offers either-or, brainstorm, and explain-first', () => {
+  const wf = readWF('discuss-phase');
+  assert(wf.includes('@agentic-learning either-or'),     'either-or missing from discuss-phase');
+  assert(wf.includes('@agentic-learning brainstorm'),    'brainstorm missing from discuss-phase');
+  assert(wf.includes('@agentic-learning explain-first'), 'explain-first missing from discuss-phase');
+});
+
+// 10. quick has struggle + learn + either-or
+check('quick Learning Checkpoint offers struggle, learn, and either-or', () => {
+  const wf = readWF('quick');
+  assert(wf.includes('@agentic-learning struggle'),  'struggle missing from quick');
+  assert(wf.includes('@agentic-learning learn'),     'learn missing from quick');
+  assert(wf.includes('@agentic-learning either-or'), 'either-or missing from quick');
+});
+
+// 11. pause-work has learning checkpoint with space + reflect
+check('pause-work has Learning Checkpoint with space and reflect', () => {
+  const wf = readWF('pause-work');
+  assert(wf.includes('## Learning Checkpoint'),    'Learning Checkpoint section missing from pause-work');
+  assert(wf.includes('@agentic-learning space'),   'space missing from pause-work');
+  assert(wf.includes('@agentic-learning reflect'), 'reflect missing from pause-work');
+});
+
+// 12. resume-work has learning checkpoint with quiz + space
+check('resume-work has Learning Checkpoint with quiz and space', () => {
+  const wf = readWF('resume-work');
+  assert(wf.includes('## Learning Checkpoint'),  'Learning Checkpoint section missing from resume-work');
+  assert(wf.includes('@agentic-learning quiz'),  'quiz missing from resume-work');
+  assert(wf.includes('@agentic-learning space'), 'space missing from resume-work');
+});
+
+// 13. Source and installed copies are in sync for all modified workflows
+const SYNCED_WORKFLOWS = [
+  'execute-phase', 'plan-phase', 'research-phase', 'discuss-phase',
+  'verify-work', 'debug', 'quick', 'pause-work', 'resume-work',
+];
+check('all modified workflow source and installed copies are identical', () => {
+  const diffs = [];
+  for (const wf of SYNCED_WORKFLOWS) {
+    const src  = readWF(wf);
+    const inst = readInstalled(wf);
+    if (src !== inst) {
+      diffs.push(wf);
+    }
+  }
+  assert(diffs.length === 0,
+    'Source and learnship/workflows/ differ for: ' + diffs.join(', ') +
+    ' — run: for f in ' + diffs.join(' ') + '; do cp .windsurf/workflows/${f}.md learnship/workflows/${f}.md; done');
+});
+
+// 14. All 11 agentic-learning actions are referenced across the workflow suite
+const ALL_ACTIONS = [
+  'learn', 'quiz', 'reflect', 'space', 'brainstorm',
+  'explain-first', 'struggle', 'either-or', 'explain', 'interleave', 'cognitive-load'
+];
+check('all 11 agentic-learning actions used somewhere in the workflow suite', () => {
+  // Read all workflow files
+  const allContent = WORKFLOWS_WITH_CHECKPOINTS.map(wf => readWF(wf)).join('\n');
+  const unused = ALL_ACTIONS.filter(a => !allContent.includes('@agentic-learning ' + a));
+  assert(unused.length === 0, 'agentic-learning actions never referenced in any workflow: ' + unused.join(', '));
+});
+
+console.log('\nSECTION12_PASS=' + pass);
+console.log('SECTION12_FAIL=' + fail);
+NODEEOF
+
+S12_OUTPUT=$(node "$TMPSCRIPT12" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT12"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S12_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""

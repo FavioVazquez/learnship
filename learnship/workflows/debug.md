@@ -232,8 +232,14 @@ Session: .planning/debug/resolved/[session-file]
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** After resolving, offer:
+**If `auto`:** After resolving, offer based on what happened:
 
-> 💡 **Learning moment:** Root cause found and fixed.
+> 💡 **Learning moment:** Root cause found and fixed. Bugs are the highest-signal learning moments — don’t let this one fade:
 >
-> `@agentic-learning either-or` — What debugging strategy worked? Log the decision path for future reference.
+> `@agentic-learning learn [bug domain]` — Active retrieval on the concept that broke. You explain the root cause first, gaps get filled. This is how "I've seen this bug" becomes real pattern recognition.
+>
+> `@agentic-learning struggle [the problem]` — Reproduce a similar problem from scratch with a hint ladder. The re-investigation builds deeper intuition than reading the fix.
+>
+> `@agentic-learning either-or` — Which debugging strategy worked (hypothesis testing, bisect, tracing)? Log it for future sessions.
+
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning learn [bug domain]` · `@agentic-learning struggle [problem]` to turn this bug into a lasting pattern."*

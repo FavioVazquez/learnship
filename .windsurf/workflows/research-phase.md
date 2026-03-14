@@ -124,10 +124,14 @@ Ask: "What would you like to do next?"
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer:
+**If `auto`:** Offer all three — new research is the best time to use all of them:
 
 > 💡 **Learning moment:** Research complete — new domain concepts are fresh. Lock them in before they fade:
 >
 > `@agentic-learning learn [phase topic]` — Active retrieval on the key concepts from this research. You explain first, gaps get filled. This is how domain knowledge becomes intuition, not just notes.
+>
+> `@agentic-learning explain-first [phase topic]` — Explain the domain back in your own words before planning starts. If you can’t explain it clearly, the plans won’t be clear either.
+>
+> `@agentic-learning quiz [phase topic]` — Test yourself on what the research surfaced. Retrieval practice now means fewer surprises during execution.
 
-**If `manual`:** Add quietly: *"Tip: `@agentic-learning learn [topic]` to consolidate what the research surfaced."*
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning learn [topic]` · `@agentic-learning explain-first [topic]` to consolidate the research before planning."*

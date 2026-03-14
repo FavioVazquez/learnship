@@ -9,6 +9,38 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.6.3] — Deep agentic-learning integration across all workflow phases
+
+**Released:** 2026-03-14
+
+### Changed
+
+All 11 core workflows now surface contextually matched `@agentic-learning` actions at every phase transition — not just one tail tip, but 2-3 options matched to what just happened:
+
+- **`execute-phase`** — Learning Checkpoint now offers `reflect` + `quiz` + `interleave`. Active recall on what was built, gaps in understanding surfaced before they become next-phase bugs.
+- **`plan-phase`** — Now offers `explain-first` + `cognitive-load` + `quiz`. Validate the mental model before touching code, not after.
+- **`research-phase`** — Now offers `learn` + `explain-first` + `quiz`. Three retrieval actions while new domain knowledge is at peak freshness.
+- **`discuss-phase`** — Now offers `either-or` + `brainstorm` + `explain-first`. Decision journaling plus blind-spot surfacing and model validation before locking context.
+- **`verify-work`** — Now has separate learning paths: pass path (`space` + `quiz`) and bug-found path (`learn` + `space`). Bugs during UAT are treated as learning opportunities, not just defects.
+- **`debug`** — Replaced single `either-or` with `learn` + `struggle` + `either-or`. Bugs are the highest-signal learning moments — each now explicitly drives retrieval and re-investigation.
+- **`quick`** — Removed overly narrow "technically complex" condition. Now offers `struggle` + `learn` + `either-or` for any completed task with a matching rationale.
+- **`pause-work`** — **New Learning Checkpoint added.** Session transitions are when learning decays fastest. Now offers `space` + `reflect` before the session ends.
+- **`resume-work`** — **New Learning Checkpoint added.** Returning after a break now offers `quiz` + `space` to warm up before diving in.
+- **`new-milestone`** — Added missing `manual` branch to Learning Checkpoint.
+- **`debug`** — Added missing `manual` branch to Learning Checkpoint.
+- All `.windsurf/workflows/` changes synced to `learnship/workflows/`.
+
+### Added
+
+- **Test section [12]** — 14 new checks in `tests/validate_multiplatform.sh` verifying:
+  - All 13 key workflows have a Learning Checkpoint section
+  - All checkpoints read `learning_mode` and have both `auto` + `manual` branches
+  - Per-workflow action coverage (reflect/quiz/interleave in execute-phase, etc.)
+  - All 11 `@agentic-learning` actions (`learn`, `quiz`, `reflect`, `space`, `brainstorm`, `explain-first`, `struggle`, `either-or`, `explain`, `interleave`, `cognitive-load`) referenced somewhere in the suite
+  - Source/installed copies in sync for all 9 modified workflows
+
+---
+
 ## [v1.6.2] — Subagent dispatch for plan-phase, execute-phase, and debug
 
 **Released:** 2026-03-14

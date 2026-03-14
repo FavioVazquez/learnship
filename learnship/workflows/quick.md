@@ -243,10 +243,14 @@ Ready for next task: quick
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto` and task was technically complex (involved unfamiliar patterns, a tricky bug, or a new library):**
+**If `auto`:** Offer based on how the task went:
 
-> 💡 **Learning moment:** That looked challenging. Want to try it again from scratch?
+> 💡 **Learning moment:** Task done. Pick the action that matches what happened:
 >
-> `@agentic-learning struggle [task]` — Work through a similar problem with a hint ladder. The re-implementation builds deeper understanding than just reading the solution.
+> `@agentic-learning struggle [task]` — If the task was tricky or used unfamiliar patterns: work through a similar problem from scratch with a hint ladder. Builds deeper intuition than just reading the solution.
+>
+> `@agentic-learning learn [task topic]` — If the task touched an unfamiliar domain: active retrieval while the context is fresh. You explain first, gaps get filled.
+>
+> `@agentic-learning either-or` — If you made a meaningful design decision during the task: log the choice and the alternatives considered.
 
 **If `manual`:** No note for quick tasks (keep it fast).

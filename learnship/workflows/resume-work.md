@@ -144,3 +144,19 @@ If STATE.md is missing but other artifacts exist:
 4. Check for `.continue-here.md` files → session continuity
 
 Write a reconstructed `.planning/STATE.md` and proceed normally.
+
+---
+
+## Learning Checkpoint
+
+Read `learning_mode` from `.planning/config.json`.
+
+**If `auto` and time since last session is more than 1 day (check `Last session` in STATE.md):**
+
+> 💡 **Back after a break:** Before diving in, warm up the mental model:
+>
+> `@agentic-learning quiz [current phase topic]` — Quick active recall on what was being built. Surfaces what’s faded since the last session before it shows up as a bug.
+>
+> `@agentic-learning space` — If `docs/revisit.md` exists, review what was scheduled for today.
+
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning quiz [topic]` to warm up before resuming."*

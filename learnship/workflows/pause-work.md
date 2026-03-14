@@ -104,3 +104,19 @@ Current state:
 
 ▶ To resume: resume-work
 ```
+
+---
+
+## Learning Checkpoint
+
+Read `learning_mode` from `.planning/config.json`.
+
+**If `auto`:** Offer before the session ends:
+
+> 💡 **Before you go:** Session transitions are when learning decays fastest. Two minutes now saves re-learning later:
+>
+> `@agentic-learning space` — Identify what was covered this session and schedule it for spaced review. Writes to `docs/revisit.md`. When you resume, you'll start sharper.
+>
+> `@agentic-learning reflect` — Quick 3-part reflection: what was built this session, what was the intent, what still feels uncertain. Takes 3 minutes, pays off when you return.
+
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning space` before closing to schedule what you worked on for review."*

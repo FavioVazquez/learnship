@@ -303,10 +303,14 @@ git commit -m "docs: update AGENTS.md — phase [X] complete"
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer:
+**If `auto`:** Offer all three — pick the one that fits:
 
-> 💡 **Learning moment:** Phase [X] is done. This is a great time to consolidate what was built and what you learned.
+> 💡 **Learning moment:** Phase [X] is done. Three ways to make this stick:
 >
 > `@agentic-learning reflect` — Structured 3-part reflection: what was built, what was the goal, what gaps remain. Takes 5 minutes, pays off for weeks.
+>
+> `@agentic-learning quiz [phase topic]` — Active recall on what was just implemented. Surfaces gaps in understanding before they become bugs in the next phase.
+>
+> `@agentic-learning interleave [phase topic]` — Mix this phase's concepts with older ones to strengthen long-term retention. Especially useful if this phase touched a domain you've worked in before.
 
-**If `manual`:** Add quietly: *"Tip: `@agentic-learning reflect` to consolidate learning from this phase."*
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning reflect` · `@agentic-learning quiz [topic]` · `@agentic-learning interleave [topic]` — pick one to consolidate this phase."*

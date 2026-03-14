@@ -231,10 +231,14 @@ Created: .planning/phases/[padded_phase]-[slug]/[padded_phase]-CONTEXT.md
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer:
+**If `auto`:** Offer based on where you are in the discussion:
 
-> 💡 **Learning moment:** You just made a series of implementation decisions. Want to log them as a decision journal entry?
+> 💡 **Learning moment:** Implementation decisions just captured. Make them stick:
 >
-> `@agentic-learning either-or` — Record the decision paths considered, the choice made, and expected consequences. Builds a searchable record of your reasoning.
+> `@agentic-learning either-or` — Record the decision paths considered, the choice made, and expected consequences. Builds a searchable record of your reasoning that future phases can reference.
+>
+> `@agentic-learning brainstorm [phase topic]` — If any area felt unclear or you settled quickly, talk it through now. Better to surface a blind spot here than mid-execution.
+>
+> `@agentic-learning explain-first [phase topic]` — Explain the planned approach back in your own words. If the explanation has gaps, the CONTEXT.md probably does too.
 
-**If `manual`:** Add quietly: *"Tip: `@agentic-learning either-or` to log today's decisions."*
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning either-or` to log today's decisions as a decision journal entry."*

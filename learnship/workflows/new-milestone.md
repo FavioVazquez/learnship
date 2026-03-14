@@ -196,3 +196,5 @@ Read `learning_mode` from `.planning/config.json`.
 > 💡 **Learning moment:** New milestone, new mental model. Before writing a line of code:
 >
 > `@agentic-learning brainstorm [milestone topic]` — Talk through the new features before committing to an approach. Surfaces blind spots before planning starts.
+
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning brainstorm [milestone topic]` before planning starts to surface approach alternatives."*

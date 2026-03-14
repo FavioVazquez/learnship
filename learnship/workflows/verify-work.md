@@ -245,10 +245,20 @@ Present when ready:
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer (after UAT passes with no issues):
+**If `auto` and UAT passed with no issues:**
 
-> 💡 **Learning moment:** Tests passed — great time to schedule what you learned for future review.
+> 💡 **Learning moment:** Tests passed — lock in what was learned before moving on:
 >
-> `@agentic-learning space` — Identifies concepts from this session and schedules them for spaced revisit. Writes to `docs/revisit.md`.
+> `@agentic-learning space` — Identifies concepts from this phase and schedules them for spaced revisit. Writes to `docs/revisit.md`. The next phase starts with less decay.
+>
+> `@agentic-learning quiz [phase topic]` — Quick active recall while the implementation is still fresh. Better now than two phases later.
 
-**If `manual`:** Add quietly: *"Tip: `@agentic-learning space` to schedule concepts for spaced review."*
+**If `auto` and issues were found and fixed:**
+
+> 💡 **Learning moment:** Bugs found during UAT are high-signal learning. Don’t just fix and move on:
+>
+> `@agentic-learning learn [bug domain]` — Active retrieval on the concept that caused the issue. Turns a frustrating bug into a lasting pattern.
+>
+> `@agentic-learning space` — Schedule the key concepts from this debugging session for spaced review.
+
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning space` · `@agentic-learning quiz [topic]` to consolidate this phase."*

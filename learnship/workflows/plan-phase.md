@@ -275,10 +275,14 @@ Verification: [Passed | Passed with override | Skipped]
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer:
+**If `auto`:** Offer based on context:
 
-> 💡 **Learning moment:** Plans are ready. If the scope feels overwhelming before you start executing, try breaking it down:
+> 💡 **Learning moment:** Plans are ready. Before you execute, make sure the domain is solid:
 >
-> `@agentic-learning cognitive-load [topic]` — Decompose an overwhelming concept into working-memory-sized steps so nothing gets missed.
+> `@agentic-learning explain-first [phase topic]` — Explain the approach back in your own words before touching code. Gaps in the explanation reveal gaps in the mental model — before they become bugs.
+>
+> `@agentic-learning cognitive-load [topic]` — If the scope feels overwhelming, decompose it into working-memory-sized steps first.
+>
+> `@agentic-learning quiz [phase topic]` — Quick active recall on the domain concepts this phase covers. Especially useful if the research surfaced unfamiliar territory.
 
-**If `manual`:** Add quietly: *"Tip: `@agentic-learning cognitive-load [topic]` if scope feels overwhelming."*
+**If `manual`:** Add quietly: *"Tip: `@agentic-learning explain-first [topic]` to validate your mental model before executing."*
