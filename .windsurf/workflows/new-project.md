@@ -75,6 +75,14 @@ Ask: "Which workflow agents should be enabled?"
 - **Plan Check** (recommended) — Verify plans achieve their goals before execution
 - **Verifier** (recommended) — Confirm deliverables match phase goals after execution
 
+**Group D — Parallel execution (Claude Code, OpenCode, Gemini CLI, Codex CLI only — skip for Windsurf):**
+
+Ask: "Do you want to enable parallel subagent execution?"
+- **No** (recommended default) — Plans execute sequentially, one at a time. Always safe, works on all platforms.
+- **Yes** — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Faster but requires a platform that supports real subagents (Claude Code, OpenCode, Gemini CLI, Codex CLI). **Not available on Windsurf.**
+
+> Only ask this question if the platform is not Windsurf. If on Windsurf, always set `parallelization: false`.
+
 Ask: "Commit planning docs to git?"
 - **Yes** (recommended) — Planning docs tracked in version control
 - **No** — Keep `.planning/` local-only
@@ -92,6 +100,7 @@ Create `.planning/config.json` with all settings:
   "commit_docs": true|false,
   "commit_mode": "auto|manual",
   "learning_mode": "auto|manual",
+  "parallelization": false|true,
   "workflow": {
     "research": true|false,
     "plan_check": true|false,
