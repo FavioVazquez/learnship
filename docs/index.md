@@ -114,18 +114,18 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
 ## Works on 5 platforms
 
 <div class="ls-platform-row">
-  <a href="platform-guide/windsurf.md" class="ls-platform-badge native">Windsurf</a>
-  <a href="platform-guide/claude-code.md" class="ls-platform-badge">Claude Code</a>
-  <a href="platform-guide/opencode.md" class="ls-platform-badge">OpenCode</a>
-  <a href="platform-guide/gemini-cli.md" class="ls-platform-badge">Gemini CLI</a>
-  <a href="platform-guide/codex-cli.md" class="ls-platform-badge">Codex CLI</a>
+  <a href="platform-guide/windsurf/" class="ls-platform-badge native">Windsurf</a>
+  <a href="platform-guide/claude-code/" class="ls-platform-badge">Claude Code</a>
+  <a href="platform-guide/opencode/" class="ls-platform-badge">OpenCode</a>
+  <a href="platform-guide/gemini-cli/" class="ls-platform-badge">Gemini CLI</a>
+  <a href="platform-guide/codex-cli/" class="ls-platform-badge">Codex CLI</a>
 </div>
 
 ```bash
 npx github:FavioVazquez/learnship --all --global   # all platforms at once
 ```
 
-See the [Platform Guide](platform-guide/windsurf.md) for platform-specific setup and capabilities.
+See the [Platform Guide](platform-guide/windsurf/) for platform-specific setup and capabilities.
 
 ---
 
