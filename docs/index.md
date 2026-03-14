@@ -10,11 +10,11 @@ hide:
   <h1>learnship</h1>
   <p class="ls-tagline">Learn as you build. Build with intent.</p>
   <div class="ls-badges">
-    <a href="https://github.com/FavioVazquez/learnship/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/FavioVazquez/learnship/ci.yml?branch=main&style=for-the-badge&label=CI&color=22c55e" alt="CI"></a>
-    <a href="https://github.com/FavioVazquez/learnship/releases/latest"><img src="https://img.shields.io/github/v/release/FavioVazquez/learnship?style=for-the-badge&color=3b82f6&label=release" alt="Latest release"></a>
-    <img src="https://img.shields.io/badge/platforms-5-0ea5e9?style=for-the-badge" alt="5 platforms">
-    <img src="https://img.shields.io/badge/workflows-42-3b82f6?style=for-the-badge" alt="42 workflows">
-    <a href="https://github.com/FavioVazquez/learnship/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" alt="MIT License"></a>
+    <a href="https://github.com/FavioVazquez/learnship/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/FavioVazquez/learnship/ci.yml?branch=main&style=for-the-badge&label=CI&color=22c55e&labelColor=555555" alt="CI"></a>
+    <a href="https://github.com/FavioVazquez/learnship/releases/latest"><img src="https://img.shields.io/github/v/release/FavioVazquez/learnship?style=for-the-badge&color=3b82f6&label=release&labelColor=555555" alt="Latest release"></a>
+    <img src="https://img.shields.io/badge/platforms-5-0ea5e9?style=for-the-badge&labelColor=555555" alt="5 platforms">
+    <img src="https://img.shields.io/badge/workflows-42-3b82f6?style=for-the-badge&labelColor=555555" alt="42 workflows">
+    <a href="https://github.com/FavioVazquez/learnship/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge&labelColor=555555" alt="MIT License"></a>
   </div>
 </div>
 
