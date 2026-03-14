@@ -1,29 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 52" fill="none">
-  <!--
-    learnship logo — phase flow icon
-    3 nodes (Plan → Execute → Ship) connected by a vertical line.
-    Middle node highlighted in blue (Execute). Each node has a green learn dot.
-    Designed to work on both light and dark (nav) backgrounds.
-  -->
-
-  <!-- Vertical connector -->
-  <line x1="20" y1="12" x2="20" y2="40" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
-
-  <!-- Node 1 -->
-  <rect x="2" y="2" width="36" height="14" rx="4"
-        fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
-  <!-- green learn dot -->
-  <circle cx="32" cy="9" r="2.5" fill="#22c55e"/>
-
-  <!-- Node 2 — highlighted (Execute) -->
-  <rect x="2" y="20" width="36" height="14" rx="4"
-        fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
-  <!-- green learn dot -->
-  <circle cx="32" cy="27" r="2.5" fill="#22c55e"/>
-
-  <!-- Node 3 -->
-  <rect x="2" y="38" width="36" height="14" rx="4"
-        fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
-  <!-- green learn dot -->
-  <circle cx="32" cy="45" r="2.5" fill="#22c55e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 28" fill="none">
+  <text
+    x="2" y="22"
+    font-family="ui-monospace, 'JetBrains Mono', 'Fira Code', monospace"
+    font-size="22"
+    font-weight="700"
+    letter-spacing="-0.5"
+    fill="white">/ls</text>
 </svg>
