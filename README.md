@@ -28,13 +28,15 @@
 
 ## What is learnship?
 
-learnship is an **agentic engineering platform** — a set of 42 slash commands, structured context files, and neuroscience-backed learning tools that turn your AI coding agent into a reliable engineering partner.
+learnship is an **agent harness** for software engineers — the scaffolding that makes your AI coding agent actually reliable across real projects.
 
-It runs inside your existing AI tool (Windsurf, Claude Code, OpenCode, Gemini CLI, or Codex CLI) and adds three things your agent doesn't have by default:
+Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on the same architecture: a simple execution loop wraps the model, and the **harness** decides what information reaches the model, when, and how. The model is interchangeable. The harness is the product.
 
-- **Persistent memory** — an `AGENTS.md` file loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions
-- **Structured process** — a repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification
-- **Built-in learning** — neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it
+learnship gives you that harness as a portable, open-source layer that runs inside Windsurf, Claude Code, OpenCode, Gemini CLI, or Codex CLI and adds three things your agent doesn't have by default:
+
+- **Persistent memory** — an `AGENTS.md` file loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
+- **Structured process** — a repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
+- **Built-in learning** — neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
 
@@ -44,13 +46,16 @@ If you've used AI coding assistants for more than a few sessions, you've hit thi
 
 > The agent forgets everything. Each session starts from scratch. Decisions get repeated. Code quality drifts. You ship fast but understand less. The more you rely on the AI, the less you own the outcome.
 
-learnship solves this with **context engineering** — every agent call is loaded with structured context that captures your project's soul, decisions, and current state. The agent doesn't guess; it reads.
+This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing tasks to completing them. Same model. The only variable is the harness.
+
+learnship solves this with **progressive disclosure** — the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
 
 | Without learnship | With learnship |
 |-------------------|----------------|
 | Context resets every session | `AGENTS.md` loaded automatically every conversation |
 | Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
 | Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
+| Everything dumped into context at once | Phase-scoped context — only what this step needs |
 | You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
 | UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
 
