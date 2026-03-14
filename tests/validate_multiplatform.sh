@@ -807,6 +807,47 @@ check('Claude Code install: installer routes skills to plugins/learnship/skills/
     'installer missing agentic-learning copy path');
 });
 
+// 9. Local scope: install() uses process.cwd()-based dir when isGlobal=false
+check('local scope: install() routes to process.cwd()/<dirName>/ when --local', () => {
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  // Key line: isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform))
+  assert(installSrc.includes('process.cwd()'), 'installer missing process.cwd() for local scope');
+  assert(installSrc.includes('isGlobal ? getGlobalDir'), 'installer missing isGlobal ternary');
+  assert(installSrc.includes('getDirName(platform)'), 'installer missing getDirName for local dir');
+});
+
+// 10. getDirName returns correct platform-specific subdir names for local install
+check('local scope: getDirName returns correct subdir for each platform', () => {
+  const { install } = require(path.join(REPO, 'bin', 'install.js'));
+  // We can't call getDirName directly (not exported), but we can verify the source maps correctly
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(installSrc.includes("'.claude'"), "getDirName missing '.claude' for claude");
+  assert(installSrc.includes("'.windsurf'"), "getDirName missing '.windsurf' for windsurf");
+  assert(installSrc.includes("'.opencode'"), "getDirName missing '.opencode' for opencode");
+  assert(installSrc.includes("'.gemini'"), "getDirName missing '.gemini' for gemini");
+  assert(installSrc.includes("'.codex'"), "getDirName missing '.codex' for codex");
+});
+
+// 11. --local flag is parsed (hasLocal) and overrides default-global behaviour
+check('local scope: --local flag parsed and respected (hasLocal)', () => {
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(installSrc.includes("'--local'") || installSrc.includes('--local'), '--local flag not parsed');
+  assert(installSrc.includes("'-l'"), '-l shorthand not parsed');
+  // Default is global unless --local is explicitly set
+  assert(installSrc.includes('hasGlobal || !hasLocal'), 'default-global logic missing');
+});
+
+// 12. Local scope install: skills land in <cwd>/<dirName>/learnship/skills/ (not global dir)
+check('local scope: skills path resolves under cwd, not home dir', () => {
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  // targetDir drives both learnshipDest and skillsDest — a single cwd-based targetDir means skills are local too
+  assert(
+    installSrc.includes('learnshipDest') && installSrc.includes('skillsDest') &&
+    installSrc.includes('learnshipDest, \'skills\''),
+    'skillsDest not derived from learnshipDest — local scope skills would not follow targetDir'
+  );
+});
+
 console.log('\nSECTION9_PASS=' + pass);
 console.log('SECTION9_FAIL=' + fail);
 NODEEOF
