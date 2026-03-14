@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dark rounded background -->
+  <rect width="32" height="32" rx="7" fill="#0f172a"/>
+  <!-- /ls in white monospace, optically centered -->
+  <text
+    x="16" y="22"
+    font-family="ui-monospace, 'SF Mono', 'Fira Code', monospace"
+    font-size="14"
+    font-weight="700"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="-0.5">/ls</text>
+</svg>

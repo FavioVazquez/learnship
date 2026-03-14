@@ -9,7 +9,7 @@ theme:
   name: material
   custom_dir: docs/overrides
   logo: assets/logo.svg
-  favicon: assets/favicon.png
+  favicon: assets/favicon.svg
   font:
     text: Inter
     code: JetBrains Mono
