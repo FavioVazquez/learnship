@@ -2,7 +2,6 @@
 title: learnship — Agentic Engineering Done Right
 description: Learn as you build. Build with intent. Multi-platform agentic engineering for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
 hide:
-  - navigation
   - toc
 ---
 

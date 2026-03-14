@@ -1,5 +1,5 @@
 site_name: learnship
-site_description: Learn as you build. Build with intent. — Agentic engineering for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
+site_description: Learn as you build. Build with intent. Agentic engineering for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
 site_url: https://faviovazquez.github.io/learnship/
 repo_url: https://github.com/FavioVazquez/learnship
 repo_name: FavioVazquez/learnship
@@ -16,15 +16,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: custom
-      accent: custom
+      primary: white
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: custom
-      accent: custom
+      primary: black
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -32,10 +32,7 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tracking
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
     - navigation.path
     - navigation.top
     - navigation.footer
