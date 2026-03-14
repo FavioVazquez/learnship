@@ -9,6 +9,20 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.8.0] — impeccable integration: automatic UI standards and milestone recommendations
+
+**Released:** 2026-03-14
+
+### Added
+
+- **`execute-phase` UI detection (Step 2b):** Before executing any phase, learnship now scans plan objectives and file paths for UI/frontend signals (`component`, `page`, `layout`, `tailwind`, `.tsx`, `.jsx`, etc.). When detected, it activates `@impeccable frontend-design` principles as active execution guidance — typography, color, layout, and component standards applied as constraints during execution, not as a post-hoc review. Displays a `UI PHASE DETECTED` banner and carries principles through every task in the phase.
+- **Post-action milestone recommendation in `@impeccable`:** After any impeccable action that produces recommendations (`audit`, `critique`, `polish`, `normalize`, `harden`, `adapt`, `optimize`, `bolder`, `quieter`, `colorize`, `clarify`, `delight`, `onboard`, `animate`, `distill`, `extract`), the agent now always closes with a suggestion to run `/new-milestone` to create a dedicated "UI Polish" milestone — turning recommendations into versioned, traceable phases with plans and commits. Setup actions (`teach-impeccable`, `frontend-design`) are exempt.
+- **9 new tests in `validate_multiplatform.sh`** covering both integration behaviors, sync between `.windsurf/` and `learnship/` copies, and docs/README coverage.
+- **Docs updated** (`docs/skills/impeccable.md`) with a new "learnship integration" section documenting both behaviors.
+- **README updated** with integration description in the Design System section.
+
+---
+
 ## [v1.7.1] — Fix AGENTS.md not generated on Windsurf new-project
 
 **Released:** 2026-03-14

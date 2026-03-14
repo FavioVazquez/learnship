@@ -108,6 +108,40 @@ This gathers your project's design context: brand, target audience, existing UI 
 
 ---
 
+## learnship integration
+
+### Automatic UI standards during execute-phase
+
+When you run `execute-phase` on a phase that involves UI work, learnship automatically detects it and activates `@impeccable frontend-design` principles as execution guidance — before a single line of code is written.
+
+UI detection triggers on plan keywords like `component`, `page`, `layout`, `css`, `tailwind`, `design`, `theme`, and frontend file patterns (`.tsx`, `.jsx`, `.vue`, `.svelte`).
+
+You'll see this banner:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► UI PHASE DETECTED — applying impeccable standards
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+The agent then carries the `frontend-design` principles through every task in the phase: typography, color, layout, components, and the one memorable design decision that makes the UI intentional rather than generated.
+
+For the best results, run `/teach-impeccable` once before your first UI phase so the agent has your project's specific design context.
+
+### Post-action milestone recommendation
+
+After any impeccable action that produces recommendations (`/audit`, `/critique`, `/polish`, `/normalize`, etc.), the agent will always suggest:
+
+```
+▶ Run /new-milestone to create a dedicated "UI Polish" milestone.
+  This turns recommendations into versioned phases with plans, commits,
+  and verification — so nothing gets lost and every improvement is auditable.
+```
+
+This is a **recommendation, not a requirement.** You can apply improvements directly in the current session, use `/decision-log` to record what changed, or create a full milestone if the scope warrants it. The point is that impeccable findings don't disappear into chat history — they become traceable work.
+
+---
+
 ## Platform availability
 
 | Platform | How it works |

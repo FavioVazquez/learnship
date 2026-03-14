@@ -1564,6 +1564,121 @@ while IFS= read -r line; do
 done <<< "$S13_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
+# [14] impeccable integration
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [14] impeccable integration"
+echo "  ────────────────────────────"
+
+TMPSCRIPT14=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
+cat > "$TMPSCRIPT14" << 'NODEEOF'
+process.env.LEARNSHIP_TEST_MODE = '1';
+const REPO = process.argv[2];
+const fs = require('fs');
+const path = require('path');
+
+let pass = 0; let fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ': ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+function readWF(name) {
+  return fs.readFileSync(path.join(REPO, '.windsurf', 'workflows', name + '.md'), 'utf8');
+}
+function readInstalled(name) {
+  return fs.readFileSync(path.join(REPO, 'learnship', 'workflows', name + '.md'), 'utf8');
+}
+function readSkill(relPath) {
+  return fs.readFileSync(path.join(REPO, '.windsurf', 'skills', 'impeccable', relPath), 'utf8');
+}
+
+// 1. execute-phase has UI detection step
+check('execute-phase has UI detection step (Step 2b)', () => {
+  const content = readWF('execute-phase');
+  assert(content.includes('UI Detection'), 'Missing UI Detection step');
+  assert(content.includes('UI PHASE DETECTED'), 'Missing UI PHASE DETECTED banner');
+});
+
+// 2. execute-phase UI detection scans for frontend keywords
+check('execute-phase UI detection covers frontend keywords', () => {
+  const content = readWF('execute-phase');
+  assert(content.includes('component'), 'Missing component keyword');
+  assert(content.includes('tailwind') || content.includes('css'), 'Missing CSS/Tailwind keyword');
+  assert(content.includes('.tsx') || content.includes('.jsx'), 'Missing frontend file pattern');
+});
+
+// 3. execute-phase activates impeccable frontend-design when UI detected
+check('execute-phase activates impeccable frontend-design for UI phases', () => {
+  const content = readWF('execute-phase');
+  assert(content.includes('frontend-design'), 'Missing @impeccable frontend-design activation');
+  assert(content.includes('Typography') && content.includes('Color') && content.includes('Layout'),
+    'Missing frontend-design principle categories (Typography/Color/Layout)');
+});
+
+// 4. execute-phase UI detection step is present in installed learnship/ copy
+check('learnship/workflows/execute-phase.md has UI detection (in sync)', () => {
+  const content = readInstalled('execute-phase');
+  assert(content.includes('UI Detection'), 'Installed copy missing UI Detection step');
+  assert(content.includes('UI PHASE DETECTED'), 'Installed copy missing UI PHASE DETECTED banner');
+});
+
+// 5. impeccable SKILL.md has post-action milestone recommendation
+check('impeccable SKILL.md has post-action milestone recommendation', () => {
+  const content = readSkill('SKILL.md');
+  assert(content.includes('After running any impeccable action'), 'Missing post-action section');
+  assert(content.includes('new-milestone') || content.includes('/new-milestone'),
+    'Missing /new-milestone recommendation');
+  assert(content.includes('RECOMMENDATIONS READY'), 'Missing RECOMMENDATIONS READY banner');
+});
+
+// 6. impeccable SKILL.md specifies which actions trigger the recommendation
+check('impeccable SKILL.md lists actions that trigger milestone recommendation', () => {
+  const content = readSkill('SKILL.md');
+  assert(content.includes('audit') && content.includes('critique') && content.includes('polish'),
+    'Missing key action names in post-action section');
+});
+
+// 7. impeccable SKILL.md exempts setup actions (teach-impeccable, frontend-design)
+check('impeccable SKILL.md exempts teach-impeccable and frontend-design from milestone suggestion', () => {
+  const content = readSkill('SKILL.md');
+  assert(content.includes('teach-impeccable') && content.includes('frontend-design') &&
+    content.includes('skip'), 'Missing exemption for setup actions');
+});
+
+// 8. docs/skills/impeccable.md documents learnship integration
+check('docs/skills/impeccable.md documents learnship integration section', () => {
+  const content = fs.readFileSync(path.join(REPO, 'docs', 'skills', 'impeccable.md'), 'utf8');
+  assert(content.includes('learnship integration'), 'Missing learnship integration section in docs');
+  assert(content.includes('execute-phase'), 'Docs missing execute-phase reference');
+  assert(content.includes('new-milestone'), 'Docs missing new-milestone recommendation reference');
+});
+
+// 9. README documents impeccable learnship integration
+check('README documents impeccable learnship integration', () => {
+  const content = fs.readFileSync(path.join(REPO, 'README.md'), 'utf8');
+  assert(content.includes('learnship integration') || content.includes('Automatic UI standards'),
+    'README missing impeccable learnship integration section');
+  assert(content.includes('execute-phase') && content.includes('frontend-design'),
+    'README missing execute-phase/frontend-design integration reference');
+});
+
+console.log('\nSECTION14_PASS=' + pass);
+console.log('SECTION14_FAIL=' + fail);
+NODEEOF
+
+S14_OUTPUT=$(node "$TMPSCRIPT14" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT14"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S14_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""

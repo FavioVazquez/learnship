@@ -53,6 +53,35 @@ Report the execution plan:
 | 2    | 03     | [objective] |
 ```
 
+## Step 2b: UI Detection
+
+Before executing, scan all PLAN.md files for UI/frontend work:
+
+Look for any of these signals in plan objectives, task descriptions, or file paths:
+- UI keywords: `component`, `page`, `layout`, `form`, `modal`, `nav`, `dashboard`, `landing`, `design`, `style`, `css`, `tailwind`, `theme`, `color`, `typography`, `animation`, `responsive`
+- Frontend file patterns: `.tsx`, `.jsx`, `.vue`, `.svelte`, `styles/`, `components/`, `pages/`, `app/`
+
+**If UI work is detected:**
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► UI PHASE DETECTED — applying impeccable standards
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+Activate `@impeccable frontend-design` as your design foundation for this entire phase. This means:
+
+- **Typography:** Avoid overused fonts (Inter, Roboto, Arial). Use a modular type scale with clear visual hierarchy.
+- **Color:** Avoid the AI palette (cyan-on-dark, purple-to-blue gradients, neon on dark). Tint neutrals toward the brand hue. No pure black (#000) or pure white (#fff).
+- **Layout:** Create rhythm through varied spacing. Not everything needs a card. Never nest cards inside cards.
+- **Components:** Avoid large rounded icons above every heading. Resist generic "AI-built" patterns.
+- **Differentiation:** Every UI phase must have one intentional, memorable design decision — commit to it.
+
+Check if `@impeccable teach-impeccable` has been run for this project (look for a `.planning/impeccable-context.md` or references to impeccable in DECISIONS.md). If not, add a note at the end of execution suggesting it be run before the next UI phase.
+
+Carry these principles through every task in every wave of this phase.
+
 ## Step 3: Execute Waves
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).
