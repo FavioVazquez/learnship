@@ -792,6 +792,21 @@ check('Windsurf install: skills copied to skills/ (native), not learnship/skills
   );
 });
 
+// 8. Claude Code installer routes skills to plugins/learnship/skills/ and handles impeccable sub-skills
+check('Claude Code install: installer routes skills to plugins/learnship/skills/ with sub-skill handling', () => {
+  const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  // installClaudePlugins must exist
+  assert(installSrc.includes('function installClaudePlugins'), 'installClaudePlugins function missing');
+  // Must target plugins/learnship/skills/
+  assert(installSrc.includes("'plugins', 'learnship'"), 'installer missing plugins/learnship path for Claude');
+  // Must handle impeccable sub-skills specially (copies into references/)
+  assert(installSrc.includes("skillName === 'impeccable'"), 'installer missing impeccable sub-skill handling');
+  assert(installSrc.includes("'references'"), 'installer missing references/ destination for impeccable sub-skills');
+  // Must handle agentic-learning (verbatim copy path)
+  assert(installSrc.includes('agentic-learning') || installSrc.includes('copyDir(srcPath, dest'),
+    'installer missing agentic-learning copy path');
+});
+
 console.log('\nSECTION9_PASS=' + pass);
 console.log('SECTION9_FAIL=' + fail);
 NODEEOF
