@@ -243,6 +243,20 @@ else
   fail "learnship/workflows/ has $WF_COUNT files, expected >= 42"
 fi
 
+# templates/agents.md must exist (used by new-project Step 8 to generate AGENTS.md)
+if [ -f "$REPO/learnship/templates/agents.md" ]; then
+  ok "learnship/templates/agents.md exists"
+else
+  fail "learnship/templates/agents.md missing — new-project Step 8 will silently skip AGENTS.md generation"
+fi
+
+# references/questioning.md must exist (used by new-project Step 3)
+if [ -f "$REPO/learnship/references/questioning.md" ]; then
+  ok "learnship/references/questioning.md exists"
+else
+  fail "learnship/references/questioning.md missing — new-project Step 3 questioning reference broken"
+fi
+
 # execute-phase.md must contain Task( for subagent spawning
 if grep -q "Task(" "$REPO/learnship/workflows/execute-phase.md" 2>/dev/null; then
   ok "learnship/workflows/execute-phase.md contains Task() subagent call"
