@@ -5,7 +5,7 @@ description: How learnship structures work into phases — discuss, plan, execut
 
 # The Phase Loop
 
-![Phase loop diagram](../../assets/phase-loop.png)
+![Phase loop diagram](../assets/phase-loop.png)
 
 Every feature in learnship ships through the same four-step loop. The loop repeats for each phase of your project until all phases are done.
 

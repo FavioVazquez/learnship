@@ -5,7 +5,7 @@ description: All 11 @agentic-learning actions, when to use each, and the neurosc
 
 # Learning Partner
 
-![agentic-learning actions](../../assets/agentic-learning-actions.png)
+![agentic-learning actions](../assets/agentic-learning-actions.png)
 
 The learning partner is woven into learnship, not bolted on. It fires at every phase transition when `learning_mode: "auto"` (the default), offering 2–3 contextually matched actions based on what just happened. You can also invoke any action at any time.
 
@@ -181,7 +181,7 @@ Breaks an overwhelming concept or task into working-memory-sized chunks. Uses ch
 
 ## Platform availability
 
-![Skills overview](../../assets/skills-overview.png)
+![Skills overview](../assets/skills-overview.png)
 
 | Platform | How it works |
 |----------|-------------|

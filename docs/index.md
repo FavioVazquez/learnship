@@ -18,7 +18,7 @@ hide:
   </div>
 </div>
 
-![learnship banner](../assets/banner.png)
+![learnship banner](assets/banner.png)
 
 ---
 
@@ -80,7 +80,7 @@ See the [Platform Guide](platform-guide/windsurf.md) for platform-specific setup
 
 ## What makes this different
 
-![Agentic vs vibe coding](../assets/vibe-vs-agentic.png)
+![Agentic vs vibe coding](assets/vibe-vs-agentic.png)
 
 | | Vibe coding | learnship |
 |-|------------|-----------|

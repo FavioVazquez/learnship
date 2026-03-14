@@ -7,7 +7,7 @@ description: Reference for milestone lifecycle workflows — new-milestone, audi
 
 These workflows manage the full milestone lifecycle — from planning a new version to archiving it and learning from it.
 
-![Milestone lifecycle](../../assets/milestone-lifecycle.png)
+![Milestone lifecycle](../assets/milestone-lifecycle.png)
 
 ---
 

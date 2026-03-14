@@ -5,7 +5,7 @@ description: The only 5 commands you need to know to get through 95% of your wor
 
 # The 5 Commands
 
-![Quick start flow](../../assets/quick-start-flow.png)
+![Quick start flow](../assets/quick-start-flow.png)
 
 learnship has 42 workflows. You don't need to know them all. Start with these five — everything else surfaces naturally from `/ls` as you need it.
 

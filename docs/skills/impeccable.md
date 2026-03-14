@@ -5,7 +5,7 @@ description: All 17 impeccable steering commands for production-grade UI — pre
 
 # Design System
 
-![impeccable commands](../../assets/impeccable-commands.png)
+![impeccable commands](../assets/impeccable-commands.png)
 
 **impeccable** is a suite of 17 design steering commands that give your AI agent production-grade UI standards. It prevents generic AI aesthetics — the kind of interface that screams "AI made this" — by providing specific, actionable design direction at every level.
 

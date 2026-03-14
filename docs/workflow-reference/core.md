@@ -7,7 +7,7 @@ description: Reference for the 8 core learnship workflows — new-project throug
 
 These 8 workflows form the backbone of every learnship project. They take you from zero to shipped.
 
-![Milestone lifecycle](../../assets/milestone-lifecycle.png)
+![Milestone lifecycle](../assets/milestone-lifecycle.png)
 
 ---
 

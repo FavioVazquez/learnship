@@ -5,7 +5,7 @@ description: The philosophy behind learnship — why structured intent beats pro
 
 # Agentic Engineering vs Vibe Coding
 
-![Agentic vs vibe coding](../../assets/vibe-vs-agentic.png)
+![Agentic vs vibe coding](../assets/vibe-vs-agentic.png)
 
 There are two ways to build with AI. One feels faster at the start. One actually is faster overall.
 

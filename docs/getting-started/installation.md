@@ -5,7 +5,7 @@ description: Install learnship on Windsurf, Claude Code, OpenCode, Gemini CLI, o
 
 # Installation
 
-![Install learnship](../../assets/install.png)
+![Install learnship](../assets/install.png)
 
 learnship installs as a set of workflow files into your AI platform's configuration directory. No daemon, no build step — just markdown files your agent reads.
 

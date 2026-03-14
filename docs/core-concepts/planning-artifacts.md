@@ -5,7 +5,7 @@ description: Deep dive into the .planning/ directory — every file, its purpose
 
 # Planning Artifacts
 
-![Planning artifacts](../../assets/planning-artifacts.png)
+![Planning artifacts](../assets/planning-artifacts.png)
 
 Every learnship project creates a `.planning/` directory at the project root. These files are the structured memory that keeps the AI agent grounded across sessions, phases, and teammates.
 

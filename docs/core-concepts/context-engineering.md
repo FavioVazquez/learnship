@@ -5,7 +5,7 @@ description: How learnship loads structured context into every AI agent call so 
 
 # Context Engineering
 
-![Context engineering diagram](../../assets/context-engineering.png)
+![Context engineering diagram](../assets/context-engineering.png)
 
 The difference between a good AI agent output and a mediocre one is almost always **context quality**. learnship doesn't let agents guess — every invocation is loaded with the right structured context for what it needs to do.
 
@@ -78,7 +78,7 @@ Before planning, `/discuss-phase` writes your implementation preferences to `.pl
 
 ## Parallel execution with full context budgets
 
-![Parallel execution](../../assets/parallel-execution.png)
+![Parallel execution](../assets/parallel-execution.png)
 
 On Claude Code, OpenCode, Gemini CLI, and Codex CLI, you can enable parallel subagents:
 

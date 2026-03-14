@@ -5,7 +5,7 @@ description: Full reference for .planning/config.json — every setting, toggle,
 
 # Configuration
 
-![Config schema](../../assets/config-schema.png)
+![Config schema](assets/config-schema.png)
 
 Project settings live in `.planning/config.json`. Set during `/new-project` or edit interactively with `/settings`.
 
