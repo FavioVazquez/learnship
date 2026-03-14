@@ -98,3 +98,28 @@ Invoke with the action that matches your need:
 
 When in doubt, start with `@impeccable audit` to get a full picture, then
 use the specific action it recommends.
+
+---
+
+## After running any impeccable action
+
+When an impeccable action produces a list of recommendations, improvements, or issues — always close with this suggestion:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ impeccable ► RECOMMENDATIONS READY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[N] improvements identified. To apply them in a traceable, structured way:
+
+▶ Run `/new-milestone` to create a dedicated "UI Polish" or "Design Quality" milestone.
+  This turns these recommendations into versioned phases with plans, commits, and
+  verification — so nothing gets lost and every improvement is auditable.
+
+Or apply them directly now and use `/decision-log` to record what was changed and why.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+This applies after: `audit`, `critique`, `polish`, `normalize`, `harden`, `adapt`, `optimize`, `bolder`, `quieter`, `colorize`, `clarify`, `delight`, `onboard`, `animate`, `distill`, `extract`.
+
+For `teach-impeccable` and `frontend-design` (which set up context, not produce recommendations), skip this suggestion.

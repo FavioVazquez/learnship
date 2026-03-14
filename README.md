@@ -507,6 +507,12 @@ The **impeccable** skill suite is always active as project context for any UI wo
 
 **The AI Slop Test:** If you showed the interface to someone and said "AI made this", would they believe you immediately? If yes, that's the problem. Use `/critique` to find out.
 
+### learnship integration
+
+**Automatic UI standards during `execute-phase`:** When a phase involves UI work, learnship detects it automatically and activates `@impeccable frontend-design` principles before any code is written. You'll see a banner announcing it. The agent then applies typography, color, layout, and component standards across every task in the phase — not as a post-hoc review but as an active constraint during execution.
+
+**Post-action milestone recommendation:** After any impeccable action produces recommendations, the agent suggests running `/new-milestone` to create a dedicated "UI Polish" milestone. This turns impeccable findings into versioned, traceable phases with plans and commits — so improvements don't disappear into chat history. Applying directly is always an option too.
+
 ### Skills across platforms
 
 | Platform | How `impeccable` works |
