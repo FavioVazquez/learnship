@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Make test scripts executable
         run: chmod +x tests/*.sh
@@ -54,7 +54,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Validate package.json
         run: node -e "JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json is valid JSON ✓')"
