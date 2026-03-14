@@ -32,17 +32,17 @@ jobs:
       - name: Install MkDocs and plugins
         run: |
           pip install \
-            mkdocs-material \
+            "mkdocs-material<2" \
             mkdocs-minify-plugin \
             pymdown-extensions \
             pillow \
             cairosvg
 
-      - name: Copy assets into docs/
+      - name: Resolve docs/assets symlink for CI
         run: |
+          rm -f docs/assets
           mkdir -p docs/assets
-          cp assets/*.png docs/assets/ 2>/dev/null || true
-          cp assets/*.svg docs/assets/ 2>/dev/null || true
+          cp assets/* docs/assets/ 2>/dev/null || true
 
       - name: Build and deploy to GitHub Pages
         run: mkdocs gh-deploy --force --clean --verbose
