@@ -26,21 +26,6 @@
 
 ---
 
-## 📚 Documentation
-
-The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)** — built with MkDocs Material and deployed automatically on every release.
-
-What's covered:
-
-- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)** — install commands, first project walkthrough, the 5 commands you need to know
-- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)** — dedicated pages for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex CLI
-- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)** — phase loop, context engineering, planning artifacts, agentic vs vibe coding
-- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)** — all 11 `@agentic-learning` actions + all 17 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)** — all 42 workflows documented with when and why to use each
-- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)** — full `.planning/config.json` schema, speed presets, parallelization
-
----
-
 ## ⚡ Get Started in 30 Seconds
 
 ### 1. Install
@@ -68,6 +53,21 @@ Or specify your platform explicitly — see [Platform Support](#-platform-suppor
 ```
 
 (or the platform equivalent — see the table below). `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
+
+---
+
+## 📚 Documentation
+
+The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)** — built with MkDocs Material and deployed automatically on every release.
+
+What's covered:
+
+- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)** — install commands, first project walkthrough, the 5 commands you need to know
+- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)** — dedicated pages for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex CLI
+- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)** — phase loop, context engineering, planning artifacts, agentic vs vibe coding
+- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)** — all 11 `@agentic-learning` actions + all 17 `impeccable` design commands
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)** — all 42 workflows documented with when and why to use each
+- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)** — full `.planning/config.json` schema, speed presets, parallelization
 
 ---
 
