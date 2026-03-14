@@ -1,6 +1,6 @@
 ---
 title: Planning Artifacts
-description: Deep dive into the .planning/ directory — every file, its purpose, and how workflows use it.
+description: Deep dive into the .planning/ directory: every file, its purpose, and how workflows use it.
 ---
 
 # Planning Artifacts
@@ -50,8 +50,8 @@ Every learnship project creates a `.planning/` directory at the project root. Th
         ├── 01-DISCOVERY.md   # Unfamiliar area mapping (from /discovery-phase)
         ├── 01-RESEARCH.md    # Ecosystem research findings
         ├── 01-VALIDATION.md  # Test coverage contract (Nyquist)
-        ├── 01-01-PLAN.md     # Executable plan — wave 1, plan 1
-        ├── 01-02-PLAN.md     # Executable plan — wave 1, plan 2 (independent)
+        ├── 01-01-PLAN.md     # Executable plan: wave 1, plan 1
+        ├── 01-02-PLAN.md     # Executable plan: wave 1, plan 2 (independent)
         ├── 01-01-SUMMARY.md  # Execution outcomes
         ├── 01-UAT.md         # User acceptance test results
         └── 01-VERIFICATION.md # Post-execution verification
@@ -96,7 +96,7 @@ The planner reads this before every plan creation and never contradicts active d
 
 ### `Phase CONTEXT.md`
 
-Written by `/discuss-phase` before planning. Contains your preferences, constraints, and priorities for this specific phase. The planner reads it as the primary input — your choices override any generic best practices.
+Written by `/discuss-phase` before planning. Contains your preferences, constraints, and priorities for this specific phase. The planner reads it as the primary input: your choices override any generic best practices.
 
 ### `REQUIREMENTS.md`
 
@@ -110,7 +110,7 @@ By default, all `.planning/` artifacts are committed to git alongside your code.
 
 - A full audit trail of decisions and plans
 - The ability to roll back to any prior planning state
-- Collaboration — teammates can read `DECISIONS.md` to understand why the code is the way it is
+- Collaboration: teammates can read `DECISIONS.md` to understand why the code is the way it is
 
 To keep planning artifacts local (private projects, sensitive info):
 

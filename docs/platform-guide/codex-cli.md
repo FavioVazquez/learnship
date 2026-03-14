@@ -1,6 +1,6 @@
 ---
 title: Codex CLI
-description: learnship on Codex CLI — dollar-sign prefix commands, skills as context, and parallel subagents.
+description: learnship on Codex CLI: dollar-sign prefix commands, skills as context, and parallel subagents.
 ---
 
 # Codex CLI

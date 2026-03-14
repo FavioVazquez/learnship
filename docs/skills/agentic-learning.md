@@ -1,5 +1,5 @@
 ---
-title: Learning Partner — @agentic-learning
+title: Learning Partner: @agentic-learning
 description: All 11 @agentic-learning actions, when to use each, and the neuroscience behind them.
 ---
 
@@ -9,7 +9,7 @@ description: All 11 @agentic-learning actions, when to use each, and the neurosc
 
 The learning partner is woven into learnship, not bolted on. It fires at every phase transition when `learning_mode: "auto"` (the default), offering 2–3 contextually matched actions based on what just happened. You can also invoke any action at any time.
 
-**Core principle:** Fluent answers from an AI are not the same as learning. Every action here makes you do the cognitive work — with support, not shortcuts.
+**Core principle:** Fluent answers from an AI are not the same as learning. Every action here makes you do the cognitive work: with support, not shortcuts.
 
 ---
 
@@ -29,19 +29,19 @@ On all other platforms, reference the skill explicitly: `use the agentic-learnin
 
 ## All 11 actions
 
-### `learn` — Active retrieval
+### `learn`: Active retrieval
 
 ```
 @agentic-learning learn [topic]
 ```
 
-You explain the topic first. The agent listens, then fills gaps with targeted follow-ups. This is deliberate retrieval practice — the most evidence-backed learning technique in cognitive science.
+You explain the topic first. The agent listens, then fills gaps with targeted follow-ups. This is deliberate retrieval practice: the most evidence-backed learning technique in cognitive science.
 
 **Best time to use:** After research-phase, after debugging, when a new domain concept was introduced.
 
 ---
 
-### `quiz` — Active recall testing
+### `quiz`: Active recall testing
 
 ```
 @agentic-learning quiz [topic]
@@ -53,19 +53,19 @@ You explain the topic first. The agent listens, then fills gaps with targeted fo
 
 ---
 
-### `reflect` — Structured reflection
+### `reflect`: Structured reflection
 
 ```
 @agentic-learning reflect
 ```
 
-Three-question structured reflection: What did I learn? What was the intent? What gaps remain? Designed to be done in under 5 minutes — short enough to actually do it, rigorous enough to be useful.
+Three-question structured reflection: What did I learn? What was the intent? What gaps remain? Designed to be done in under 5 minutes: short enough to actually do it, rigorous enough to be useful.
 
 **Best time to use:** After execute-phase completes.
 
 ---
 
-### `space` — Spaced review scheduling
+### `space`: Spaced review scheduling
 
 ```
 @agentic-learning space
@@ -77,7 +77,7 @@ Identifies concepts from the current session and schedules them for spaced revis
 
 ---
 
-### `brainstorm` — Collaborative design dialogue
+### `brainstorm`: Collaborative design dialogue
 
 ```
 @agentic-learning brainstorm [topic]
@@ -89,19 +89,19 @@ A Socratic design conversation before committing to an approach. The agent asks 
 
 ---
 
-### `struggle` — Productive struggle with hints
+### `struggle`: Productive struggle with hints
 
 ```
 @agentic-learning struggle [topic]
 ```
 
-You attempt to solve a problem from scratch. The agent provides a graduated hint ladder — giving only what you need to keep moving, never the full solution until you've genuinely tried.
+You attempt to solve a problem from scratch. The agent provides a graduated hint ladder: giving only what you need to keep moving, never the full solution until you've genuinely tried.
 
 **Best time to use:** After debug, after quick (when the task was tricky), when you want to cement a pattern you just used.
 
 ---
 
-### `either-or` — Decision journaling
+### `either-or`: Decision journaling
 
 ```
 @agentic-learning either-or
@@ -113,7 +113,7 @@ Records the decision paths considered, the choice made, the rationale, and expec
 
 ---
 
-### `explain-first` — Oracy exercise
+### `explain-first`: Oracy exercise
 
 ```
 @agentic-learning explain-first [topic]
@@ -125,19 +125,19 @@ You explain the concept or approach in your own words before seeing any referenc
 
 ---
 
-### `explain` — Comprehension log
+### `explain`: Comprehension log
 
 ```
 @agentic-learning explain [topic]
 ```
 
-A deeper explanation exercise that writes to `docs/project-knowledge.md` — a persistent log of what you understand about how the project works. Good for onboarding, knowledge transfer, and future reference.
+A deeper explanation exercise that writes to `docs/project-knowledge.md`: a persistent log of what you understand about how the project works. Good for onboarding, knowledge transfer, and future reference.
 
 **Best time to use:** After significant phases, before handing off work, when building for future maintainability.
 
 ---
 
-### `interleave` — Mixed retrieval
+### `interleave`: Mixed retrieval
 
 ```
 @agentic-learning interleave
@@ -149,7 +149,7 @@ Active recall across multiple topics from different phases or sessions. Interlea
 
 ---
 
-### `cognitive-load` — Scope decomposition
+### `cognitive-load`: Scope decomposition
 
 ```
 @agentic-learning cognitive-load [topic]
@@ -185,8 +185,8 @@ Breaks an overwhelming concept or task into working-memory-sized chunks. Uses ch
 
 | Platform | How it works |
 |----------|-------------|
-| **Windsurf** | Native skill — invoke with `@agentic-learning [action]`. Cascade dispatches automatically. |
-| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/agentic-learning/`. Reference explicitly: `use the agentic-learning skill: [action]`, or just work — it activates at workflow checkpoints automatically. |
+| **Windsurf** | Native skill: invoke with `@agentic-learning [action]`. Cascade dispatches automatically. |
+| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/agentic-learning/`. Reference explicitly: `use the agentic-learning skill: [action]`, or just work: it activates at workflow checkpoints automatically. |
 
 ---
 
@@ -194,10 +194,10 @@ Breaks an overwhelming concept or task into working-memory-sized chunks. Uses ch
 
 The actions in `@agentic-learning` are grounded in established cognitive science:
 
-- **Retrieval practice** (`learn`, `quiz`, `explain-first`) — actively recalling information produces stronger long-term memory than re-reading
-- **Spaced repetition** (`space`) — reviewing at increasing intervals exploits the forgetting curve for efficient retention
-- **Interleaving** (`interleave`) — mixing topics during practice produces better transfer and discrimination than blocked study
-- **Generation effect** (`struggle`) — generating answers (even wrong ones) before seeing the correct answer produces stronger encoding
-- **Elaborative interrogation** (`brainstorm`, `either-or`) — explaining why and how strengthens schema formation
+- **Retrieval practice** (`learn`, `quiz`, `explain-first`): actively recalling information produces stronger long-term memory than re-reading
+- **Spaced repetition** (`space`): reviewing at increasing intervals exploits the forgetting curve for efficient retention
+- **Interleaving** (`interleave`): mixing topics during practice produces better transfer and discrimination than blocked study
+- **Generation effect** (`struggle`): generating answers (even wrong ones) before seeing the correct answer produces stronger encoding
+- **Elaborative interrogation** (`brainstorm`, `either-or`): explaining why and how strengthens schema formation
 
 Based on [@FavioVazquez/agentic-learn](https://github.com/faviovazquez/agentic-learn).

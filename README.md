@@ -28,15 +28,15 @@
 
 ## What is learnship?
 
-learnship is an **agent harness** for software engineers — the scaffolding that makes your AI coding agent actually reliable across real projects.
+learnship is an **agent harness** for anyone who wants to build, learn, and ship real products using AI agents. It's the scaffolding that makes your AI coding agent actually reliable across real projects.
 
 Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on the same architecture: a simple execution loop wraps the model, and the **harness** decides what information reaches the model, when, and how. The model is interchangeable. The harness is the product.
 
 learnship gives you that harness as a portable, open-source layer that runs inside Windsurf, Claude Code, OpenCode, Gemini CLI, or Codex CLI and adds three things your agent doesn't have by default:
 
-- **Persistent memory** — an `AGENTS.md` file loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
-- **Structured process** — a repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
-- **Built-in learning** — neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
+- **Persistent memory.** An `AGENTS.md` file is loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
+- **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
+- **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
 
@@ -48,14 +48,14 @@ If you've used AI coding assistants for more than a few sessions, you've hit thi
 
 This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing tasks to completing them. Same model. The only variable is the harness.
 
-learnship solves this with **progressive disclosure** — the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
+learnship solves this with **progressive disclosure**, the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
 
 | Without learnship | With learnship |
 |-------------------|----------------|
 | Context resets every session | `AGENTS.md` loaded automatically every conversation |
 | Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
 | Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
-| Everything dumped into context at once | Phase-scoped context — only what this step needs |
+| Everything dumped into context at once | Phase-scoped context: only what this step needs |
 | You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
 | UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
 
@@ -63,7 +63,7 @@ learnship solves this with **progressive disclosure** — the pattern that separ
 
 ## Who is it for?
 
-learnship is built for **developers who want to build with AI agents seriously** — not just for quick scripts, but for real products that need to be maintained, understood, and extended.
+learnship is built for **anyone who wants to build and ship real products with AI agents**, not just developers. If you're a founder, designer, researcher, or maker who uses AI tools to build things, this is for you.
 
 It's the right tool if:
 
@@ -71,9 +71,9 @@ It's the right tool if:
 - You're **learning while building** and want to actually understand what gets shipped
 - You care about **code quality and UI quality** beyond "it works"
 - You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI to ship phases faster
-- You've felt the pain of **context loss** — repeating yourself every session, watching the agent forget past decisions
+- You've felt the frustration of **context loss**: repeating yourself every session while the agent forgets past decisions
 
-It's probably overkill if you just need one-off scripts or quick fixes — use `/quick` for that.
+It's probably overkill if you just need one-off scripts or quick fixes. Use `/quick` for that.
 
 ---
 
@@ -84,7 +84,7 @@ It's probably overkill if you just need one-off scripts or quick fixes — use `
 ![Install learnship](assets/install.png)
 
 ```bash
-# Recommended — runs directly from GitHub, no clone needed
+# Runs directly from GitHub, no clone needed
 npx github:FavioVazquez/learnship
 ```
 
@@ -95,7 +95,7 @@ npx github:FavioVazquez/learnship --global   # all projects
 npx github:FavioVazquez/learnship --local    # this project only
 ```
 
-Or specify your platform explicitly — see [Platform Support](#-platform-support) below.
+Or specify your platform explicitly. See [Platform Support](#-platform-support) below.
 
 ### 2. Start your AI agent and type
 
@@ -103,22 +103,22 @@ Or specify your platform explicitly — see [Platform Support](#-platform-suppor
 /ls
 ```
 
-(or the platform equivalent — see the table below). `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
+(or the platform equivalent; see the table below). `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
 
 ---
 
 ## 📚 Documentation
 
-The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)** — built with MkDocs Material and deployed automatically on every release.
+The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)**, built with MkDocs Material and deployed automatically on every release.
 
 What's covered:
 
-- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)** — install commands, first project walkthrough, the 5 commands you need to know
-- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)** — dedicated pages for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex CLI
-- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)** — phase loop, context engineering, planning artifacts, agentic vs vibe coding
-- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)** — all 11 `@agentic-learning` actions + all 17 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)** — all 42 workflows documented with when and why to use each
-- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)** — full `.planning/config.json` schema, speed presets, parallelization
+- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install commands, first project walkthrough, the 5 commands you need to know
+- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex CLI
+- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
+- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 17 `impeccable` design commands
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 42 workflows documented with when and why to use each
+- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
 
 ---
 
@@ -152,7 +152,7 @@ Each platform gets the best experience it supports:
 | Skills (native `@invoke`) | ✓ | — | — | — | — |
 | Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave — each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": true` in `.planning/config.json`. All platforms default to sequential (always safe).
+**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave, each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": true` in `.planning/config.json`. All platforms default to sequential (always safe).
 
 ---
 
@@ -160,11 +160,11 @@ Each platform gets the best experience it supports:
 
 ![5 commands diagram](assets/quick-start-flow.png)
 
-learnship has 42 workflows. You don't need to know them all. Start with these five — everything else surfaces naturally from `/ls`.
+learnship has 42 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
-| `/ls` | Show status, recent work, and next step — offer to run it | **Start every session here** |
+| `/ls` | Show status, recent work, and next step (and offer to run it) | **Start every session here** |
 | `/next` | Read state and immediately run the right next workflow | When you just want to keep moving |
 | `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
@@ -196,7 +196,7 @@ flowchart LR
 |------|---------|-------------|
 | **1. Discuss** | `/discuss-phase N` | You and the agent align on implementation decisions before any code |
 | **2. Plan** | `/plan-phase N` | Agent researches the domain, creates executable plans, verifies them |
-| **3. Execute** | `/execute-phase N` | Plans run in dependency order — atomic commit per task |
+| **3. Execute** | `/execute-phase N` | Plans run in dependency order, one atomic commit per task |
 | **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
 
 **Just starting?** `/ls` or `/next` will route you into the right step automatically.
@@ -212,8 +212,8 @@ Three integrated layers that reinforce each other:
 | Layer | What it does |
 |-------|-------------|
 | **Workflow Engine** | Spec-driven phases → context-engineered plans → wave-ordered execution → verified delivery |
-| **Learning Partner** | Neuroscience-backed checkpoints at every phase transition — retrieval, reflection, spacing, struggle |
-| **Design System** | 17 impeccable steering commands for production-grade UI — `/audit`, `/critique`, `/polish`, and more |
+| **Learning Partner** | Neuroscience-backed checkpoints at every phase transition: retrieval, reflection, spacing, struggle |
+| **Design System** | 17 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
 
 ```mermaid
 graph LR
@@ -242,7 +242,7 @@ graph LR
 
 ![Context engineering](assets/context-engineering.png)
 
-Every agent invocation in learnship is loaded with structured context — nothing is guessed:
+Every agent invocation in learnship is loaded with structured context. Nothing is guessed:
 
 ```mermaid
 flowchart LR
@@ -259,11 +259,11 @@ flowchart LR
 
 ---
 
-## 🗂️ AGENTS.md — Persistent Project Memory
+## 🗂️ AGENTS.md: Persistent Project Memory
 
 ![AGENTS.md](assets/agents-md.png)
 
-`/new-project` generates an `AGENTS.md` at your project root. Your AI agent reads it as a persistent system rule for every conversation — so it always knows where the project stands without you repeating yourself.
+`/new-project` generates an `AGENTS.md` at your project root. Your AI agent reads it as a persistent system rule for every conversation, so it always knows where the project stands without you repeating yourself.
 
 ```
 AGENTS.md                   ← your AI agent reads this every conversation
@@ -277,7 +277,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 
 ---
 
-## 📖 Workflow Reference — Advanced
+## 📖 Workflow Reference
 
 > These are all 42 workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
 
@@ -300,7 +300,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 |----------|---------|-------------|
 | `/ls` | Status + next step + offer to run it | Start every session here |
 | `/next` | Auto-pilot: reads state and runs the right workflow | When you just want to keep moving |
-| `/progress` | Same as `/ls` — status overview + smart routing | "Where am I?" |
+| `/progress` | Same as `/ls`: status overview with smart routing | "Where am I?" |
 | `/resume-work` | Restore full context from last session | Starting a new session |
 | `/pause-work` | Save handoff file mid-phase | Stopping mid-phase |
 | `/quick [description]` | Ad-hoc task with full guarantees | Bug fixes, small features |
@@ -324,7 +324,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | `/map-codebase` | Analyze existing codebase | Before `/new-project` on existing code |
 | `/discovery-phase [N]` | Map unfamiliar code area before planning | Entering complex/unfamiliar territory |
 | `/debug [description]` | Systematic triage → diagnose → fix | When something breaks |
-| `/diagnose-issues [N]` | Batch-diagnose all UAT issues — groups by root cause | After verify-work finds multiple issues |
+| `/diagnose-issues [N]` | Batch-diagnose all UAT issues by root cause | After verify-work finds multiple issues |
 | `/execute-plan [N] [id]` | Run a single plan in isolation | Re-running a failed plan |
 | `/add-todo [description]` | Capture an idea without breaking flow | Think of something mid-session |
 | `/check-todos` | Review and act on captured todos | Reviewing accumulated ideas |
@@ -443,7 +443,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 
 ## 🧩 Learning Partner
 
-The learning partner is woven into the platform, not bolted on. It fires at natural workflow transitions to build genuine understanding — not just fluent answers.
+The learning partner is woven into the platform, not bolted on. It fires at natural workflow transitions to build genuine understanding, not just fluent answers.
 
 ### How it fires
 
@@ -456,26 +456,26 @@ learning_mode: "manual"  → only when you explicitly invoke @agentic-learning
 
 | Action | Trigger | What it does |
 |--------|---------|-------------|
-| `@agentic-learning learn [topic]` | Any time | Active retrieval — explain before seeing, then fill gaps |
+| `@agentic-learning learn [topic]` | Any time | Active retrieval: explain before seeing, then fill gaps |
 | `@agentic-learning quiz [topic]` | Any time | 3-5 questions, one at a time, formative feedback |
 | `@agentic-learning reflect` | After `execute-phase` | Three-question structured reflection: learned / goal / gaps |
 | `@agentic-learning space` | After `verify-work` | Schedule concepts for spaced review → writes `docs/revisit.md` |
 | `@agentic-learning brainstorm [topic]` | After `new-project` | Collaborative design dialogue before any code |
-| `@agentic-learning struggle [topic]` | During `quick` | Hint ladder — try first, reveal only when needed |
-| `@agentic-learning either-or` | After `discuss-phase` | Decision journal — paths considered, choice, rationale |
-| `@agentic-learning explain-first` | Any time | Oracy exercise — you explain, agent gives structured feedback |
+| `@agentic-learning struggle [topic]` | During `quick` | Hint ladder: try first, reveal only when needed |
+| `@agentic-learning either-or` | After `discuss-phase` | Decision journal: paths considered, choice, rationale |
+| `@agentic-learning explain-first` | Any time | Oracy exercise: you explain, agent gives structured feedback |
 | `@agentic-learning explain [topic]` | Any time | Project comprehension log → writes `docs/project-knowledge.md` |
 | `@agentic-learning interleave` | Any time | Mixed retrieval across multiple topics |
 | `@agentic-learning cognitive-load [topic]` | After `plan-phase` | Decompose overwhelming scope into working-memory steps |
 
-**Core principle:** Fluent answers from an AI are not the same as learning. Every action makes you do the cognitive work — with support, not shortcuts.
+**Core principle:** Fluent answers from an AI are not the same as learning. Every action makes you do the cognitive work, with support rather than shortcuts.
 
 ### Skills across platforms
 
 | Platform | How `agentic-learning` works |
 |----------|-----------------------------|
-| **Windsurf** | Native skill — invoke with `@agentic-learning learn`, `@agentic-learning quiz`, etc. |
-| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as a context file in `learnship/skills/agentic-learning/`. The AI reads and applies the techniques automatically — reference it explicitly with `use the agentic-learning skill` or just work normally and it activates at checkpoints. |
+| **Windsurf** | Native skill: invoke with `@agentic-learning learn`, `@agentic-learning quiz`, etc. |
+| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as a context file in `learnship/skills/agentic-learning/`. The AI reads and applies the techniques automatically. Reference it explicitly with `use the agentic-learning skill` or just work normally and it activates at checkpoints. |
 
 ---
 
@@ -487,16 +487,16 @@ The **impeccable** skill suite is always active as project context for any UI wo
 
 | Command | What it does |
 |---------|-------------|
-| `/teach-impeccable` | One-time setup — gathers project design context and saves persistent guidelines |
+| `/teach-impeccable` | One-time setup: gathers project design context and saves persistent guidelines |
 | `/audit` | Comprehensive audit: accessibility, performance, theming, responsive design |
 | `/critique` | UX critique: visual hierarchy, information architecture, emotional resonance |
-| `/polish` | Final quality pass — alignment, spacing, consistency before shipping |
+| `/polish` | Final quality pass: alignment, spacing, consistency before shipping |
 | `/normalize` | Normalize design to match your design system for consistency |
 | `/colorize` | Add strategic color to monochromatic or flat interfaces |
 | `/animate` | Add purposeful animations and micro-interactions |
-| `/bolder` | Amplify safe or boring designs — more visual impact |
-| `/quieter` | Tone down overly aggressive designs — reduce intensity, gain refinement |
-| `/distill` | Strip to essence — remove complexity, clarify what matters |
+| `/bolder` | Amplify safe or boring designs for more visual impact |
+| `/quieter` | Tone down overly aggressive designs to reduce intensity and gain refinement |
+| `/distill` | Strip to essence: remove complexity, clarify what matters |
 | `/clarify` | Improve UX copy, error messages, microcopy, labels |
 | `/optimize` | Performance: loading speed, rendering, animations, bundle size |
 | `/harden` | Resilience: error handling, i18n, text overflow, edge cases |
@@ -505,14 +505,14 @@ The **impeccable** skill suite is always active as project context for any UI wo
 | `/adapt` | Adapt designs across screen sizes, devices, and contexts |
 | `/onboard` | Design onboarding flows, empty states, first-time user experiences |
 
-**The AI Slop Test:** If you showed the interface to someone and said "AI made this" — would they believe you immediately? If yes, that's the problem. Use `/critique` to find out.
+**The AI Slop Test:** If you showed the interface to someone and said "AI made this", would they believe you immediately? If yes, that's the problem. Use `/critique` to find out.
 
 ### Skills across platforms
 
 | Platform | How `impeccable` works |
 |----------|-----------------------|
-| **Windsurf** | Native skills — invoke each command directly: `/audit`, `/polish`, `/critique`, etc. |
-| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/impeccable/`. The AI reads the design principles and anti-patterns automatically. Reference commands explicitly: `run the /audit impeccable skill` or just ask for UI work and it applies the standards. |
+| **Windsurf** | Native skills: invoke each command directly with `/audit`, `/polish`, `/critique`, etc. |
+| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/impeccable/`. The AI reads design principles and anti-patterns automatically. Reference commands explicitly with `run the /audit impeccable skill` or just ask for UI work and it applies the standards. |
 
 ---
 
@@ -554,9 +554,9 @@ The **impeccable** skill suite is always active as project context for any UI wo
 ### Resuming after a break
 
 ```
-/ls                       # See where you left off — offers to run next step
+/ls                       # See where you left off (offers to run next step)
 # or
-/next                     # Just pick up and go — auto-pilot
+/next                     # Just pick up and go: auto-pilot
 # or
 /resume-work              # Full context restoration
 ```
@@ -587,9 +587,9 @@ The **impeccable** skill suite is always active as project context for any UI wo
 
 ## 🧭 Decision Intelligence
 
-Every project accumulates decisions — architecture choices, library picks, scope trade-offs. The platform tracks them in a structured register so future sessions understand *why* the project is built the way it is.
+Every project accumulates decisions: architecture choices, library picks, scope trade-offs. The platform tracks them in a structured register so future sessions understand *why* the project is built the way it is.
 
-**`.planning/DECISIONS.md`** — the decision register:
+**`.planning/DECISIONS.md`** is the decision register:
 ```markdown
 ## DEC-001: Use Zustand over Redux
 Date: 2026-03-01 | Phase: 2 | Type: library
@@ -602,14 +602,14 @@ Status: active
 ```
 
 **Populated automatically by:**
-- `discuss-phase` — surfaces prior decisions before each phase discussion
-- `plan-phase` — planner reads decisions before creating plans (never contradicts active ones)
-- `debug` — architectural lessons from bugs go into the register
-- `decision-log` — manual capture of any decision from any conversation
+- `discuss-phase` surfaces prior decisions before each phase discussion
+- `plan-phase` reads decisions before creating plans (never contradicts active ones)
+- `debug` puts architectural lessons from bugs into the register
+- `decision-log` manually captures any decision from any conversation
 
 **Queried by:**
-- `audit-milestone` — checks decisions were honored in implementation
-- `knowledge-base` — aggregates all decisions into a searchable `KNOWLEDGE.md`
+- `audit-milestone` checks decisions were honored in implementation
+- `knowledge-base` aggregates all decisions into a searchable `KNOWLEDGE.md`
 
 ---
 
@@ -668,7 +668,7 @@ Every project creates a structured `.planning/` directory:
 `/new-project` found `.planning/PROJECT.md` already exists. If you want to start over, delete `.planning/` first. To continue, use `/progress` or `/resume-work`.
 
 ### Context degradation during long sessions
-Start each major workflow with a fresh context. The platform is designed around fresh context windows — every agent gets a clean slate. Use `/resume-work` or `/progress` to restore state after clearing.
+Start each major workflow with a fresh context. The platform is designed around fresh context windows; every agent gets a clean slate. Use `/resume-work` or `/progress` to restore state after clearing.
 
 ### Plans seem wrong or misaligned
 Run `/discuss-phase [N]` before planning. Most plan quality issues come from unresolved gray areas. Run `/list-phase-assumptions [N]` to see the intended approach before committing to a plan.
@@ -718,8 +718,8 @@ learnship/
 ├── .windsurf/
 │   ├── workflows/          # 42 workflows as slash commands
 │   └── skills/
-│       ├── agentic-learning/   # Learning partner (SKILL.md + references) — native on Windsurf + Claude Code
-│       └── impeccable/         # Design suite: 18 skills — native on Windsurf + Claude Code
+│       ├── agentic-learning/   # Learning partner (SKILL.md + references), native on Windsurf + Claude Code
+│       └── impeccable/         # Design suite: 18 skills, native on Windsurf + Claude Code
 │           ├── frontend-design/ #   Base skill + 7 reference files (typography, color, motion…)
 │           ├── audit/           #   /audit
 │           ├── critique/        #   /critique
@@ -728,7 +728,7 @@ learnship/
 │                               # → on OpenCode/Gemini/Codex: both skills copied to learnship/skills/ as context files
 ├── commands/               # 42 Claude Code-style slash command wrappers
 │   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
-├── learnship/              # Payload — installed into the target platform config dir
+├── learnship/              # Payload installed into the target platform config dir
 │   ├── workflows/          # 42 workflow markdown files (the actual instructions)
 │   ├── references/         # Reference docs (questioning, verification, git, design, learning)
 │   └── templates/          # Document templates for .planning/ + AGENTS.md template
@@ -751,11 +751,11 @@ learnship/
 
 **learnship** was built on top of ideas and work from three open-source projects:
 
-- **[get-shit-done](https://github.com/davila7/get-shit-done)** — the spec-driven, context-engineered workflow system that inspired the phase lifecycle, planning artifacts, and agent coordination patterns
-- **[agentic-learn](https://github.com/faviovazquez/agentic-learn)** — the learning partner skill whose neuroscience-backed techniques (retrieval, spacing, generation, reflection) power the Learning Partner layer
-- **[impeccable](https://github.com/pbakaus/impeccable)** — the frontend design skill that raised the bar on UI quality standards and powers the Design System layer
+- **[get-shit-done](https://github.com/davila7/get-shit-done)**: the spec-driven, context-engineered workflow system that inspired the phase lifecycle, planning artifacts, and agent coordination patterns
+- **[agentic-learn](https://github.com/faviovazquez/agentic-learn)**: the learning partner skill whose neuroscience-backed techniques (retrieval, spacing, generation, reflection) power the Learning Partner layer
+- **[impeccable](https://github.com/pbakaus/impeccable)**: the frontend design skill that raised the bar on UI quality standards and powers the Design System layer
 
-learnship adapts, combines, and extends these into a unified, multi-platform system. All three are used as inspiration — learnship is original work built on their shoulders.
+learnship adapts, combines, and extends these into a unified, multi-platform system. All three are used as inspiration and learnship is original work built on their shoulders.
 
 ---
 

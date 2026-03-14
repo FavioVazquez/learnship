@@ -1,6 +1,6 @@
 ---
 title: Agentic Engineering vs Vibe Coding
-description: The philosophy behind learnship — why structured intent beats prompt-and-hope.
+description: The philosophy behind learnship: why structured intent beats prompt-and-hope.
 ---
 
 # Agentic Engineering vs Vibe Coding
@@ -29,7 +29,7 @@ This pattern has a ceiling. It works for demos and throwaway code. It breaks dow
 - Build on top of code it didn't write
 - Produce something production-grade
 
-The AI isn't failing — it has no context. It's solving a different problem than the one you think you're solving.
+The AI isn't failing: it has no context. It's solving a different problem than the one you think you're solving.
 
 ---
 
@@ -70,7 +70,7 @@ Nothing is guessed. Everything is engineered.
 
 The other failure mode of vibe coding: you ship code you don't understand. The AI wrote it; you reviewed it; it works. But six months later, when it breaks, you have no model for why.
 
-learnship treats this as a first-class problem. The [Learning Partner](../skills/agentic-learning.md) fires at every phase transition to build genuine understanding — not just fluent answers.
+learnship treats this as a first-class problem. The [Learning Partner](../skills/agentic-learning.md) fires at every phase transition to build genuine understanding: not just fluent answers.
 
 ```
 After execute-phase:   @agentic-learning reflect  (what did I actually learn?)
@@ -79,7 +79,7 @@ After debug:           @agentic-learning learn    (turn the bug into a pattern)
 After plan-phase:      @agentic-learning explain-first (can I explain the approach?)
 ```
 
-The goal isn't to slow you down. It's to ensure that when you finish a milestone, you own the code — not just the repo.
+The goal isn't to slow you down. It's to ensure that when you finish a milestone, you own the code: not just the repo.
 
 ---
 
@@ -92,4 +92,4 @@ learnship is the right tool when you're building something that:
 - Involves decisions you'll want to remember
 - Has quality standards (production, client-facing, team code)
 
-For a quick throwaway script or experiment, `/quick` is sufficient — same guarantees, no phase planning ceremony.
+For a quick throwaway script or experiment, `/quick` is sufficient: same guarantees, no phase planning ceremony.

@@ -1,6 +1,6 @@
 ---
 title: Gemini CLI
-description: learnship on Gemini CLI — slash command prefixes, skills as context, and native parallel execution.
+description: learnship on Gemini CLI: slash command prefixes, skills as context, and native parallel execution.
 ---
 
 # Gemini CLI
@@ -53,7 +53,7 @@ Run the impeccable /audit skill on this component
 
 ## Parallel execution
 
-Gemini CLI supports parallel execution natively — it's on by default without requiring `"parallelization": true`. Plans in the same wave run simultaneously with independent context budgets.
+Gemini CLI supports parallel execution natively: it's on by default without requiring `"parallelization": true`. Plans in the same wave run simultaneously with independent context budgets.
 
 ## Capabilities
 

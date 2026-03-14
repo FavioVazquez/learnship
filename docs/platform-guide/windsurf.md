@@ -1,11 +1,11 @@
 ---
 title: Windsurf
-description: learnship on Windsurf — native skills, slash commands, and Cascade-specific tips.
+description: learnship on Windsurf: native skills, slash commands, and Cascade-specific tips.
 ---
 
 # Windsurf
 
-Windsurf is learnship's **native platform** — it gets the richest experience including real `@skill-name` invocation and the full impeccable suite as native slash commands.
+Windsurf is learnship's **native platform.** It gets the richest experience including real `@skill-name` invocation and the full impeccable suite as native slash commands.
 
 ## Install
 
@@ -32,7 +32,7 @@ All learnship workflows are available as slash commands directly:
 
 ## Native skills
 
-On Windsurf, skills are first-class — Cascade dispatches to them directly:
+On Windsurf, skills are first-class: Cascade dispatches to them directly:
 
 ```
 @agentic-learning learn React hooks
@@ -61,11 +61,11 @@ No prefix needed, no "use the skill" phrasing required. Just invoke.
 | Specialist agent pool | ❌ Not supported |
 
 !!! note "Parallelization"
-    Windsurf doesn't support real parallel subagents — `execute-phase` always runs plans sequentially. All context engineering, planning, verification, and learning features are fully available.
+    Windsurf doesn't support real parallel subagents: `execute-phase` always runs plans sequentially. All context engineering, planning, verification, and learning features are fully available.
 
 ## Tips for Cascade
 
 - **Fresh context windows matter.** learnship is designed around fresh context. Start each major workflow (plan-phase, execute-phase) in a new Cascade conversation for best results.
-- **`AGENTS.md` is auto-loaded.** Cascade reads `AGENTS.md` from your project root as a rule — you never need to paste context manually.
+- **`AGENTS.md` is auto-loaded.** Cascade reads `AGENTS.md` from your project root as a rule: you never need to paste context manually.
 - **Skills activate at checkpoints.** When `learning_mode: "auto"`, Cascade will offer `@agentic-learning` actions at the end of each workflow step.
-- **Use `/ls` to orient.** If Cascade seems unsure what to do, run `/ls` — it reads all state files and gives a clear next step.
+- **Use `/ls` to orient.** If Cascade seems unsure what to do, run `/ls`: it reads all state files and gives a clear next step.

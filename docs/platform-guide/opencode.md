@@ -1,6 +1,6 @@
 ---
 title: OpenCode
-description: learnship on OpenCode — slash command prefixes, skills as context, and parallel subagents.
+description: learnship on OpenCode: slash command prefixes, skills as context, and parallel subagents.
 ---
 
 # OpenCode

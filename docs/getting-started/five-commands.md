@@ -7,21 +7,21 @@ description: The only 5 commands you need to know to get through 95% of your wor
 
 ![Quick start flow](../assets/quick-start-flow.png)
 
-learnship has 42 workflows. You don't need to know them all. Start with these five — everything else surfaces naturally from `/ls` as you need it.
+learnship has 42 workflows. You don't need to know them all. Start with these five: everything else surfaces naturally from `/ls` as you need it.
 
 ## At a glance
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
 | `/ls` | Status + current position + what to do next | **Start every session here** |
-| `/next` | Auto-pilot — reads state and runs the right workflow | When you just want to keep moving |
+| `/next` | Auto-pilot: reads state and runs the right workflow | When you just want to keep moving |
 | `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
 | `/help` | All 42 workflows organized by category | Discovering capabilities |
 
 ---
 
-## `/ls` — Your home base
+## `/ls`: Your home base
 
 ```
 /ls
@@ -31,14 +31,14 @@ Run this at the start of every session. It reads your project state and shows:
 
 - Which phase you're in and how far along
 - What you were last working on
-- The exact next step — and an offer to run it
+- The exact next step: and an offer to run it
 
 **New user with no project?** `/ls` explains learnship and offers to run `/new-project`.  
 **Returning user?** `/ls` shows your progress and routes you into the right next workflow.
 
 ---
 
-## `/next` — Auto-pilot
+## `/next`: Auto-pilot
 
 ```
 /next
@@ -48,7 +48,7 @@ Reads your state and immediately runs the correct next workflow without asking. 
 
 ---
 
-## `/new-project` — Start fresh
+## `/new-project`: Start fresh
 
 ```
 /new-project
@@ -61,11 +61,11 @@ Walks you through:
 3. Writing `AGENTS.md`, `PROJECT.md`, `REQUIREMENTS.md`
 4. Proposing a phase-by-phase roadmap for your approval
 
-After `/new-project`, the AI agent reads `AGENTS.md` every conversation — no more repeating yourself.
+After `/new-project`, the AI agent reads `AGENTS.md` every conversation: no more repeating yourself.
 
 ---
 
-## `/quick "..."` — One-off tasks
+## `/quick "..."`: One-off tasks
 
 ```
 /quick "Fix the login button not responding on mobile Safari"
@@ -85,13 +85,13 @@ Executes a small, atomic task with full guarantees: atomic commits, rollback on 
 
 ---
 
-## `/help` — Explore everything
+## `/help`: Explore everything
 
 ```
 /help
 ```
 
-Lists all 42 workflows organized by category with one-line descriptions. Use this when you want to check if a specific capability exists — scope changes, debugging workflows, decision logging, milestone management, and more.
+Lists all 42 workflows organized by category with one-line descriptions. Use this when you want to check if a specific capability exists: scope changes, debugging workflows, decision logging, milestone management, and more.
 
 ---
 

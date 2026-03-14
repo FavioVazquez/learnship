@@ -1,11 +1,11 @@
 ---
 title: Milestone Workflows
-description: Reference for milestone lifecycle workflows — new-milestone, audit, complete, and retrospective.
+description: Reference for milestone lifecycle workflows: new-milestone, audit, complete, and retrospective.
 ---
 
 # Milestone Workflows
 
-These workflows manage the full milestone lifecycle — from planning a new version to archiving it and learning from it.
+These workflows manage the full milestone lifecycle: from planning a new version to archiving it and learning from it.
 
 ![Milestone lifecycle](../assets/milestone-lifecycle.png)
 
@@ -15,7 +15,7 @@ These workflows manage the full milestone lifecycle — from planning a new vers
 
 Captures goals, anti-goals, and constraints before committing to a roadmap.
 
-**Run before `/new-milestone`.** The 10-minute discussion produces `MILESTONE-CONTEXT.md` which `/new-milestone` reads automatically — no re-asking.
+**Run before `/new-milestone`.** The 10-minute discussion produces `MILESTONE-CONTEXT.md` which `/new-milestone` reads automatically: no re-asking.
 
 See [Decision Intelligence → /discuss-milestone](decision-intelligence.md) for full details.
 
@@ -39,7 +39,7 @@ Starts a new milestone version cycle with a fresh roadmap.
 
 ## `/audit-milestone`
 
-Pre-release quality gate — checks everything before you tag a release.
+Pre-release quality gate: checks everything before you tag a release.
 
 **What it checks:**
 - Every REQ-ID from `REQUIREMENTS.md` maps to implementation
@@ -49,7 +49,7 @@ Pre-release quality gate — checks everything before you tag a release.
 
 **Output:** A prioritized gap report. If gaps exist, use `/plan-milestone-gaps` to create fix phases.
 
-**When to use:** Before `/complete-milestone`. Don't skip this — it's the difference between "shipped" and "shipped correctly".
+**When to use:** Before `/complete-milestone`. Don't skip this: it's the difference between "shipped" and "shipped correctly".
 
 ---
 
@@ -81,19 +81,19 @@ Structured 5-question retrospective after completing a milestone.
 
 **Output:** A `RETROSPECTIVE.md` in `.planning/milestones/[version]/`.
 
-**Learning checkpoint:** `space` — schedule key concepts and lessons for spaced review.
+**Learning checkpoint:** `space`: schedule key concepts and lessons for spaced review.
 
 ---
 
 ## `/health`
 
-Project health check — surfaces stale files, uncommitted changes, missing artifacts, and config drift.
+Project health check: surfaces stale files, uncommitted changes, missing artifacts, and config drift.
 
 ```
 /health
 ```
 
-Use this any time you feel the project state might be inconsistent — after a long break, after a manual edit to planning files, or after a git conflict.
+Use this any time you feel the project state might be inconsistent: after a long break, after a manual edit to planning files, or after a git conflict.
 
 ---
 

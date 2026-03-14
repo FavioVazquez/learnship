@@ -1,6 +1,6 @@
 ---
 title: The Phase Loop
-description: How learnship structures work into phases — discuss, plan, execute, verify, and repeat.
+description: How learnship structures work into phases: discuss, plan, execute, verify, and repeat.
 ---
 
 # The Phase Loop
@@ -23,7 +23,7 @@ flowchart LR
 
 ---
 
-## Step 1 — Discuss
+## Step 1: Discuss
 
 ```
 /discuss-phase N
@@ -35,14 +35,14 @@ A structured conversation that happens **before any code is written**. The agent
 - What should be off-limits (things to avoid)?
 - Any constraints from previous phases?
 
-Your answers get written to `.planning/phases/N-*/N-CONTEXT.md`. The planner reads this file before creating any plans — so your preferences are honored, not guessed.
+Your answers get written to `.planning/phases/N-*/N-CONTEXT.md`. The planner reads this file before creating any plans: so your preferences are honored, not guessed.
 
 !!! tip "Why this step matters"
     Skipping discuss and going straight to plan is the most common source of misaligned plans. 10 minutes of discussion prevents hours of rework.
 
 ---
 
-## Step 2 — Plan
+## Step 2: Plan
 
 ```
 /plan-phase N
@@ -61,7 +61,7 @@ Plans are written in a structured format that specifies exact tasks, expected ou
 
 ---
 
-## Step 3 — Execute
+## Step 3: Execute
 
 ```
 /execute-phase N
@@ -81,7 +81,7 @@ See [Context Engineering → Parallel Execution](context-engineering.md) for det
 
 ---
 
-## Step 4 — Verify
+## Step 4: Verify
 
 ```
 /verify-work N
@@ -90,7 +90,7 @@ See [Context Engineering → Parallel Execution](context-engineering.md) for det
 You do the testing. The agent is your diagnostic partner:
 
 1. Agent shows what was built and the acceptance criteria
-2. **You** test it — run the app, call endpoints, check behavior
+2. **You** test it: run the app, call endpoints, check behavior
 3. Report issues in plain language: `"Search returns 500 when query is empty"`
 4. Agent diagnoses root causes and creates targeted fix plans
 5. Execute the fixes: `/execute-phase N` or `/quick "..."`
@@ -106,11 +106,11 @@ When all criteria pass, the phase is marked complete and `STATE.md` advances.
 
 | Step | Learning action offered |
 |------|------------------------|
-| After discuss | `@agentic-learning either-or` — log decisions made |
-| After plan | `@agentic-learning explain-first` — validate your mental model |
+| After discuss | `@agentic-learning either-or`: log decisions made |
+| After plan | `@agentic-learning explain-first`: validate your mental model |
 | After execute | `@agentic-learning reflect` + `quiz` + `interleave` |
 | After verify (pass) | `@agentic-learning space` + `quiz` |
-| After verify (bugs found) | `@agentic-learning learn` — turn the bug into a pattern |
+| After verify (bugs found) | `@agentic-learning learn`: turn the bug into a pattern |
 
 See [Skills → Learning Partner](../skills/agentic-learning.md) for all 11 actions.
 

@@ -24,15 +24,15 @@ hide:
 
 ## What is learnship?
 
-learnship is an **agent harness** for software engineers — the scaffolding that makes your AI coding agent actually reliable across real projects.
+learnship is an **agent harness** for anyone who wants to build, learn, and ship real products using AI agents. It's the scaffolding that makes your AI coding agent actually reliable across real projects.
 
 Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on the same architecture: a simple execution loop wraps the model, and the **harness** decides what information reaches the model, when, and how. The model is interchangeable. The harness is the product.
 
 learnship gives you that harness as a portable, open-source layer that runs inside your existing AI tool and adds three things your agent doesn't have by default:
 
-- **Persistent memory** — an `AGENTS.md` file loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
-- **Structured process** — a repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
-- **Built-in learning** — neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
+- **Persistent memory.** An `AGENTS.md` file is loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
+- **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
+- **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
 
@@ -44,14 +44,14 @@ If you've used AI coding assistants for more than a few sessions, you've hit thi
 
 This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing to completing tasks. Same model. The only variable is the harness.
 
-learnship solves this with **progressive disclosure** — the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
+learnship solves this with **progressive disclosure**, the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
 
 | Without learnship | With learnship |
 |-------------------|----------------|
 | Context resets every session | `AGENTS.md` loaded automatically every conversation |
 | Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
 | Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
-| Everything dumped into context at once | Phase-scoped context — only what this step needs |
+| Everything dumped into context at once | Phase-scoped context: only what this step needs |
 | You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
 | UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
 
@@ -59,7 +59,7 @@ learnship solves this with **progressive disclosure** — the pattern that separ
 
 ## Who is it for?
 
-learnship is built for **developers who want to build with AI agents seriously** — not just for quick scripts, but for real products that need to be maintained, understood, and extended.
+learnship is built for **anyone who wants to build and ship real products with AI agents**, not just developers. If you're a founder, designer, researcher, or maker who uses AI tools to build things, this is for you.
 
 It's the right tool if:
 
@@ -67,9 +67,9 @@ It's the right tool if:
 - You're **learning while building** and want to actually understand what gets shipped
 - You care about **code quality and UI quality** beyond "it works"
 - You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI to ship phases faster
-- You've felt the pain of **context loss** — repeating yourself every session, watching the agent forget past decisions
+- You've felt the frustration of **context loss**: repeating yourself every session while the agent forgets past decisions
 
-It's probably overkill if you just need one-off scripts or quick fixes — use `/quick` for that.
+It's probably overkill if you just need one-off scripts or quick fixes. Use `/quick` for that.
 
 ---
 
@@ -99,7 +99,7 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
   </div>
   <div class="ls-card">
     <div class="ls-card-title">🧠 Learning Partner</div>
-    <p class="ls-card-desc">Neuroscience-backed checkpoints woven into every phase transition. Active retrieval, spaced review, structured reflection — builds real understanding, not just fluent answers.</p>
+    <p class="ls-card-desc">Neuroscience-backed checkpoints woven into every phase transition. Active retrieval, spaced review, and structured reflection build real understanding, not just fluent answers.</p>
     <span class="ls-card-command">@agentic-learning learn · quiz · reflect · space · brainstorm</span>
   </div>
   <div class="ls-card">
@@ -138,7 +138,7 @@ See the [Platform Guide](platform-guide/windsurf.md) for platform-specific setup
 | **Context** | Resets every session | Engineered into every agent call via `AGENTS.md` |
 | **Plans** | Ad-hoc prompts | Spec-driven, verifiable, wave-ordered |
 | **Decisions** | Implicit, forgotten | Tracked in `DECISIONS.md`, honored by the agent |
-| **Learning** | Incidental | Woven in — retrieval, reflection, spacing at every step |
+| **Learning** | Incidental | Woven in: retrieval, reflection, spacing at every step |
 | **Outcome** | Code you shipped | Code you shipped **and understand** |
 
 ---

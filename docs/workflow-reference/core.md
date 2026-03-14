@@ -1,6 +1,6 @@
 ---
 title: Core Workflow
-description: Reference for the 8 core learnship workflows — new-project through complete-milestone.
+description: Reference for the 8 core learnship workflows: new-project through complete-milestone.
 ---
 
 # Core Workflow
@@ -17,13 +17,13 @@ Initializes a new project with full spec-driven scaffolding.
 
 **What it does:**
 1. Structured questioning about what you're building, why, and for whom
-2. Domain research — stack recommendations, architecture patterns, pitfalls
+2. Domain research: stack recommendations, architecture patterns, pitfalls
 3. Writes `AGENTS.md`, `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`
 4. Proposes a phase-by-phase `ROADMAP.md` for your approval
 
 **When to use:** Start of any new project, greenfield or brownfield (after `/map-codebase`).
 
-**Learning checkpoint:** `@agentic-learning brainstorm [topic]` — surface blind spots before planning starts.
+**Learning checkpoint:** `@agentic-learning brainstorm [topic]`: surface blind spots before planning starts.
 
 ---
 
@@ -34,7 +34,7 @@ Captures implementation decisions for phase N before any planning begins.
 **What it does:**
 1. Reads your roadmap and prior `DECISIONS.md`
 2. Asks targeted questions about your preferences for this phase
-3. Writes `.planning/phases/N-*/N-CONTEXT.md` — the planner's primary input
+3. Writes `.planning/phases/N-*/N-CONTEXT.md`: the planner's primary input
 
 **When to use:** Before every `/plan-phase`. Skipping this is the #1 source of misaligned plans.
 
@@ -99,7 +99,7 @@ Manual UAT for phase N with agent-assisted diagnosis and fix planning.
 
 ## `/audit-milestone`
 
-Pre-release quality gate — requirement coverage, stub detection, integration check.
+Pre-release quality gate: requirement coverage, stub detection, integration check.
 
 **What it does:**
 1. Maps every REQ-ID from `REQUIREMENTS.md` to implementation

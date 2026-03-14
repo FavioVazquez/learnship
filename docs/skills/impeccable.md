@@ -1,13 +1,13 @@
 ---
-title: Design System — impeccable
-description: All 17 impeccable steering commands for production-grade UI — prevent AI slop before it ships.
+title: Design System: impeccable
+description: All 17 impeccable steering commands for production-grade UI: prevent AI slop before it ships.
 ---
 
 # Design System
 
 ![impeccable commands](../assets/impeccable-commands.png)
 
-**impeccable** is a suite of 17 design steering commands that give your AI agent production-grade UI standards. It prevents generic AI aesthetics — the kind of interface that screams "AI made this" — by providing specific, actionable design direction at every level.
+**impeccable** is a suite of 17 design steering commands that give your AI agent production-grade UI standards. It prevents generic AI aesthetics: the kind of interface that screams "AI made this": by providing specific, actionable design direction at every level.
 
 Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
 
@@ -17,7 +17,7 @@ Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
 
 Before using any impeccable command, apply this test:
 
-> *If you showed this interface to someone and said "AI made this" — would they believe you immediately?*
+> *If you showed this interface to someone and said "AI made this": would they believe you immediately?*
 
 If the answer is yes, that's the problem. `/critique` finds out exactly where. `/polish` fixes it.
 
@@ -31,7 +31,7 @@ Run this once per project before any UI work:
 /teach-impeccable
 ```
 
-This gathers your project's design context — brand, target audience, existing UI patterns — and saves persistent guidelines. All subsequent impeccable commands read these guidelines so advice is tailored to your project, not generic.
+This gathers your project's design context: brand, target audience, existing UI patterns: and saves persistent guidelines. All subsequent impeccable commands read these guidelines so advice is tailored to your project, not generic.
 
 ---
 
@@ -48,18 +48,18 @@ This gathers your project's design context — brand, target audience, existing 
 
 | Command | What it does |
 |---------|-------------|
-| `/polish` | Final quality pass before shipping — alignment, spacing, consistency, micro-details. The last thing to run before a PR. |
+| `/polish` | Final quality pass before shipping: alignment, spacing, consistency, micro-details. The last thing to run before a PR. |
 | `/normalize` | Normalize the interface to match your design system. Eliminates inconsistencies in spacing, typography, and component usage. |
-| `/harden` | Resilience pass — error states, i18n readiness, text overflow, empty states, edge case handling. |
+| `/harden` | Resilience pass: error states, i18n readiness, text overflow, empty states, edge case handling. |
 
 ### Visual Direction
 
 | Command | What it does |
 |---------|-------------|
-| `/colorize` | Add strategic color to monochromatic or flat interfaces. Applies color with intent — hierarchy, status, emphasis. |
+| `/colorize` | Add strategic color to monochromatic or flat interfaces. Applies color with intent: hierarchy, status, emphasis. |
 | `/animate` | Add purposeful animations and micro-interactions. Motion that communicates state, not decorates. |
-| `/bolder` | Amplify safe or visually timid designs — more impact, stronger hierarchy, clearer intent. |
-| `/quieter` | Tone down aggressive or busy designs — reduce visual noise, increase refinement, find the essential signal. |
+| `/bolder` | Amplify safe or visually timid designs: more impact, stronger hierarchy, clearer intent. |
+| `/quieter` | Tone down aggressive or busy designs: reduce visual noise, increase refinement, find the essential signal. |
 | `/distill` | Strip to essence. Remove everything that doesn't serve the user's goal. |
 
 ### Content & Copy
@@ -72,7 +72,7 @@ This gathers your project's design context — brand, target audience, existing 
 
 | Command | What it does |
 |---------|-------------|
-| `/optimize` | Performance audit and fixes — loading speed, rendering, animation performance, bundle impact. |
+| `/optimize` | Performance audit and fixes: loading speed, rendering, animation performance, bundle impact. |
 
 ### Experience & Delight
 
@@ -112,7 +112,7 @@ This gathers your project's design context — brand, target audience, existing 
 
 | Platform | How it works |
 |----------|-------------|
-| **Windsurf** | Native skills — each command is a dedicated skill file. Invoke directly: `/audit`, `/polish`, `/critique`, etc. Cascade dispatches to the right sub-skill. |
+| **Windsurf** | Native skills: each command is a dedicated skill file. Invoke directly: `/audit`, `/polish`, `/critique`, etc. Cascade dispatches to the right sub-skill. |
 | **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/impeccable/`. Reference explicitly: `run the /audit impeccable skill`, or just ask for UI work and the agent applies the standards automatically from the context files. |
 
 ---
@@ -127,7 +127,7 @@ These are the most common signs of AI-generated UI that impeccable is specifical
 - **Generic empty states** that say "No data found" with a sad icon
 - **Animations that use `ease-in-out` for everything** without matching the interaction type
 - **Color that decorates** rather than communicates state or hierarchy
-- **Typography with no rhythm** — inconsistent line heights, arbitrary font sizes
-- **Mobile designs that are just desktop scaled down** — no real touch target consideration
+- **Typography with no rhythm.** Inconsistent line heights, arbitrary font sizes
+- **Mobile designs that are just desktop scaled down.** No real touch target consideration
 
 Run `/critique` to find these. Run the targeted commands to fix them.

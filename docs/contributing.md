@@ -1,11 +1,11 @@
 ---
 title: Contributing
-description: How to extend learnship — add workflows, improve skills, submit PRs.
+description: How to extend learnship: add workflows, improve skills, submit PRs.
 ---
 
 # Contributing
 
-learnship is built in the open. Contributions — new workflows, skill improvements, platform support, bug fixes, and documentation — are welcome.
+learnship is built in the open. Contributions: new workflows, skill improvements, platform support, bug fixes, and documentation: are welcome.
 
 ---
 
@@ -14,7 +14,7 @@ learnship is built in the open. Contributions — new workflows, skill improveme
 ```
 learnship/
 ├── .windsurf/workflows/    # 42 workflows as slash commands (source of truth)
-├── learnship/workflows/    # installed payload — must stay in sync with .windsurf/
+├── learnship/workflows/    # installed payload: must stay in sync with .windsurf/
 ├── .windsurf/skills/       # agentic-learning + impeccable native skills
 ├── agents/                 # 6+ agent persona files
 ├── commands/               # Claude Code-style slash command wrappers
@@ -51,7 +51,7 @@ learnship/
 
     > 💡 **Learning moment:** [context-appropriate action]
     >
-    > `@agentic-learning [action] [topic]` — [why this action, why now]
+    > `@agentic-learning [action] [topic]`: [why this action, why now]
 
     **If `manual`:** Add quietly: *"Tip: `@agentic-learning [action]` to [benefit]."*
     ```
@@ -64,7 +64,7 @@ learnship/
 
 3. **Add to `help.md`** in both `.windsurf/workflows/` and `learnship/workflows/`.
 
-4. **Add tests** — new workflows need at least:
+4. **Add tests.** New workflows need at least:
     - File exists check in both locations
     - Source and installed copies are identical
     - Frontmatter description is present
@@ -179,6 +179,6 @@ Images are saved to `assets/` and referenced in docs and the README.
 
 learnship builds on:
 
-- **[get-shit-done](https://github.com/davila7/get-shit-done)** — spec-driven workflow and planning artifact patterns
-- **[agentic-learn](https://github.com/faviovazquez/agentic-learn)** — neuroscience-backed learning techniques
-- **[impeccable](https://github.com/pbakaus/impeccable)** — frontend design quality system
+- **[get-shit-done](https://github.com/davila7/get-shit-done).** Spec-driven workflow and planning artifact patterns
+- **[agentic-learn](https://github.com/faviovazquez/agentic-learn).** Neuroscience-backed learning techniques
+- **[impeccable](https://github.com/pbakaus/impeccable).** Frontend design quality system

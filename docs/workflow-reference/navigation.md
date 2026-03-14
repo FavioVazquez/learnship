@@ -1,6 +1,6 @@
 ---
 title: Navigation
-description: Reference for learnship navigation and utility workflows — ls, next, quick, resume-work, pause-work.
+description: Reference for learnship navigation and utility workflows: ls, next, quick, resume-work, pause-work.
 ---
 
 # Navigation
@@ -16,7 +16,7 @@ Shows current project status and what to do next. Run this at the start of every
 **What it shows:**
 - Current phase, position, and progress bar
 - Last activity and timestamp
-- Recommended next step — with an offer to run it
+- Recommended next step: with an offer to run it
 
 **New user (no project):** Explains learnship and offers to run `/new-project`.  
 **Returning user:** Shows progress and routes you into the next workflow.
@@ -25,7 +25,7 @@ Shows current project status and what to do next. Run this at the start of every
 
 ## `/next`
 
-Auto-pilot — reads state and immediately runs the correct next workflow.
+Auto-pilot: reads state and immediately runs the correct next workflow.
 
 **Use when:** You trust the state is current and just want to keep moving without reviewing the status first.
 
@@ -35,7 +35,7 @@ Under the hood: same logic as `/ls`, but dispatches immediately instead of askin
 
 ## `/progress`
 
-Identical to `/ls` — full status overview and smart routing. An alias for users who prefer the word "progress" over "ls".
+Identical to `/ls`: full status overview and smart routing. An alias for users who prefer the word "progress" over "ls".
 
 ---
 
@@ -49,7 +49,7 @@ Restores full project context after a break or in a new session.
 3. Detects incomplete plans (PLAN without SUMMARY)
 4. Presents a clear status panel and recommended next action
 
-**Learning checkpoint:** `quiz [phase topic]` · `space` — warm up after a break before diving in.
+**Learning checkpoint:** `quiz [phase topic]` · `space`: warm up after a break before diving in.
 
 ---
 
@@ -64,7 +64,7 @@ Saves a handoff file so you can resume seamlessly in a future session.
 - Blockers
 - The specific first action to take when resuming
 
-**Learning checkpoint:** `space` · `reflect` — schedule what you worked on before closing.
+**Learning checkpoint:** `space` · `reflect`: schedule what you worked on before closing.
 
 ---
 
@@ -86,7 +86,7 @@ Executes a small, self-contained task with full guarantees. No phase planning ce
 | `--discuss` | Brief decision conversation before executing |
 | `--full` | Full plan + execute + verification pass |
 
-**Learning checkpoint:** `struggle` · `learn` · `either-or` — matched to what happened during the task.
+**Learning checkpoint:** `struggle` · `learn` · `either-or`: matched to what happened during the task.
 
 ---
 
@@ -98,7 +98,7 @@ Lists all 42 workflows organized by category with one-line descriptions.
 /help
 ```
 
-Use this to discover capabilities — scope management, debugging workflows, decision logging, milestone management, and more.
+Use this to discover capabilities: scope management, debugging workflows, decision logging, milestone management, and more.
 
 ---
 
@@ -106,4 +106,4 @@ Use this to discover capabilities — scope management, debugging workflows, dec
 
 Writes a full `HANDOFF.md` document for handing off to a new session or collaborator.
 
-Contains: full project context, current state, open decisions, blockers, and exactly what to do next. More comprehensive than `/pause-work` — intended for longer breaks or team handoffs.
+Contains: full project context, current state, open decisions, blockers, and exactly what to do next. More comprehensive than `/pause-work`: intended for longer breaks or team handoffs.

@@ -1,6 +1,6 @@
 ---
 title: Brownfield Project
-description: Adding features to an existing codebase with learnship — map-codebase first, then the normal phase loop.
+description: Adding features to an existing codebase with learnship: map-codebase first, then the normal phase loop.
 ---
 
 # Brownfield Project
@@ -19,7 +19,7 @@ Adding learnship to an existing codebase takes one extra step: `/map-codebase` b
 
 ---
 
-## Step 1 — Map the codebase
+## Step 1: Map the codebase
 
 ```
 /map-codebase
@@ -40,20 +40,20 @@ The agent analyzes your existing codebase and produces `.planning/codebase/`:
 ```markdown
 ## CONCERNS
 
-1. Auth module — mixed synchronous and async patterns, no consistent error handling
-2. Database layer — raw SQL mixed with Knex queries in the same files
+1. Auth module: mixed synchronous and async patterns, no consistent error handling
+2. Database layer: raw SQL mixed with Knex queries in the same files
 3. No test coverage for the payment module (0%)
-4. `utils/helpers.js` is a 1200-line catch-all — high coupling risk
+4. `utils/helpers.js` is a 1200-line catch-all: high coupling risk
 ```
 
-This file is read by every subsequent planner — it shapes which areas get touched and which are avoided.
+This file is read by every subsequent planner: it shapes which areas get touched and which are avoided.
 
 !!! tip
-    Be honest in your `/map-codebase` session. The agent will find the concerns anyway — better to surface them explicitly than have the planner stumble into them mid-execution.
+    Be honest in your `/map-codebase` session. The agent will find the concerns anyway: better to surface them explicitly than have the planner stumble into them mid-execution.
 
 ---
 
-## Step 2 — Initialize the project
+## Step 2: Initialize the project
 
 ```
 /new-project
@@ -63,7 +63,7 @@ With `CODEBASE/` artifacts present, the questions shift:
 
 ```
 What are you ADDING to this codebase?
-→ A notification system — email + in-app — triggered by task events
+→ A notification system: email + in-app: triggered by task events
 
 What should this milestone NOT change?
 → Auth system (active users), payment module (undergoing audit), public API shape
@@ -72,11 +72,11 @@ What existing patterns should the new code follow?
 → Async/await throughout, Knex for DB queries, Jest for testing
 ```
 
-The roadmap is scoped to the new feature only — it won't touch the auth system or payment module because those are explicitly off-limits.
+The roadmap is scoped to the new feature only: it won't touch the auth system or payment module because those are explicitly off-limits.
 
 ---
 
-## Step 3 — Normal phase loop
+## Step 3: Normal phase loop
 
 From here the workflow is identical to greenfield:
 
@@ -99,7 +99,7 @@ If a phase touches an area you haven't worked in before:
 /discovery-phase N
 ```
 
-Produces `N-DISCOVERY.md` — a focused map of the specific code area the phase will touch. More targeted than `/map-codebase` (which is the whole codebase).
+Produces `N-DISCOVERY.md`: a focused map of the specific code area the phase will touch. More targeted than `/map-codebase` (which is the whole codebase).
 
 ```
 /list-phase-assumptions N
@@ -116,5 +116,5 @@ Shows what the agent intends to do before creating any plans. Redirect early if 
 | First step | `/new-project` | `/map-codebase` → `/new-project` |
 | Questions focus | What are you building? | What are you ADDING? What's off-limits? |
 | Planner context | Domain research only | Codebase map + domain research |
-| Anti-goals | Optional | Essential — scope what must not change |
+| Anti-goals | Optional | Essential: scope what must not change |
 | Per-phase prep | `/discuss-phase` | `/discuss-phase` + optionally `/discovery-phase` |

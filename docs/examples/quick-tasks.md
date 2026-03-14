@@ -1,6 +1,6 @@
 ---
 title: Quick Tasks
-description: Using /quick for one-off fixes, experiments, and small features — patterns and flags.
+description: Using /quick for one-off fixes, experiments, and small features: patterns and flags.
 ---
 
 # Quick Tasks
@@ -26,7 +26,7 @@ Each produces:
 
 ## Flags
 
-### `--discuss` — brief decision conversation first
+### `--discuss`: brief decision conversation first
 
 ```bash
 /quick --discuss "Add dark mode toggle to the settings page"
@@ -39,15 +39,15 @@ Before executing, the agent asks 2–3 clarifying questions:
 
 Use this when you have a clear goal but want to align on approach before any code is written.
 
-### `--full` — full plan + execution + verification
+### `--full`: full plan + execution + verification
 
 ```bash
 /quick --full "Refactor the auth middleware to support OAuth"
 ```
 
-Adds a full verification pass after execution — the agent checks that the refactor didn't break existing functionality and that the OAuth integration works end-to-end.
+Adds a full verification pass after execution: the agent checks that the refactor didn't break existing functionality and that the OAuth integration works end-to-end.
 
-Use this for tasks that are small in scope but high in impact — where you want the same guarantees as a full phase without the overhead.
+Use this for tasks that are small in scope but high in impact: where you want the same guarantees as a full phase without the overhead.
 
 ---
 
@@ -68,7 +68,7 @@ Use this for tasks that are small in scope but high in impact — where you want
 
 ## Combining quick tasks with the phase loop
 
-Quick tasks run independently of the phase loop — they don't advance phase status. You can run a `/quick` in the middle of a phase for an urgent bug without disrupting your phase progress:
+Quick tasks run independently of the phase loop: they don't advance phase status. You can run a `/quick` in the middle of a phase for an urgent bug without disrupting your phase progress:
 
 ```bash
 # Mid-phase urgent fix
@@ -85,7 +85,7 @@ Quick tasks run independently of the phase loop — they don't advance phase sta
 The learning checkpoint on `/quick` matches the action to what happened:
 
 ```
-@agentic-learning struggle [task]    # if it was tricky — re-solve with a hint ladder
+@agentic-learning struggle [task]    # if it was tricky: re-solve with a hint ladder
 @agentic-learning learn [domain]     # if it touched an unfamiliar area
 @agentic-learning either-or          # if you made a meaningful design choice
 ```

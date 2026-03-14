@@ -1,6 +1,6 @@
 ---
 title: Maintenance
-description: Reference for maintenance workflows — settings, health, update, cleanup, sync-upstream-skills.
+description: Reference for maintenance workflows: settings, health, update, cleanup, sync-upstream-skills.
 ---
 
 # Maintenance
@@ -17,7 +17,7 @@ Interactive configuration editor for `.planning/config.json`.
 /settings
 ```
 
-Walks you through each setting with explanations and current values. Safer than editing `config.json` directly — validates values before writing.
+Walks you through each setting with explanations and current values. Safer than editing `config.json` directly: validates values before writing.
 
 See [Configuration](../configuration.md) for the full schema reference.
 
@@ -25,7 +25,7 @@ See [Configuration](../configuration.md) for the full schema reference.
 
 ## `/set-profile [quality|balanced|budget]`
 
-One-step model profile switch — the fastest way to adjust cost vs. quality.
+One-step model profile switch: the fastest way to adjust cost vs. quality.
 
 ```
 /set-profile quality    # all agents use large models
@@ -39,7 +39,7 @@ Only changes `model_profile` in `config.json`. For full preset changes (mode, gr
 
 ## `/health`
 
-Project health check — surfaces issues before they become blockers.
+Project health check: surfaces issues before they become blockers.
 
 **What it checks:**
 - Stale planning files (last modified > 30 days with no activity)
@@ -106,6 +106,6 @@ Syncs `@agentic-learning` and `@impeccable` skills from their upstream repositor
 
 ## `/release`
 
-Cuts a new learnship release — bumps version, updates changelog, pushes tag, creates GitHub release.
+Cuts a new learnship release: bumps version, updates changelog, pushes tag, creates GitHub release.
 
 **When to use:** When you're developing learnship itself and want to publish a new version. Not needed for normal project work.

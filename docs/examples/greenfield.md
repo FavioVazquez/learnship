@@ -9,7 +9,7 @@ A complete walkthrough of building a task manager API from scratch with learnshi
 
 ---
 
-## Session 1 — Initialize
+## Session 1: Initialize
 
 ```
 /new-project
@@ -34,7 +34,7 @@ Target environment?
 learnship researches the domain, then proposes:
 
 ```
-Milestone: v1.0 — Task Manager API
+Milestone: v1.0: Task Manager API
 
 Phase 1: Project foundation (auth, DB schema, migrations)
 Phase 2: Core task endpoints (CRUD, filtering, pagination)
@@ -45,11 +45,11 @@ Phase 4: Testing and hardening (integration tests, error handling)
 Approve the roadmap → `AGENTS.md` + `.planning/` scaffolded, committed.
 
 !!! tip "Learning moment"
-    `@agentic-learning brainstorm authentication patterns` — talk through JWT vs sessions vs OAuth before Phase 1 planning locks anything in.
+    `@agentic-learning brainstorm authentication patterns`: talk through JWT vs sessions vs OAuth before Phase 1 planning locks anything in.
 
 ---
 
-## Session 2 — Phase 1
+## Session 2: Phase 1
 
 ```
 /discuss-phase 1
@@ -62,12 +62,12 @@ Conversation covers: JWT vs sessions (chose JWT), Knex vs Prisma (chose Prisma),
 ```
 
 Planner creates three plans:
-- `01-01-PLAN.md` — database schema + Prisma setup
-- `01-02-PLAN.md` — JWT authentication middleware
-- `01-03-PLAN.md` — user registration and login endpoints
+- `01-01-PLAN.md`: database schema + Prisma setup
+- `01-02-PLAN.md`: JWT authentication middleware
+- `01-03-PLAN.md`: user registration and login endpoints
 
 !!! tip "Before executing"
-    `@agentic-learning explain-first auth flow` — if you can explain the JWT flow before seeing code, the execution will go smoother.
+    `@agentic-learning explain-first auth flow`: if you can explain the JWT flow before seeing code, the execution will go smoother.
 
 ```
 /execute-phase 1
@@ -100,7 +100,7 @@ Agent diagnoses: missing unique constraint error handler in the Prisma adapter. 
 
 ---
 
-## Sessions 3–5 — Phases 2 and 3
+## Sessions 3–5: Phases 2 and 3
 
 Same pattern repeats. By the end of Phase 3:
 
@@ -115,7 +115,7 @@ Same pattern repeats. By the end of Phase 3:
 
 ---
 
-## Session 6 — Phase 4 + Release
+## Session 6: Phase 4 + Release
 
 ```
 /discuss-phase 4
@@ -142,7 +142,7 @@ Archives phases, creates tag `v1.0.0`, advances project state.
 /milestone-retrospective
 ```
 
-5-question retrospective. Key lesson logged: "Prisma error handling needs explicit middleware — don't rely on default error propagation."
+5-question retrospective. Key lesson logged: "Prisma error handling needs explicit middleware: don't rely on default error propagation."
 
 ```
 @agentic-learning space
@@ -165,7 +165,7 @@ Schedules: Prisma error handling, JWT refresh pattern, WebSocket broadcast archi
 
 ## Key patterns to carry forward
 
-- Always `/discuss-phase` before `/plan-phase` — the context file is the planner's primary input
+- Always `/discuss-phase` before `/plan-phase`: the context file is the planner's primary input
 - `/verify-work` is you doing real testing, not the agent running scripts
-- Bugs found during UAT are learning moments — use `@agentic-learning learn [domain]`
-- `/audit-milestone` before releasing — it catches what manual testing misses
+- Bugs found during UAT are learning moments: use `@agentic-learning learn [domain]`
+- `/audit-milestone` before releasing: it catches what manual testing misses

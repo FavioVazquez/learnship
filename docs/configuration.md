@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: Full reference for .planning/config.json — every setting, toggle, and preset explained.
+description: Full reference for .planning/config.json: every setting, toggle, and preset explained.
 ---
 
 # Configuration
@@ -81,7 +81,7 @@ Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profi
 | Value | Behavior |
 |-------|----------|
 | `"auto"` | Learning checkpoints offered automatically at phase transitions. Default. |
-| `"manual"` | Checkpoints are quiet — invoke `@agentic-learning` explicitly when you want it. |
+| `"manual"` | Checkpoints are quiet: invoke `@agentic-learning` explicitly when you want it. |
 
 ### `parallelization`
 
@@ -148,7 +148,7 @@ Template variables: `{phase}` = phase number, `{slug}` = kebab-case phase name, 
 | Normal development | `yolo` | `standard` | `balanced` | all on |
 | Production / client | `interactive` | `fine` | `quality` | all on |
 
-Apply a preset with `/settings` or edit `config.json` directly. The `/set-profile` command switches `model_profile` only — for full preset changes use `/settings`.
+Apply a preset with `/settings` or edit `config.json` directly. The `/set-profile` command switches `model_profile` only: for full preset changes use `/settings`.
 
 ---
 
@@ -166,4 +166,4 @@ Apply a preset with `/settings` or edit `config.json` directly. The `/set-profil
 /set-profile budget
 ```
 
-**Direct edit:** Open `.planning/config.json` in your editor — changes take effect immediately on the next workflow run.
+**Direct edit:** Open `.planning/config.json` in your editor: changes take effect immediately on the next workflow run.

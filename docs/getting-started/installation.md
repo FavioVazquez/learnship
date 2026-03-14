@@ -7,7 +7,7 @@ description: Install learnship on Windsurf, Claude Code, OpenCode, Gemini CLI, o
 
 ![Install learnship](../assets/install.png)
 
-learnship installs as a set of workflow files into your AI platform's configuration directory. No daemon, no build step — just markdown files your agent reads.
+learnship installs as a set of workflow files into your AI platform's configuration directory. No daemon, no build step: just markdown files your agent reads.
 
 ## Quick install
 
@@ -25,7 +25,7 @@ The installer auto-detects which platforms are configured on your machine and as
     npx github:FavioVazquez/learnship --windsurf --global
     ```
 
-    Installs to `~/.windsurf/` — workflows available as `/slash-commands` in all Windsurf projects. Native `@agentic-learning` and `@impeccable` skills included.
+    Installs to `~/.windsurf/`: workflows available as `/slash-commands` in all Windsurf projects. Native `@agentic-learning` and `@impeccable` skills included.
 
 === "Claude Code"
 
@@ -33,7 +33,7 @@ The installer auto-detects which platforms are configured on your machine and as
     npx github:FavioVazquez/learnship --claude --global
     ```
 
-    Installs to `~/.claude/` — invoke as `/learnship:ls`, `/learnship:new-project`, etc.
+    Installs to `~/.claude/`: invoke as `/learnship:ls`, `/learnship:new-project`, etc.
 
 === "OpenCode"
 
@@ -41,7 +41,7 @@ The installer auto-detects which platforms are configured on your machine and as
     npx github:FavioVazquez/learnship --opencode --global
     ```
 
-    Installs to `~/.config/opencode/` — invoke as `/learnship-ls`, `/learnship-new-project`, etc.
+    Installs to `~/.config/opencode/`: invoke as `/learnship-ls`, `/learnship-new-project`, etc.
 
 === "Gemini CLI"
 
@@ -49,7 +49,7 @@ The installer auto-detects which platforms are configured on your machine and as
     npx github:FavioVazquez/learnship --gemini --global
     ```
 
-    Installs to `~/.gemini/` — invoke as `/learnship:ls`, `/learnship:new-project`, etc.
+    Installs to `~/.gemini/`: invoke as `/learnship:ls`, `/learnship:new-project`, etc.
 
 === "Codex CLI"
 
@@ -57,7 +57,7 @@ The installer auto-detects which platforms are configured on your machine and as
     npx github:FavioVazquez/learnship --codex --global
     ```
 
-    Installs to `~/.codex/` — invoke as `$learnship-ls`, `$learnship-new-project`, etc.
+    Installs to `~/.codex/`: invoke as `$learnship-ls`, `$learnship-new-project`, etc.
 
 === "All platforms"
 

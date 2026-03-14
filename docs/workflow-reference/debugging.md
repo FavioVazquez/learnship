@@ -1,6 +1,6 @@
 ---
 title: Debugging
-description: Reference for debugging and brownfield workflows — debug, diagnose-issues, map-codebase, discovery-phase.
+description: Reference for debugging and brownfield workflows: debug, diagnose-issues, map-codebase, discovery-phase.
 ---
 
 # Debugging
@@ -19,15 +19,15 @@ Systematic root-cause debugging: triage → diagnose → fix → verify.
 ```
 
 **What it does:**
-1. **Triage** — reproduces the issue, narrows the search space
-2. **Diagnose** — root cause analysis (hypothesis testing, bisect, tracing)
-3. **Plan fix** — creates a targeted fix plan, no unnecessary changes
-4. **Execute** — implements the fix with atomic commits
-5. **Verify** — confirms the bug is gone and no regressions introduced
+1. **Triage.** Reproduces the issue, narrows the search space
+2. **Diagnose.** Root cause analysis (hypothesis testing, bisect, tracing)
+3. **Plan fix.** Creates a targeted fix plan, no unnecessary changes
+4. **Execute.** Implements the fix with atomic commits
+5. **Verify.** Confirms the bug is gone and no regressions introduced
 
 Maintains a persistent debug session in `.planning/debug/` so context isn't lost across steps.
 
-**Learning checkpoint:** `learn [bug domain]` · `struggle [the problem]` · `either-or` — bugs are the highest-signal learning moments. Don't just fix and move on.
+**Learning checkpoint:** `learn [bug domain]` · `struggle [the problem]` · `either-or`: bugs are the highest-signal learning moments. Don't just fix and move on.
 
 ---
 
@@ -35,7 +35,7 @@ Maintains a persistent debug session in `.planning/debug/` so context isn't lost
 
 Batch-diagnoses multiple UAT issues after `/verify-work` finds several problems.
 
-**When to use:** After `/verify-work N` finds 3+ issues — groups them by root cause, identifies shared underlying problems, and proposes a consolidated fix plan. More efficient than running `/debug` on each issue separately.
+**When to use:** After `/verify-work N` finds 3+ issues: groups them by root cause, identifies shared underlying problems, and proposes a consolidated fix plan. More efficient than running `/debug` on each issue separately.
 
 **Output:** A structured diagnosis grouping issues by root cause, with a prioritized fix plan.
 
@@ -48,16 +48,16 @@ Structured analysis of an existing codebase before starting work on it.
 **When to use:** Before `/new-project` when you're adding features to existing code (brownfield). Gives the agent a grounded understanding of the architecture before it makes any plans.
 
 **What it produces:** `.planning/codebase/` with:
-- `STACK.md` — tech stack and dependencies
-- `ARCHITECTURE.md` — structural patterns and key relationships
-- `CONVENTIONS.md` — naming, style, patterns in use
-- `CONCERNS.md` — identified risks, technical debt, areas to avoid
+- `STACK.md`: tech stack and dependencies
+- `ARCHITECTURE.md`: structural patterns and key relationships
+- `CONVENTIONS.md`: naming, style, patterns in use
+- `CONCERNS.md`: identified risks, technical debt, areas to avoid
 
 ---
 
 ## `/execute-plan [N] [plan-id]`
 
-Runs a single plan in isolation — useful for re-running a failed plan without re-executing the whole phase.
+Runs a single plan in isolation: useful for re-running a failed plan without re-executing the whole phase.
 
 ```bash
 /execute-plan 2 01    # re-run plan 01 of phase 2
