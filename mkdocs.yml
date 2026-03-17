@@ -1,5 +1,5 @@
 site_name: learnship
-site_description: Learn as you build. Build with intent. Agentic engineering for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex.
+site_description: Learn as you build. Build with intent. Agentic engineering for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex.
 site_url: https://faviovazquez.github.io/learnship/
 repo_url: https://github.com/FavioVazquez/learnship
 repo_name: FavioVazquez/learnship
@@ -112,6 +112,7 @@ nav:
   - Platform Guide:
     - Windsurf: platform-guide/windsurf.md
     - Claude Code: platform-guide/claude-code.md
+    - Cursor: platform-guide/cursor.md
     - OpenCode: platform-guide/opencode.md
     - Gemini CLI: platform-guide/gemini-cli.md
     - Codex CLI: platform-guide/codex-cli.md
