@@ -83,16 +83,31 @@ It's probably overkill if you just need one-off scripts or quick fixes. Use `/qu
 
 ![Install learnship](assets/install.png)
 
+**Via npm (all platforms — recommended):**
+
 ```bash
-# Runs directly from GitHub, no clone needed
-npx github:FavioVazquez/learnship
+npx learnship
 ```
 
 The installer auto-detects your platform. Choose **global** (all projects) or **local** (current project only):
 
 ```bash
-npx github:FavioVazquez/learnship --global   # all projects
-npx github:FavioVazquez/learnship --local    # this project only
+npx learnship --global   # all projects
+npx learnship --local    # this project only
+```
+
+**Via platform marketplace (no terminal required):**
+
+```bash
+# Claude Code — community marketplace
+/plugin marketplace add FavioVazquez/learnship-marketplace
+/plugin install learnship@learnship-marketplace
+
+# Cursor — after marketplace approval
+/add-plugin learnship
+
+# Gemini CLI — native extension
+gemini extensions install https://github.com/FavioVazquez/learnship
 ```
 
 Or specify your platform explicitly. See [Platform Support](#-platform-support) below.
@@ -128,15 +143,16 @@ learnship works on **5 platforms**. Pick your tool:
 
 | Platform | Install command | Invoke commands as |
 |----------|----------------|-------------------|
-| **Windsurf** | `npx github:FavioVazquez/learnship --windsurf --global` | `/ls`, `/new-project` |
-| **Claude Code** | `npx github:FavioVazquez/learnship --claude --global` | `/learnship:ls`, `/learnship:new-project` |
-| **OpenCode** | `npx github:FavioVazquez/learnship --opencode --global` | `/learnship-ls`, `/learnship-new-project` |
-| **Gemini CLI** | `npx github:FavioVazquez/learnship --gemini --global` | `/learnship:ls`, `/learnship:new-project` |
-| **Codex CLI** | `npx github:FavioVazquez/learnship --codex --global` | `$learnship-ls`, `$learnship-new-project` |
+| **Windsurf** | `npx learnship --windsurf --global` | `/ls`, `/new-project` |
+| **Claude Code** | `npx learnship --claude --global` | `/learnship:ls`, `/learnship:new-project` |
+| **Cursor** | `/add-plugin learnship` *(after marketplace approval)* | `@learnship` rules load automatically |
+| **OpenCode** | `npx learnship --opencode --global` | `/learnship-ls`, `/learnship-new-project` |
+| **Gemini CLI** | `npx learnship --gemini --global` | `/learnship:ls`, `/learnship:new-project` |
+| **Codex CLI** | `npx learnship --codex --global` | `$learnship-ls`, `$learnship-new-project` |
 
 ```bash
 # All platforms at once
-npx github:FavioVazquez/learnship --all --global
+npx learnship --all --global
 ```
 
 ### 🤖 Platform capabilities

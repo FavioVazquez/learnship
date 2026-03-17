@@ -75,7 +75,7 @@ It's probably overkill if you just need one-off scripts or quick fixes. Use `/qu
 ## Install in 30 seconds
 
 ```bash
-npx github:FavioVazquez/learnship
+npx learnship
 ```
 
 The installer auto-detects your platform. Then open your AI agent and type:
@@ -121,7 +121,7 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
 </div>
 
 ```bash
-npx github:FavioVazquez/learnship --all --global   # all platforms at once
+npx learnship --all --global   # all platforms at once
 ```
 
 See the [Platform Guide](platform-guide/windsurf/) for platform-specific setup and capabilities.

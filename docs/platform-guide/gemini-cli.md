@@ -10,7 +10,13 @@ Gemini CLI gets full learnship capabilities. Unlike Claude Code and OpenCode, pa
 ## Install
 
 ```bash
-npx github:FavioVazquez/learnship --gemini --global
+npx learnship --gemini --global
+```
+
+Alternatively, install as a native Gemini CLI extension (no terminal needed after this):
+
+```bash
+gemini extensions install https://github.com/FavioVazquez/learnship
 ```
 
 Installs to `~/.gemini/learnship/`.

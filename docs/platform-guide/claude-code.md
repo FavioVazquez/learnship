@@ -10,10 +10,17 @@ Claude Code gets full learnship capabilities including real parallel subagents, 
 ## Install
 
 ```bash
-npx github:FavioVazquez/learnship --claude --global
+npx learnship --claude --global
 ```
 
 Installs to `~/.claude/learnship/`.
+
+Alternatively, install via the community marketplace (no terminal required):
+
+```
+/plugin marketplace add FavioVazquez/learnship-marketplace
+/plugin install learnship@learnship-marketplace
+```
 
 ## Invoke commands
 

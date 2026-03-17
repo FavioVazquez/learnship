@@ -1552,7 +1552,7 @@ check('docs/index.md exists and contains npx install command', () => {
   const indexPath = path.join(DOCS, 'index.md');
   assert(fs.existsSync(indexPath), 'docs/index.md not found');
   const content = fs.readFileSync(indexPath, 'utf8');
-  assert(content.includes('npx github:FavioVazquez/learnship'), 'install command missing from docs/index.md');
+  assert(content.includes('npx learnship'), 'install command missing from docs/index.md');
 });
 
 // 5. All 5 platform guide pages exist
@@ -1733,6 +1733,299 @@ while IFS= read -r line; do
     "  FAIL "*) fail "${line#  FAIL }" ;;
   esac
 done <<< "$S14_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 15: Claude Code plugin manifest
+# ──────────────────────────────────────────────────────────────────────────
+TMPSCRIPT15=$(mktemp /tmp/ls_test15_XXXXXX.js)
+cat > "$TMPSCRIPT15" << 'NODEEOF'
+const fs = require('fs');
+const path = require('path');
+const REPO = process.argv[2];
+let pass = 0, fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ' — ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. .claude-plugin/plugin.json exists
+check('.claude-plugin/plugin.json exists', () => {
+  const p = path.join(REPO, '.claude-plugin', 'plugin.json');
+  assert(fs.existsSync(p), '.claude-plugin/plugin.json not found');
+});
+
+// 2. Claude Code plugin.json has required fields
+check('.claude-plugin/plugin.json has required fields (name, description, version)', () => {
+  const p = path.join(REPO, '.claude-plugin', 'plugin.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(cfg.name === 'learnship', 'name must be "learnship"');
+  assert(typeof cfg.description === 'string' && cfg.description.length > 10, 'description missing or too short');
+  assert(typeof cfg.version === 'string' && cfg.version.match(/^\d+\.\d+\.\d+$/), 'version not semver');
+});
+
+// 3. Claude Code plugin.json paths point to real directories
+check('.claude-plugin/plugin.json paths point to real directories', () => {
+  const p = path.join(REPO, '.claude-plugin', 'plugin.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  if (cfg.commands) assert(fs.existsSync(path.join(REPO, cfg.commands)), `commands dir not found: ${cfg.commands}`);
+  if (cfg.agents) assert(fs.existsSync(path.join(REPO, cfg.agents)), `agents dir not found: ${cfg.agents}`);
+  if (cfg.skills) assert(fs.existsSync(path.join(REPO, cfg.skills)), `skills dir not found: ${cfg.skills}`);
+});
+
+// 4. Claude Code plugin.json version matches package.json
+check('.claude-plugin/plugin.json version matches package.json', () => {
+  const pluginCfg = JSON.parse(fs.readFileSync(path.join(REPO, '.claude-plugin', 'plugin.json'), 'utf8'));
+  const pkgCfg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pluginCfg.version === pkgCfg.version,
+    `plugin.json version (${pluginCfg.version}) does not match package.json (${pkgCfg.version})`);
+});
+
+// 5. Marketplace manifest exists
+check('marketplace/.claude-plugin/marketplace.json exists', () => {
+  const p = path.join(REPO, 'marketplace', '.claude-plugin', 'marketplace.json');
+  assert(fs.existsSync(p), 'marketplace/.claude-plugin/marketplace.json not found');
+});
+
+// 6. Marketplace manifest has required fields
+check('marketplace manifest has name, owner, plugins array', () => {
+  const p = path.join(REPO, 'marketplace', '.claude-plugin', 'marketplace.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(typeof cfg.name === 'string', 'marketplace name missing');
+  assert(cfg.owner && cfg.owner.name, 'marketplace owner.name missing');
+  assert(Array.isArray(cfg.plugins) && cfg.plugins.length > 0, 'plugins array missing or empty');
+  assert(cfg.plugins[0].name === 'learnship', 'first plugin name must be learnship');
+});
+
+console.log('\nSECTION15_PASS=' + pass);
+console.log('SECTION15_FAIL=' + fail);
+NODEEOF
+
+S15_OUTPUT=$(node "$TMPSCRIPT15" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT15"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S15_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 16: Cursor plugin manifest
+# ──────────────────────────────────────────────────────────────────────────
+TMPSCRIPT16=$(mktemp /tmp/ls_test16_XXXXXX.js)
+cat > "$TMPSCRIPT16" << 'NODEEOF'
+const fs = require('fs');
+const path = require('path');
+const REPO = process.argv[2];
+let pass = 0, fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ' — ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. .cursor-plugin/plugin.json exists
+check('.cursor-plugin/plugin.json exists', () => {
+  const p = path.join(REPO, '.cursor-plugin', 'plugin.json');
+  assert(fs.existsSync(p), '.cursor-plugin/plugin.json not found');
+});
+
+// 2. Cursor plugin.json has required fields
+check('.cursor-plugin/plugin.json has required fields (name, description, version)', () => {
+  const p = path.join(REPO, '.cursor-plugin', 'plugin.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(cfg.name === 'learnship', 'name must be "learnship"');
+  assert(typeof cfg.description === 'string' && cfg.description.length > 10, 'description missing or too short');
+  assert(typeof cfg.version === 'string' && cfg.version.match(/^\d+\.\d+\.\d+$/), 'version not semver');
+});
+
+// 3. Cursor plugin.json paths point to real directories
+check('.cursor-plugin/plugin.json paths point to real directories', () => {
+  const p = path.join(REPO, '.cursor-plugin', 'plugin.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  if (cfg.skills) assert(fs.existsSync(path.join(REPO, cfg.skills)), `skills dir not found: ${cfg.skills}`);
+  if (cfg.rules) assert(fs.existsSync(path.join(REPO, cfg.rules)), `rules dir not found: ${cfg.rules}`);
+  if (cfg.agents) assert(fs.existsSync(path.join(REPO, cfg.agents)), `agents dir not found: ${cfg.agents}`);
+});
+
+// 4. Cursor plugin.json version matches package.json
+check('.cursor-plugin/plugin.json version matches package.json', () => {
+  const pluginCfg = JSON.parse(fs.readFileSync(path.join(REPO, '.cursor-plugin', 'plugin.json'), 'utf8'));
+  const pkgCfg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pluginCfg.version === pkgCfg.version,
+    `cursor plugin.json version (${pluginCfg.version}) does not match package.json (${pkgCfg.version})`);
+});
+
+// 5. cursor-rules/learnship.mdc exists
+check('cursor-rules/learnship.mdc exists', () => {
+  const p = path.join(REPO, 'cursor-rules', 'learnship.mdc');
+  assert(fs.existsSync(p), 'cursor-rules/learnship.mdc not found');
+});
+
+// 6. cursor-rules/learnship.mdc has frontmatter and content
+check('cursor-rules/learnship.mdc has valid frontmatter and workflow table', () => {
+  const content = fs.readFileSync(path.join(REPO, 'cursor-rules', 'learnship.mdc'), 'utf8');
+  assert(content.startsWith('---'), 'Missing YAML frontmatter');
+  assert(content.includes('name:') && content.includes('description:'), 'Missing name/description in frontmatter');
+  assert(content.includes('/ls') && content.includes('/new-project'), 'Missing core workflow commands');
+  assert(content.includes('.planning/'), 'Missing .planning/ reference');
+});
+
+console.log('\nSECTION16_PASS=' + pass);
+console.log('SECTION16_FAIL=' + fail);
+NODEEOF
+
+S16_OUTPUT=$(node "$TMPSCRIPT16" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT16"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S16_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 17: Gemini extension manifest
+# ──────────────────────────────────────────────────────────────────────────
+TMPSCRIPT17=$(mktemp /tmp/ls_test17_XXXXXX.js)
+cat > "$TMPSCRIPT17" << 'NODEEOF'
+const fs = require('fs');
+const path = require('path');
+const REPO = process.argv[2];
+let pass = 0, fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ' — ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. gemini-extension.json exists at repo root
+check('gemini-extension.json exists at repo root', () => {
+  const p = path.join(REPO, 'gemini-extension.json');
+  assert(fs.existsSync(p), 'gemini-extension.json not found at repo root');
+});
+
+// 2. gemini-extension.json has required fields
+check('gemini-extension.json has name, version, description, installDir', () => {
+  const p = path.join(REPO, 'gemini-extension.json');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(cfg.name === 'learnship', 'name must be "learnship"');
+  assert(typeof cfg.version === 'string' && cfg.version.match(/^\d+\.\d+\.\d+$/), 'version not semver');
+  assert(typeof cfg.description === 'string' && cfg.description.length > 10, 'description missing or too short');
+  assert(cfg.installDir === '.gemini', 'installDir must be ".gemini"');
+});
+
+// 3. gemini-extension.json version matches package.json
+check('gemini-extension.json version matches package.json', () => {
+  const extCfg = JSON.parse(fs.readFileSync(path.join(REPO, 'gemini-extension.json'), 'utf8'));
+  const pkgCfg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(extCfg.version === pkgCfg.version,
+    `gemini-extension.json version (${extCfg.version}) does not match package.json (${pkgCfg.version})`);
+});
+
+console.log('\nSECTION17_PASS=' + pass);
+console.log('SECTION17_FAIL=' + fail);
+NODEEOF
+
+S17_OUTPUT=$(node "$TMPSCRIPT17" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT17"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S17_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 18: npm publishability
+# ──────────────────────────────────────────────────────────────────────────
+TMPSCRIPT18=$(mktemp /tmp/ls_test18_XXXXXX.js)
+cat > "$TMPSCRIPT18" << 'NODEEOF'
+const fs = require('fs');
+const path = require('path');
+const REPO = process.argv[2];
+let pass = 0, fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ' — ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. package.json has files field
+check('package.json has files field for npm publish', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(Array.isArray(pkg.files) && pkg.files.length > 0, 'package.json missing files field');
+});
+
+// 2. package.json files field includes new manifests
+check('package.json files includes .claude-plugin, .cursor-plugin, cursor-rules', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pkg.files.includes('.claude-plugin'), 'files missing .claude-plugin');
+  assert(pkg.files.includes('.cursor-plugin'), 'files missing .cursor-plugin');
+  assert(pkg.files.includes('cursor-rules'), 'files missing cursor-rules');
+  assert(pkg.files.includes('gemini-extension.json'), 'files missing gemini-extension.json');
+});
+
+// 3. package.json has publishConfig
+check('package.json has publishConfig.access = "public"', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pkg.publishConfig && pkg.publishConfig.access === 'public',
+    'publishConfig.access must be "public"');
+});
+
+// 4. .npmignore exists
+check('.npmignore exists to exclude dev files', () => {
+  assert(fs.existsSync(path.join(REPO, '.npmignore')), '.npmignore not found');
+});
+
+// 5. README install commands use npx learnship (not github: prefix)
+check('README uses "npx learnship" (not old github: prefix)', () => {
+  const readme = fs.readFileSync(path.join(REPO, 'README.md'), 'utf8');
+  assert(!readme.includes('npx github:FavioVazquez/learnship'),
+    'README still contains old "npx github:FavioVazquez/learnship" — update to "npx learnship"');
+  assert(readme.includes('npx learnship'), 'README missing "npx learnship" install command');
+});
+
+// 6. package.json name is "learnship" (not scoped)
+check('package.json name is "learnship" (clean npm package name)', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pkg.name === 'learnship', `package name should be "learnship", got "${pkg.name}"`);
+});
+
+// 7. All platform guide docs use npx learnship (not github: prefix)
+check('docs/ install commands use "npx learnship" not old github: prefix', () => {
+  const docsDir = path.join(REPO, 'docs');
+  function scanDir(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) { scanDir(full); continue; }
+      if (!entry.name.endsWith('.md')) continue;
+      const content = fs.readFileSync(full, 'utf8');
+      if (content.includes('npx github:FavioVazquez/learnship')) {
+        throw new Error(`${full.replace(REPO + '/', '')} still uses old npx github: prefix`);
+      }
+    }
+  }
+  scanDir(docsDir);
+});
+
+console.log('\nSECTION18_PASS=' + pass);
+console.log('SECTION18_FAIL=' + fail);
+NODEEOF
+
+S18_OUTPUT=$(node "$TMPSCRIPT18" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT18"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S18_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
 # Summary

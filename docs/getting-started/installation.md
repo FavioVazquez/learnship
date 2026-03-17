@@ -12,7 +12,7 @@ learnship installs as a set of workflow files into your AI platform's configurat
 ## Quick install
 
 ```bash
-npx github:FavioVazquez/learnship
+npx learnship
 ```
 
 The installer auto-detects which platforms are configured on your machine and asks whether to install globally (all projects) or locally (current project only).
@@ -22,7 +22,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "Windsurf"
 
     ```bash
-    npx github:FavioVazquez/learnship --windsurf --global
+    npx learnship --windsurf --global
     ```
 
     Installs to `~/.windsurf/`: workflows available as `/slash-commands` in all Windsurf projects. Native `@agentic-learning` and `@impeccable` skills included.
@@ -30,7 +30,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "Claude Code"
 
     ```bash
-    npx github:FavioVazquez/learnship --claude --global
+    npx learnship --claude --global
     ```
 
     Installs to `~/.claude/`: invoke as `/learnship:ls`, `/learnship:new-project`, etc.
@@ -38,7 +38,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "OpenCode"
 
     ```bash
-    npx github:FavioVazquez/learnship --opencode --global
+    npx learnship --opencode --global
     ```
 
     Installs to `~/.config/opencode/`: invoke as `/learnship-ls`, `/learnship-new-project`, etc.
@@ -46,7 +46,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "Gemini CLI"
 
     ```bash
-    npx github:FavioVazquez/learnship --gemini --global
+    npx learnship --gemini --global
     ```
 
     Installs to `~/.gemini/`: invoke as `/learnship:ls`, `/learnship:new-project`, etc.
@@ -54,7 +54,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "Codex CLI"
 
     ```bash
-    npx github:FavioVazquez/learnship --codex --global
+    npx learnship --codex --global
     ```
 
     Installs to `~/.codex/`: invoke as `$learnship-ls`, `$learnship-new-project`, etc.
@@ -62,7 +62,7 @@ The installer auto-detects which platforms are configured on your machine and as
 === "All platforms"
 
     ```bash
-    npx github:FavioVazquez/learnship --all --global
+    npx learnship --all --global
     ```
 
     Installs to every detected platform at once. Recommended if you switch between tools.
@@ -113,7 +113,7 @@ You should see either a project status panel (if you're in an existing project) 
 ## Updating
 
 ```bash
-npx github:FavioVazquez/learnship --update
+npx learnship --update
 ```
 
 Or from inside your AI agent: `/update`

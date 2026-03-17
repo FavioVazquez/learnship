@@ -10,7 +10,7 @@ OpenCode gets full learnship capabilities including real parallel subagents and 
 ## Install
 
 ```bash
-npx github:FavioVazquez/learnship --opencode --global
+npx learnship --opencode --global
 ```
 
 Installs to `~/.config/opencode/learnship/`.

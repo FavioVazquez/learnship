@@ -1,0 +1,10 @@
+{
+  "name": "learnship",
+  "version": "1.9.0",
+  "description": "Agentic engineering done right — 42 structured workflows, persistent memory across sessions, integrated learning partner, and impeccable UI design system.",
+  "author": "Favio Vazquez",
+  "homepage": "https://faviovazquez.github.io/learnship/",
+  "repository": "https://github.com/FavioVazquez/learnship",
+  "license": "MIT",
+  "installDir": ".gemini"
+}

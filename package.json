@@ -1,12 +1,13 @@
 {
   "name": "learnship",
-  "version": "1.8.0",
-  "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, OpenCode, Gemini CLI, and Codex: spec-driven workflows, integrated learning, and production-grade design.",
+  "version": "1.9.0",
+  "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex: spec-driven workflows, integrated learning, and production-grade design.",
   "keywords": [
     "agentic",
     "development",
     "windsurf",
     "claude-code",
+    "cursor",
     "opencode",
     "gemini-cli",
     "codex",
@@ -14,7 +15,10 @@
     "ai",
     "learning",
     "planning",
-    "cascade"
+    "cascade",
+    "agentic-ai",
+    "ai-agent",
+    "ai-workflow"
   ],
   "files": [
     "bin",
@@ -24,8 +28,16 @@
     "references",
     "templates",
     "install.sh",
-    ".windsurf/skills"
+    ".windsurf/skills",
+    ".claude-plugin",
+    ".cursor-plugin",
+    "cursor-rules",
+    "gemini-extension.json",
+    "SKILL.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/FavioVazquez/learnship#readme",
   "bugs": {
     "url": "https://github.com/FavioVazquez/learnship/issues"

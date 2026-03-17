@@ -9,6 +9,15 @@ assets/raw/
 node_modules/
 npm-debug.log*
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Extension build artifacts
+extension/dist/
+extension/*.vsix
+
 # OS
 .DS_Store
 Thumbs.db

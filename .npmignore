@@ -1,0 +1,17 @@
+# Dev/test files excluded from npm publish
+tests/
+docs/
+.github/
+.vscode/
+assets/
+scripts/
+extension/
+generate_images.py
+mkdocs.yml
+publish-first-release.md
+*.sh
+.env
+__pycache__/
+
+# Marketplace repo files (separate repo, not part of published package)
+marketplace/

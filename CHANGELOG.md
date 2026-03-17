@@ -9,6 +9,24 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.0] — Multi-platform marketplace distribution: Claude Code, Cursor, Gemini CLI native + npm publish
+
+**Released:** 2026-03-17
+
+### Added
+
+- **Claude Code plugin manifest** (`.claude-plugin/plugin.json`): learnship is now structured as a native Claude Code plugin, wiring up existing commands, agents, and skills into the Claude plugin format. Users can install via `/plugin marketplace add FavioVazquez/learnship-marketplace` + `/plugin install learnship@learnship-marketplace`.
+- **Claude Code community marketplace** (`marketplace/.claude-plugin/marketplace.json`): dedicated marketplace manifest for `FavioVazquez/learnship-marketplace` repo, enabling community marketplace discovery in Claude Code.
+- **Cursor plugin manifest** (`.cursor-plugin/plugin.json`): learnship is structured as a Cursor plugin with skills, rules, and agents. Submitted to [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) for official listing.
+- **Cursor rules** (`cursor-rules/learnship.mdc`): Cursor-format agent rule covering all 42 workflows, `.planning/` artifacts, learning mode, and design system.
+- **Gemini CLI native extension** (`gemini-extension.json`): enables `gemini extensions install https://github.com/FavioVazquez/learnship` as a zero-terminal install path.
+- **npm publish prep**: `publishConfig.access = "public"` added to `package.json`, new manifests included in `files`, `.npmignore` added to exclude dev files. Package name `learnship` is available — `npx learnship` is now the canonical install command.
+- **22 new tests** (Sections 15–18 in `validate_multiplatform.sh`) covering all four new distribution manifests: field validation, version sync with `package.json`, path integrity, and install command hygiene across README and docs.
+- **Updated install commands** across README and all 7 docs pages — `npx github:FavioVazquez/learnship` → `npx learnship` throughout. Platform guide for Claude Code and Gemini CLI now document the marketplace/native-extension paths.
+- **Cursor added to platform support table** in README.
+
+---
+
 ## [v1.8.0] — impeccable integration: automatic UI standards and milestone recommendations
 
 **Released:** 2026-03-14

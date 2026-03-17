@@ -10,7 +10,7 @@ Windsurf is learnship's **native platform.** It gets the richest experience incl
 ## Install
 
 ```bash
-npx github:FavioVazquez/learnship --windsurf --global
+npx learnship --windsurf --global
 ```
 
 Installs to `~/.windsurf/workflows/` and `~/.windsurf/skills/`.

@@ -10,7 +10,7 @@ Codex CLI gets full learnship capabilities including real parallel subagents and
 ## Install
 
 ```bash
-npx github:FavioVazquez/learnship --codex --global
+npx learnship --codex --global
 ```
 
 Installs to `~/.codex/learnship/`.

@@ -1,0 +1,60 @@
+---
+name: learnship
+description: Activate learnship agentic engineering workflows — structured phases, persistent memory, learning partner, and impeccable UI design. Use whenever a user is working on a software project or asks about project planning, phases, workflows, or how to build something.
+---
+
+You are working inside a project that uses **learnship** — a multi-platform agentic engineering system for building real products with spec-driven workflows, integrated learning, and impeccable design.
+
+## Core Workflows
+
+Suggest the appropriate workflow slash command when relevant:
+
+| Workflow | When to suggest |
+|----------|----------------|
+| `/new-project` | User wants to start a new project from scratch |
+| `/discuss-phase [N]` | Before planning a phase — capture user's implementation vision |
+| `/plan-phase [N]` | After discussing a phase — create executable plans |
+| `/execute-phase [N]` | Plans exist and are ready to run |
+| `/verify-work [N]` | Phase execution complete — user acceptance testing |
+| `/ls` | User asks "where are we?", "what's next?", or starts a new session |
+| `/next` | User wants to keep moving without deciding what to do |
+| `/quick [task]` | Small ad-hoc task that doesn't need full phase ceremony |
+| `/progress` | Status overview and routing |
+| `/pause-work` | User is stopping mid-phase |
+| `/resume-work` | User is returning to an in-progress project |
+| `/complete-milestone` | All phases in the current milestone are done |
+
+## Planning Artifacts
+
+All project state lives in `.planning/`. Key files:
+
+- `.planning/config.json` — Settings including `learning_mode` ("auto" or "manual")
+- `.planning/PROJECT.md` — Vision, requirements, key decisions
+- `.planning/ROADMAP.md` — Phase-by-phase delivery plan
+- `.planning/STATE.md` — Current position, decisions, blockers
+- `.planning/phases/[N]-[slug]/` — Per-phase artifacts
+
+Always read `STATE.md` and `ROADMAP.md` before any planning or execution operation.
+
+## Key Behaviors
+
+- **Context efficiency**: Reference file paths rather than inlining file contents.
+- **Atomic commits**: Every task gets its own commit. Never batch unrelated changes.
+- **No scope creep**: Execute exactly what plans say. Document deviations in SUMMARY.md.
+- **Goal-backward verification**: Check that `must_haves` are met, not just that tasks ran.
+- **Deferred ideas**: Note things outside current phase scope in the roadmap backlog.
+
+## Learning Mode
+
+Read `learning_mode` from `.planning/config.json` (default: "auto"):
+
+- **`auto`** — Proactively offer learning actions at natural workflow checkpoints
+- **`manual`** — Only activate learning when the user explicitly asks
+
+## Design Quality
+
+The `impeccable` skill is available for UI work. Key commands:
+- `@impeccable audit` — full quality audit
+- `@impeccable polish` — final pass before shipping
+- `@impeccable frontend-design` — apply design foundation principles
+- `@impeccable critique` — UX effectiveness review
