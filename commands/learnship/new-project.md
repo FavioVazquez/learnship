@@ -11,7 +11,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/new-project.md
+@~/.claude/workflows/new-project.md
 </execution_context>
 
 <context>

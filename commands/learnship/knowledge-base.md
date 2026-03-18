@@ -8,7 +8,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/knowledge-base.md
+@~/.claude/workflows/knowledge-base.md
 </execution_context>
 
 <context>

@@ -136,6 +136,25 @@ else
   fail "Codex config block missing max_depth"
 fi
 
+# Regression: commands/learnship/ must NOT contain @~/.claude/learnship/ (double learnship/ after install)
+# Source files use @~/.claude/workflows/ so replacePaths() resolves them to
+# pathPrefix+workflows/ = ~/.claude/learnship/workflows/ — not double learnship/learnship/
+DOUBLE_COUNT=$(grep -rl "@~/.claude/learnship/" "$REPO/commands/learnship/" 2>/dev/null | wc -l)
+if [ "$DOUBLE_COUNT" -eq 0 ]; then
+  ok "commands/learnship/ source files have no @~/.claude/learnship/ double-path refs (regression: install would produce learnship/learnship/)"
+else
+  fail "commands/learnship/ has $DOUBLE_COUNT file(s) with @~/.claude/learnship/ — install will produce broken learnship/learnship/ paths"
+fi
+
+# Regression: all command source files must use @~/.claude/workflows/ for workflow refs
+WORKFLOW_COUNT=$(grep -rl "@~/.claude/workflows/" "$REPO/commands/learnship/" 2>/dev/null | wc -l)
+EXPECTED_COUNT=$(ls "$REPO/commands/learnship/"*.md 2>/dev/null | wc -l)
+if [ "$WORKFLOW_COUNT" -eq "$EXPECTED_COUNT" ]; then
+  ok "all $EXPECTED_COUNT command source files use @~/.claude/workflows/ for cross-platform path resolution"
+else
+  fail "only $WORKFLOW_COUNT of $EXPECTED_COUNT command files use @~/.claude/workflows/ — remaining will break on non-Claude platforms"
+fi
+
 if grep -q 'replace.*subagent_type.*general-purpose.*general' "$REPO/bin/install.js"; then
   ok "installer converts subagent_type=general-purpose → general for OpenCode"
 else
@@ -195,9 +214,9 @@ for f in "$COMMANDS_DIR"/*.md; do
     fail "commands/learnship/$name.md missing 'allowed-tools:' field"
     WRAPPER_ISSUES=$((WRAPPER_ISSUES+1))
   fi
-  # Must have execution_context referencing the workflow
-  if ! grep -q "@~/.claude/learnship/workflows/" "$f"; then
-    fail "commands/learnship/$name.md missing @~/.claude/learnship/workflows/ reference"
+  # Must have execution_context referencing the workflow (no learnship/ prefix — replacePaths adds it)
+  if ! grep -q "@~/.claude/workflows/" "$f"; then
+    fail "commands/learnship/$name.md missing @~/.claude/workflows/ reference"
     WRAPPER_ISSUES=$((WRAPPER_ISSUES+1))
   fi
 done

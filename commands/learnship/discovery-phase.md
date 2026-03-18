@@ -11,7 +11,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/discovery-phase.md
+@~/.claude/workflows/discovery-phase.md
 </execution_context>
 
 <context>

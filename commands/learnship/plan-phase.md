@@ -11,7 +11,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/plan-phase.md
+@~/.claude/workflows/plan-phase.md
 </execution_context>
 
 <context>

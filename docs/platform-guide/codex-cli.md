@@ -41,7 +41,7 @@ Skills are installed as context files:
 │   └── references/
 └── impeccable/
     ├── SKILL.md
-    └── [17 sub-skills]/
+    └── [18 sub-skills]/
 ```
 
 Reference explicitly to invoke:
@@ -72,3 +72,6 @@ Codex CLI supports real parallel subagents. Enable:
 
 !!! tip
     Codex CLI uses `$learnship-` (dollar sign prefix) rather than `/learnship:` or `/learnship-`. This matches Codex CLI's native skill invocation convention.
+
+!!! tip
+    **`AGENTS.md` is not auto-loaded on Codex CLI** the way it is on Windsurf or Claude Code. Run `/new-project` once per project — it generates an `AGENTS.md` at your project root. Codex CLI reads `AGENTS.md` when commands explicitly reference it, but for fully automatic context loading, keep `AGENTS.md` in the project root and your agent will encounter it via the workflows.

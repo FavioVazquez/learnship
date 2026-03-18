@@ -14,7 +14,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/debug.md
+@~/.claude/workflows/debug.md
 </execution_context>
 
 <context>

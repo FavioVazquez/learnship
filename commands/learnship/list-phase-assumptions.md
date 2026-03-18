@@ -8,7 +8,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/list-phase-assumptions.md
+@~/.claude/workflows/list-phase-assumptions.md
 </execution_context>
 
 <context>

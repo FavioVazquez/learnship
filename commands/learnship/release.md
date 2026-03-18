@@ -8,7 +8,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/release.md
+@~/.claude/workflows/release.md
 </execution_context>
 
 <context>

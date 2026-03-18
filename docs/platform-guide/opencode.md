@@ -41,7 +41,7 @@ Skills are installed as context files:
 │   └── references/
 └── impeccable/
     ├── SKILL.md
-    └── [17 sub-skills]/
+    └── [18 sub-skills]/
 ```
 
 Reference explicitly to invoke:
@@ -74,3 +74,6 @@ When enabled, `execute-phase` dispatches each plan in a wave to its own dedicate
 
 !!! tip
     Note the **hyphen** separator in OpenCode commands (`/learnship-ls`) vs the **colon** in Claude Code and Gemini CLI (`/learnship:ls`).
+
+!!! tip
+    **`AGENTS.md` is not auto-loaded on OpenCode** the way it is on Windsurf or Claude Code. Run `/new-project` once per project — it generates an `AGENTS.md` at your project root. For subsequent sessions, OpenCode's agent will read it when the workflow commands explicitly reference it, but you can also add it to your OpenCode context manually for automatic loading.

@@ -9,7 +9,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/validate-phase.md
+@~/.claude/workflows/validate-phase.md
 </execution_context>
 
 <context>

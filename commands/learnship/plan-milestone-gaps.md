@@ -9,7 +9,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/plan-milestone-gaps.md
+@~/.claude/workflows/plan-milestone-gaps.md
 </execution_context>
 
 <context>

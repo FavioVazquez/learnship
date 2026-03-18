@@ -1036,6 +1036,7 @@ function install(platform, isGlobal) {
                    platform === 'opencode' ? '/learnship-ls' :
                    platform === 'gemini'   ? '/learnship:ls' : '$learnship-ls';
   console.log(`\n  ${green}Done!${reset} Open a project in ${label} and run ${cyan}${firstCmd}${reset}.`);
+  console.log(`  ${dim}First time? Run ${cyan}${platform === 'windsurf' ? '/new-project' : platform === 'claude' ? '/learnship:new-project' : platform === 'opencode' ? '/learnship-new-project' : platform === 'gemini' ? '/learnship:new-project' : '$learnship-new-project'}${reset}${dim} to initialize your project and create AGENTS.md.${reset}`);
   if (platform !== 'windsurf') {
     console.log(`  ${dim}Enable parallel subagents: add ${cyan}"parallelization": true${reset}${dim} to .planning/config.json${reset}`);
   }

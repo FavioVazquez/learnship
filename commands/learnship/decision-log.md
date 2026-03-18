@@ -9,7 +9,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/decision-log.md
+@~/.claude/workflows/decision-log.md
 </execution_context>
 
 <context>

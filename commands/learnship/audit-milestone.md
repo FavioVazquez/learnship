@@ -8,7 +8,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/audit-milestone.md
+@~/.claude/workflows/audit-milestone.md
 </execution_context>
 
 <context>

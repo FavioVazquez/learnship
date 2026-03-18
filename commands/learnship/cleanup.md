@@ -9,7 +9,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/cleanup.md
+@~/.claude/workflows/cleanup.md
 </execution_context>
 
 <context>

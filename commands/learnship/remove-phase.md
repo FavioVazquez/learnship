@@ -10,7 +10,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/remove-phase.md
+@~/.claude/workflows/remove-phase.md
 </execution_context>
 
 <context>

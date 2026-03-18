@@ -6,7 +6,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/help.md
+@~/.claude/workflows/help.md
 </execution_context>
 
 <context>

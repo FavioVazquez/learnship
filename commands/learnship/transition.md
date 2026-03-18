@@ -8,7 +8,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/transition.md
+@~/.claude/workflows/transition.md
 </execution_context>
 
 <context>

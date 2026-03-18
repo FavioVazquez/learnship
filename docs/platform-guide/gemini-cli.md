@@ -47,7 +47,7 @@ Skills are installed as context files:
 │   └── references/
 └── impeccable/
     ├── SKILL.md
-    └── [17 sub-skills]/
+    └── [18 sub-skills]/
 ```
 
 Reference explicitly to invoke:
@@ -74,3 +74,6 @@ Gemini CLI supports parallel execution natively: it's on by default without requ
 
 !!! tip
     Gemini CLI is the only platform where parallelization is on by default. If you want sequential execution for debugging, set `"parallelization": false` in `.planning/config.json`.
+
+!!! tip
+    **`AGENTS.md` is not auto-loaded on Gemini CLI** the way it is on Windsurf or Claude Code. Run `/new-project` once per project — it generates an `AGENTS.md` at your project root. For subsequent sessions, Gemini CLI reads `GEMINI.md` from the project root automatically, so you can also symlink or copy `AGENTS.md` → `GEMINI.md` for persistent project context.
