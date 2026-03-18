@@ -35,7 +35,7 @@ Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on th
 
 learnship gives you that harness as a portable, open-source layer that runs inside Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, or Codex CLI and adds three things your agent doesn't have by default:
 
-- **Persistent memory.** An `AGENTS.md` file is loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
+- **Persistent memory.** `/new-project` generates an `AGENTS.md` at your project root. Windsurf, Claude Code, and Cursor load it automatically every session; on other platforms the workflows reference it explicitly. No more repeating yourself.
 - **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
@@ -284,7 +284,7 @@ flowchart LR
 
 ![AGENTS.md](assets/agents-md.png)
 
-`/new-project` generates an `AGENTS.md` at your project root. Your AI agent reads it as a persistent system rule for every conversation, so it always knows where the project stands without you repeating yourself.
+`/new-project` generates an `AGENTS.md` at your project root. On Windsurf, Claude Code, and Cursor it is loaded automatically every session as a project rule. On OpenCode, Gemini CLI, and Codex CLI the learnship workflows reference it explicitly. Either way, the agent always knows the project, current phase, tech stack, and past decisions without you repeating yourself.
 
 ```
 AGENTS.md                   ← your AI agent reads this every conversation

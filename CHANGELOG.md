@@ -9,21 +9,40 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
-## [v1.9.0] — Multi-platform marketplace distribution: Claude Code, Cursor, Gemini CLI native + npm publish
+## [v1.9.0] — Multi-platform distribution: marketplaces, hooks, session context injection, npm publish
 
-**Released:** 2026-03-17
+**Released:** 2026-03-18
 
 ### Added
 
-- **Claude Code plugin manifest** (`.claude-plugin/plugin.json`): learnship is now structured as a native Claude Code plugin, wiring up existing commands, agents, and skills into the Claude plugin format. Users can install via `/plugin marketplace add FavioVazquez/learnship-marketplace` + `/plugin install learnship@learnship-marketplace`.
-- **Claude Code community marketplace** (`marketplace/.claude-plugin/marketplace.json`): dedicated marketplace manifest for `FavioVazquez/learnship-marketplace` repo, enabling community marketplace discovery in Claude Code.
-- **Cursor plugin manifest** (`.cursor-plugin/plugin.json`): learnship is structured as a Cursor plugin with skills, rules, and agents. Submitted to [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) for official listing.
-- **Cursor rules** (`cursor-rules/learnship.mdc`): Cursor-format agent rule covering all 42 workflows, `.planning/` artifacts, learning mode, and design system.
+- **Claude Code plugin manifest** (`.claude-plugin/plugin.json`): learnship is now a native Claude Code plugin. Install via `/plugin marketplace add FavioVazquez/learnship-marketplace` + `/plugin install learnship@learnship-marketplace`.
+- **Claude Code community marketplace** (`marketplace/.claude-plugin/marketplace.json` + `FavioVazquez/learnship-marketplace` repo): enables community marketplace discovery in Claude Code.
+- **Cursor plugin manifest** (`.cursor-plugin/plugin.json`) and rules (`cursor-rules/learnship.mdc`): full Cursor plugin with skills, rules, and agents. Install via `/add-plugin learnship` in Cursor.
+- **Cursor platform guide** (`docs/platform-guide/cursor.md`): dedicated documentation page for Cursor, covering install, workflows, skills, hooks, and capabilities.
 - **Gemini CLI native extension** (`gemini-extension.json`): enables `gemini extensions install https://github.com/FavioVazquez/learnship` as a zero-terminal install path.
-- **npm publish prep**: `publishConfig.access = "public"` added to `package.json`, new manifests included in `files`, `.npmignore` added to exclude dev files. Package name `learnship` is available — `npx learnship` is now the canonical install command.
-- **22 new tests** (Sections 15–18 in `validate_multiplatform.sh`) covering all four new distribution manifests: field validation, version sync with `package.json`, path integrity, and install command hygiene across README and docs.
-- **Updated install commands** across README and all 7 docs pages — `npx github:FavioVazquez/learnship` → `npx learnship` throughout. Platform guide for Claude Code and Gemini CLI now document the marketplace/native-extension paths.
-- **Cursor added to platform support table** in README.
+- **npm publish prep**: `publishConfig.access = "public"`, `.npmignore`, new manifests in `files`. `npx learnship` is now the canonical install command replacing the old `npx github:` form.
+- **Session-start hooks** (`hooks/session-start`, `hooks/hooks-cursor.json`, `hooks/hooks-claude.json`): bash hook that injects learnship context (`SKILL.md`) at every session start for Claude Code and Cursor. Correctly emits `hookSpecificOutput.additionalContext` for Claude Code and `additional_context` for Cursor — no double-injection.
+- **Platform-neutral `skills/` directory**: skills now live at `skills/` (not `.windsurf/skills/`) in the published package, eliminating confusing Windsurf-branded paths in Cursor and Claude Code plugin manifests. `.windsurf/skills/` retained for Windsurf native install.
+- **Cursor added as 6th platform** throughout: README badge, platform table, `docs/index.md`, `mkdocs.yml` nav, all image prompts regenerated.
+- **8 brand images regenerated**: `install`, `platform-comparison`, `impeccable-commands`, `skills-overview`, `how-it-works`, `phase-loop`, `vibe-vs-agentic`, `quick-start-flow` — all updated for `npx learnship`, 6 platforms, 18 impeccable commands.
+- **39 new tests** (Sections 15, 19, 20): plugin manifest validation, `skills/` directory sync, hooks structure + executable bit + shebang, plugin-root paths in hook manifests, runtime execution tests for `session-start` across all three modes (Cursor, Claude Code, fallback) — validates valid JSON output, correct keys per platform, no double-injection, learnship keywords in context, graceful exit when `SKILL.md` missing.
+
+### Fixed
+
+- **Critical: double `learnship/learnship/` path bug** in all 42 `commands/learnship/` source files. Command files referenced `@~/.claude/learnship/workflows/` but `replacePaths()` replaces `~/.claude/` → `pathPrefix` (which is already `~/.claude/learnship/`), producing `learnship/learnship/` on every non-Windsurf platform. This silently broke every workflow command — `/new-project`, `/ls`, all 42 — on Claude Code, OpenCode, Gemini CLI, and Codex CLI. `AGENTS.md` was never generated because `/new-project` couldn't load its workflow file. Fixed by changing all source references to `@~/.claude/workflows/` (no `learnship/` prefix).
+- **Hook manifest command paths**: changed from relative `./hooks/session-start` to `"${CLAUDE_PLUGIN_ROOT}/hooks/session-start"` and `"${CURSOR_PLUGIN_ROOT}/hooks/session-start"` — relative paths break when plugins are installed globally.
+- **`hooks-claude.json` format**: corrected to match Claude Code's actual hook schema (`description` + inner `hooks` array with `type: "command"`).
+
+### Changed
+
+- **`npx github:FavioVazquez/learnship` → `npx learnship`** across README and all 7 platform docs pages.
+- **Plugin manifests**: `skills` field changed from `.windsurf/skills` → `skills` (platform-neutral); `hooks` field added to both Claude Code and Cursor manifests.
+- **`package.json` `files`**: `.windsurf/skills` replaced with `skills` and `hooks` added.
+- **Post-install message** in `bin/install.js` now explicitly tells users to run `/new-project` to generate `AGENTS.md` — it is not created by the installer.
+- **Platform guides for OpenCode, Gemini CLI, Codex CLI**: added `AGENTS.md` auto-loading tip (not auto-loaded on these platforms the way it is on Windsurf/Claude Code/Cursor); fixed 17 → 18 impeccable sub-skills count.
+- **`impeccable` command count**: 17 → 18 throughout (`frontend-design` command added previously but count was stale in README, docs, and image prompts).
+- **`docs/index.md`**: 5 → 6 platforms, Cursor badge added, 17 → 18 impeccable count.
+- **`mkdocs.yml` `site_description`**: updated to include Cursor.
 
 ---
 
