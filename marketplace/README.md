@@ -21,7 +21,7 @@ Then install learnship:
 - **42 structured workflows** — full project lifecycle from `/new-project` to `/complete-milestone`
 - **Persistent memory** — `AGENTS.md` and `DECISIONS.md` survive across sessions
 - **Learning partner** — neuroscience-backed `agentic-learning` skill
-- **Design system** — `impeccable` skill for production-grade UI quality
+- **Design system** — 18 `impeccable` commands for production-grade UI quality
 - **6 agent personas** — planner, executor, verifier, debugger, researcher, phase-researcher
 
 ## Also available via
@@ -33,7 +33,8 @@ npx learnship
 # Gemini CLI native extension
 gemini extensions install https://github.com/FavioVazquez/learnship
 
-# Cursor — via /add-plugin learnship (after marketplace submission)
+# Cursor marketplace
+/add-plugin learnship
 ```
 
 ## Links

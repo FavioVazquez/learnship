@@ -14,7 +14,7 @@
         "source": "url",
         "url": "https://github.com/FavioVazquez/learnship.git"
       },
-      "description": "42 structured workflows, persistent cross-session memory, integrated learning partner, and impeccable UI design system for Claude Code and 4 other platforms.",
+      "description": "42 structured workflows, persistent cross-session memory, integrated learning partner, and impeccable UI design system. Works on Claude Code, Cursor, Windsurf, Gemini CLI, OpenCode, and Codex.",
       "version": "1.9.0",
       "strict": true
     }
