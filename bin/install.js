@@ -608,23 +608,55 @@ function installClaudePlugins(skillsSrc, targetDir) {
     const dest = path.join(pluginSkillsDir, skillName);
 
     if (skillName === 'impeccable') {
-      // impeccable: copy root SKILL.md (rewriting sibling paths → references/ paths),
-      // then copy each sub-skill dir into references/
+      // impeccable: build a single inlined SKILL.md that contains all sub-skill
+      // content inline — same pattern as agentic-learning.
+      // Claude Code cannot follow markdown reference links to sibling files, so
+      // the hollow index approach produced an "@impeccable isn't installed" error.
       fs.mkdirSync(dest, { recursive: true });
-      let skillMdContent = fs.readFileSync(path.join(srcPath, 'SKILL.md'), 'utf8');
-      // Rewrite repo-relative sibling links (e.g. adapt/SKILL.md) to post-install references/ paths
-      skillMdContent = skillMdContent.replace(/\]\((?!references\/)([^/)][^)]*\/SKILL\.md)\)/g, '](references/$1)');
-      fs.writeFileSync(path.join(dest, 'SKILL.md'), skillMdContent);
-      const refsDest = path.join(dest, 'references');
-      fs.mkdirSync(refsDest, { recursive: true });
-      for (const sub of fs.readdirSync(srcPath, { withFileTypes: true })) {
-        if (!sub.isDirectory()) continue;
-        const subSrc = path.join(srcPath, sub.name);
-        const subDest = path.join(refsDest, sub.name);
-        if (fs.existsSync(path.join(subSrc, 'SKILL.md'))) {
-          copyDir(subSrc, subDest, '', 'claude');
-        }
+
+      // Read root frontmatter + intro (everything up to the ## Actions section)
+      const rootContent = fs.readFileSync(path.join(srcPath, 'SKILL.md'), 'utf8');
+      // Strip frontmatter, keep the prose intro + "After running" footer
+      const rootBody = rootContent.replace(/^---[\s\S]*?---\n/, '');
+
+      // Ordered sub-actions (defines appearance order in the inlined file)
+      const SUB_ACTION_ORDER = [
+        'adapt', 'animate', 'audit', 'bolder', 'clarify', 'colorize',
+        'critique', 'delight', 'distill', 'extract', 'frontend-design',
+        'harden', 'normalize', 'onboard', 'optimize', 'polish', 'quieter',
+        'teach-impeccable',
+      ];
+
+      // Build inlined sections by reading each sub-skill's body
+      const inlinedSections = [];
+      for (const subName of SUB_ACTION_ORDER) {
+        const subSkillPath = path.join(srcPath, subName, 'SKILL.md');
+        if (!fs.existsSync(subSkillPath)) continue;
+        const subContent = fs.readFileSync(subSkillPath, 'utf8');
+        // Strip YAML frontmatter, keep body only
+        const subBody = subContent.replace(/^---[\s\S]*?---\n/, '').trim();
+        // Also copy sub-skill directory (for Windsurf native skill support)
+        const subDest = path.join(dest, subName);
+        copyDir(path.join(srcPath, subName), subDest, '', 'claude');
+        inlinedSections.push(`\n## Action: \`${subName}\`\n\n${subBody}`);
       }
+
+      // Root frontmatter: keep original header but update description to remove
+      // the "Invoke with @impeccable" preamble that confused Claude Code's matcher
+      const inlinedSkillMd =
+        `---\nname: impeccable\ndescription: >\n` +
+        `  A design quality system for frontend interfaces. 18 focused actions for\n` +
+        `  auditing, refining, and elevating UI quality. Use when the user asks to\n` +
+        `  audit, critique, polish, improve, review, or refine a frontend interface.\n` +
+        `  Invoke with @impeccable followed by one of: adapt, animate, audit, bolder,\n` +
+        `  clarify, colorize, critique, delight, distill, extract, frontend-design,\n` +
+        `  harden, normalize, onboard, optimize, polish, quieter, or teach-impeccable.\n` +
+        `---\n\n` +
+        rootBody.replace(/## Actions[\s\S]*?---\n\n## How to use/, '## How to use') +
+        `\n\n` +
+        inlinedSections.join('\n\n');
+
+      fs.writeFileSync(path.join(dest, 'SKILL.md'), inlinedSkillMd);
       count++;
     } else {
       // agentic-learning and any future top-level skills — copy verbatim
@@ -1269,6 +1301,7 @@ if (process.env.LEARNSHIP_TEST_MODE) {
     parseJsonc,
     replacePaths,
     rewriteNewProject,
+    installClaudePlugins,
     toHomePrefix,
     LEARNSHIP_CODEX_MARKER,
     CODEX_AGENT_SANDBOX,

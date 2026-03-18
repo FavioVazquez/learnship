@@ -9,6 +9,27 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.10] — Fix `@impeccable` not found in Claude Code
+
+**Released:** 2026-03-18
+
+### Fixed
+
+- **`@impeccable critique` (and all other actions) returned "isn't installed as a skill"** — `installClaudePlugins` was writing a hollow 100-line index `SKILL.md` that listed sub-skills as markdown reference links (`[critique/SKILL.md](references/critique/SKILL.md)`). Claude Code does not follow those links when resolving `@mentions`, so the skill loaded with no actionable content. Fix: `installClaudePlugins` now builds a single **inlined** `SKILL.md` (~3000 lines) that concatenates all 18 sub-skill bodies under `## Action: \`<name>\`` headers — identical in approach to `agentic-learning` which already worked correctly.
+- **`installClaudePlugins` exported for testing** — added to `LEARNSHIP_TEST_MODE` exports so section 10 tests can use the real function instead of a duplicated local simulation.
+- **Section 10 tests updated** — replaced the stale local `runInstallClaudePlugins` clone with the real exported function; tests 7/8/9 now verify inlined content, real bodies, and clean frontmatter instead of the old reference-link approach.
+
+### Platform impact
+
+| Platform | Skill delivery | Change |
+|---|---|---|
+| **Claude Code** | `plugins/learnship/skills/impeccable/SKILL.md` — fully inlined | ✅ Fixed |
+| **Windsurf** | `.windsurf/skills/impeccable/` — native sub-skill dirs | No change |
+| **Cursor** | `skills/impeccable/` via `.cursor-plugin/plugin.json` + `.mdc` rule | No change |
+| **OpenCode / Gemini / Codex** | `learnship/skills/impeccable/` via plain `copyDir` | No change |
+
+---
+
 ## [v1.9.9] — Correct parallelization platform matrix (Gemini CLI sequential-only; Cursor 2.4+ parallel)
 
 **Released:** 2026-03-18

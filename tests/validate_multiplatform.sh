@@ -975,61 +975,15 @@ function check(name, fn) {
 }
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 
-const skillsSrc = path.join(REPO, '.windsurf', 'skills');
+const realSkillsSrc = path.join(REPO, 'skills');
+const { installClaudePlugins } = require(path.join(REPO, 'bin', 'install.js'));
 
-// Simulate installClaudePlugins against a temp dir
+// Use the real installClaudePlugins from install.js
 function runInstallClaudePlugins(tmpDir) {
+  const count = installClaudePlugins(realSkillsSrc, tmpDir);
   const pluginDir = path.join(tmpDir, 'plugins', 'learnship');
   const pluginSkillsDir = path.join(pluginDir, 'skills');
   const pluginMetaDir = path.join(pluginDir, '.claude-plugin');
-
-  if (fs.existsSync(pluginDir)) fs.rmSync(pluginDir, { recursive: true });
-  fs.mkdirSync(pluginSkillsDir, { recursive: true });
-  fs.mkdirSync(pluginMetaDir, { recursive: true });
-
-  const manifest = {
-    name: 'learnship',
-    description: 'Learnship skills — agentic-learning partner and impeccable design system',
-    author: { name: 'favio-vazquez' },
-  };
-  fs.writeFileSync(path.join(pluginMetaDir, 'plugin.json'), JSON.stringify(manifest, null, 2) + '\n');
-
-  function copyDir(src, dest) {
-    fs.mkdirSync(dest, { recursive: true });
-    for (const e of fs.readdirSync(src, { withFileTypes: true })) {
-      const s = path.join(src, e.name), d = path.join(dest, e.name);
-      if (e.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d);
-    }
-  }
-
-  let count = 0;
-  for (const entry of fs.readdirSync(skillsSrc, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const skillName = entry.name;
-    const srcPath = path.join(skillsSrc, skillName);
-    if (!fs.existsSync(path.join(srcPath, 'SKILL.md'))) continue;
-    const dest = path.join(pluginSkillsDir, skillName);
-    if (skillName === 'impeccable') {
-      // impeccable: root SKILL.md (with paths rewritten to references/) + sub-skills as references/
-      fs.mkdirSync(dest, { recursive: true });
-      let skillMdContent = fs.readFileSync(path.join(srcPath, 'SKILL.md'), 'utf8');
-      skillMdContent = skillMdContent.replace(/\]\((?!references\/)([^/)][^)]*\/SKILL\.md)\)/g, '](references/$1)');
-      fs.writeFileSync(path.join(dest, 'SKILL.md'), skillMdContent);
-      const refsDest = path.join(dest, 'references');
-      fs.mkdirSync(refsDest, { recursive: true });
-      for (const sub of fs.readdirSync(srcPath, { withFileTypes: true })) {
-        if (!sub.isDirectory()) continue;
-        const subSrc = path.join(srcPath, sub.name);
-        if (fs.existsSync(path.join(subSrc, 'SKILL.md'))) {
-          copyDir(subSrc, path.join(refsDest, sub.name));
-        }
-      }
-      count++;
-    } else {
-      copyDir(srcPath, dest);
-      count++;
-    }
-  }
   return { pluginDir, pluginSkillsDir, pluginMetaDir, count };
 }
 
@@ -1078,7 +1032,7 @@ check('agentic-learning: SKILL.md and references/ present in plugin', () => {
 
 // 6. impeccable SKILL.md names all 18 actions
 check('impeccable SKILL.md references all 18 actions', () => {
-  const skillMd = fs.readFileSync(path.join(skillsSrc, 'impeccable', 'SKILL.md'), 'utf8');
+  const skillMd = fs.readFileSync(path.join(realSkillsSrc, 'impeccable', 'SKILL.md'), 'utf8');
   const expected = ['adapt','animate','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
     'optimize','polish','quieter','teach-impeccable'];
@@ -1086,41 +1040,42 @@ check('impeccable SKILL.md references all 18 actions', () => {
   assert(missing.length === 0, 'impeccable SKILL.md missing actions: ' + missing.join(', '));
 });
 
-// 7. impeccable plugin has all 18 sub-skills as references/
-check('impeccable plugin: all 18 sub-skills present in references/', () => {
+// 7. impeccable SKILL.md has all 18 action bodies inlined (not reference links)
+check('impeccable plugin SKILL.md: all 18 action bodies inlined, no reference links', () => {
   const expected = ['adapt','animate','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
     'optimize','polish','quieter','teach-impeccable'];
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
   const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const refsDir = path.join(pluginSkillsDir, 'impeccable', 'references');
-  const missing = expected.filter(s => !fs.existsSync(path.join(refsDir, s, 'SKILL.md')));
-  fs.rmSync(tmp, { recursive: true });
-  assert(missing.length === 0, 'missing sub-skill references: ' + missing.join(', '));
-});
-
-// 8. no flattened sub-skills at top level of plugin skills (impeccable dir exists, not sub-skill dirs)
-check('impeccable sub-skills are NOT flattened — only agentic-learning and impeccable at top level', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const dirs = fs.readdirSync(pluginSkillsDir).filter(e =>
-    fs.statSync(path.join(pluginSkillsDir, e)).isDirectory()
-  );
-  assert(!dirs.includes('audit'), 'audit should not be at top level — should be inside impeccable/references/');
-  assert(!dirs.includes('polish'), 'polish should not be at top level');
-  assert(dirs.includes('impeccable'), 'impeccable/ dir should exist at top level');
+  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+  const missingHeaders = expected.filter(s => !content.includes('## Action: `' + s + '`'));
+  assert(missingHeaders.length === 0, 'missing inlined action headers: ' + missingHeaders.join(', '));
+  // No reference links to sibling SKILL.md files
+  assert(!content.includes('[audit/SKILL.md]'), 'reference link found — should be inlined');
+  assert(!content.includes('[critique/SKILL.md]'), 'reference link found — should be inlined');
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 9. impeccable SKILL.md in plugin has paths rewritten to references/ (not sibling paths)
-check('impeccable plugin SKILL.md: sibling paths rewritten to references/ for Claude Code', () => {
+// 8. inlined impeccable SKILL.md contains real action bodies (not just headers)
+check('impeccable plugin SKILL.md: inlined bodies contain real content', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
   const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const installedSkillMd = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
-  // Must use references/ paths, not bare sibling paths
-  assert(installedSkillMd.includes('references/adapt/SKILL.md'), 'adapt path not rewritten to references/');
-  assert(installedSkillMd.includes('references/audit/SKILL.md'), 'audit path not rewritten to references/');
-  assert(!installedSkillMd.match(/\]\((?!references\/)adapt\/SKILL\.md\)/), 'bare adapt/SKILL.md still present');
+  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+  assert(content.includes('Run systematic quality checks'), 'audit body missing');
+  assert(content.includes('Conduct a holistic design critique'), 'critique body missing');
+  assert(content.includes('BOLD aesthetic'), 'frontend-design body missing');
+  assert(content.length > 50000, 'inlined SKILL.md suspiciously short (' + content.length + ' chars)');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 9. impeccable SKILL.md has valid frontmatter (name: impeccable, no sub-skill frontmatter leaked)
+check('impeccable plugin SKILL.md: valid frontmatter, no sub-skill frontmatter leaked', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
+  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
+  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+  assert(content.startsWith('---\nname: impeccable'), 'frontmatter must start with name: impeccable');
+  assert(!content.includes('\nname: audit\n'), 'sub-skill frontmatter (audit) leaked into inlined file');
+  assert(!content.includes('\nname: critique\n'), 'sub-skill frontmatter (critique) leaked');
   fs.rmSync(tmp, { recursive: true });
 });
 

@@ -1,7 +1,7 @@
 {
   "name": "learnship",
   "description": "Agentic engineering done right — 42 structured workflows, persistent memory across sessions, integrated learning partner, and impeccable UI design system. Works with Claude Code, Windsurf, Cursor, Gemini CLI, OpenCode, and Codex.",
-  "version": "1.9.9",
+  "version": "1.9.10",
   "author": {
     "name": "Favio Vazquez",
     "email": "favio.vazquezp@gmail.com"
