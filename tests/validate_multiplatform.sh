@@ -2122,6 +2122,10 @@ check('hooks/hooks-cursor.json exists and has sessionStart hook', () => {
   assert(cfg.hooks && cfg.hooks.sessionStart, 'hooks-cursor.json missing hooks.sessionStart');
   assert(Array.isArray(cfg.hooks.sessionStart) && cfg.hooks.sessionStart.length > 0,
     'hooks-cursor.json sessionStart must be a non-empty array');
+  const cmd = cfg.hooks.sessionStart[0].command || '';
+  assert(cmd.includes('CURSOR_PLUGIN_ROOT'),
+    'hooks-cursor.json command must use ${CURSOR_PLUGIN_ROOT} for absolute path resolution');
+  assert(cmd.includes('session-start'), 'hooks-cursor.json command must reference session-start script');
 });
 
 // 8. hooks-claude.json exists and is valid
@@ -2130,6 +2134,14 @@ check('hooks/hooks-claude.json exists and has SessionStart hook', () => {
   assert(fs.existsSync(p), 'hooks/hooks-claude.json not found');
   const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
   assert(cfg.hooks && cfg.hooks.SessionStart, 'hooks-claude.json missing hooks.SessionStart');
+  const entry = cfg.hooks.SessionStart[0];
+  assert(entry && Array.isArray(entry.hooks) && entry.hooks.length > 0,
+    'hooks-claude.json SessionStart must have inner hooks array with at least one entry');
+  const cmd = entry.hooks[0].command || '';
+  assert(entry.hooks[0].type === 'command', 'hooks-claude.json hook type must be "command"');
+  assert(cmd.includes('CLAUDE_PLUGIN_ROOT'),
+    'hooks-claude.json command must use ${CLAUDE_PLUGIN_ROOT} for absolute path resolution');
+  assert(cmd.includes('session-start'), 'hooks-claude.json command must reference session-start script');
 });
 
 // 9. package.json includes hooks/ in files field
@@ -2163,6 +2175,85 @@ while IFS= read -r line; do
     "  FAIL "*) fail "${line#  FAIL }" ;;
   esac
 done <<< "$S19_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 20: session-start hook — runtime execution tests
+# Actually runs the hook script with each platform env and validates output
+# ──────────────────────────────────────────────────────────────────────────
+HOOK_SCRIPT="$REPO/hooks/session-start"
+
+# 20.1 Cursor mode: CURSOR_PLUGIN_ROOT set → must output valid JSON with additional_context
+CURSOR_OUT=$(CURSOR_PLUGIN_ROOT="$REPO" bash "$HOOK_SCRIPT" 2>/dev/null)
+if echo "$CURSOR_OUT" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'additional_context' in d" 2>/dev/null; then
+  ok "session-start (Cursor mode): exits 0 and emits valid JSON with additional_context"
+else
+  fail "session-start (Cursor mode): did not produce valid JSON with additional_context key"
+fi
+
+# 20.2 Cursor mode: must NOT contain hookSpecificOutput (wrong platform)
+if echo "$CURSOR_OUT" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'hookSpecificOutput' not in d" 2>/dev/null; then
+  ok "session-start (Cursor mode): does not emit hookSpecificOutput (no double-injection)"
+else
+  fail "session-start (Cursor mode): unexpectedly emits hookSpecificOutput"
+fi
+
+# 20.3 Claude Code mode: CLAUDE_PLUGIN_ROOT set → must output valid JSON with hookSpecificOutput
+CLAUDE_OUT=$(CLAUDE_PLUGIN_ROOT="$REPO" bash "$HOOK_SCRIPT" 2>/dev/null)
+if echo "$CLAUDE_OUT" | python3 -c "import sys,json; d=json.load(sys.stdin); ho=d['hookSpecificOutput']; assert ho['hookEventName']=='SessionStart'; assert 'additionalContext' in ho" 2>/dev/null; then
+  ok "session-start (Claude Code mode): exits 0 and emits valid JSON with hookSpecificOutput.additionalContext"
+else
+  fail "session-start (Claude Code mode): did not produce valid JSON with hookSpecificOutput.additionalContext"
+fi
+
+# 20.4 Claude Code mode: must NOT contain additional_context at top level
+if echo "$CLAUDE_OUT" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'additional_context' not in d" 2>/dev/null; then
+  ok "session-start (Claude Code mode): does not emit additional_context at top level (no double-injection)"
+else
+  fail "session-start (Claude Code mode): unexpectedly emits additional_context at top level"
+fi
+
+# 20.5 Fallback mode: no env vars → must output valid JSON with additional_context
+FALLBACK_OUT=$(bash "$HOOK_SCRIPT" 2>/dev/null)
+if echo "$FALLBACK_OUT" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'additional_context' in d" 2>/dev/null; then
+  ok "session-start (fallback mode): exits 0 and emits valid JSON with additional_context"
+else
+  fail "session-start (fallback mode): did not produce valid JSON with additional_context"
+fi
+
+# 20.6 All modes: context must contain learnship workflow keywords
+for label in "Cursor" "Claude Code" "fallback"; do
+  case "$label" in
+    "Cursor")    CONTENT="$CURSOR_OUT" ;;
+    "Claude Code") CONTENT="$CLAUDE_OUT" ;;
+    "fallback")  CONTENT="$FALLBACK_OUT" ;;
+  esac
+  if echo "$CONTENT" | python3 -c "
+import sys, json, urllib.parse
+d = json.load(sys.stdin)
+text = json.dumps(d)
+assert 'new-project' in text, 'missing /new-project workflow reference'
+assert 'discuss-phase' in text, 'missing /discuss-phase workflow reference'
+assert 'learnship' in text, 'missing learnship brand in context'
+" 2>/dev/null; then
+    ok "session-start ($label mode): context contains learnship workflow keywords"
+  else
+    fail "session-start ($label mode): context missing expected learnship workflow keywords"
+  fi
+done
+
+# 20.7 session-start: exits 0 even when SKILL.md is missing (graceful degradation)
+TMPDIR_TEST=$(mktemp -d)
+TMPDIR_HOOKS="$TMPDIR_TEST/hooks"
+mkdir -p "$TMPDIR_HOOKS"
+cp "$HOOK_SCRIPT" "$TMPDIR_HOOKS/session-start"
+chmod +x "$TMPDIR_HOOKS/session-start"
+# No SKILL.md in TMPDIR_TEST — script should exit 0 silently
+if bash "$TMPDIR_HOOKS/session-start" > /dev/null 2>&1; then
+  ok "session-start: exits 0 gracefully when SKILL.md is missing"
+else
+  fail "session-start: non-zero exit when SKILL.md is missing (not graceful)"
+fi
+rm -rf "$TMPDIR_TEST"
 
 # ──────────────────────────────────────────────────────────────────────────
 # Summary
