@@ -55,7 +55,22 @@ All learnship workflows are available as natural language or slash commands. Cur
 
 ## Skills
 
-On Cursor, skills are available via the `.windsurf/skills/` directory in the learnship plugin. Reference them explicitly:
+On Cursor, skills ship as context files inside the learnship plugin package:
+
+```
+<plugin>/
+├── .windsurf/skills/        ← skill source in the package
+│   ├── agentic-learning/
+│   │   ├── SKILL.md         ← loaded as AI context
+│   │   └── references/
+│   └── impeccable/
+│       ├── SKILL.md
+│       └── [18 sub-skills]/
+└── cursor-rules/
+    └── learnship.mdc        ← references the skills automatically
+```
+
+The `learnship.mdc` rule file already describes both skills to Cursor's agent — you don't need to reference the directory manually. Just invoke them naturally:
 
 ```
 Use the agentic-learning skill: quiz React hooks
