@@ -234,7 +234,7 @@ Three integrated layers that reinforce each other:
 |-------|-------------|
 | **Workflow Engine** | Spec-driven phases → context-engineered plans → wave-ordered execution → verified delivery |
 | **Learning Partner** | Neuroscience-backed checkpoints at every phase transition: retrieval, reflection, spacing, struggle |
-| **Design System** | 17 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
+| **Design System** | 18 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
 
 ```mermaid
 graph LR
