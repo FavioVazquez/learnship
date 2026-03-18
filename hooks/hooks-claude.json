@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/session-start"
+          }
+        ]
+      }
+    ]
+  }
+}

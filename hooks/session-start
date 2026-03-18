@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# SessionStart hook for learnship plugin
+# Injects learnship SKILL.md context at every session start so the agent
+# always knows the workflows, planning artifacts, and learning system.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+SKILL_FILE="${PLUGIN_ROOT}/SKILL.md"
+
+if [ ! -f "$SKILL_FILE" ]; then
+  exit 0
+fi
+
+skill_content=$(cat "$SKILL_FILE" 2>/dev/null || echo "")
+
+escape_for_json() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
+}
+
+skill_escaped=$(escape_for_json "$skill_content")
+
+session_context="<learnship>\nYou are working in a project that uses learnship — an agentic engineering system.\n\n${skill_escaped}\n</learnship>"
+
+# Cursor sets CURSOR_PLUGIN_ROOT; Claude Code sets CLAUDE_PLUGIN_ROOT.
+# Emit the field each platform expects to avoid double-injection.
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+else
+  printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+fi
+
+exit 0

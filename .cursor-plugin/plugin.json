@@ -19,7 +19,8 @@
     "claude-code",
     "cursor"
   ],
-  "skills": ".windsurf/skills",
+  "skills": "skills",
   "rules": "cursor-rules",
-  "agents": "agents"
+  "agents": "agents",
+  "hooks": "./hooks/hooks-cursor.json"
 }

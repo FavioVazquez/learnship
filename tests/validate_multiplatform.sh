@@ -41,10 +41,10 @@ else
 fi
 
 # .windsurf/skills must be in package.json "files" — otherwise npx strips it and skills are never found
-if node -e "const pkg=require('$REPO/package.json'); process.exit(pkg.files && pkg.files.includes('.windsurf/skills') ? 0 : 1);" 2>/dev/null; then
-  ok "package.json files includes .windsurf/skills (required for npx delivery)"
+if node -e "const pkg=require('$REPO/package.json'); process.exit(pkg.files && pkg.files.includes('skills') ? 0 : 1);" 2>/dev/null; then
+  ok "package.json files includes skills/ (required for npx delivery)"
 else
-  fail "package.json files missing .windsurf/skills — skills will be absent when installed via npx"
+  fail "package.json files missing skills/ — skills will be absent when installed via npx"
 fi
 
 # Check key functions exist in installer
@@ -1797,6 +1797,39 @@ check('marketplace manifest has name, owner, plugins array', () => {
   assert(cfg.plugins[0].name === 'learnship', 'first plugin name must be learnship');
 });
 
+// 7. Plugin manifests do NOT reference .windsurf/skills (platform-neutral skills/)
+check('plugin manifests use skills/ not .windsurf/skills', () => {
+  const claudeCfg = JSON.parse(fs.readFileSync(path.join(REPO, '.claude-plugin', 'plugin.json'), 'utf8'));
+  const cursorCfg = JSON.parse(fs.readFileSync(path.join(REPO, '.cursor-plugin', 'plugin.json'), 'utf8'));
+  assert(!String(claudeCfg.skills || '').includes('.windsurf'),
+    '.claude-plugin/plugin.json skills must not reference .windsurf/');
+  assert(!String(cursorCfg.skills || '').includes('.windsurf'),
+    '.cursor-plugin/plugin.json skills must not reference .windsurf/');
+  assert(claudeCfg.skills === 'skills', `.claude-plugin skills should be "skills", got "${claudeCfg.skills}"`);
+  assert(cursorCfg.skills === 'skills', `.cursor-plugin skills should be "skills", got "${cursorCfg.skills}"`);
+});
+
+// 8. skills/ directory exists and has both skill subdirectories
+check('skills/ directory exists with agentic-learning and impeccable', () => {
+  const skillsDir = path.join(REPO, 'skills');
+  assert(fs.existsSync(skillsDir), 'skills/ directory not found');
+  assert(fs.existsSync(path.join(skillsDir, 'agentic-learning')), 'skills/agentic-learning/ missing');
+  assert(fs.existsSync(path.join(skillsDir, 'impeccable')), 'skills/impeccable/ missing');
+  assert(fs.existsSync(path.join(skillsDir, 'agentic-learning', 'SKILL.md')), 'skills/agentic-learning/SKILL.md missing');
+  assert(fs.existsSync(path.join(skillsDir, 'impeccable', 'SKILL.md')), 'skills/impeccable/SKILL.md missing');
+});
+
+// 9. Plugin manifests reference hooks
+check('.claude-plugin/plugin.json has hooks field', () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(REPO, '.claude-plugin', 'plugin.json'), 'utf8'));
+  assert(typeof cfg.hooks === 'string', '.claude-plugin/plugin.json missing hooks field');
+});
+
+check('.cursor-plugin/plugin.json has hooks field', () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(REPO, '.cursor-plugin', 'plugin.json'), 'utf8'));
+  assert(typeof cfg.hooks === 'string', '.cursor-plugin/plugin.json missing hooks field');
+});
+
 console.log('\nSECTION15_PASS=' + pass);
 console.log('SECTION15_FAIL=' + fail);
 NODEEOF
@@ -2026,6 +2059,110 @@ while IFS= read -r line; do
     "  FAIL "*) fail "${line#  FAIL }" ;;
   esac
 done <<< "$S18_OUTPUT"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Section 19: Hooks
+# ──────────────────────────────────────────────────────────────────────────
+TMPSCRIPT19=$(mktemp /tmp/ls_test19_XXXXXX.js)
+cat > "$TMPSCRIPT19" << 'NODEEOF'
+const fs = require('fs');
+const path = require('path');
+const REPO = process.argv[2];
+let pass = 0, fail = 0;
+function check(name, fn) {
+  try { fn(); console.log('  PASS ' + name); pass++; }
+  catch(e) { console.log('  FAIL ' + name + ' — ' + e.message); fail++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+
+// 1. hooks/ directory exists
+check('hooks/ directory exists', () => {
+  assert(fs.existsSync(path.join(REPO, 'hooks')), 'hooks/ directory not found');
+});
+
+// 2. session-start script exists
+check('hooks/session-start script exists', () => {
+  assert(fs.existsSync(path.join(REPO, 'hooks', 'session-start')), 'hooks/session-start not found');
+});
+
+// 3. session-start is executable
+check('hooks/session-start is executable', () => {
+  const stat = fs.statSync(path.join(REPO, 'hooks', 'session-start'));
+  const isExecutable = (stat.mode & 0o111) !== 0;
+  assert(isExecutable, 'hooks/session-start is not executable — run chmod +x hooks/session-start');
+});
+
+// 4. session-start has shebang
+check('hooks/session-start has bash shebang', () => {
+  const content = fs.readFileSync(path.join(REPO, 'hooks', 'session-start'), 'utf8');
+  assert(content.startsWith('#!/usr/bin/env bash') || content.startsWith('#!/bin/bash'),
+    'hooks/session-start missing bash shebang');
+});
+
+// 5. session-start handles both Cursor and Claude Code
+check('hooks/session-start handles Cursor and Claude Code output formats', () => {
+  const content = fs.readFileSync(path.join(REPO, 'hooks', 'session-start'), 'utf8');
+  assert(content.includes('CURSOR_PLUGIN_ROOT'), 'Missing CURSOR_PLUGIN_ROOT check for Cursor');
+  assert(content.includes('CLAUDE_PLUGIN_ROOT'), 'Missing CLAUDE_PLUGIN_ROOT check for Claude Code');
+  assert(content.includes('additional_context'), 'Missing additional_context output for Cursor');
+  assert(content.includes('hookSpecificOutput'), 'Missing hookSpecificOutput for Claude Code');
+});
+
+// 6. session-start injects SKILL.md content
+check('hooks/session-start reads SKILL.md for context injection', () => {
+  const content = fs.readFileSync(path.join(REPO, 'hooks', 'session-start'), 'utf8');
+  assert(content.includes('SKILL.md'), 'session-start does not reference SKILL.md');
+});
+
+// 7. hooks-cursor.json exists and is valid
+check('hooks/hooks-cursor.json exists and has sessionStart hook', () => {
+  const p = path.join(REPO, 'hooks', 'hooks-cursor.json');
+  assert(fs.existsSync(p), 'hooks/hooks-cursor.json not found');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(cfg.hooks && cfg.hooks.sessionStart, 'hooks-cursor.json missing hooks.sessionStart');
+  assert(Array.isArray(cfg.hooks.sessionStart) && cfg.hooks.sessionStart.length > 0,
+    'hooks-cursor.json sessionStart must be a non-empty array');
+});
+
+// 8. hooks-claude.json exists and is valid
+check('hooks/hooks-claude.json exists and has SessionStart hook', () => {
+  const p = path.join(REPO, 'hooks', 'hooks-claude.json');
+  assert(fs.existsSync(p), 'hooks/hooks-claude.json not found');
+  const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+  assert(cfg.hooks && cfg.hooks.SessionStart, 'hooks-claude.json missing hooks.SessionStart');
+});
+
+// 9. package.json includes hooks/ in files field
+check('package.json files includes hooks/', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8'));
+  assert(pkg.files.includes('hooks'), 'package.json files missing hooks/');
+});
+
+// 10. skills/ directory has same content as .windsurf/skills/ (in sync)
+check('skills/ and .windsurf/skills/ contain same skill subdirectories', () => {
+  const wsSkills = path.join(REPO, '.windsurf', 'skills');
+  const pkgSkills = path.join(REPO, 'skills');
+  const wsEntries = fs.readdirSync(wsSkills).filter(e =>
+    fs.statSync(path.join(wsSkills, e)).isDirectory()).sort();
+  const pkgEntries = fs.readdirSync(pkgSkills).filter(e =>
+    fs.statSync(path.join(pkgSkills, e)).isDirectory()).sort();
+  assert(JSON.stringify(wsEntries) === JSON.stringify(pkgEntries),
+    `skills/ subdirs ${JSON.stringify(pkgEntries)} don't match .windsurf/skills/ ${JSON.stringify(wsEntries)}`);
+});
+
+console.log('\nSECTION19_PASS=' + pass);
+console.log('SECTION19_FAIL=' + fail);
+NODEEOF
+
+S19_OUTPUT=$(node "$TMPSCRIPT19" "$REPO" 2>&1)
+rm -f "$TMPSCRIPT19"
+
+while IFS= read -r line; do
+  case "$line" in
+    "  PASS "*) ok "${line#  PASS }" ;;
+    "  FAIL "*) fail "${line#  FAIL }" ;;
+  esac
+done <<< "$S19_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
 # Summary

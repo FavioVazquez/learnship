@@ -21,5 +21,6 @@
   ],
   "commands": "commands/learnship",
   "agents": "agents",
-  "skills": ".windsurf/skills"
+  "skills": "skills",
+  "hooks": "./hooks/hooks-claude.json"
 }
