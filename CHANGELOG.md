@@ -9,6 +9,27 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.14] — Add Request Routing Protocol to AGENTS.md — prevent ceremony bypass on existing projects
+
+**Released:** 2026-03-19
+
+### Fixed
+
+- **AI bypasses learnship ceremony on existing projects when user gives a specific prompt** — On an existing project (`.planning/PROJECT.md` exists), if a user typed a detailed task description, the AI would treat it as a direct coding request and implement the change immediately, skipping `/quick`, `discuss-phase`, `plan-phase`, and all planning ceremony. Root cause: `AGENTS.md` described learnship but had no intercept rule preventing direct execution.
+  - **Fix:** Added **Request Routing Protocol** section to `learnship/templates/agents.md` — a mandatory decision tree that fires before the AI responds to ANY user message:
+    1. Check if `.planning/PROJECT.md` exists — if not, stop and redirect to `/new-project`
+    2. Classify the message — task/bug/feature → route; pure question/discussion → answer normally
+    3. Size-based routing — small tasks → propose `/quick` + wait for yes; medium/uncertain → propose `discuss-phase` + wait; large/cross-cutting → run `/ls` first, then recommend
+    4. **Never self-route silently** — always name the workflow and reason, then wait for explicit confirmation before invoking
+  - Examples of prohibited behavior now documented inline: fixing a bug directly, starting dark mode from a prompt, treating a pasted spec as an execution command
+- **4 new tests** in `tests/validate_multiplatform.sh`:
+  - `AGENTS.md template has Request Routing Protocol section`
+  - `AGENTS.md routing protocol forbids direct code changes`
+  - `AGENTS.md routing protocol requires explicit user confirmation before invoking workflow`
+  - `AGENTS.md routing protocol has decision tree with quick/discuss-phase routes`
+
+---
+
 ## [v1.9.13] — Structurally enforce new-project questioning ceremony (take 2)
 
 **Released:** 2026-03-19
