@@ -276,6 +276,47 @@ else
   fail "learnship/references/questioning.md missing — new-project Step 3 questioning reference broken"
 fi
 
+# new-project must have all mandatory structural gates (prevents ceremony-skip bug)
+NEW_PROJECT_WF="$REPO/learnship/workflows/new-project.md"
+if grep -q "Exchange 1" "$NEW_PROJECT_WF" && \
+   grep -q "Exchange 2" "$NEW_PROJECT_WF" && \
+   grep -q "Exchange 3" "$NEW_PROJECT_WF" && \
+   grep -q "Exchange 4" "$NEW_PROJECT_WF"; then
+  ok "new-project has 4 numbered question exchanges (structural gate)"
+else
+  fail "new-project missing numbered exchanges — AI can skip ceremony with single detailed answer"
+fi
+
+if grep -q "ANSWER_1" "$NEW_PROJECT_WF" && \
+   grep -q "ANSWER_2" "$NEW_PROJECT_WF" && \
+   grep -q "ANSWER_3" "$NEW_PROJECT_WF" && \
+   grep -q "ANSWER_4" "$NEW_PROJECT_WF"; then
+  ok "new-project tracks ANSWER_1..ANSWER_4 (gate check before Step 4)"
+else
+  fail "new-project missing ANSWER_N tracking — gate check will silently pass without all answers"
+fi
+
+if grep -q "Do not proceed to Step 5" "$NEW_PROJECT_WF" && \
+   grep -q "Reply.*yes.*to continue" "$NEW_PROJECT_WF"; then
+  ok "new-project Step 4 has explicit user-confirmation gate before Step 5"
+else
+  fail "new-project Step 4 missing explicit confirmation gate — PROJECT.md can be silently accepted"
+fi
+
+if grep -q "Do not proceed to Step 5 until you have asked the research question" "$NEW_PROJECT_WF"; then
+  ok "new-project has STOP gate between PROJECT.md confirmation and research decision"
+else
+  fail "new-project missing STOP gate after Step 4 commit — can skip research question"
+fi
+
+# .windsurf mirror must match learnship source for new-project
+WINDSURF_NP="$REPO/.windsurf/workflows/new-project.md"
+if grep -q "Exchange 1" "$WINDSURF_NP" && grep -q "ANSWER_4" "$WINDSURF_NP"; then
+  ok ".windsurf/workflows/new-project.md has structural gates (mirror in sync)"
+else
+  fail ".windsurf/workflows/new-project.md missing structural gates — Windsurf users unaffected by fix"
+fi
+
 # execute-phase.md must contain Task( for subagent spawning
 if grep -q "Task(" "$REPO/learnship/workflows/execute-phase.md" 2>/dev/null; then
   ok "learnship/workflows/execute-phase.md contains Task() subagent call"
@@ -754,6 +795,20 @@ check('rewriteNewProject: no raw LEARNSHIP markers remain in output', () => {
   for (const p of ['claude', 'windsurf', 'opencode', 'gemini', 'codex']) {
     const out = rewriteNewProject(NP_SRC, p);
     assert(!out.includes('<!-- LEARNSHIP_'), 'raw marker found for platform ' + p + ':\n' + out);
+  }
+});
+
+// 18b. Structural questioning gates survive rewriteNewProject for ALL platforms
+check('rewriteNewProject: structural questioning gates preserved after platform rewrite (all platforms)', () => {
+  const realSrc = fs.readFileSync(path.join(REPO, 'learnship', 'workflows', 'new-project.md'), 'utf8');
+  for (const p of ['claude', 'windsurf', 'opencode', 'gemini', 'codex']) {
+    const out = rewriteNewProject(realSrc, p);
+    assert(out.includes('Exchange 1'), `[${p}] Exchange 1 missing after rewrite`);
+    assert(out.includes('Exchange 4'), `[${p}] Exchange 4 missing after rewrite`);
+    assert(out.includes('ANSWER_1'), `[${p}] ANSWER_1 register missing after rewrite`);
+    assert(out.includes('ANSWER_4'), `[${p}] ANSWER_4 register missing after rewrite`);
+    assert(out.includes('Do not proceed to Step 5'), `[${p}] Step 5 gate missing after rewrite`);
+    assert(out.includes('Reply **yes** to continue'), `[${p}] PROJECT.md confirmation gate missing after rewrite`);
   }
 });
 
