@@ -9,6 +9,26 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.13] — Structurally enforce new-project questioning ceremony (take 2)
+
+**Released:** 2026-03-19
+
+### Fixed
+
+- **`new-project` still skipping ceremony after v1.9.12** — The `⚠ MANDATORY MINIMUM` advisory warning was insufficient; LLMs rationalize past advisory text when a user's first reply is specific. Root cause was structural: the questioning loop had no hard sequential checkpoints, only a soft "when you have enough" heuristic.
+  - **Step 3 complete rewrite:** Replaced the open-ended questioning loop with 4 mandatory numbered exchanges (`Exchange 1` through `Exchange 4`), each followed by a `🛑 STOP. Wait for the user's answer.` and a named answer register (`ANSWER_1`…`ANSWER_4`). The AI cannot reach Step 4 without having explicitly received and recorded all four answers. Gate check added: verifies all four `ANSWER_N` are recorded before offering to write `PROJECT.md`.
+  - **Step 4 confirmation gate hardened:** Wording changed to exactly match what a `grep` test can verify — `"Reply **yes** to continue"` — and a second `🛑 STOP` added explicitly blocking progression to Step 5 until the research question is asked and answered.
+  - **Steps 5, 6, 7 STOP gates:** Upgraded from `⚠` advisory text to the `🛑 STOP.` pattern used in the rest of the workflow for consistency.
+- **Tests added** (5 new checks in `tests/validate_multiplatform.sh`):
+  - `new-project has 4 numbered question exchanges` — verifies Exchange 1–4 exist
+  - `new-project tracks ANSWER_1..ANSWER_4` — verifies named answer registers
+  - `new-project Step 4 has explicit user-confirmation gate` — verifies `Do not proceed to Step 5` + `Reply yes to continue`
+  - `new-project has STOP gate between PROJECT.md confirmation and research decision`
+  - `.windsurf/workflows/new-project.md has structural gates (mirror in sync)`
+- Synced fix to both `learnship/workflows/new-project.md` and `.windsurf/workflows/new-project.md`.
+
+---
+
 ## [v1.9.12] — Fix new-project skipping full ceremony on detailed first answer
 
 **Released:** 2026-03-19

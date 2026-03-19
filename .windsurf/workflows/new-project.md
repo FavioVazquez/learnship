@@ -121,47 +121,67 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Ask openly: **"What do you want to build?"**
+This step is **strictly sequential**. You must complete each numbered exchange fully before moving to the next. Do not batch questions. Do not skip exchanges. Do not proceed to Step 4 until Exchange 4 is complete.
 
-Wait for their response. Then follow the thread — each answer opens new questions. Dig into:
-- What excited them / what problem sparked this
-- What they mean by vague terms ("simple", "fast", "clean")
-- What it would actually look like in use
-- What's already decided vs. open
-- Who the users are and what they need
+**Exchange 1 — Opening question:**
 
-Use the questioning techniques from `@./references/questioning.md`.
+Ask: **"What do you want to build?"**
 
-> **⚠ MANDATORY MINIMUM — Do not ask to create PROJECT.md until you have asked AT LEAST 3 follow-up questions after the user's first answer. No matter how detailed the first response is, one answer is never enough. A single detailed prompt is not a project definition — it is a starting point. Ask follow-ups about: who uses it, what the edge cases are, what success looks like, what they've already tried, what must NOT happen. Only after at least 3 follow-ups have been exchanged may you proceed.**
+> 🛑 STOP. Wait for the user's answer. Do not continue until you have received it. Record their answer internally as `ANSWER_1`.
 
-When you have enough depth (minimum 3 follow-ups exchanged), ask:
+**Exchange 2 — First follow-up:**
 
-"I think I understand what you're after. Ready to create PROJECT.md, or do you want to explore more?"
+Based on `ANSWER_1`, ask one focused follow-up. Choose the most important unknown from:
+- Who are the users and what problem does this solve for them specifically?
+- What does success look like — how will you know it's working?
+- What's already decided vs. still open?
+- What must NOT happen (constraints, anti-goals)?
 
-- **Create PROJECT.md** → proceed
-- **Keep exploring** → continue questions
+> 🛑 STOP. Wait for the user's answer. Do not continue until you have received it. Record their answer internally as `ANSWER_2`.
 
-Loop until ready.
+**Exchange 3 — Second follow-up:**
+
+Based on `ANSWER_1` + `ANSWER_2`, ask a second focused follow-up that digs into a gap the first two answers left open. Do not repeat themes already covered.
+
+> 🛑 STOP. Wait for the user's answer. Do not continue until you have received it. Record their answer internally as `ANSWER_3`.
+
+**Exchange 4 — Third follow-up:**
+
+Based on all previous answers, ask a third follow-up that clarifies scope, edge cases, or the most important implementation decision not yet surfaced.
+
+> 🛑 STOP. Wait for the user's answer. Do not continue until you have received it. Record their answer internally as `ANSWER_4`.
+
+**Gate check — before proceeding to Step 4:**
+
+Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4` recorded? If any is missing, go back and ask it. Only after all four answers are in hand may you ask:
+
+"I think I have a solid picture of what you're building. Ready for me to write PROJECT.md, or is there more you want to cover first?"
+
+- **Write PROJECT.md** → proceed to Step 4
+- **More to cover** → continue asking follow-ups, then re-ask this gate question
+
+Use the questioning techniques from `@./references/questioning.md` to shape the follow-up questions.
 
 ## Step 4: Write PROJECT.md
 
 Synthesize all gathered context into `.planning/PROJECT.md` using `@./templates/project.md` as the template.
 
-Once written, **show the user the full contents of `.planning/PROJECT.md`** and ask:
+Once written, display the full raw contents of `.planning/PROJECT.md` in your response — do not summarize it, show the whole file.
 
-"Here's the PROJECT.md I've written from our conversation. Does this accurately capture what you want to build, or should we adjust anything?"
+Then ask exactly this:
 
-- **Looks good** → continue
-- **Needs changes** → ask what to adjust, update PROJECT.md, re-present, loop until confirmed
+"That's the PROJECT.md I've written. Does this capture what you want to build? Reply **yes** to continue, or tell me what to change."
 
-> **⚠ STOP — do not proceed to Step 5 until the user has explicitly confirmed PROJECT.md. This is a mandatory gate. Do not interpret silence or a brief "ok" as confirmation — wait for a clear positive signal.**
+> 🛑 STOP. Wait for the user's explicit reply. Do not proceed to Step 5 under any circumstances until the user has replied to this question. A reply of "yes", "looks good", "go ahead", or any clear positive is acceptable. Silence, no reply, or a new unrelated message is NOT acceptable — ask again.
+
+If user requests changes: update PROJECT.md, show the full file again, re-ask the confirmation question. Loop until confirmed.
 
 **If `commit_mode` is `auto`:**
 ```bash
 git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 ```
 
-> **⚠ STOP — do not proceed to Step 5 until you have asked the research question below and received the user's answer.**
+> 🛑 STOP. Do not proceed to Step 5 until you have asked the research question below AND received the user's explicit answer to it.
 
 ## Step 5: Research Decision
 
@@ -169,7 +189,7 @@ Ask: "Research the domain ecosystem before defining requirements?"
 - **Research first** (recommended) — Discover standard stacks, expected features, architecture patterns
 - **Skip research** — I know this domain well, go straight to requirements
 
-> **⚠ STOP — wait for the user's choice before continuing.**
+> 🛑 STOP. Wait for the user's explicit choice before continuing. Do not default to "Research first" — wait for the user's actual reply.
 
 **If Research first:**
 
@@ -203,7 +223,7 @@ Files: .planning/research/
 
 ## Step 6: Define Requirements
 
-> **⚠ STOP — do not write REQUIREMENTS.md until you have presented feature categories to the user and received their v1 selections. This is an interactive step.**
+> 🛑 STOP. Do not write REQUIREMENTS.md until you have presented feature categories to the user and received their explicit v1 selections. This is a fully interactive step — you must wait for input.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -227,7 +247,7 @@ Create `.planning/REQUIREMENTS.md` with v1 requirements (with REQ-IDs like `AUTH
 
 Present the full list for confirmation. If user wants adjustments, iterate.
 
-> **⚠ STOP — wait for the user to confirm the requirements list before writing REQUIREMENTS.md or continuing.**
+> 🛑 STOP. Wait for the user to explicitly confirm the requirements list before writing REQUIREMENTS.md or continuing to Step 7.
 
 **If `commit_mode` is `auto`:**
 ```bash
@@ -271,7 +291,7 @@ Ask for approval:
 - **Adjust phases** → get feedback, revise, re-present
 - **Review full file** → show raw ROADMAP.md, then re-ask
 
-> **⚠ STOP — do not proceed to Step 8 until the user has explicitly approved the roadmap.**
+> 🛑 STOP. Do not proceed to Step 8 until the user has explicitly approved the roadmap.
 
 **If `commit_mode` is `auto`:**
 ```bash
