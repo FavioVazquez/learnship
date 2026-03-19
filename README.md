@@ -136,7 +136,7 @@ What's covered:
 - **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install commands, first project walkthrough, the 5 commands you need to know
 - **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
 - **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
-- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 18 `impeccable` design commands
+- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 21 `impeccable` design commands
 - **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 42 workflows documented with when and why to use each
 - **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
 
@@ -234,7 +234,7 @@ Three integrated layers that reinforce each other:
 |-------|-------------|
 | **Workflow Engine** | Spec-driven phases → context-engineered plans → wave-ordered execution → verified delivery |
 | **Learning Partner** | Neuroscience-backed checkpoints at every phase transition: retrieval, reflection, spacing, struggle |
-| **Design System** | 18 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
+| **Design System** | 21 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
 
 ```mermaid
 graph LR
@@ -502,7 +502,7 @@ learning_mode: "manual"  → only when you explicitly invoke @agentic-learning
 
 ## 🎨 Design System
 
-The **impeccable** skill suite is always active as project context for any UI work. It provides design direction, anti-patterns, and 17 steering commands that prevent generic AI aesthetics. Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
+The **impeccable** skill suite is always active as project context for any UI work. It provides design direction, anti-patterns, and 21 steering commands that prevent generic AI aesthetics. Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
 
 ### Commands
 
@@ -746,7 +746,7 @@ learnship/
 │   ├── workflows/          # 42 workflows as slash commands
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references), native on Windsurf + Claude Code
-│       └── impeccable/         # Design suite: 18 skills, native on Windsurf + Claude Code
+│       └── impeccable/         # Design suite: 21 skills, native on Windsurf + Claude Code
 │           ├── frontend-design/ #   Base skill + 7 reference files (typography, color, motion…)
 │           ├── audit/           #   /audit
 │           ├── critique/        #   /critique

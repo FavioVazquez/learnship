@@ -11,7 +11,7 @@ Pull the latest skill content from both upstream repositories into learnship's s
 **What this touches:**
 - `.windsurf/skills/agentic-learning/SKILL.md` — replaced from upstream
 - `.windsurf/skills/agentic-learning/references/` — replaced from upstream
-- `.windsurf/skills/impeccable/<sub-skill>/` — each of 18 sub-skill dirs replaced from upstream
+- `.windsurf/skills/impeccable/<sub-skill>/` — each of 21 sub-skill dirs replaced from upstream
 - `.windsurf/skills/impeccable/SKILL.md` — **NOT touched** (this is learnship's own dispatcher)
 
 ---
@@ -59,7 +59,7 @@ Will pull from:
 Files updated:
   .windsurf/skills/agentic-learning/SKILL.md
   .windsurf/skills/agentic-learning/references/   (full replace)
-  .windsurf/skills/impeccable/<18 sub-skills>/    (full replace each)
+  .windsurf/skills/impeccable/<21 sub-skills>/    (full replace each)
 
 Files preserved (learnship-owned):
   .windsurf/skills/impeccable/SKILL.md            (dispatcher — never touched)
@@ -89,7 +89,7 @@ ls "$AGENTIC_LEARN_TMP"
 ls "$IMPECCABLE_TMP/source/skills/"
 ```
 
-Confirm both clones succeeded — `SKILL.md` must exist in `$AGENTIC_LEARN_TMP` and the 18 sub-skill dirs must exist under `$IMPECCABLE_TMP/source/skills/`. If either is missing, stop.
+Confirm both clones succeeded — `SKILL.md` must exist in `$AGENTIC_LEARN_TMP` and at least 21 sub-skill dirs must exist under `$IMPECCABLE_TMP/source/skills/`. If either is missing, stop.
 
 ---
 
@@ -175,7 +175,7 @@ Check all 18 expected sub-skills are present and have a `SKILL.md`:
 
 ```bash
 IMPECCABLE_DEST="$(pwd)/.windsurf/skills/impeccable"
-expected="adapt animate audit bolder clarify colorize critique delight distill extract frontend-design harden normalize onboard optimize polish quieter teach-impeccable"
+expected="adapt animate arrange audit bolder clarify colorize critique delight distill extract frontend-design harden normalize onboard optimize overdrive polish quieter teach-impeccable typeset"
 missing=""
 
 for skill in $expected; do
@@ -190,7 +190,7 @@ if [ -n "$missing" ]; then
   cp -r "$BACKUP_DIR/impeccable/." "$IMPECCABLE_DEST/"
   echo "Restored. Check upstream structure manually."
 else
-  echo "All 18 impeccable sub-skills present ✓"
+  echo "All 21 impeccable sub-skills present ✓"
 fi
 
 # Verify dispatcher is still intact
@@ -251,7 +251,7 @@ agentic-learning:
   references/    ✓ synced ([N] files)
 
 impeccable:
-  18 sub-skills  ✓ synced from pbakaus/impeccable
+  21 sub-skills  ✓ synced from pbakaus/impeccable
   SKILL.md       ✓ preserved (learnship dispatcher)
 
 All platforms updated (installer re-run):

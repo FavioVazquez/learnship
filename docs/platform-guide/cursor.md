@@ -65,7 +65,7 @@ learnship-plugin/
 │   │   └── references/
 │   └── impeccable/
 │       ├── SKILL.md
-│       └── [18 sub-skills]/
+│       └── [21 sub-skills]/
 ├── cursor-rules/
 │   └── learnship.mdc        ← loaded every session automatically
 └── hooks/

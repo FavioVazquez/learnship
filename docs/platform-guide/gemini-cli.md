@@ -47,7 +47,7 @@ Skills are installed as context files:
 │   └── references/
 └── impeccable/
     ├── SKILL.md
-    └── [18 sub-skills]/
+    └── [21 sub-skills]/
 ```
 
 Reference explicitly to invoke:

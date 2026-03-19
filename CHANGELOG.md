@@ -9,6 +9,35 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.11] — Sync 3 new impeccable skills from upstream (arrange, typeset, overdrive)
+
+**Released:** 2026-03-19
+
+### Added
+
+- **`@impeccable arrange`** — New skill: fix layout, spacing, and visual rhythm. Tackles monotonous grids, inconsistent spacing, and weak visual hierarchy. Includes squint test, spacing system guidance, Flexbox-vs-Grid decision framework, card grid anti-patterns.
+- **`@impeccable typeset`** — New skill: fix font choices, hierarchy, sizing, weight consistency, and readability. Turns default-looking Inter/Roboto text into intentional, well-crafted type. Includes fluid-vs-fixed scale guidance, web font loading, OpenType details.
+- **`@impeccable overdrive`** — New skill: push interfaces past conventional limits with technically ambitious implementations — shaders, 60fps virtual tables via virtual scrolling, spring physics on dialogs, scroll-driven animations, WebGPU. Proposes 2-3 directions before building; requires user confirmation.
+- **`frontend-design` Context Gathering Protocol** — Added the upstream "Context Gathering Protocol" section to `frontend-design/SKILL.md`, making the 3-step context-gathering order (instructions → `.impeccable.md` → teach-impeccable) explicit for all design skills.
+
+### Fixed
+
+- **Broken `reference/` links in `arrange` and `typeset`** — Both skills referenced `reference/spatial-design.md` and `reference/typography.md` from their own directory (which doesn't exist). Fixed to `../frontend-design/reference/spatial-design.md` and `../frontend-design/reference/typography.md`.
+- **`typography.md` fluid type guidance** — Updated to upstream's more precise version: distinguishes "use fluid type for marketing headings" vs "use fixed rem scales for app UIs" (no major app design system uses fluid type in product UI).
+
+### Changed
+
+- **Root `impeccable/SKILL.md`** — Updated action count 18→21, added `arrange`, `typeset`, `overdrive` to the Actions list.
+- **`install.js` `SUB_ACTION_ORDER`** — Added `arrange`, `overdrive`, `typeset` so Claude Code plugin inlines all 21 sub-skill bodies correctly.
+- **`audit/SKILL.md`** — Suggested command lists updated to include `/arrange`, `/typeset`, `/overdrive`.
+- **`sync-upstream-skills` workflow** — Updated 18→21 throughout (expected list, banner text, integrity check).
+- **`cursor-rules/learnship.mdc`** — Added `@impeccable arrange`, `@impeccable typeset`, `@impeccable overdrive` to the Design Quality section.
+- **Tests** — Section 10/11 updated: `SUB_SKILLS` array has all 21, body-content checks assert `arrange`/`overdrive`/`typeset` inline content, size threshold raised to 60 000 chars.
+- **README, docs** — All "18 commands"/"17 commands" references updated to 21 throughout (`docs/skills/impeccable.md`, `docs/getting-started/installation.md`, `docs/index.md`, `docs/platform-guide/*.md`).
+- **Images** — `assets/impeccable-commands.png` regenerated with 21-command grid; `assets/skills-overview.png` regenerated showing `[21 sub-skills]` (was `[17 sub-skills]`). `generate_images.py` prompts updated to match.
+
+---
+
 ## [v1.9.10] — Fix `@impeccable` not found in Claude Code
 
 **Released:** 2026-03-18

@@ -55,6 +55,9 @@ Read `learning_mode` from `.planning/config.json` (default: "auto"):
 
 The `impeccable` skill is available for UI work. Key commands:
 - `@impeccable audit` — full quality audit
+- `@impeccable critique` — UX effectiveness review
 - `@impeccable polish` — final pass before shipping
 - `@impeccable frontend-design` — apply design foundation principles
-- `@impeccable critique` — UX effectiveness review
+- `@impeccable arrange` — fix layout, spacing, visual rhythm
+- `@impeccable typeset` — fix typography, fonts, hierarchy
+- `@impeccable overdrive` — technically ambitious implementations
