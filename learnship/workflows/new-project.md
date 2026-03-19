@@ -271,7 +271,7 @@ Using `@./agents/planner.md` as your planning persona:
 3. Create 2-5 observable success criteria per phase ("After this phase, user can ___")
 4. Validate 100% requirement coverage
 
-Write `.planning/ROADMAP.md` and `.planning/STATE.md` using `@./templates/requirements.md` and `@./templates/state.md`.
+Write `.planning/ROADMAP.md` and `.planning/STATE.md` using `@./templates/state.md` for the STATE.md structure.
 
 Present the roadmap clearly:
 

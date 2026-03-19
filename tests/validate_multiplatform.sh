@@ -295,6 +295,29 @@ else
   fail "AGENTS.md routing protocol missing decision tree entries (quick, discuss-phase)"
 fi
 
+# learnship/agents/ must exist with all 5 inline persona files (used by sequential-mode ceremonies on all platforms)
+AGENTS_DIR="$REPO/learnship/agents"
+if [ -d "$AGENTS_DIR" ]; then
+  ok "learnship/agents/ directory exists"
+else
+  fail "learnship/agents/ directory missing — @./agents/ references in ceremony workflows will silently fail"
+fi
+
+for PERSONA in researcher planner executor verifier debugger; do
+  if [ -f "$AGENTS_DIR/$PERSONA.md" ]; then
+    ok "learnship/agents/$PERSONA.md exists"
+  else
+    fail "learnship/agents/$PERSONA.md missing — ceremony workflows referencing @./agents/$PERSONA.md will fail"
+  fi
+done
+
+# install.js Windsurf block must copy agents/ subdir alongside templates/ and references/
+if grep -q "'agents'" "$REPO/bin/install.js" && grep -q "templates.*references.*agents\|agents.*templates\|references.*agents" "$REPO/bin/install.js"; then
+  ok "install.js Windsurf block copies agents/ subdir (fixes @./agents/ resolution)"
+else
+  fail "install.js Windsurf block missing agents/ copy — @./agents/ references broken on Windsurf"
+fi
+
 # references/questioning.md must exist (used by new-project Step 3)
 if [ -f "$REPO/learnship/references/questioning.md" ]; then
   ok "learnship/references/questioning.md exists"
@@ -342,6 +365,50 @@ if grep -q "Exchange 1" "$WINDSURF_NP" && grep -q "ANSWER_4" "$WINDSURF_NP"; the
 else
   fail ".windsurf/workflows/new-project.md missing structural gates — Windsurf users unaffected by fix"
 fi
+
+# ── Ceremony correctness ────────────────────────────────────────────────────
+
+# new-project Step 8 must contain MANDATORY AGENTS.md generation gate
+if grep -q "MANDATORY" "$NEW_PROJECT_WF" && grep -q "Generate AGENTS.md" "$NEW_PROJECT_WF"; then
+  ok "new-project Step 8 has mandatory AGENTS.md generation gate"
+else
+  fail "new-project Step 8 missing mandatory AGENTS.md gate — AGENTS.md may not be generated"
+fi
+
+# new-project must reference the agents.md template for AGENTS.md population
+if grep -q "templates/agents.md" "$NEW_PROJECT_WF"; then
+  ok "new-project references templates/agents.md for AGENTS.md generation"
+else
+  fail "new-project does not reference templates/agents.md — AGENTS.md template unused"
+fi
+
+# All core ceremony workflows must have a Learning Checkpoint (agentic-learning integration)
+for WF in discuss-phase plan-phase execute-phase verify-work quick debug research-phase; do
+  WF_FILE="$REPO/learnship/workflows/$WF.md"
+  if grep -q "Learning Checkpoint" "$WF_FILE" && grep -q "agentic-learning" "$WF_FILE"; then
+    ok "$WF has Learning Checkpoint with agentic-learning"
+  else
+    fail "$WF missing Learning Checkpoint or agentic-learning reference"
+  fi
+done
+
+# All templates referenced by workflows must exist
+for TMPL in agents.md project.md requirements.md state.md plan.md context.md uat.md; do
+  if [ -f "$REPO/learnship/templates/$TMPL" ]; then
+    ok "learnship/templates/$TMPL exists"
+  else
+    fail "learnship/templates/$TMPL missing — workflow template reference will fail"
+  fi
+done
+
+# Persona files must be referenced by the correct names in ceremony workflows
+for PERSONA in researcher planner executor verifier debugger; do
+  if grep -rq "agents/$PERSONA.md" "$REPO/learnship/workflows/"; then
+    ok "learnship/agents/$PERSONA.md is referenced in ceremony workflows"
+  else
+    fail "learnship/agents/$PERSONA.md is NOT referenced anywhere — may be dead file or wrong name"
+  fi
+done
 
 # execute-phase.md must contain Task( for subagent spawning
 if grep -q "Task(" "$REPO/learnship/workflows/execute-phase.md" 2>/dev/null; then

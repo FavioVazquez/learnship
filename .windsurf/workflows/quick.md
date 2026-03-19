@@ -34,10 +34,12 @@ Display banner based on active flags:
 
 Check that a project exists:
 ```bash
-test -f .planning/ROADMAP.md && echo "OK" || echo "MISSING"
+test -f .planning/PROJECT.md && echo "OK" || echo "MISSING"
 ```
 
-If ROADMAP.md missing: stop — run `new-project` first. Quick tasks require an active project.
+If PROJECT.md missing: stop — run `new-project` first. Quick tasks require an active project.
+
+If PROJECT.md exists but ROADMAP.md is missing: continue — note in the SUMMARY.md that no roadmap phase could be linked, and skip STATE.md phase references.
 
 Generate a slug from the description (lowercase, hyphens, max 40 chars).
 
