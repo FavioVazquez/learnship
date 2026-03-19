@@ -1,11 +1,12 @@
 ---
 name: impeccable
 description: >
-  A design quality system for frontend interfaces. 18 focused actions for
+  A design quality system for frontend interfaces. 21 focused actions for
   auditing, refining, and elevating UI quality. Invoke with @impeccable
-  followed by one of: adapt, animate, audit, bolder, clarify, colorize,
-  critique, delight, distill, extract, frontend-design, harden, normalize,
-  onboard, optimize, polish, quieter, or teach-impeccable.
+  followed by one of: adapt, animate, arrange, audit, bolder, clarify,
+  colorize, critique, delight, distill, extract, frontend-design, harden,
+  normalize, onboard, optimize, overdrive, polish, quieter, teach-impeccable,
+  or typeset.
 license: MIT
 compatibility: Works with Windsurf Cascade, Claude Code, and any AgentSkills-compatible agent.
 metadata:
@@ -15,7 +16,7 @@ metadata:
 
 # Impeccable
 
-A design quality system composed of 18 focused actions for auditing, refining,
+A design quality system composed of 21 focused actions for auditing, refining,
 and elevating frontend interfaces. Each action is a specialist — invoke the one
 that matches your current need.
 
@@ -33,6 +34,9 @@ principles and anti-patterns.
 
 ### `animate` — Purposeful motion & micro-interactions
 [animate/SKILL.md](animate/SKILL.md)
+
+### `arrange` — Layout, spacing & visual rhythm
+[arrange/SKILL.md](arrange/SKILL.md)
 
 ### `audit` — Comprehensive quality audit
 [audit/SKILL.md](audit/SKILL.md)
@@ -82,6 +86,12 @@ principles and anti-patterns.
 ### `teach-impeccable` — Project design context setup
 [teach-impeccable/SKILL.md](teach-impeccable/SKILL.md)
 
+### `typeset` — Typography: fonts, hierarchy & readability
+[typeset/SKILL.md](typeset/SKILL.md)
+
+### `overdrive` — Technically ambitious implementations
+[overdrive/SKILL.md](overdrive/SKILL.md)
+
 ---
 
 ## How to use
@@ -120,6 +130,6 @@ Or apply them directly now and use `/decision-log` to record what was changed an
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-This applies after: `audit`, `critique`, `polish`, `normalize`, `harden`, `adapt`, `optimize`, `bolder`, `quieter`, `colorize`, `clarify`, `delight`, `onboard`, `animate`, `distill`, `extract`.
+This applies after: `audit`, `critique`, `polish`, `normalize`, `harden`, `adapt`, `optimize`, `bolder`, `quieter`, `colorize`, `clarify`, `delight`, `onboard`, `animate`, `distill`, `extract`, `arrange`, `typeset`, `overdrive`.
 
 For `teach-impeccable` and `frontend-design` (which set up context, not produce recommendations), skip this suggestion.

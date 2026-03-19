@@ -621,10 +621,10 @@ function installClaudePlugins(skillsSrc, targetDir) {
 
       // Ordered sub-actions (defines appearance order in the inlined file)
       const SUB_ACTION_ORDER = [
-        'adapt', 'animate', 'audit', 'bolder', 'clarify', 'colorize',
+        'adapt', 'animate', 'arrange', 'audit', 'bolder', 'clarify', 'colorize',
         'critique', 'delight', 'distill', 'extract', 'frontend-design',
-        'harden', 'normalize', 'onboard', 'optimize', 'polish', 'quieter',
-        'teach-impeccable',
+        'harden', 'normalize', 'onboard', 'optimize', 'overdrive', 'polish',
+        'quieter', 'teach-impeccable', 'typeset',
       ];
 
       // Build inlined sections by reading each sub-skill's body
@@ -645,12 +645,13 @@ function installClaudePlugins(skillsSrc, targetDir) {
       // the "Invoke with @impeccable" preamble that confused Claude Code's matcher
       const inlinedSkillMd =
         `---\nname: impeccable\ndescription: >\n` +
-        `  A design quality system for frontend interfaces. 18 focused actions for\n` +
+        `  A design quality system for frontend interfaces. 21 focused actions for\n` +
         `  auditing, refining, and elevating UI quality. Use when the user asks to\n` +
         `  audit, critique, polish, improve, review, or refine a frontend interface.\n` +
-        `  Invoke with @impeccable followed by one of: adapt, animate, audit, bolder,\n` +
-        `  clarify, colorize, critique, delight, distill, extract, frontend-design,\n` +
-        `  harden, normalize, onboard, optimize, polish, quieter, or teach-impeccable.\n` +
+        `  Invoke with @impeccable followed by one of: adapt, animate, arrange, audit,\n` +
+        `  bolder, clarify, colorize, critique, delight, distill, extract,\n` +
+        `  frontend-design, harden, normalize, onboard, optimize, overdrive, polish,\n` +
+        `  quieter, teach-impeccable, or typeset.\n` +
         `---\n\n` +
         rootBody.replace(/## Actions[\s\S]*?---\n\n## How to use/, '## How to use') +
         `\n\n` +

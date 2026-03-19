@@ -88,7 +88,7 @@ The installer auto-detects which platforms are configured on your machine and as
 │   └── … 39 more
 └── skills/
     ├── agentic-learning/ ← Learning partner skill (native @invoke on Windsurf)
-    └── impeccable/       ← Design system skill (18 sub-skills)
+    └── impeccable/       ← Design system skill (21 sub-skills)
 ```
 
 For non-Windsurf platforms, skills are installed as context files:

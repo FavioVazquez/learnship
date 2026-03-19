@@ -103,7 +103,7 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
   </div>
   <div class="ls-card">
     <div class="ls-card-title">🎨 Design System</div>
-    <p class="ls-card-desc">18 impeccable steering commands for production-grade UI. Prevent generic AI aesthetics at the source. Based on @pbakaus/impeccable.</p>
+    <p class="ls-card-desc">21 impeccable steering commands for production-grade UI. Prevent generic AI aesthetics at the source. Based on @pbakaus/impeccable.</p>
     <span class="ls-card-command">/audit · /critique · /polish · /colorize · /animate</span>
   </div>
 </div>

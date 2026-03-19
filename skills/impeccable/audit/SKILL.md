@@ -71,7 +71,7 @@ For each issue, document:
 - **Impact**: How it affects users
 - **WCAG/Standard**: Which standard it violates (if applicable)
 - **Recommendation**: How to fix it
-- **Suggested command**: Which command to use (prefer: /polish, /audit, /critique, /normalize, /colorize, /animate, /bolder, /quieter, /distill, /clarify, /optimize, /harden, /delight, /extract, /adapt, /onboard, /teach-impeccable — or other installed skills you're sure exist)
+- **Suggested command**: Which command to use (prefer: /polish, /audit, /critique, /normalize, /colorize, /animate, /bolder, /quieter, /distill, /clarify, /optimize, /harden, /delight, /extract, /adapt, /onboard, /arrange, /typeset, /overdrive, /teach-impeccable — or other installed skills you're sure exist)
 
 #### Critical Issues
 [Issues that block core functionality or violate WCAG A]
@@ -108,7 +108,7 @@ Create actionable plan:
 
 ### Suggested Commands for Fixes
 
-Map issues to available commands. Prefer these: /polish, /audit, /critique, /normalize, /colorize, /animate, /bolder, /quieter, /distill, /clarify, /optimize, /harden, /delight, /extract, /adapt, /onboard, /teach-impeccable. You may also suggest other installed skills you're sure exist, but never invent commands.
+Map issues to available commands. Prefer these: /polish, /audit, /critique, /normalize, /colorize, /animate, /bolder, /quieter, /distill, /clarify, /optimize, /harden, /delight, /extract, /adapt, /onboard, /arrange, /typeset, /overdrive, /teach-impeccable. You may also suggest other installed skills you're sure exist, but never invent commands.
 
 Examples:
 - "Use `/normalize` to align with design system (addresses N theming issues)"

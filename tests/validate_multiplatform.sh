@@ -1030,21 +1030,21 @@ check('agentic-learning: SKILL.md and references/ present in plugin', () => {
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 6. impeccable SKILL.md names all 18 actions
-check('impeccable SKILL.md references all 18 actions', () => {
+// 6. impeccable SKILL.md names all 21 actions
+check('impeccable SKILL.md references all 21 actions', () => {
   const skillMd = fs.readFileSync(path.join(realSkillsSrc, 'impeccable', 'SKILL.md'), 'utf8');
-  const expected = ['adapt','animate','audit','bolder','clarify','colorize','critique',
+  const expected = ['adapt','animate','arrange','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
-    'optimize','polish','quieter','teach-impeccable'];
+    'optimize','overdrive','polish','quieter','teach-impeccable','typeset'];
   const missing = expected.filter(s => !skillMd.includes(s));
   assert(missing.length === 0, 'impeccable SKILL.md missing actions: ' + missing.join(', '));
 });
 
-// 7. impeccable SKILL.md has all 18 action bodies inlined (not reference links)
-check('impeccable plugin SKILL.md: all 18 action bodies inlined, no reference links', () => {
-  const expected = ['adapt','animate','audit','bolder','clarify','colorize','critique',
+// 7. impeccable SKILL.md has all 21 action bodies inlined (not reference links)
+check('impeccable plugin SKILL.md: all 21 action bodies inlined, no reference links', () => {
+  const expected = ['adapt','animate','arrange','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
-    'optimize','polish','quieter','teach-impeccable'];
+    'optimize','overdrive','polish','quieter','teach-impeccable','typeset'];
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
   const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
   const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
@@ -1064,7 +1064,10 @@ check('impeccable plugin SKILL.md: inlined bodies contain real content', () => {
   assert(content.includes('Run systematic quality checks'), 'audit body missing');
   assert(content.includes('Conduct a holistic design critique'), 'critique body missing');
   assert(content.includes('BOLD aesthetic'), 'frontend-design body missing');
-  assert(content.length > 50000, 'inlined SKILL.md suspiciously short (' + content.length + ' chars)');
+  assert(content.includes('visual rhythm'), 'arrange body missing');
+  assert(content.includes('Entering overdrive mode'), 'overdrive body missing');
+  assert(content.includes('generic, inconsistent, or poorly structured'), 'typeset body missing');
+  assert(content.length > 60000, 'inlined SKILL.md suspiciously short (' + content.length + ' chars)');
   fs.rmSync(tmp, { recursive: true });
 });
 
@@ -1131,9 +1134,9 @@ const HELP_INST     = path.join(REPO, 'learnship', 'workflows', 'help.md');
 const IMPECCABLE_DISPATCHER = path.join(REPO, '.windsurf', 'skills', 'impeccable', 'SKILL.md');
 
 const SUB_SKILLS = [
-  'adapt','animate','audit','bolder','clarify','colorize','critique','delight',
-  'distill','extract','frontend-design','harden','normalize','onboard','optimize',
-  'polish','quieter','teach-impeccable'
+  'adapt','animate','arrange','audit','bolder','clarify','colorize','critique',
+  'delight','distill','extract','frontend-design','harden','normalize','onboard',
+  'optimize','overdrive','polish','quieter','teach-impeccable','typeset'
 ];
 
 // 1. Workflow file exists in source location
@@ -1200,15 +1203,15 @@ check('impeccable dispatcher SKILL.md exists and has correct name field', () => 
   assert(content.includes('name: impeccable'), 'impeccable/SKILL.md missing "name: impeccable" field');
 });
 
-// 10. Dispatcher SKILL.md links all 18 sub-skills
-check('impeccable dispatcher SKILL.md references all 18 sub-skills', () => {
+// 10. Dispatcher SKILL.md links all 21 sub-skills
+check('impeccable dispatcher SKILL.md references all 21 sub-skills', () => {
   const dispatcher = fs.readFileSync(IMPECCABLE_DISPATCHER, 'utf8');
   const missing = SUB_SKILLS.filter(s => !dispatcher.includes(s));
   assert(missing.length === 0, 'dispatcher missing references to: ' + missing.join(', '));
 });
 
-// 11. All 18 sub-skill dirs exist with SKILL.md
-check('all 18 impeccable sub-skill dirs have SKILL.md', () => {
+// 11. All 21 sub-skill dirs exist with SKILL.md
+check('all 21 impeccable sub-skill dirs have SKILL.md', () => {
   const missing = SUB_SKILLS.filter(s => {
     const p = path.join(REPO, '.windsurf', 'skills', 'impeccable', s, 'SKILL.md');
     return !fs.existsSync(p);
@@ -1223,7 +1226,7 @@ check('workflow backs up skills before overwriting', () => {
 });
 
 // 13. Workflow includes integrity verification step
-check('workflow verifies all 18 sub-skills after sync', () => {
+check('workflow verifies all 21 sub-skills after sync', () => {
   const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
   assert(wf.includes('teach-impeccable') && wf.includes('frontend-design'), 'workflow integrity check missing sub-skill names');
 });
@@ -1330,7 +1333,7 @@ check('simulated integrity check: detects missing sub-skill and would restore', 
   // Simulate a partial sync where one sub-skill is missing
   const impeccableDir = path.join(tmp, 'impeccable');
   fs.mkdirSync(impeccableDir, { recursive: true });
-  // Only install 17 out of 18 (missing 'adapt')
+  // Only install 20 out of 21 (missing 'adapt')
   const present = SUB_SKILLS.filter(s => s !== 'adapt');
   for (const sub of present) {
     fs.mkdirSync(path.join(impeccableDir, sub), { recursive: true });

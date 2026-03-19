@@ -1,13 +1,13 @@
 ---
 title: "Design System: impeccable"
-description: "All 17 impeccable steering commands for production-grade UI: prevent AI slop before it ships."
+description: "All 21 impeccable steering commands for production-grade UI: prevent AI slop before it ships."
 ---
 
 # Design System
 
 ![impeccable commands](../assets/impeccable-commands.png)
 
-**impeccable** is a suite of 17 design steering commands that give your AI agent production-grade UI standards. It prevents generic AI aesthetics: the kind of interface that screams "AI made this": by providing specific, actionable design direction at every level.
+**impeccable** is a suite of 21 design steering commands that give your AI agent production-grade UI standards. It prevents generic AI aesthetics: the kind of interface that screams "AI made this": by providing specific, actionable design direction at every level.
 
 Based on [@pbakaus/impeccable](https://github.com/pbakaus/impeccable).
 
@@ -35,7 +35,7 @@ This gathers your project's design context: brand, target audience, existing UI 
 
 ---
 
-## All 17 commands
+## All 21 commands
 
 ### Audit & Assessment
 
@@ -87,6 +87,9 @@ This gathers your project's design context: brand, target audience, existing UI 
 |---------|-------------|
 | `/extract` | Extract reusable components, design tokens, and patterns from one-off implementations into your design system. |
 | `/adapt` | Adapt designs across screen sizes, devices, input methods, and usage contexts. |
+| `/arrange` | Fix layout, spacing, and visual rhythm. Tackles monotonous grids, inconsistent spacing, and weak visual hierarchy. |
+| `/typeset` | Fix font choices, hierarchy, sizing, and weight consistency. Turns default-looking text into intentional type. |
+| `/overdrive` | Push interfaces past conventional limits with technically ambitious implementations — shaders, 60fps virtual tables, spring physics, scroll-driven reveals. |
 
 ---
 
