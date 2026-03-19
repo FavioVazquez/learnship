@@ -92,6 +92,44 @@ follow. The map should become territory.
 
 ---
 
+## Request Routing Protocol
+
+**This section is mandatory. Apply it before responding to ANY user message.**
+
+When a user sends a message — whether it's a vague idea, a specific bug report, a feature request, or a detailed technical prompt — you MUST route it through the correct learnship workflow. **Do not make code changes, fix bugs, or implement anything in direct response to a user message.** Every task goes through a workflow.
+
+### Decision tree — apply in order:
+
+**1. Is there a `.planning/PROJECT.md`?**
+- **No** → Stop. Tell the user: "No project found. Run `/new-project` to initialize." Do nothing else.
+- **Yes** → Continue to step 2.
+
+**2. Does the user message look like a task, problem, bug, or feature request?**
+(Anything that would result in a code change, file edit, config change, or new capability)
+- **Yes** → Route to step 3. Do NOT start implementing.
+- **No** (pure question, status check, discussion) → Answer normally.
+
+**3. How large/complex is the task?**
+- **Small, self-contained** (estimated < 1 hour, touches ≤ 3 files, no design decisions needed):
+  → Tell the user: "This looks like a quick task. I'll run `/quick` for this — it gives us atomic commits and state tracking without full planning ceremony. Proceed?"
+  → Wait for confirmation, then invoke `/quick "[description]"`.
+- **Medium or uncertain** (design decisions needed, multiple files, touches active phase work):
+  → Tell the user: "This touches phase [N] work. I'll run `/discuss-phase [N]` to capture your intent before planning. Proceed?"
+  → Wait for confirmation, then invoke `discuss-phase`.
+- **Large or cross-cutting** (new capability, affects multiple phases, architectural):
+  → Tell the user: "This is significant scope. Let me check where we are first."
+  → Run `/ls` to show current status, then recommend the right workflow (plan-phase, new-milestone, etc).
+
+**4. Never self-route silently.**
+Always tell the user which workflow you're about to invoke and why, then wait for a "yes" before proceeding. Do not assume consent from a detailed prompt.
+
+### Examples of what NOT to do:
+- User says "the login button is broken" → ❌ Don't fix it directly → ✅ Route to `/quick`
+- User says "I want to add dark mode" → ❌ Don't start implementing → ✅ Route to `discuss-phase`
+- User pastes a detailed spec → ❌ Don't treat it as a command to execute → ✅ Classify size, propose workflow, wait for yes
+
+---
+
 ## Platform Context
 
 This project uses **learnship**. Key facts:

@@ -269,6 +269,32 @@ else
   fail "learnship/templates/agents.md missing — new-project Step 8 will silently skip AGENTS.md generation"
 fi
 
+# AGENTS.md template must contain Request Routing Protocol (prevents direct-execution bypass on existing projects)
+AGENTS_TMPL="$REPO/learnship/templates/agents.md"
+if grep -q "Request Routing Protocol" "$AGENTS_TMPL"; then
+  ok "AGENTS.md template has Request Routing Protocol section"
+else
+  fail "AGENTS.md template missing Request Routing Protocol — AI will bypass ceremony on existing projects"
+fi
+
+if grep -q "Do not make code changes" "$AGENTS_TMPL" || grep -q "do not make code changes" "$AGENTS_TMPL"; then
+  ok "AGENTS.md routing protocol forbids direct code changes"
+else
+  fail "AGENTS.md routing protocol missing direct-execution prohibition"
+fi
+
+if grep -q "Never self-route silently" "$AGENTS_TMPL"; then
+  ok "AGENTS.md routing protocol requires explicit user confirmation before invoking workflow"
+else
+  fail "AGENTS.md routing protocol missing 'Never self-route silently' rule"
+fi
+
+if grep -q "planning/PROJECT.md" "$AGENTS_TMPL" && grep -q "quick" "$AGENTS_TMPL" && grep -q "discuss-phase" "$AGENTS_TMPL"; then
+  ok "AGENTS.md routing protocol has decision tree with quick/discuss-phase routes"
+else
+  fail "AGENTS.md routing protocol missing decision tree entries (quick, discuss-phase)"
+fi
+
 # references/questioning.md must exist (used by new-project Step 3)
 if [ -f "$REPO/learnship/references/questioning.md" ]; then
   ok "learnship/references/questioning.md exists"
