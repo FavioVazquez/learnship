@@ -1036,8 +1036,8 @@ function install(platform, isGlobal) {
       fs.copyFileSync(path.join(learnshipSrc, 'workflows', f), path.join(wfDest, f));
       count++;
     }
-    // Copy templates/ and references/ so @./templates/ and @./references/ resolve in workflows
-    for (const subdir of ['templates', 'references']) {
+    // Copy templates/, references/, and agents/ so @./templates/, @./references/, @./agents/ resolve in workflows
+    for (const subdir of ['templates', 'references', 'agents']) {
       const srcSub = path.join(learnshipSrc, subdir);
       const destSub = path.join(wfDest, subdir);
       if (fs.existsSync(srcSub)) {

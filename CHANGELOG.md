@@ -9,6 +9,47 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.15] — Add inline agent personas — fix broken @./agents/ references in all ceremony workflows
+
+**Released:** 2026-03-19
+
+### Added
+
+- **`learnship/agents/` directory with 5 inline persona files** — `researcher.md`, `planner.md`, `executor.md`, `verifier.md`, `debugger.md`. These are the sequential-mode personas that ceremony workflows invoke on non-subagent platforms (Windsurf, Gemini CLI, Cursor) via `@./agents/`. Previously this directory did not exist, causing all `@./agents/` references to silently fail.
+
+### Fixed
+
+- **`@./agents/` references silently failing on Windsurf** — `install.js` copied `templates/` and `references/` subdirs into `.windsurf/workflows/` so those `@./` references resolved, but `agents/` was not copied. Added `'agents'` to the Windsurf subdir copy loop — `learnship/agents/` now installs to `.windsurf/workflows/agents/` alongside templates and references.
+- **Filename mismatch** — Ceremony workflows referenced `@./agents/researcher.md`, `@./agents/planner.md`, etc. The subagent-dispatch files live at `agents/learnship-phase-researcher.md` etc. (different names, different purpose). The new `learnship/agents/` files use the exact names the workflows reference.
+- **`quick.md` Step 2 blocked on `ROADMAP.md` instead of `PROJECT.md`** — The `AGENTS.md` routing protocol routes small tasks to `/quick`, but `/quick` stopped if `ROADMAP.md` was missing. Fixed: check for `PROJECT.md` (the real project existence marker). If `PROJECT.md` exists but `ROADMAP.md` is absent, continue with a note in SUMMARY.md.
+
+### Affected ceremonies (all now have working inline personas on all platforms)
+
+- `plan-phase` — researcher + planner + verifier personas
+- `execute-phase` — executor + verifier personas
+- `execute-plan` — executor persona
+- `verify-work` — debugger + planner + verifier personas
+- `debug` — debugger + executor personas
+- `quick` — planner + verifier + executor personas
+- `audit-milestone` — verifier persona
+- `research-phase` — researcher persona
+- `map-codebase` — researcher persona
+- `new-project` — planner persona
+- `new-milestone` — researcher + planner personas
+- `diagnose-issues` — debugger persona
+
+### Tests added (7 new, 246 total)
+
+- `learnship/agents/ directory exists`
+- `learnship/agents/researcher.md exists`
+- `learnship/agents/planner.md exists`
+- `learnship/agents/executor.md exists`
+- `learnship/agents/verifier.md exists`
+- `learnship/agents/debugger.md exists`
+- `install.js Windsurf block copies agents/ subdir`
+
+---
+
 ## [v1.9.14] — Add Request Routing Protocol to AGENTS.md — prevent ceremony bypass on existing projects
 
 **Released:** 2026-03-19
