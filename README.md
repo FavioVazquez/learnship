@@ -15,14 +15,14 @@
 
 <p align="center">
   <strong>Agentic engineering done right.</strong><br>
-  <a href="https://faviovazquez.github.io/learnship/">📚 Full Docs</a> ·
-  <a href="#-get-started-in-30-seconds">Get Started</a> ·
-  <a href="#-how-it-works">How it works</a> ·
-  <a href="#-the-phase-loop">Phase Loop</a> ·
-  <a href="#-workflow-reference--advanced">All Workflows</a> ·
-  <a href="#-configuration">Configuration</a> ·
-  <a href="CONTRIBUTING.md">Contributing</a> ·
-  <a href="CHANGELOG.md">Changelog</a>
+  · <a href="https://faviovazquez.github.io/learnship/">📚 Full Docs</a><br>
+  · <a href="#-get-started-in-30-seconds">Get Started</a> <br>
+  · <a href="#-how-it-works">How it works</a> <br>
+  · <a href="#-the-phase-loop">Phase Loop</a><br>
+  · <a href="#-workflow-reference--advanced">All Workflows</a><br>
+  · <a href="#-configuration">Configuration</a><br>
+  · <a href="CONTRIBUTING.md">Contributing</a><br>
+  · <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 ---
@@ -38,43 +38,6 @@ learnship gives you that harness as a portable, open-source layer that runs insi
 - **Persistent memory.** `/new-project` generates an `AGENTS.md` at your project root. Windsurf, Claude Code, and Cursor load it automatically every session; on other platforms the workflows reference it explicitly. No more repeating yourself.
 - **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
-
----
-
-## What problem does it solve?
-
-If you've used AI coding assistants for more than a few sessions, you've hit this wall:
-
-> The agent forgets everything. Each session starts from scratch. Decisions get repeated. Code quality drifts. You ship fast but understand less. The more you rely on the AI, the less you own the outcome.
-
-This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing tasks to completing them. Same model. The only variable is the harness.
-
-learnship solves this with **progressive disclosure**, the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
-
-| Without learnship | With learnship |
-|-------------------|----------------|
-| Context resets every session | `AGENTS.md` loaded automatically every conversation |
-| Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
-| Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
-| Everything dumped into context at once | Phase-scoped context: only what this step needs |
-| You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
-| UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
-
----
-
-## Who is it for?
-
-learnship is built for **anyone who wants to build and ship real products with AI agents**, not just developers. If you're a founder, designer, researcher, or maker who uses AI tools to build things, this is for you.
-
-It's the right tool if:
-
-- You're **building a real project** (not just experimenting) and want the AI to stay aligned across sessions
-- You're **learning while building** and want to actually understand what gets shipped
-- You care about **code quality and UI quality** beyond "it works"
-- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI to ship phases faster
-- You've felt the frustration of **context loss**: repeating yourself every session while the agent forgets past decisions
-
-It's probably overkill if you just need one-off scripts or quick fixes. Use `/quick` for that.
 
 ---
 
@@ -127,18 +90,40 @@ learnship v1.9.0 is published to npm — `npx learnship` pulls the latest releas
 
 ---
 
-## 📚 Documentation
+## What problem does it solve?
 
-The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)**, built with MkDocs Material and deployed automatically on every release.
+If you've used AI coding assistants for more than a few sessions, you've hit this wall:
 
-What's covered:
+> The agent forgets everything. Each session starts from scratch. Decisions get repeated. Code quality drifts. You ship fast but understand less. The more you rely on the AI, the less you own the outcome.
 
-- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install commands, first project walkthrough, the 5 commands you need to know
-- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
-- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
-- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 18 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 42 workflows documented with when and why to use each
-- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
+This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing tasks to completing them. Same model. The only variable is the harness.
+
+learnship solves this with **progressive disclosure**, the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
+
+| Without learnship | With learnship |
+|-------------------|----------------|
+| Context resets every session | `AGENTS.md` loaded automatically every conversation |
+| Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
+| Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
+| Everything dumped into context at once | Phase-scoped context: only what this step needs |
+| You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
+| UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
+
+---
+
+## Who is it for?
+
+learnship is built for **anyone who wants to build and ship real products with AI agents**, not just developers. If you're a founder, designer, researcher, or maker who uses AI tools to build things, this is for you.
+
+It's the right tool if:
+
+- You're **building a real project** (not just experimenting) and want the AI to stay aligned across sessions
+- You're **learning while building** and want to actually understand what gets shipped
+- You care about **code quality and UI quality** beyond "it works"
+- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI to ship phases faster
+- You've felt the frustration of **context loss**: repeating yourself every session while the agent forgets past decisions
+
+It's probably overkill if you just need one-off scripts or quick fixes. Use `/quick` for that.
 
 ---
 
@@ -295,6 +280,21 @@ AGENTS.md                   ← your AI agent reads this every conversation
 ├── Tech Stack               # Filled from research results
 └── Regressions              # Updated by /debug when bugs are fixed
 ```
+
+---
+
+## 📚 Documentation
+
+The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)**, built with MkDocs Material and deployed automatically on every release.
+
+What's covered:
+
+- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install commands, first project walkthrough, the 5 commands you need to know
+- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
+- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
+- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 18 `impeccable` design commands
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 42 workflows documented with when and why to use each
+- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
 
 ---
 
