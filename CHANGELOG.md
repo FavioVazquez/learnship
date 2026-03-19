@@ -9,6 +9,19 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.12] — Fix new-project skipping full ceremony on detailed first answer
+
+**Released:** 2026-03-19
+
+### Fixed
+
+- **`new-project` collapses ceremony when user gives a detailed first answer** — Step 3 lacked a hard minimum: if the user's first reply was specific and detailed, the AI would self-conclude it had "enough context", skip to PROJECT.md, then silently collapse the remaining steps (research decision, requirements gathering, roadmap) into a direct code change. Root cause: no required minimum of follow-up questions before the AI could proceed.
+  - **Step 3 fix:** Added explicit `⚠ MANDATORY MINIMUM` gate: AI must ask **at least 3 follow-up questions** after the user's first answer before being allowed to propose writing PROJECT.md. No exceptions regardless of how detailed the initial response is.
+  - **Step 4 fix:** Added mandatory `⚠ STOP` after writing PROJECT.md: AI must show the full file to the user and receive explicit confirmation before proceeding to the research decision. A brief "ok" or silence does not count as confirmation.
+- Synced fix to both `learnship/workflows/new-project.md` and `.windsurf/workflows/new-project.md`.
+
+---
+
 ## [v1.9.11] — Sync 3 new impeccable skills from upstream (arrange, typeset, overdrive)
 
 **Released:** 2026-03-19

@@ -132,7 +132,9 @@ Wait for their response. Then follow the thread — each answer opens new questi
 
 Use the questioning techniques from `@./references/questioning.md`.
 
-When you have enough to write a clear PROJECT.md, ask:
+> **⚠ MANDATORY MINIMUM — Do not ask to create PROJECT.md until you have asked AT LEAST 3 follow-up questions after the user's first answer. No matter how detailed the first response is, one answer is never enough. A single detailed prompt is not a project definition — it is a starting point. Ask follow-ups about: who uses it, what the edge cases are, what success looks like, what they've already tried, what must NOT happen. Only after at least 3 follow-ups have been exchanged may you proceed.**
+
+When you have enough depth (minimum 3 follow-ups exchanged), ask:
 
 "I think I understand what you're after. Ready to create PROJECT.md, or do you want to explore more?"
 
@@ -144,6 +146,15 @@ Loop until ready.
 ## Step 4: Write PROJECT.md
 
 Synthesize all gathered context into `.planning/PROJECT.md` using `@./templates/project.md` as the template.
+
+Once written, **show the user the full contents of `.planning/PROJECT.md`** and ask:
+
+"Here's the PROJECT.md I've written from our conversation. Does this accurately capture what you want to build, or should we adjust anything?"
+
+- **Looks good** → continue
+- **Needs changes** → ask what to adjust, update PROJECT.md, re-present, loop until confirmed
+
+> **⚠ STOP — do not proceed to Step 5 until the user has explicitly confirmed PROJECT.md. This is a mandatory gate. Do not interpret silence or a brief "ok" as confirmation — wait for a clear positive signal.**
 
 **If `commit_mode` is `auto`:**
 ```bash
