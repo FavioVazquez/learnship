@@ -34,7 +34,7 @@ Display banner based on active flags:
 
 Check that a project exists:
 ```bash
-test -f .planning/PROJECT.md && echo "OK" || echo "MISSING"
+python3 -c "import os; print('OK' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
 ```
 
 If PROJECT.md missing: stop — run `new-project` first. Quick tasks require an active project.
@@ -128,9 +128,9 @@ Each task needs:
 
 If `--full`: also include `must_haves` in plan frontmatter (truths, artifacts, key_links).
 
-Verify plan was created:
+Verify plan was created (substitute actual NEXT_NUM and SLUG values):
 ```bash
-test -f ".planning/quick/${NEXT_NUM}-${SLUG}/${NEXT_NUM}-PLAN.md" && echo "OK"
+python3 -c "import os; print('OK' if os.path.exists('.planning/quick/NEXT_NUM-SLUG/NEXT_NUM-PLAN.md') else 'MISSING')"
 ```
 
 ## Step 5: Plan Check (only with `--full`)

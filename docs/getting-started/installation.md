@@ -9,6 +9,16 @@ description: Install learnship on Windsurf, Claude Code, OpenCode, Gemini CLI, o
 
 learnship installs as a set of workflow files into your AI platform's configuration directory. No daemon, no build step: just markdown files your agent reads.
 
+## Requirements
+
+| Requirement | Notes |
+|-------------|-------|
+| **Node.js ≥ 18** | Only needed to run the installer (`npx learnship`). Not needed at runtime. |
+| **Python 3** | Used by workflows for cross-platform file checks (Windows, macOS, Linux). Already installed on macOS and most Linux distros. On Windows: [python.org/downloads](https://www.python.org/downloads/) or `winget install Python.Python.3`. |
+| **Git** | Used by workflows to commit changes atomically. |
+
+All three are standard developer tools you almost certainly already have.
+
 ## Quick install
 
 ```bash

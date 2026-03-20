@@ -55,6 +55,7 @@ const hasClaude    = args.includes('--claude');
 const hasOpencode  = args.includes('--opencode');
 const hasGemini    = args.includes('--gemini');
 const hasCodex     = args.includes('--codex');
+const hasCursor    = args.includes('--cursor');
 const hasAll       = args.includes('--all');
 const hasGlobal    = args.includes('--global') || args.includes('-g');
 const hasLocal     = args.includes('--local')  || args.includes('-l');
@@ -70,6 +71,7 @@ if (hasAll) {
   if (hasOpencode) selectedPlatforms.push('opencode');
   if (hasGemini)   selectedPlatforms.push('gemini');
   if (hasCodex)    selectedPlatforms.push('codex');
+  if (hasCursor)   selectedPlatforms.push('cursor');
 }
 
 // ─── Banner ────────────────────────────────────────────────────────────────
@@ -82,7 +84,7 @@ ${purple}  ██╗     ███████╗ █████╗ ███�
   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝${reset}
 
   ${dim}Learn as you build. Build with intent.${reset}
-  ${dim}v${pkg.version} · Windsurf · Claude Code · OpenCode · Gemini CLI · Codex CLI${reset}
+  ${dim}v${pkg.version} · Windsurf · Claude Code · OpenCode · Gemini CLI · Codex CLI · Cursor${reset}
 `;
 
 // ─── Help text ─────────────────────────────────────────────────────────────
@@ -95,7 +97,8 @@ const helpText = `
     ${cyan}--opencode${reset}    OpenCode     (~/.config/opencode/)
     ${cyan}--gemini${reset}      Gemini CLI   (~/.gemini/)
     ${cyan}--codex${reset}       Codex CLI    (~/.codex/)
-    ${cyan}--all${reset}         All platforms
+    ${cyan}--all${reset}         All platforms (excludes Cursor — use marketplace)
+    ${cyan}--cursor${reset}      Show Cursor install instructions
 
   ${yellow}Scope:${reset}
     ${cyan}-g, --global${reset}  Install to global config directory (recommended)
@@ -979,6 +982,19 @@ function scanForLeakedPaths(targetDir, platform) {
 
 // ─── Main install function ─────────────────────────────────────────────────
 function install(platform, isGlobal) {
+  // Cursor installs via the marketplace plugin, not this CLI.
+  // Print instructions and exit cleanly rather than silently doing nothing.
+  if (platform === 'cursor') {
+    console.log(`\n  ${cyan}Cursor${reset} — learnship installs via the plugin marketplace, not this CLI.\n`);
+    console.log(`  ${yellow}Option 1 (recommended):${reset} Install from the Cursor marketplace:`);
+    console.log(`    ${dim}/add-plugin learnship${reset}\n`);
+    console.log(`  ${yellow}Option 2 (manual):${reset} Copy the rule file into your project:`);
+    console.log(`    ${dim}mkdir -p .cursor/rules${reset}`);
+    console.log(`    ${dim}cp node_modules/learnship/cursor-rules/learnship.mdc .cursor/rules/${reset}\n`);
+    console.log(`  ${dim}The .mdc rule activates all 42 learnship workflows automatically in every Cursor session.${reset}\n`);
+    return;
+  }
+
   const src = path.join(__dirname, '..');
   const targetDir = isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform));
   const pathPrefix = `${targetDir.replace(/\\/g, '/')}/learnship/`;
@@ -1001,6 +1017,17 @@ function install(platform, isGlobal) {
   if (verifyInstalled(learnshipDest, 'learnship/')) {
     console.log(`  ${green}✓${reset} Installed learnship/ (workflows, references, templates)`);
   } else { failures.push('learnship/'); }
+
+  // 1b. Copy agents/ into learnship/workflows/agents/ so @./agents/ resolves from workflow files.
+  // Windsurf is handled separately (flat workflows/ dir). For all other platforms, the AI reads
+  // workflows from learnship/workflows/ and @./ resolves relative to that directory.
+  if (platform !== 'windsurf') {
+    const agentsInlinesSrc  = path.join(learnshipSrc, 'agents');
+    const agentsInlinesDest = path.join(learnshipDest, 'workflows', 'agents');
+    if (fs.existsSync(agentsInlinesSrc)) {
+      copyDir(agentsInlinesSrc, agentsInlinesDest, pathPrefix, platform);
+    }
+  }
 
   // 2. Write VERSION file into learnship/ dir
   fs.writeFileSync(path.join(learnshipDest, 'VERSION'), pkg.version);
@@ -1046,6 +1073,13 @@ function install(platform, isGlobal) {
     }
     console.log(`  ${green}✓${reset} Installed ${count} workflows to workflows/`);
   } else if (platform === 'claude') {
+    // Remove legacy workflows/ dir left by pre-1.9.0 installs — it shadows learnship/workflows/
+    // and causes commands to read stale files (e.g. showing "Windsurf-native" text on Claude Code)
+    const legacyWorkflowsDir = path.join(targetDir, 'workflows');
+    if (fs.existsSync(legacyWorkflowsDir)) {
+      fs.rmSync(legacyWorkflowsDir, { recursive: true });
+      console.log(`  ${yellow}⚠${reset}  Removed legacy workflows/ directory (pre-1.9.0 leftover)`);
+    }
     const count = installClaudeCommands(commandsSrc, targetDir, pathPrefix);
     if (verifyInstalled(path.join(targetDir, 'commands', 'learnship'), 'commands/learnship/')) {
       console.log(`  ${green}✓${reset} Installed ${count} commands to commands/learnship/`);

@@ -15,14 +15,21 @@ Cursor gets learnship via the plugin marketplace — no terminal required. The `
 /add-plugin learnship
 ```
 
-**Or clone and install locally:**
+**Or install manually (before marketplace approval):**
 
 ```bash
-npx learnship --cursor --global
+npx learnship          # installs Claude Code, Windsurf, Gemini, OpenCode, or Codex
+```
+
+For Cursor specifically, copy the rule file into your project:
+
+```bash
+mkdir -p .cursor/rules
+cp node_modules/learnship/cursor-rules/learnship.mdc .cursor/rules/
 ```
 
 !!! note "Marketplace status"
-    learnship has been submitted to the Cursor marketplace. Until approved, use the direct npm install or copy `cursor-rules/learnship.mdc` into your project's `.cursor/rules/` directory.
+    learnship has been submitted to the Cursor marketplace. Until approved, copy `cursor-rules/learnship.mdc` into your project's `.cursor/rules/` directory. The `npx learnship` CLI does not have a `--cursor` flag — Cursor installs via the plugin marketplace or by copying the `.mdc` rule file directly.
 
 ## How it works on Cursor
 

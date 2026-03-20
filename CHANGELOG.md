@@ -9,6 +9,40 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.16] — Fix stale Claude Code content + remove dead agent files
+
+**Released:** 2026-03-20
+
+### Fixed
+
+- **Claude Code shows "Windsurf-native" text after reinstall** — Pre-1.9.0 installs created `~/.claude/workflows/` (flat). Since 1.9.0, workflows live at `~/.claude/learnship/workflows/`. The old directory was never removed, so Claude Code commands referenced the stale file via `@~/.claude/learnship/workflows/ls.md` but the pre-1.9.0 `~/.claude/workflows/ls.md` was still there and being read first. Added explicit cleanup: `install.js` now removes `~/.claude/workflows/` on every Claude install if it exists.
+
+- **`@./agents/` broken on Claude Code, Gemini, OpenCode, Codex** — Every ceremony workflow (`plan-phase`, `execute-phase`, `verify-work`, `debug`, `quick`, etc.) uses `@./agents/researcher.md` etc. as inline personas. `@./` resolves relative to the workflow file's directory (`learnship/workflows/`). Agents were installed at `learnship/agents/` — one level up, so `@./agents/` resolved to `learnship/workflows/agents/` which didn't exist. Fixed: `install.js` now copies `learnship/agents/` into `learnship/workflows/agents/` for all non-Windsurf platforms immediately after the main `learnship/` payload install. (Windsurf was already correct — it copies agents into `.windsurf/workflows/agents/`.)
+
+- **Dead short-name agent files in `agents/` cluttering the install** — Five files (`agents/debugger.md`, `executor.md`, `planner.md`, `researcher.md`, `verifier.md`) existed in the repo root `agents/` directory with no YAML frontmatter. `installAgents()` only copies `learnship-*.md` prefixed files, so these were never installed to any platform. They caused confusion in Claude Code's file browser (appearing alongside the real `learnship-*.md` subagent dispatch files). Removed all five.
+
+- **`test -f FILE` fails on Windows/PowerShell** — 18 workflows used POSIX `test -f`/`test -d` shell commands for file existence checks. On Windows (Windsurf on Windows, Cursor on Windows), the agent has no bash available and PowerShell doesn't recognize `test`. Replaced all simple existence checks with `python3 -c "import os; print(...)"` one-liners which work on Windows, macOS, and Linux. Complex bash blocks that use shell variables or loops (`health.md` internals, `update.md`, `sync-upstream-skills.md`) were left unchanged since they are Windsurf/bash-native internal tools.
+
+### How the two `agents/` paths work (for reference)
+
+| Path | Files | Purpose | Installed to |
+|------|-------|---------|-------------|
+| `agents/learnship-*.md` | `learnship-debugger.md`, `learnship-executor.md`, etc. | Subagent dispatch — YAML frontmatter, used when `parallelization: true` | `~/.claude/agents/learnship-*.md` |
+| `learnship/agents/` | `debugger.md`, `executor.md`, etc. | Inline personas — loaded via `@./agents/X.md` in sequential ceremony mode | `~/.claude/learnship/agents/` (Claude), `.windsurf/workflows/agents/` (Windsurf) |
+
+These are different things at different paths. No duplication.
+
+### Tests added (5 new, 273 total)
+
+- `install.js Claude block removes legacy workflows/ dir`
+- `agents/debugger.md removed` (dead file)
+- `agents/executor.md removed` (dead file)
+- `agents/planner.md removed` (dead file)
+- `agents/researcher.md removed` (dead file)
+- `agents/verifier.md removed` (dead file)
+
+---
+
 ## [v1.9.15] — Add inline agent personas — fix broken @./agents/ references in all ceremony workflows
 
 **Released:** 2026-03-19

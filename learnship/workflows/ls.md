@@ -13,7 +13,7 @@ The quickest way to answer "where am I and what do I do next?" Works for new use
 ## Step 1: Check for Project
 
 ```bash
-test -f .planning/PROJECT.md && echo "EXISTS" || echo "MISSING"
+python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
 ```
 
 **If MISSING** — no project initialized yet. Display:

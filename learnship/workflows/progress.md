@@ -9,7 +9,7 @@ Check where you are in the project, what's been done, and what comes next.
 ## Step 1: Check for Planning Structure
 
 ```bash
-test -f .planning/PROJECT.md && echo "EXISTS" || echo "MISSING"
+python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
 ```
 
 If `.planning/` doesn't exist: stop — run `new-project` to initialize.

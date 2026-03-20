@@ -31,7 +31,7 @@ Validate that the after-phase number is an integer.
 ## Step 2: Validate
 
 ```bash
-test -f .planning/ROADMAP.md && echo "OK" || echo "MISSING"
+python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
 ```
 
 Check that phase `[N]` exists in ROADMAP.md:
