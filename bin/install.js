@@ -1060,7 +1060,10 @@ function install(platform, isGlobal) {
     let count = 0;
     for (const f of fs.readdirSync(path.join(learnshipSrc, 'workflows'))) {
       if (!f.endsWith('.md')) continue;
-      fs.copyFileSync(path.join(learnshipSrc, 'workflows', f), path.join(wfDest, f));
+      let c = fs.readFileSync(path.join(learnshipSrc, 'workflows', f), 'utf8');
+      c = replacePaths(c, pathPrefix, platform);
+      if (f === 'new-project.md') c = rewriteNewProject(c, platform);
+      fs.writeFileSync(path.join(wfDest, f), c);
       count++;
     }
     // Copy templates/, references/, and agents/ so @./templates/, @./references/, @./agents/ resolve in workflows

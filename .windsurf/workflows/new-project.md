@@ -8,7 +8,7 @@ Initialize a new project with full context gathering, optional research, require
 
 ## Step 1: Setup
 
-<!-- LEARNSHIP_PLATFORM_LABEL -->
+You are running on **Windsurf**. Platform config directory: `.windsurf/`
 
 Check if `.planning/PROJECT.md` already exists:
 
@@ -31,7 +31,7 @@ git init
 
 Add the platform config directory to `.gitignore` so AI platform files are not tracked in the project repo:
 ```bash
-<!-- LEARNSHIP_GITIGNORE_CMD -->
+grep -q '.windsurf/' .gitignore 2>/dev/null || echo '.windsurf/' >> .gitignore
 ```
 
 Create the planning directory:
@@ -67,7 +67,9 @@ Ask: "Which workflow agents should be enabled?"
 - **Plan Check** (recommended) — Verify plans achieve their goals before execution
 - **Verifier** (recommended) — Confirm deliverables match phase goals after execution
 
-<!-- LEARNSHIP_PARALLEL_BLOCK -->
+**Group D — Parallel execution:**
+
+Windsurf does not support real subagents. Parallelization is automatically set to `false`.
 
 Ask: "Commit planning docs to git?"
 - **Yes** (recommended) — Planning docs tracked in version control

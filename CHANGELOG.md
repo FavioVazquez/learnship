@@ -9,6 +9,16 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.17] — Fix parallelization question missing on all platforms
+
+**Released:** 2026-03-20
+
+### Fixed
+
+- **Parallelization question never shown during `/new-project`** — The `<!-- LEARNSHIP_PARALLEL_BLOCK -->` marker in `new-project.md` was correctly replaced by `rewriteNewProject()` for Claude, OpenCode, Gemini, and Codex (all go through `copyDir`). But the Windsurf workflow copy loop used `fs.copyFileSync` — a raw file copy that bypasses all rewriting. The result: every platform installed with the raw HTML comment left in place, the AI ignored it, and `parallelization` silently defaulted to `false` for all platforms. Fixed by switching the Windsurf loop to read → `replacePaths` → `rewriteNewProject` → write, matching what `copyDir` does for every other platform.
+
+---
+
 ## [v1.9.16] — Fix stale Claude Code content + remove dead agent files
 
 **Released:** 2026-03-20
