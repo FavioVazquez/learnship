@@ -181,6 +181,8 @@ This project uses **learnship**. Key facts:
 
 ## Skills — Operational Knowledge
 
+<!-- LEARNSHIP_SKILLS_BLOCK -->
+
 ### CHANGELOG Discipline
 
 Every significant change gets a dated entry in `CHANGELOG.md` with:
