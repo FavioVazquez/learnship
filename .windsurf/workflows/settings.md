@@ -11,7 +11,7 @@ Interactive configuration editor for the current project. Updates `.planning/con
 ## Step 1: Ensure Config Exists
 
 ```bash
-test -f .planning/config.json && echo "exists" || echo "missing"
+python3 -c "import os; print('exists' if os.path.exists('.planning/config.json') else 'missing')"
 ```
 
 If missing, create from template:

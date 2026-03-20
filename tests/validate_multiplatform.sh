@@ -318,6 +318,32 @@ else
   fail "install.js Windsurf block missing agents/ copy — @./agents/ references broken on Windsurf"
 fi
 
+# install.js Claude block must remove legacy workflows/ dir (pre-1.9.0 leftover shadows learnship/workflows/)
+if grep -q "legacyWorkflowsDir" "$REPO/bin/install.js" && grep -q "legacy workflows" "$REPO/bin/install.js"; then
+  ok "install.js Claude block removes legacy workflows/ dir (prevents stale file shadowing)"
+else
+  fail "install.js Claude block missing legacy workflows/ cleanup — pre-1.9.0 users see stale content on Claude Code"
+fi
+
+# Dead short-name agent files must NOT exist in agents/ (they were never installed, only confused users)
+# Only learnship-*.md subagent dispatch files belong in agents/
+for DEAD in debugger.md executor.md planner.md researcher.md verifier.md; do
+  if [ ! -f "$REPO/agents/$DEAD" ]; then
+    ok "agents/$DEAD removed (dead file — was never installed, only cluttered repo)"
+  else
+    fail "agents/$DEAD still exists — dead file, not installed anywhere, causes user confusion"
+  fi
+done
+
+# install.js must copy learnship/agents/ into learnship/workflows/agents/ for non-Windsurf platforms
+# @./agents/ in workflow files resolves relative to the workflow file's directory (learnship/workflows/)
+# so agents must exist at learnship/workflows/agents/, not just learnship/agents/
+if grep -q "agentsInlinesDest" "$REPO/bin/install.js" && grep -q "workflows.*agents\|workflows/agents" "$REPO/bin/install.js"; then
+  ok "install.js copies agents/ into learnship/workflows/agents/ for non-Windsurf @./agents/ resolution"
+else
+  fail "install.js missing agents/ copy into learnship/workflows/agents/ — @./agents/ broken on Claude/Gemini/OpenCode/Codex"
+fi
+
 # references/questioning.md must exist (used by new-project Step 3)
 if [ -f "$REPO/learnship/references/questioning.md" ]; then
   ok "learnship/references/questioning.md exists"

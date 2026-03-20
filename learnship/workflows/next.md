@@ -13,7 +13,7 @@ Reads project state and runs the right next workflow automatically. No need to r
 ## Step 1: Check for Project
 
 ```bash
-test -f .planning/PROJECT.md && echo "EXISTS" || echo "MISSING"
+python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
 ```
 
 **If MISSING:**

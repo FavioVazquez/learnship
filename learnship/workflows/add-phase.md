@@ -12,7 +12,7 @@ Append a new integer phase to the end of the current milestone. Use when scope g
 
 Check that a roadmap exists:
 ```bash
-test -f .planning/ROADMAP.md && echo "OK" || echo "MISSING"
+python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
 ```
 
 If missing: stop — run `new-project` first.

@@ -22,7 +22,7 @@ If `nyquist_validation: false`: stop — "Validation is disabled. Enable it in `
 ## Step 2: Validate Phase
 
 ```bash
-test -f .planning/ROADMAP.md && grep -E "Phase [N]:" .planning/ROADMAP.md
+python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
 ```
 
 Determine the phase directory:

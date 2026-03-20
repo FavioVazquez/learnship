@@ -29,7 +29,7 @@ Pending todos: [N] items
 
 Check if a MILESTONE-CONTEXT.md already exists:
 ```bash
-test -f .planning/MILESTONE-CONTEXT.md && echo "EXISTS"
+python3 -c "import os; print('EXISTS' if os.path.exists('.planning/MILESTONE-CONTEXT.md') else 'MISSING')"
 ```
 
 If exists: ask "A milestone context file already exists from a prior discussion. Update it or start fresh?"

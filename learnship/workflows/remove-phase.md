@@ -22,7 +22,7 @@ Example: remove-phase 7
 
 Check roadmap exists:
 ```bash
-test -f .planning/ROADMAP.md && echo "OK" || echo "MISSING"
+python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
 ```
 
 ## Step 2: Verify the Phase is Future

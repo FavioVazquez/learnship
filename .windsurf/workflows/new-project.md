@@ -13,7 +13,7 @@ Initialize a new project with full context gathering, optional research, require
 Check if `.planning/PROJECT.md` already exists:
 
 ```bash
-test -f .planning/PROJECT.md && echo "EXISTS" || echo "NEW"
+python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'NEW')"
 ```
 
 **If EXISTS:** Stop. Project already initialized. Use the `progress` workflow to see where you are.
@@ -21,7 +21,7 @@ test -f .planning/PROJECT.md && echo "EXISTS" || echo "NEW"
 Check if git is initialized:
 
 ```bash
-test -d .git && echo "HAS_GIT" || echo "NO_GIT"
+python3 -c "import os; print('HAS_GIT' if os.path.isdir('.git') else 'NO_GIT')"
 ```
 
 **If NO_GIT:**

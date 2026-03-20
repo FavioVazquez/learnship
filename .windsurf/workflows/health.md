@@ -15,7 +15,7 @@ Check if `--repair` flag is present.
 ## Step 2: Check Project Exists
 
 ```bash
-test -d .planning && echo "OK" || echo "MISSING"
+python3 -c "import os; print('OK' if os.path.isdir('.planning') else 'MISSING')"
 ```
 
 If `.planning/` doesn't exist:
@@ -32,10 +32,10 @@ Run the following checks and classify each as error, warning, or info:
 
 ### Required Files
 ```bash
-test -f .planning/PROJECT.md   || echo "E002: PROJECT.md not found"
-test -f .planning/ROADMAP.md   || echo "E003: ROADMAP.md not found"
-test -f .planning/STATE.md     || echo "E004: STATE.md not found (repairable)"
-test -f .planning/config.json  || echo "W003: config.json not found (repairable)"
+python3 -c "import os; print('E002: PROJECT.md not found') if not os.path.exists('.planning/PROJECT.md') else None"
+python3 -c "import os; print('E003: ROADMAP.md not found') if not os.path.exists('.planning/ROADMAP.md') else None"
+python3 -c "import os; print('E004: STATE.md not found (repairable)') if not os.path.exists('.planning/STATE.md') else None"
+python3 -c "import os; print('W003: config.json not found (repairable)') if not os.path.exists('.planning/config.json') else None"
 ```
 
 ### Config Validity
