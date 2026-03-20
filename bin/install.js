@@ -501,6 +501,7 @@ function copyDir(srcDir, destDir, pathPrefix, platform) {
       let c = fs.readFileSync(src, 'utf8');
       c = replacePaths(c, pathPrefix, platform);
       if (entry.name === 'new-project.md') c = rewriteNewProject(c, platform);
+      if (entry.name === 'agents.md') c = rewriteAgentsMd(c, platform, pathPrefix);
       if (platform === 'opencode') c = convertToOpencode(c);
       // gemini agents converted separately; body ${VAR} escaping done there
       fs.writeFileSync(dest, c);
@@ -527,6 +528,62 @@ function replacePaths(content, pathPrefix, platform) {
     c = c.replace(/~\/\.codex\//g, pathPrefix);
   }
   return c;
+}
+
+/**
+ * Rewrite AGENTS.md markers with platform-specific skill invocation instructions.
+ * On Windsurf, @agentic-learning and @impeccable are native @skill invocations.
+ * On all other platforms there is no @mention dispatch — the AI must be told
+ * explicitly where the skill files live and what to do when the user types @skill-name.
+ */
+function rewriteAgentsMd(content, platform, pathPrefix) {
+  if (!content.includes('<!-- LEARNSHIP_SKILLS_BLOCK -->')) return content;
+
+  let block;
+  if (platform === 'windsurf') {
+    block = `### Learning Partner — \`@agentic-learning\`
+
+Windsurf loads \`@agentic-learning\` natively as a skill. When the user (or a workflow) invokes \`@agentic-learning <action>\`, Windsurf automatically routes it to the installed skill.
+
+Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, \`explain-first\`, \`struggle\`, \`either-or\`, \`interleave\`, \`cognitive-load\`
+
+### Design System — \`@impeccable\`
+
+Windsurf loads \`@impeccable\` natively as a skill. When the user (or a workflow) invokes \`@impeccable <action>\`, Windsurf automatically routes it to the installed skill.
+
+Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \`clarify\`, \`colorize\`, \`critique\`, \`delight\`, \`distill\`, \`extract\`, \`frontend-design\`, \`harden\`, \`normalize\`, \`onboard\`, \`optimize\`, \`overdrive\`, \`polish\`, \`quieter\`, \`teach-impeccable\`, \`typeset\``;
+  } else {
+    // For all non-Windsurf platforms: @mention is not a native dispatch mechanism.
+    // The AI must read the skill file directly and execute the instructions inside it.
+    // pathPrefix ends with learnship/ — skills are at learnship/skills/
+    const skillsPath = pathPrefix + 'skills';
+
+    block = `### Learning Partner — \`@agentic-learning\`
+
+**There is no native @mention skill dispatch on this platform.** When a workflow checkpoint or the user mentions \`@agentic-learning <action>\`, you must:
+
+1. Read \`${skillsPath}/agentic-learning/SKILL.md\`
+2. Find the section for the requested action (e.g. \`either-or\`, \`brainstorm\`, \`reflect\`, \`quiz\`, etc.)
+3. Execute those instructions directly in this conversation
+
+Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, \`explain-first\`, \`struggle\`, \`either-or\`, \`interleave\`, \`cognitive-load\`
+
+**Do NOT say "@agentic-learning isn't installed" — it is installed. Read the SKILL.md and run the action.**
+
+### Design System — \`@impeccable\`
+
+**There is no native @mention skill dispatch on this platform.** When a workflow checkpoint or the user mentions \`@impeccable <action>\`, you must:
+
+1. Read \`${skillsPath}/impeccable/SKILL.md\`
+2. Find the section for the requested action (e.g. \`audit\`, \`critique\`, \`polish\`, etc.)
+3. Execute those instructions directly in this conversation
+
+Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \`clarify\`, \`colorize\`, \`critique\`, \`delight\`, \`distill\`, \`extract\`, \`frontend-design\`, \`harden\`, \`normalize\`, \`onboard\`, \`optimize\`, \`overdrive\`, \`polish\`, \`quieter\`, \`teach-impeccable\`, \`typeset\`
+
+**Do NOT say "@impeccable isn't installed" — it is installed. Read the SKILL.md and run the action.**`;
+  }
+
+  return content.replace('<!-- LEARNSHIP_SKILLS_BLOCK -->', block);
 }
 
 /** Rewrite new-project.md markers with exact platform-specific content at install time */
@@ -1339,6 +1396,7 @@ if (process.env.LEARNSHIP_TEST_MODE) {
     parseJsonc,
     replacePaths,
     rewriteNewProject,
+    rewriteAgentsMd,
     installClaudePlugins,
     toHomePrefix,
     LEARNSHIP_CODEX_MARKER,

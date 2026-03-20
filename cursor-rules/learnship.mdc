@@ -44,6 +44,32 @@ Always read `STATE.md` and `ROADMAP.md` before any planning or execution operati
 - **Goal-backward verification**: Check that `must_haves` are met, not just that tasks ran.
 - **Deferred ideas**: Note things outside current phase scope in the roadmap backlog.
 
+## Skills — @agentic-learning and @impeccable
+
+**There is no native @mention skill dispatch in Cursor.** When a workflow checkpoint or the user mentions `@agentic-learning <action>` or `@impeccable <action>`, you must read the skill file and execute its instructions directly.
+
+### Learning Partner — `@agentic-learning`
+
+When `@agentic-learning <action>` is mentioned:
+1. Read `node_modules/learnship/skills/agentic-learning/SKILL.md` (or `learnship/skills/agentic-learning/SKILL.md` if installed locally)
+2. Find the section for the requested action
+3. Execute those instructions in this conversation
+
+Available actions: `learn`, `quiz`, `reflect`, `space`, `brainstorm`, `explain-first`, `struggle`, `either-or`, `interleave`, `cognitive-load`
+
+**Do NOT say "@agentic-learning isn't installed" — it is installed. Read the SKILL.md and run the action.**
+
+### Design System — `@impeccable`
+
+When `@impeccable <action>` is mentioned:
+1. Read `node_modules/learnship/skills/impeccable/SKILL.md` (or `learnship/skills/impeccable/SKILL.md` if installed locally)
+2. Find the section for the requested action
+3. Execute those instructions in this conversation
+
+Available actions: `adapt`, `animate`, `arrange`, `audit`, `bolder`, `clarify`, `colorize`, `critique`, `delight`, `distill`, `extract`, `frontend-design`, `harden`, `normalize`, `onboard`, `optimize`, `overdrive`, `polish`, `quieter`, `teach-impeccable`, `typeset`
+
+**Do NOT say "@impeccable isn't installed" — it is installed. Read the SKILL.md and run the action.**
+
 ## Parallel Execution
 
 Cursor supports real parallel subagents. During `/new-project` setup (Group D), ask:

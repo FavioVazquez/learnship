@@ -9,6 +9,25 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.18] — Fix @agentic-learning and @impeccable not working on non-Windsurf platforms
+
+**Released:** 2026-03-20
+
+### Fixed
+
+- **`@agentic-learning` and `@impeccable` fail on all non-Windsurf platforms** — `@mention` skill dispatch is a Windsurf-native mechanism. On Claude Code, Gemini CLI, OpenCode, Codex, and Cursor, typing `@agentic-learning either-or` does nothing — the AI gets no context and either errors with "isn't installed" or silently ignores the invocation. The skills ARE installed on disk but the AI has no mechanism to auto-load them from an `@mention`.
+
+  **Root cause:** The `AGENTS.md` template had a `## Skills` section that contained only project-level notes (CHANGELOG discipline, Decisions Register) but no instructions about where skill files live or what to do with `@skill-name` syntax on non-Windsurf platforms.
+
+  **Fix:** Added a `<!-- LEARNSHIP_SKILLS_BLOCK -->` marker to `learnship/templates/agents.md`, replaced at install time by `rewriteAgentsMd()` with platform-specific instructions:
+  - **Windsurf:** "Windsurf loads `@agentic-learning` natively — invoke as normal."
+  - **Claude Code / Gemini / OpenCode / Codex:** "There is no native @mention dispatch. When `@agentic-learning <action>` is mentioned, read `[path]/skills/agentic-learning/SKILL.md`, find the action section, and execute those instructions directly. Do NOT say it isn't installed."
+  - **Cursor:** Added the same explicit instructions to `cursor-rules/learnship.mdc` (Cursor doesn't go through `install.js`).
+
+  Every new project's `AGENTS.md` (generated from the template during `/new-project`) now contains the correct skill invocation instructions for the platform it was installed on. The AI reads `AGENTS.md` at the start of every session, so the instructions are always present.
+
+---
+
 ## [v1.9.17] — Fix parallelization question missing on all platforms
 
 **Released:** 2026-03-20
