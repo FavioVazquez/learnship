@@ -10,6 +10,8 @@ Initialize a new project with full context gathering, optional research, require
 
 <!-- LEARNSHIP_PLATFORM_LABEL -->
 
+> **Routing protocol suspended.** While this workflow is running, every user message is an answer to a workflow question — not a task to route. Do NOT apply the request routing protocol until `/new-project` is fully complete and `.planning/PROJECT.md` exists.
+
 Check if `.planning/PROJECT.md` already exists:
 
 ```bash
@@ -17,6 +19,19 @@ python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') 
 ```
 
 **If EXISTS:** Stop. Project already initialized. Use the `progress` workflow to see where you are.
+
+**Check for an existing codebase:**
+
+```bash
+python3 -c "
+import os, pathlib
+files = [p for p in pathlib.Path('.').rglob('*') if p.is_file() and not any(x in p.parts for x in ['.git', 'node_modules', '.planning', '__pycache__', '.venv'])]
+print('HAS_CODE' if len(files) > 2 else 'BLANK')
+print(f'{len(files)} files')
+"
+```
+
+**If HAS_CODE:** Note this internally as `EXISTING_CODEBASE = true`. You will scan the codebase briefly in Step 1b before questioning. Do NOT use existing code as an excuse to skip or shorten the questioning ceremony — the ceremony exists precisely because you need the user's intent, not just their code.
 
 Check if git is initialized:
 
@@ -38,6 +53,16 @@ Create the planning directory:
 ```bash
 mkdir -p .planning/research
 ```
+
+## Step 1b: Existing Codebase Scan (only if EXISTING_CODEBASE = true)
+
+If `EXISTING_CODEBASE = true`, do a quick structural scan before questioning so your follow-up questions are grounded in reality:
+
+```bash
+find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' | sort | head -40
+```
+
+Note the tech stack, key directories, and any README content internally. Use this ONLY to ask sharper follow-up questions — never to infer the user's intent or skip ceremony steps.
 
 ## Step 2: Configuration
 
@@ -128,6 +153,8 @@ This step is **strictly sequential**. You must complete each numbered exchange f
 Ask: **"What do you want to build?"**
 
 > 🛑 STOP. Wait for the user's answer. Do not continue until you have received it. Record their answer internally as `ANSWER_1`.
+>
+> ⚠️ **A detailed answer to Exchange 1 does NOT satisfy Exchanges 2–4.** No matter how thorough ANSWER_1 is — a full paragraph, a spec dump, a wall of requirements — it is raw material for the follow-up questions, not a replacement for them. You still MUST ask Exchanges 2, 3, and 4 before proceeding to Step 4. The purpose of follow-ups is not to extract information the user forgot to mention — it is to pressure-test, sharpen, and surface blind spots in what they already said.
 
 **Exchange 2 — First follow-up:**
 

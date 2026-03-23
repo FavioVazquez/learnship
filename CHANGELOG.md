@@ -9,6 +9,30 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.19] — Fix new-project ceremony bypass on existing codebases
+
+**Released:** 2026-03-23
+
+### Fixed
+
+- **`/new-project` ceremony bypassed when user gives a detailed answer to "What do you want to build?"** — Three compounding bugs caused the full questioning → requirements → roadmap ceremony to be skipped:
+
+  1. **Routing protocol intercepted Exchange 1 answers.** The `AGENTS.md` routing protocol fires on every user message. When the user pastes a detailed prompt in answer to "What do you want to build?", the AI pattern-matched it as a task/feature request and either re-routed to a workflow or started implementing directly — bypassing all subsequent exchanges.
+
+  2. **Detailed ANSWER_1 was treated as sufficient to skip Exchanges 2–4.** The Exchange 1 `🛑 STOP` gate only said "wait for the answer" — it didn't explicitly forbid treating a thorough answer as a full replacement for the three follow-up exchanges. AI models infer: detailed answer → enough context → proceed to Step 4.
+
+  3. **No existing codebase detection.** With real code already in the directory, the AI had visible context from IDE/tool reads and felt the ceremony was redundant — skipping straight to implementation.
+
+  **Fixes:**
+  - `learnship/workflows/new-project.md` Step 1: Added explicit **"Routing protocol suspended"** notice — every user message during `/new-project` is a workflow answer, not a routable task.
+  - `learnship/workflows/new-project.md` Step 1: Added **existing codebase detection** (`HAS_CODE` check). If files exist, sets `EXISTING_CODEBASE = true` with an explicit guard: "Do NOT use existing code as an excuse to skip or shorten the questioning ceremony."
+  - `learnship/workflows/new-project.md` Step 1b: New **codebase scan step** — runs `find` to map structure, used only to sharpen follow-up questions, never to infer intent.
+  - `learnship/workflows/new-project.md` Exchange 1: Added `⚠️` warning: "A detailed answer to Exchange 1 does NOT satisfy Exchanges 2–4. No matter how thorough — it is raw material for follow-ups, not a replacement for them."
+  - `learnship/templates/agents.md` routing protocol: Added **Step 0** — explicit check: "If `/new-project` is currently in progress, the user's message is an answer to a workflow question. Do NOT apply the routing protocol."
+  - `learnship/templates/agents.md` examples: Added counter-example: "`/new-project` asked 'What do you want to build?' and user replies with a detailed description → ❌ Don't treat as a task to route → ✅ It is ANSWER_1. Record it and ask Exchange 2."
+
+---
+
 ## [v1.9.18] — Fix @agentic-learning and @impeccable not working on non-Windsurf platforms
 
 **Released:** 2026-03-20
