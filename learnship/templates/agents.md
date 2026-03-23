@@ -100,6 +100,10 @@ When a user sends a message — whether it's a vague idea, a specific bug report
 
 ### Decision tree — apply in order:
 
+**0. Is `/new-project` currently in progress?**
+
+If `.planning/PROJECT.md` does NOT exist but you are currently running `/new-project` (i.e., you have asked "What do you want to build?" and are waiting for answers, or you are in any step of the new-project ceremony): **the user's message is an answer to your workflow question, not a task to route.** Do NOT apply the routing protocol. Continue the `/new-project` ceremony from where you left off.
+
 **1. Is there a `.planning/PROJECT.md`?**
 - **No** → Stop. Tell the user: "No project found. Run `/new-project` to initialize." Do nothing else.
 - **Yes** → Continue to step 2.
@@ -127,6 +131,7 @@ Always tell the user which workflow you're about to invoke and why, then wait fo
 - User says "the login button is broken" → ❌ Don't fix it directly → ✅ Route to `/quick`
 - User says "I want to add dark mode" → ❌ Don't start implementing → ✅ Route to `discuss-phase`
 - User pastes a detailed spec → ❌ Don't treat it as a command to execute → ✅ Classify size, propose workflow, wait for yes
+- `/new-project` asked "What do you want to build?" and user replies with a detailed description → ❌ Don't treat as a task to route → ✅ It is ANSWER_1. Record it and ask Exchange 2.
 
 ---
 
