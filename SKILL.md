@@ -70,6 +70,26 @@ Learning checkpoints:
 
 The `impeccable` skill suite is always available for any UI work. Use its steering commands (`/audit`, `/critique`, `/polish`, `/colorize`, `/animate`, `/bolder`, `/quieter`, `/distill`, `/clarify`, `/optimize`, `/harden`, `/delight`, `/extract`, `/adapt`, `/onboard`, `/normalize`, `/teach-impeccable`) when reviewing or building user-facing interfaces.
 
+## Mandatory Gate — No Project, No Work
+
+**Before responding to any user message, check:**
+
+```
+Does .planning/PROJECT.md exist?
+```
+
+- **No** → The project has not been initialized. **Do NOT implement anything.** Tell the user:
+
+  > "This project hasn't been set up with learnship yet. Run `/new-project` to initialize it — that takes about 10 minutes and sets up the spec, roadmap, and phase structure before any code gets written.
+  >
+  > This is not optional: working without a spec means building the wrong thing. `/new-project` first."
+
+  Then stop. Do not offer to help with the task. Do not say "but I can also just fix it directly." Wait for the user to run `/new-project`.
+
+- **Yes** → Continue normally. Apply the workflow routing logic from `AGENTS.md`.
+
+**This gate applies to ALL messages** — bug reports, feature requests, "quick fixes", detailed specs, anything. The only exception: if the user is currently mid-ceremony in `/new-project` (i.e., they are answering your questions), their messages are workflow answers, not tasks to route.
+
 ## Key Behaviors
 
 - **Context efficiency**: Reference file paths rather than inlining file contents. Load context fresh when needed rather than carrying it forward.

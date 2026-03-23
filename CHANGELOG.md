@@ -9,6 +9,22 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.20] — Fix ceremony bypass when user sends task without running /new-project first
+
+**Released:** 2026-03-23
+
+### Fixed
+
+- **Cascade solves tasks directly when user never ran `/new-project`** — The ceremony bypass reported in v1.9.19 had a deeper root cause that the previous fix didn't address. The user's friend opened Windsurf on an existing codebase and typed a bug fix request directly — never invoking `/new-project` at all. Since `AGENTS.md` doesn't exist yet (it's created by `/new-project`), the routing protocol in `AGENTS.md` never loaded. Cascade saw a codebase, a task, and no learnship gate — and solved the bug directly.
+
+  **Root cause:** `SKILL.md` (the global Windsurf skill loaded in every session) only *suggested* `/new-project` when relevant — it had no hard gate blocking task implementation when `.planning/PROJECT.md` didn't exist. The routing protocol only lived in `AGENTS.md`, which requires `/new-project` to have already run.
+
+  **Fixes:**
+  - `SKILL.md`: Added **"Mandatory Gate — No Project, No Work"** section. Before responding to any message, check if `.planning/PROJECT.md` exists. If not: block the task, tell the user to run `/new-project` first, and stop. Explicitly: "Do not offer to help with the task. Do not say 'but I can also just fix it directly.'"
+  - `.windsurf/workflows/new-project.md`: Regenerated from source — was missing all three v1.9.19 fixes (routing protocol suspension notice, `HAS_CODE` codebase detection, Step 1b codebase scan, Exchange 1 detailed-answer warning). The Windsurf pre-generated copy had never been updated after v1.9.19 merged.
+
+---
+
 ## [v1.9.19] — Fix new-project ceremony bypass on existing codebases
 
 **Released:** 2026-03-23
