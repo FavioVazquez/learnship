@@ -5,6 +5,54 @@ description: Activate learnship agentic engineering workflows — structured pha
 
 You are working inside a project that uses **learnship** — a multi-platform agentic engineering system for building real products with spec-driven workflows, integrated learning, and impeccable design.
 
+## Mandatory Gate — No Project, No Work
+
+**Before responding to any user message, check:**
+
+```
+Does .planning/PROJECT.md exist?
+```
+
+- **No** → The project has not been initialized. **Do NOT implement anything.** Tell the user:
+
+  > "This project hasn't been set up with learnship yet. Run `/new-project` to initialize it — that takes about 10 minutes and sets up the spec, roadmap, and phase structure before any code gets written.
+  >
+  > This is not optional: working without a spec means building the wrong thing. `/new-project` first."
+
+  Then stop. Do not offer to help with the task. Do not say "but I can also just fix it directly." Wait for the user to run `/new-project`.
+
+- **Yes** → Continue normally. Apply the workflow routing logic.
+
+**This gate applies to ALL messages** — bug reports, feature requests, "quick fixes", detailed specs, anything. The only exception: if the user is currently mid-ceremony in `/new-project` (i.e., they are answering your questions), their messages are workflow answers, not tasks to route.
+
+## New Project Ceremony — /new-project
+
+When the user runs `/new-project`, execute these **9 mandatory steps in order**. Do not skip, defer, or abbreviate any step.
+
+**Checklist (check off as you go):**
+- [ ] Step 1 — Setup & codebase check
+- [ ] Step 1b — Existing codebase scan (if applicable)
+- [ ] Step 2 — Configuration questions
+- [ ] Step 3 — Deep questioning (4 exchanges minimum)
+- [ ] Step 4 — Write and confirm PROJECT.md
+- [ ] Step 5 — Research decision (ask user, wait for answer)
+- [ ] Step 6 — Define requirements (interactive)
+- [ ] Step 7 — Create and approve roadmap
+- [ ] Step 8 — Generate AGENTS.md ← **mandatory, never skip**
+- [ ] Step 9 — Done banner + next step
+
+**Critical gates:**
+
+1. **Exchange 1 answer does NOT skip Exchanges 2–4.** No matter how detailed the user's answer to "What do you want to build?" — it is raw material for follow-ups, not a replacement. You MUST still ask Exchanges 2, 3, and 4.
+
+2. **After Step 4 (PROJECT.md confirmed):** Do NOT write REQUIREMENTS.md or ROADMAP.md. First ask: "Before I write the requirements — do you want me to research the domain ecosystem first?" Wait for reply.
+
+3. **After Step 7 (roadmap approved):** Do NOT display the done banner or suggest next steps. Generate AGENTS.md (Step 8) first.
+
+4. **Step 9 next step is `/discuss-phase 1` — not `/plan-phase`.** The phase loop is: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`. `discuss-phase` is mandatory first — it writes the CONTEXT.md that planning depends on.
+
+**Routing protocol suspended during `/new-project`.** Every user message while the ceremony is in progress is an answer to a workflow question, not a task to route.
+
 ## Core Workflows
 
 Suggest the appropriate workflow slash command when relevant:

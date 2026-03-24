@@ -6,6 +6,19 @@ description: Initialize a new project — questioning → research → requireme
 
 Initialize a new project with full context gathering, optional research, requirements scoping, and roadmap creation. This is the most leveraged moment in any project — deep questioning now means better plans, better execution, better outcomes.
 
+> **This workflow has 9 mandatory steps. You must complete every step in order. Do not skip, defer, or abbreviate any step. Check each one off as you complete it:**
+>
+> - [ ] Step 1 — Setup & codebase check
+> - [ ] Step 1b — Existing codebase scan (if applicable)
+> - [ ] Step 2 — Configuration questions
+> - [ ] Step 3 — Deep questioning (4 exchanges)
+> - [ ] Step 4 — Write and confirm PROJECT.md
+> - [ ] Step 5 — Research decision (ask user, wait for answer)
+> - [ ] Step 6 — Define requirements (interactive)
+> - [ ] Step 7 — Create and approve roadmap
+> - [ ] Step 8 — Generate AGENTS.md ← **mandatory, never skip**
+> - [ ] Step 9 — Done banner + next step
+
 ## Step 1: Setup
 
 <!-- LEARNSHIP_PLATFORM_LABEL -->
@@ -208,15 +221,15 @@ If user requests changes: update PROJECT.md, show the full file again, re-ask th
 git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 ```
 
-> 🛑 STOP. Do not proceed to Step 5 until you have asked the research question below AND received the user's explicit answer to it.
+> 🛑 STOP — **Step 4 complete. You MUST now ask the research question (Step 5) before writing any other file.** Do not write REQUIREMENTS.md. Do not write ROADMAP.md. Do not proceed to any other step. The next action is to ask the user exactly one question: whether to research the domain first.
 
 ## Step 5: Research Decision
 
-Ask: "Research the domain ecosystem before defining requirements?"
+Ask: **"Before I write the requirements — do you want me to research the domain ecosystem first?"**
 - **Research first** (recommended) — Discover standard stacks, expected features, architecture patterns
 - **Skip research** — I know this domain well, go straight to requirements
 
-> 🛑 STOP. Wait for the user's explicit choice before continuing. Do not default to "Research first" — wait for the user's actual reply.
+> 🛑 STOP. Wait for the user's explicit choice. Do not default to either option. Do not write REQUIREMENTS.md yet. Do not proceed until the user replies.
 
 **If Research first:**
 
@@ -325,6 +338,8 @@ Ask for approval:
 git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git commit -m "docs: create roadmap ([N] phases)"
 ```
 
+> 🛑 STOP — **Step 7 complete. You MUST now generate AGENTS.md (Step 8) before anything else.** Do not display the done banner. Do not suggest next steps. Do not end the workflow. The roadmap is approved — AGENTS.md is next.
+
 ## Step 8: Generate AGENTS.md
 
 > **🔴 MANDATORY — This step must always be completed. Do not skip it, do not defer it, do not move to Step 9 without writing AGENTS.md to the project root. AGENTS.md is the persistent memory file that every future session depends on.**
@@ -378,7 +393,10 @@ Files created:
 - .planning/config.json
 [- .planning/research/ (if research was run)]
 
-▶ Next: discuss-phase 1 → plan-phase 1 → execute-phase 1
+▶ Next: `/discuss-phase 1` — **start here, not `/plan-phase`**
+
+The phase loop is: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`
+`discuss-phase` is mandatory before planning — it captures your intent and writes the CONTEXT.md that plan-phase depends on. Skipping it means planning without context.
 
 > **Platform detected:** `[PLATFORM]` — parallelization is `[true/false]`
 ```
