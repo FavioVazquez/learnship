@@ -378,7 +378,7 @@ else
   fail "new-project Step 4 missing explicit confirmation gate — PROJECT.md can be silently accepted"
 fi
 
-if grep -q "Do not proceed to Step 5 until you have asked the research question" "$NEW_PROJECT_WF"; then
+if grep -q "Step 4 complete.*MUST now ask the research question" "$NEW_PROJECT_WF"; then
   ok "new-project has STOP gate between PROJECT.md confirmation and research decision"
 else
   fail "new-project missing STOP gate after Step 4 commit — can skip research question"
@@ -399,6 +399,27 @@ if grep -q "MANDATORY" "$NEW_PROJECT_WF" && grep -q "Generate AGENTS.md" "$NEW_P
   ok "new-project Step 8 has mandatory AGENTS.md generation gate"
 else
   fail "new-project Step 8 missing mandatory AGENTS.md gate — AGENTS.md may not be generated"
+fi
+
+# new-project must have hard gate between Step 7 (roadmap) and Step 8 (AGENTS.md)
+if grep -q "Step 7 complete.*MUST now generate AGENTS.md" "$NEW_PROJECT_WF"; then
+  ok "new-project has STOP gate between roadmap approval and AGENTS.md generation"
+else
+  fail "new-project missing STOP gate after Step 7 — AGENTS.md can be skipped after roadmap approval"
+fi
+
+# new-project Step 9 must recommend discuss-phase, not plan-phase
+if grep -q "discuss-phase" "$NEW_PROJECT_WF" && grep -q "start here, not" "$NEW_PROJECT_WF"; then
+  ok "new-project Step 9 recommends discuss-phase first (not plan-phase)"
+else
+  fail "new-project Step 9 missing discuss-phase recommendation — users will skip to plan-phase directly"
+fi
+
+# new-project must have step checklist at top
+if grep -q "9 mandatory steps" "$NEW_PROJECT_WF"; then
+  ok "new-project has mandatory step checklist to prevent skipping"
+else
+  fail "new-project missing mandatory step checklist — AI can skip steps without awareness"
 fi
 
 # new-project must reference the agents.md template for AGENTS.md population
@@ -917,17 +938,32 @@ check('rewriteNewProject: no raw LEARNSHIP markers remain in output', () => {
   }
 });
 
-// 18b. Structural questioning gates survive rewriteNewProject for ALL platforms
-check('rewriteNewProject: structural questioning gates preserved after platform rewrite (all platforms)', () => {
+// 18b. All ceremony gates survive rewriteNewProject for ALL platforms
+check('rewriteNewProject: all v1.9.21 ceremony gates preserved after platform rewrite (all 5 platforms)', () => {
   const realSrc = fs.readFileSync(path.join(REPO, 'learnship', 'workflows', 'new-project.md'), 'utf8');
   for (const p of ['claude', 'windsurf', 'opencode', 'gemini', 'codex']) {
     const out = rewriteNewProject(realSrc, p);
+    // Questioning gates
     assert(out.includes('Exchange 1'), `[${p}] Exchange 1 missing after rewrite`);
     assert(out.includes('Exchange 4'), `[${p}] Exchange 4 missing after rewrite`);
     assert(out.includes('ANSWER_1'), `[${p}] ANSWER_1 register missing after rewrite`);
     assert(out.includes('ANSWER_4'), `[${p}] ANSWER_4 register missing after rewrite`);
-    assert(out.includes('Do not proceed to Step 5'), `[${p}] Step 5 gate missing after rewrite`);
     assert(out.includes('Reply **yes** to continue'), `[${p}] PROJECT.md confirmation gate missing after rewrite`);
+    // v1.9.21: mandatory step checklist
+    assert(out.includes('9 mandatory steps'), `[${p}] mandatory step checklist missing after rewrite`);
+    // v1.9.21: Step 4->5 hard gate
+    assert(out.includes('Step 4 complete'), `[${p}] Step 4->5 hard gate missing after rewrite`);
+    assert(out.includes('MUST now ask the research question'), `[${p}] research question gate missing after rewrite`);
+    // v1.9.21: Step 7->8 hard gate
+    assert(out.includes('Step 7 complete'), `[${p}] Step 7->8 hard gate missing after rewrite`);
+    assert(out.includes('MUST now generate AGENTS.md'), `[${p}] AGENTS.md gate missing after rewrite`);
+    // v1.9.21: discuss-phase next step
+    assert(out.includes('discuss-phase'), `[${p}] discuss-phase recommendation missing after rewrite`);
+    assert(out.includes('start here, not'), `[${p}] discuss-phase 'start here, not' wording missing after rewrite`);
+    // v1.9.21: Exchange 1 detailed-answer warning
+    assert(out.includes('does NOT satisfy Exchanges'), `[${p}] Exchange 1 detailed-answer warning missing after rewrite`);
+    // Routing protocol suspended notice
+    assert(out.includes('Routing protocol suspended'), `[${p}] routing suspension notice missing after rewrite`);
   }
 });
 
@@ -2478,6 +2514,114 @@ else
   fail "session-start: non-zero exit when SKILL.md is missing (not graceful)"
 fi
 rm -rf "$TMPDIR_TEST"
+
+# ──────────────────────────────────────────────────────────────────────────
+# [21] Cursor .mdc and SKILL.md ceremony gate enforcement
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [21] Cursor .mdc and SKILL.md ceremony gates"
+echo "  ──────────────────────────────────────────────"
+
+CURSOR_MDC="$REPO/cursor-rules/learnship.mdc"
+SKILL_MD="$REPO/SKILL.md"
+
+# Cursor .mdc exists
+if [ -f "$CURSOR_MDC" ]; then
+  ok "cursor-rules/learnship.mdc exists"
+else
+  fail "cursor-rules/learnship.mdc missing — Cursor users have no learnship integration"
+fi
+
+# Cursor .mdc has mandatory gate
+if grep -q "Mandatory Gate" "$CURSOR_MDC" && grep -q "planning/PROJECT.md" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has Mandatory Gate section"
+else
+  fail "cursor-rules/learnship.mdc missing Mandatory Gate — Cursor users bypass ceremony when no PROJECT.md"
+fi
+
+# Cursor .mdc blocks task implementation when no PROJECT.md
+if grep -q "Do NOT implement anything" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc explicitly blocks implementation when no PROJECT.md"
+else
+  fail "cursor-rules/learnship.mdc missing 'Do NOT implement anything' gate"
+fi
+
+# Cursor .mdc has new-project ceremony section
+if grep -q "New Project Ceremony" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has New Project Ceremony section"
+else
+  fail "cursor-rules/learnship.mdc missing New Project Ceremony section — AI has no ceremony steps"
+fi
+
+# Cursor .mdc has 9-step mandatory checklist
+if grep -q "9 mandatory steps" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has 9-step mandatory checklist"
+else
+  fail "cursor-rules/learnship.mdc missing 9-step mandatory checklist — steps can be silently skipped"
+fi
+
+# Cursor .mdc has Exchange 1 detailed-answer warning
+if grep -q "does NOT skip Exchanges 2" "$CURSOR_MDC" || grep -q "does NOT satisfy Exchanges" "$CURSOR_MDC" || grep -q "does NOT skip Exchanges" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc warns that detailed Exchange 1 answer does not skip 2-4"
+else
+  fail "cursor-rules/learnship.mdc missing Exchange 1 warning — detailed answer still skips ceremony"
+fi
+
+# Cursor .mdc has Step 4->5 gate (research question)
+if grep -q "Do NOT write REQUIREMENTS.md" "$CURSOR_MDC" || grep -q "research the domain ecosystem first" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has Step 4->5 research question gate"
+else
+  fail "cursor-rules/learnship.mdc missing Step 4->5 gate — REQUIREMENTS.md written without research question"
+fi
+
+# Cursor .mdc has Step 7->8 gate (AGENTS.md mandatory)
+if grep -q "Generate AGENTS.md.*Step 8\|Step 8.*AGENTS.md\|AGENTS.md (Step 8)" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has Step 7->8 AGENTS.md mandatory gate"
+else
+  fail "cursor-rules/learnship.mdc missing Step 7->8 gate — AGENTS.md skipped after roadmap approval"
+fi
+
+# Cursor .mdc recommends discuss-phase not plan-phase
+if grep -q "discuss-phase.*not.*plan-phase\|not.*plan-phase.*discuss-phase\|start here, not" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc recommends /discuss-phase first (not /plan-phase)"
+else
+  fail "cursor-rules/learnship.mdc missing discuss-phase next step — users go directly to plan-phase"
+fi
+
+# Cursor .mdc has routing protocol suspended notice
+if grep -q "Routing protocol suspended" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has routing protocol suspended notice during ceremony"
+else
+  fail "cursor-rules/learnship.mdc missing routing suspension — messages intercepted during ceremony"
+fi
+
+# SKILL.md exists (global Windsurf skill)
+if [ -f "$SKILL_MD" ]; then
+  ok "SKILL.md exists (global Windsurf skill)"
+else
+  fail "SKILL.md missing — Windsurf global skill not loaded"
+fi
+
+# SKILL.md has mandatory gate
+if grep -q "Mandatory Gate" "$SKILL_MD" && grep -q "No Project, No Work" "$SKILL_MD"; then
+  ok "SKILL.md has 'Mandatory Gate — No Project, No Work' section"
+else
+  fail "SKILL.md missing mandatory gate — Windsurf bypasses ceremony when no PROJECT.md"
+fi
+
+# SKILL.md blocks task implementation when no PROJECT.md
+if grep -q "Do NOT implement anything" "$SKILL_MD"; then
+  ok "SKILL.md explicitly blocks implementation when no PROJECT.md"
+else
+  fail "SKILL.md missing 'Do NOT implement anything' gate"
+fi
+
+# SKILL.md has exception for mid-ceremony answers
+if grep -q "mid-ceremony\|answering your questions\|workflow answers" "$SKILL_MD"; then
+  ok "SKILL.md has mid-ceremony exception (answers not treated as tasks)"
+else
+  fail "SKILL.md missing mid-ceremony exception — Exchange 1 answers intercepted as tasks"
+fi
 
 # ──────────────────────────────────────────────────────────────────────────
 # Summary

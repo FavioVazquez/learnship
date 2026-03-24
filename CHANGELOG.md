@@ -9,6 +9,29 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.21] — Fix new-project ceremony: research skipped, AGENTS.md skipped, wrong next step
+
+**Released:** 2026-03-24
+
+### Fixed
+
+- **Research step (Step 5) bypassed after PROJECT.md approval** — The AI treated Step 4 → Step 5 as a narrative flow-through rather than a mandatory gate. It would write REQUIREMENTS.md and ROADMAP.md immediately after PROJECT.md was confirmed, skipping the research question entirely. Root cause: no hard STOP gate existed *between* steps, only *within* them.
+
+- **AGENTS.md (Step 8) skipped after roadmap approval** — The roadmap approval in Step 7 created a natural "ceremony complete" feeling. With `commit_mode: auto`, the git commit further reinforced this. The AI would display the Step 9 done banner and suggest next steps without ever running Step 8. The `🔴 MANDATORY` notice existed but had nothing to anchor it structurally between Step 7 and Step 9.
+
+- **Step 9 recommended `/plan-phase` instead of `/discuss-phase`** — The closing message was paraphrased as "Ready to start Phase 1? Run /plan-phase or /execute-phase" — dropping `discuss-phase` entirely. `discuss-phase` is mandatory before `plan-phase` as it writes `CONTEXT.md` that planning depends on.
+
+  **Fixes:**
+  - `new-project.md`: Added **9-step mandatory checklist** at the top of the workflow — the AI must check off each step before proceeding. Prevents silent skipping.
+  - `new-project.md` after Step 4 commit: Added hard `🛑 STOP — Step 4 complete. You MUST now ask the research question (Step 5) before writing any other file.`
+  - `new-project.md` Step 5: Rewrote the research question to be direct — "Before I write the requirements — do you want me to research the domain ecosystem first?" with explicit gate: "Do not write REQUIREMENTS.md yet."
+  - `new-project.md` after Step 7 commit: Added hard `🛑 STOP — Step 7 complete. You MUST now generate AGENTS.md (Step 8) before anything else. Do not display the done banner.`
+  - `new-project.md` Step 9: Locked next step to `▶ Next: /discuss-phase 1 — start here, not /plan-phase` with explicit explanation of the phase loop.
+  - `.windsurf/workflows/new-project.md`: Regenerated from source with all fixes applied.
+  - `tests/validate_multiplatform.sh`: Updated Step 4→5 gate test pattern; added 3 new tests (Step 7→8 gate, discuss-phase next, mandatory checklist).
+
+---
+
 ## [v1.9.20] — Fix ceremony bypass when user sends task without running /new-project first
 
 **Released:** 2026-03-23
