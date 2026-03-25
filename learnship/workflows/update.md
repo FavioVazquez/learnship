@@ -35,6 +35,7 @@ for loc in \
   "$HOME/favio/learnship" \
   "$HOME/learnship" \
   "$(find $HOME -name "install.sh" -path "*/learnship/*" 2>/dev/null | head -1 | xargs dirname 2>/dev/null)"; do
+# PowerShell: (Get-ChildItem $HOME -Recurse -Filter install.sh -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'learnship' } | Select-Object -First 1).DirectoryName
   test -d "$loc/.windsurf/workflows" && SOURCE_DIR="$loc" && break
 done
 ```
@@ -93,7 +94,7 @@ Stop.
 For any workflow file that exists in install dir AND differs from source AND differs from the current source (meaning you modified it):
 
 ```bash
-mkdir -p "$INSTALL_DIR/local-patches"
+node -e "require('fs').mkdirSync('$INSTALL_DIR/local-patches',{recursive:true})"
 ```
 
 For each locally modified file:

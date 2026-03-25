@@ -9,6 +9,30 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v1.9.22] — Windows/PowerShell compatibility: replace python3 and bash-only commands
+
+**Released:** 2026-03-25
+
+### Fixed
+
+- **`python3` removed from all workflows** — Every `python3 -c "import os; ..."` file-existence check replaced with `node -e "require('fs').existsSync(...)"` — Node.js is a guaranteed dependency on all platforms; `python3` is not present on Windows by default. Affected: `health`, `new-project`, `quick`, `resume-work`, `progress`, `next`, `ls`, `settings`, `set-profile`, `validate-phase`, `research-phase`, `remove-phase`, `insert-phase`, `add-phase`, `discuss-milestone`, `plan-milestone-gaps`, `references/planning-config.md` (~32 occurrences).
+- **`mkdir -p` removed from all workflows** — Replaced with `node -e "require('fs').mkdirSync('...', {recursive:true})"` — `mkdir -p` is not available in PowerShell. Affected: `add-todo`, `debug`, `complete-milestone`, `discuss-phase`, `plan-phase`, `insert-phase`, `map-codebase`, `cleanup`, `plan-milestone-gaps`, `sync-upstream-skills`, `update` (13 occurrences).
+- **`xargs ls -t | head -N` removed** — Replaced with `node -e` sort-by-mtime equivalent — `xargs` is not available in PowerShell. Affected: `ls`, `progress`, `pause-work`, `transition` (4 occurrences).
+- **`head -N` / `tail -N`** — Inline PowerShell comments added: `# PowerShell: ... | Select-Object -First N / -Last N`. Affected: 25+ occurrences across 15 workflows.
+- **`sort -V`** — PowerShell equivalents added as inline comments (`Sort-Object Name`). Affected: `add-phase`, `new-milestone`, `discuss-milestone`, `milestone-retrospective`, `complete-milestone`, `plan-milestone-gaps`.
+- **`2>/dev/null`** — Inline `# PS: 2>$null` comments added where relevant.
+- **`python3` in `release.md`** — JSON escaping for GitHub API now uses `node -e` instead of `python3`.
+- **`grep -rl | head`** — PowerShell `Select-String` equivalents added as inline comments in `discovery-phase`, `audit-milestone`, `agents/debugger`.
+- **`npm test 2>&1 | tail -5`** — PowerShell equivalent added as inline comment in `agents/verifier`.
+
+### Changed
+
+- All `learnship/workflows/` mirror copies synced with `.windsurf/workflows/` changes.
+- `learnship/agents/` mirror copies synced with `agents/` changes.
+- `references/planning-config.md` and its mirror updated.
+
+---
+
 ## [v1.9.21] — Fix new-project ceremony: research skipped, AGENTS.md skipped, wrong next step
 
 **Released:** 2026-03-24

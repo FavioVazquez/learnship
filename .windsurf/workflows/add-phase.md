@@ -12,7 +12,7 @@ Append a new integer phase to the end of the current milestone. Use when scope g
 
 Check that a roadmap exists:
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/ROADMAP.md') ? 'OK' : 'MISSING')"
 ```
 
 If missing: stop — run `new-project` first.
@@ -24,11 +24,13 @@ If no description was provided as an argument, ask: "What does this new phase de
 Read `.planning/ROADMAP.md` and find the highest existing integer phase number:
 ```bash
 grep -E "^## Phase [0-9]+" .planning/ROADMAP.md | tail -1
+# PowerShell: Select-String -Path .planning/ROADMAP.md -Pattern '^## Phase \d+' | Select-Object -Last 1
 ```
 
 Also scan the phases directory for any directories that may not be in the roadmap:
 ```bash
 ls .planning/phases/ 2>/dev/null | grep -E "^[0-9]+" | sort -n | tail -3
+# PowerShell: Get-ChildItem .planning/phases/ -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^[0-9]+' } | Sort-Object Name | Select-Object -Last 3
 ```
 
 Set `NEXT_NUM` = highest found + 1. Pad to 2 digits (01, 02, ..., 10, 11, ...).
@@ -38,7 +40,8 @@ Generate a slug from the description (lowercase, hyphens, max 40 chars).
 ## Step 3: Create Phase Directory
 
 ```bash
-mkdir -p ".planning/phases/${NEXT_NUM}-${SLUG}"
+node -e "require('fs').mkdirSync('.planning/phases/${NEXT_NUM}-${SLUG}',{recursive:true})"
+# PowerShell: New-Item -ItemType Directory -Force -Path ".planning/phases/${NEXT_NUM}-${SLUG}"
 ```
 
 ## Step 4: Update ROADMAP.md

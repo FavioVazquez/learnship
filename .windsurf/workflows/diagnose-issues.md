@@ -15,6 +15,7 @@ Batch-diagnose all open UAT issues after `verify-work`. Groups issues by root ca
 Find the UAT file for the phase:
 ```bash
 ls ".planning/phases/"*[N]*"/"*-UAT.md 2>/dev/null | head -1
+# PowerShell: Get-ChildItem ".planning/phases/" -Recurse -Filter "*-UAT.md" | Where-Object { $_.FullName -match [N] } | Select-Object -First 1
 ```
 
 If no UAT file found: stop — "Run `verify-work [N]` first to log issues."

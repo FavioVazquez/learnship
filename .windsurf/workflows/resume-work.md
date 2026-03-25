@@ -9,9 +9,9 @@ Instantly restore full project context. Use when starting a new session, returni
 ## Step 1: Check Planning Structure
 
 ```bash
-python3 -c "import os; print('HAS_STATE' if os.path.exists('.planning/STATE.md') else 'NO_STATE')"
-python3 -c "import os; print('HAS_PROJECT' if os.path.exists('.planning/PROJECT.md') else 'NO_PROJECT')"
-python3 -c "import os; print('HAS_ROADMAP' if os.path.exists('.planning/ROADMAP.md') else 'NO_ROADMAP')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/STATE.md') ? 'HAS_STATE' : 'NO_STATE')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md') ? 'HAS_PROJECT' : 'NO_PROJECT')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/ROADMAP.md') ? 'HAS_ROADMAP' : 'NO_ROADMAP')"
 ```
 
 If nothing exists: stop — run `new-project` to start a project.

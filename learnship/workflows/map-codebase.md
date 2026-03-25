@@ -33,7 +33,7 @@ Wait for response before continuing.
 ## Step 2: Create Output Directory
 
 ```bash
-mkdir -p .planning/codebase
+node -e "require('fs').mkdirSync('.planning/codebase',{recursive:true})"
 ```
 
 Expected output files:

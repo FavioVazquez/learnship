@@ -51,12 +51,12 @@ Stop.
 Update the `model_profile` field in `.planning/config.json`:
 
 ```bash
-python3 -c "
-import json
-cfg = json.load(open('.planning/config.json'))
-cfg['model_profile'] = '[profile]'
-json.dump(cfg, open('.planning/config.json', 'w'), indent=2)
-print('Updated.')
+node -e "
+const fs=require('fs');
+const cfg=JSON.parse(fs.readFileSync('.planning/config.json','utf8'));
+cfg.model_profile='[profile]';
+fs.writeFileSync('.planning/config.json',JSON.stringify(cfg,null,2));
+console.log('Updated.');
 "
 ```
 

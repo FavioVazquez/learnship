@@ -37,6 +37,7 @@ For each must-have in each plan's frontmatter:
 - If it says "file X exists" → check with `ls [file]`
 - If it says "file X exports Y" → check with `grep "export.*Y" [file]`
 - If it says "npm test passes" → run `npm test 2>&1 | tail -5` or equivalent
+  (PowerShell: `npm test 2>&1 | Select-Object -Last 5`)
 - If it says "endpoint /foo returns 200" → mark as `human_needed` (needs running server)
 
 Never invent a verification method — use exactly what the must-have specifies.

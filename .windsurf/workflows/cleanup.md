@@ -80,7 +80,7 @@ Wait for confirmation. If "no": stop.
 For each milestone and its phase directories:
 
 ```bash
-mkdir -p ".planning/milestones/v[X.Y]-phases"
+node -e "require('fs').mkdirSync('.planning/milestones/v[X.Y]-phases',{recursive:true})"
 mv ".planning/phases/[phase-dir]/" ".planning/milestones/v[X.Y]-phases/"
 ```
 

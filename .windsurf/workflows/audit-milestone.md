@@ -79,6 +79,7 @@ Check:
 
 ```bash
 grep -rn "TODO\|FIXME\|PLACEHOLDER\|return null\|return undefined" src/ --include="*.ts" --include="*.tsx" --include="*.js" 2>/dev/null | grep -v "node_modules\|\.test\." | head -30
+# PowerShell: Select-String -Path src/ -Recurse -Pattern 'TODO|FIXME|PLACEHOLDER|return null|return undefined' -Include '*.ts','*.tsx','*.js' | Where-Object { $_.Path -notmatch 'node_modules|\.test\.' } | Select-Object -First 30
 ```
 
 ## Step 5: Compile Audit Report

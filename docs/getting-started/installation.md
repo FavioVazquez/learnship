@@ -13,11 +13,10 @@ learnship installs as a set of workflow files into your AI platform's configurat
 
 | Requirement | Notes |
 |-------------|-------|
-| **Node.js ≥ 18** | Only needed to run the installer (`npx learnship`). Not needed at runtime. |
-| **Python 3** | Used by workflows for cross-platform file checks (Windows, macOS, Linux). Already installed on macOS and most Linux distros. On Windows: [python.org/downloads](https://www.python.org/downloads/) or `winget install Python.Python.3`. |
-| **Git** | Used by workflows to commit changes atomically. |
+| **Node.js ≥ 18** | Required by the installer and at workflow runtime. |
+| **Git** | Used by workflows to commit changes. |
 
-All three are standard developer tools you almost certainly already have.
+Both are standard tools you almost certainly have already.
 
 ## Quick install
 

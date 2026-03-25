@@ -68,6 +68,7 @@ Identify the key files to check:
 ```bash
 # Find entry points, relevant modules
 grep -r "[key_term]" src/ --include="*.ts" --include="*.js" -l 2>/dev/null | head -10
+# PowerShell: Select-String -Path src/ -Recurse -Pattern '[key_term]' -Include '*.ts','*.js' | Select-Object -ExpandProperty Path -Unique | Select-Object -First 10
 ```
 
 ### 2b. Trace the code path

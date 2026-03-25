@@ -17,6 +17,7 @@ Read what has already shipped:
 cat .planning/PROJECT.md
 cat .planning/STATE.md
 ls .planning/milestones/ 2>/dev/null | sort -V | tail -3
+# PowerShell: Get-ChildItem .planning/milestones/ -ErrorAction SilentlyContinue | Sort-Object Name | Select-Object -Last 3
 ```
 
 Display the last milestone summary so the conversation starts informed:
@@ -29,7 +30,7 @@ Pending todos: [N] items
 
 Check if a MILESTONE-CONTEXT.md already exists:
 ```bash
-python3 -c "import os; print('EXISTS' if os.path.exists('.planning/MILESTONE-CONTEXT.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/MILESTONE-CONTEXT.md') ? 'EXISTS' : 'MISSING')"
 ```
 
 If exists: ask "A milestone context file already exists from a prior discussion. Update it or start fresh?"

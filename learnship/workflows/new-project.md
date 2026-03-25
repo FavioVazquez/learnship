@@ -21,14 +21,14 @@ Initialize a new project with full context gathering, optional research, require
 
 ## Step 1: Setup
 
-<!-- LEARNSHIP_PLATFORM_LABEL -->
+You are running on **Windsurf**. Platform config directory: `.windsurf/`
 
 > **Routing protocol suspended.** While this workflow is running, every user message is an answer to a workflow question — not a task to route. Do NOT apply the request routing protocol until `/new-project` is fully complete and `.planning/PROJECT.md` exists.
 
 Check if `.planning/PROJECT.md` already exists:
 
 ```bash
-python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'NEW')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md') ? 'EXISTS' : 'NEW')"
 ```
 
 **If EXISTS:** Stop. Project already initialized. Use the `progress` workflow to see where you are.
@@ -36,11 +36,11 @@ python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') 
 **Check for an existing codebase:**
 
 ```bash
-python3 -c "
-import os, pathlib
-files = [p for p in pathlib.Path('.').rglob('*') if p.is_file() and not any(x in p.parts for x in ['.git', 'node_modules', '.planning', '__pycache__', '.venv'])]
-print('HAS_CODE' if len(files) > 2 else 'BLANK')
-print(f'{len(files)} files')
+node -e "
+const fs=require('fs'),path=require('path');
+function walk(dir,skip){let n=0;try{for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(skip.some(s=>f.includes(s)))continue;n+=e.isDirectory()?walk(f,skip):1;}}catch(e){}return n;}
+const n=walk('.',['/.git/','node_modules','.planning','__pycache__','.venv']);
+console.log(n>2?'HAS_CODE':'BLANK');console.log(n+' files');
 "
 ```
 
@@ -49,7 +49,7 @@ print(f'{len(files)} files')
 Check if git is initialized:
 
 ```bash
-python3 -c "import os; print('HAS_GIT' if os.path.isdir('.git') else 'NO_GIT')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.git') ? 'HAS_GIT' : 'NO_GIT')"
 ```
 
 **If NO_GIT:**
@@ -59,12 +59,12 @@ git init
 
 Add the platform config directory to `.gitignore` so AI platform files are not tracked in the project repo:
 ```bash
-<!-- LEARNSHIP_GITIGNORE_CMD -->
+grep -q '.windsurf/' .gitignore 2>/dev/null || echo '.windsurf/' >> .gitignore
 ```
 
 Create the planning directory:
 ```bash
-mkdir -p .planning/research
+node -e "require('fs').mkdirSync('.planning/research',{recursive:true})"
 ```
 
 ## Step 1b: Existing Codebase Scan (only if EXISTING_CODEBASE = true)
@@ -73,6 +73,7 @@ If `EXISTING_CODEBASE = true`, do a quick structural scan before questioning so 
 
 ```bash
 find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' | sort | head -40
+# PowerShell: Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning|__pycache__|\.venv' } | Select-Object -First 40
 ```
 
 Note the tech stack, key directories, and any README content internally. Use this ONLY to ask sharper follow-up questions — never to infer the user's intent or skip ceremony steps.
@@ -105,7 +106,9 @@ Ask: "Which workflow agents should be enabled?"
 - **Plan Check** (recommended) — Verify plans achieve their goals before execution
 - **Verifier** (recommended) — Confirm deliverables match phase goals after execution
 
-<!-- LEARNSHIP_PARALLEL_BLOCK -->
+**Group D — Parallel execution:**
+
+Windsurf does not support real subagents. Parallelization is automatically set to `false`.
 
 Ask: "Commit planning docs to git?"
 - **Yes** (recommended) — Planning docs tracked in version control
@@ -351,6 +354,7 @@ Fill in the placeholder sections using information gathered in this session:
 **Project Structure** — derive from the project description and any existing directories:
 ```bash
 find . -maxdepth 2 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -type d | sort | head -20
+# PowerShell: Get-ChildItem -Directory -Recurse -Depth 2 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning' } | Select-Object -First 20
 ```
 
 Populate the `## Project Structure` tree with real directories and one-line descriptions.

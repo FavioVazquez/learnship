@@ -168,10 +168,10 @@ curl -s -X POST \
     \"tag_name\": \"vX.Y.Z\",
     \"target_commitish\": \"main\",
     \"name\": \"vX.Y.Z — [Short title]\",
-    \"body\": $(echo "$RELEASE_NOTES" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))'),
+    \"body\": $(node -e "process.stdout.write(JSON.stringify(require('fs').readFileSync('/dev/stdin','utf8')))" <<< "$RELEASE_NOTES"),
     \"draft\": false,
     \"prerelease\": false
-  }" | python3 -c "import sys,json; r=json.load(sys.stdin); print(r.get('html_url', r.get('message','ERROR')))"
+  }" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const r=JSON.parse(d);console.log(r.html_url||r.message||'ERROR');})"
 ```
 
 If successful, the release URL is printed.
@@ -198,6 +198,7 @@ git remote -v
 ```bash
 git log --oneline public-main -3   # new release commit at top
 git tag --sort=-version:refname | head -5   # new tag at top
+# PowerShell: git tag --sort=-version:refname | Select-Object -First 5
 ```
 
 Open the release URL printed in Step 11 to confirm it looks correct on GitHub.

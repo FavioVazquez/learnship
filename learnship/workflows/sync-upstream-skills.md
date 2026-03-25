@@ -97,7 +97,7 @@ Confirm both clones succeeded — `SKILL.md` must exist in `$AGENTIC_LEARN_TMP` 
 
 ```bash
 BACKUP_DIR="$(pwd)/.windsurf/skills/.upstream-backup-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$BACKUP_DIR"
+node -e "require('fs').mkdirSync('$BACKUP_DIR',{recursive:true})"
 
 cp -r "$(pwd)/.windsurf/skills/agentic-learning" "$BACKUP_DIR/agentic-learning"
 cp -r "$(pwd)/.windsurf/skills/impeccable" "$BACKUP_DIR/impeccable"

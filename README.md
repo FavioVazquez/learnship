@@ -84,7 +84,7 @@ It's probably overkill if you just need one-off scripts or quick fixes. Use `/qu
 
 ![Install learnship](assets/install.png)
 
-**Requirements:** Node.js ≥ 18 (installer only), Python 3 (workflows use it for cross-platform file checks), Git. All standard — you almost certainly have them already. [Details →](https://faviovazquez.github.io/learnship/getting-started/installation/#requirements)
+**Requirements:** Node.js ≥ 18, Git. [Details →](https://faviovazquez.github.io/learnship/getting-started/installation/#requirements)
 
 **Via npm (all platforms — recommended):**
 

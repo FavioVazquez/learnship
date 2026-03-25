@@ -13,6 +13,7 @@ Create all phases needed to close gaps identified by `audit-milestone`. One work
 Find the most recent audit file:
 ```bash
 ls -t .planning/*-MILESTONE-AUDIT.md 2>/dev/null | head -1
+# PowerShell: Get-ChildItem .planning/*-MILESTONE-AUDIT.md -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 ```
 
 If no audit file exists or status is `passed`:
@@ -74,6 +75,7 @@ Gap: Flow "User stays logged in" broken
 Find the highest existing phase number:
 ```bash
 ls .planning/phases/ | grep -E "^[0-9]" | sort -V | tail -1
+# PowerShell: Get-ChildItem .planning/phases/ | Where-Object { $_.Name -match '^[0-9]' } | Sort-Object Name | Select-Object -Last 1
 ```
 
 Gap closure phases continue from the highest existing phase + 1.
@@ -131,7 +133,7 @@ For each unsatisfied requirement being addressed:
 
 ```bash
 for each gap closure phase:
-  mkdir -p ".planning/phases/[NN]-[slug]"
+  node -e "require('fs').mkdirSync('.planning/phases/[NN]-[slug]',{recursive:true})"
 done
 ```
 

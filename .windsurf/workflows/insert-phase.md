@@ -31,7 +31,7 @@ Validate that the after-phase number is an integer.
 ## Step 2: Validate
 
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/ROADMAP.md') ? 'OK' : 'MISSING')"
 ```
 
 Check that phase `[N]` exists in ROADMAP.md:
@@ -56,7 +56,7 @@ Generate slug from description (lowercase, hyphens, max 40 chars).
 ## Step 4: Create Phase Directory
 
 ```bash
-mkdir -p ".planning/phases/[N].[M]-[SLUG]"
+node -e "require('fs').mkdirSync('.planning/phases/[N].[M]-[SLUG]',{recursive:true})"
 ```
 
 ## Step 5: Update ROADMAP.md

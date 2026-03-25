@@ -29,6 +29,7 @@ Extract from prior CONTEXT.md files: locked preferences, patterns the user has e
 If `.planning/DECISIONS.md` exists, read it:
 ```bash
 cat .planning/DECISIONS.md 2>/dev/null | head -80
+# PowerShell: Get-Content .planning/DECISIONS.md -ErrorAction SilentlyContinue | Select-Object -First 80
 ```
 
 Note any decisions that constrain or inform this phase's approach. Surface them during discussion rather than re-asking decided questions.
@@ -129,7 +130,7 @@ Track deferred ideas internally.
 
 Find or create the phase directory:
 ```bash
-mkdir -p ".planning/phases/[padded_phase]-[phase_slug]"
+node -e "require('fs').mkdirSync('.planning/phases/[padded_phase]-[phase_slug]',{recursive:true})"
 ```
 
 Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
