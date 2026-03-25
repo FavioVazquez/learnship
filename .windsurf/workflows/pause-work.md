@@ -12,7 +12,7 @@ Create a `.continue-here.md` handoff file that captures complete work state. Ena
 
 Find the most recently active phase:
 ```bash
-find .planning/phases -name "*-PLAN.md" -type f 2>/dev/null | xargs ls -t 2>/dev/null | head -1
+node -e "const fs=require('fs'),path=require('path');function find(d){let r=[];try{for(const e of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,e.name);r=r.concat(e.isDirectory()?find(f):e.name.endsWith('-PLAN.md')?[f]:[]);}}catch(e){}return r;}const files=find('.planning/phases').map(f=>({f,t:fs.statSync(f).mtimeMs})).sort((a,b)=>b.t-a.t);if(files[0])console.log(files[0].f);"
 ```
 
 Extract the phase directory name from the result.

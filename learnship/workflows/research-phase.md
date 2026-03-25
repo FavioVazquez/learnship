@@ -13,7 +13,7 @@ Run standalone domain research for a phase. Useful when the domain is unfamiliar
 ## Step 1: Validate Phase
 
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/ROADMAP.md') ? 'OK' : 'MISSING')"
 ```
 
 Find phase `[N]` in ROADMAP.md:

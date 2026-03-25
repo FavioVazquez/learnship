@@ -15,7 +15,7 @@ Check if `--repair` flag is present.
 ## Step 2: Check Project Exists
 
 ```bash
-python3 -c "import os; print('OK' if os.path.isdir('.planning') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning') ? 'OK' : 'MISSING')"
 ```
 
 If `.planning/` doesn't exist:
@@ -32,40 +32,49 @@ Run the following checks and classify each as error, warning, or info:
 
 ### Required Files
 ```bash
-python3 -c "import os; print('E002: PROJECT.md not found') if not os.path.exists('.planning/PROJECT.md') else None"
-python3 -c "import os; print('E003: ROADMAP.md not found') if not os.path.exists('.planning/ROADMAP.md') else None"
-python3 -c "import os; print('E004: STATE.md not found (repairable)') if not os.path.exists('.planning/STATE.md') else None"
-python3 -c "import os; print('W003: config.json not found (repairable)') if not os.path.exists('.planning/config.json') else None"
+node -e "const fs=require('fs'); if(!fs.existsSync('.planning/PROJECT.md')) console.log('E002: PROJECT.md not found')"
+node -e "const fs=require('fs'); if(!fs.existsSync('.planning/ROADMAP.md')) console.log('E003: ROADMAP.md not found')"
+node -e "const fs=require('fs'); if(!fs.existsSync('.planning/STATE.md')) console.log('E004: STATE.md not found (repairable)')"
+node -e "const fs=require('fs'); if(!fs.existsSync('.planning/config.json')) console.log('W003: config.json not found (repairable)')"
 ```
 
 ### Config Validity
 ```bash
-cat .planning/config.json | python3 -c "import sys,json; json.load(sys.stdin)" 2>&1 || echo "E005: config.json parse error (repairable)"
+node -e "try{JSON.parse(require('fs').readFileSync('.planning/config.json','utf8'))}catch(e){console.log('E005: config.json parse error (repairable)')}"
 ```
 
 ### State / Roadmap Consistency
 ```bash
-# Check if STATE.md references a phase that exists in ROADMAP.md
-CURRENT_PHASE=$(grep -E "^Phase:" .planning/STATE.md 2>/dev/null | head -1 | grep -oE "[0-9]+")
-if [ -n "$CURRENT_PHASE" ]; then
-  grep -q "Phase ${CURRENT_PHASE}:" .planning/ROADMAP.md || echo "W002: STATE.md references phase ${CURRENT_PHASE} not found in roadmap (repairable)"
-fi
+node -e "
+const fs=require('fs');
+if(!fs.existsSync('.planning/STATE.md')||!fs.existsSync('.planning/ROADMAP.md'))process.exit(0);
+const state=fs.readFileSync('.planning/STATE.md','utf8');
+const m=state.match(/^Phase:\s*(\d+)/m);
+if(m){
+  const roadmap=fs.readFileSync('.planning/ROADMAP.md','utf8');
+  if(!roadmap.includes('Phase '+m[1]+':'))console.log('W002: STATE.md references phase '+m[1]+' not found in roadmap (repairable)');
+}
+"
 ```
 
 ### Phase Directory Checks
 ```bash
-# Phases in ROADMAP but no directory
-grep -oE "Phase [0-9]+:" .planning/ROADMAP.md | while read phase; do
-  num=$(echo "$phase" | grep -oE "[0-9]+")
-  padded=$(printf "%02d" $num)
-  ls .planning/phases/${padded}-* 2>/dev/null | head -1 || echo "W006: Phase ${num} in roadmap but no directory"
-done
-
-# Phase directories not in ROADMAP
-for dir in .planning/phases/*/; do
-  slug=$(basename "$dir" | sed 's/^[0-9]*-//')
-  grep -q "$slug" .planning/ROADMAP.md || echo "W007: Directory $(basename $dir) not in roadmap"
-done
+node -e "
+const fs=require('fs'),path=require('path');
+if(!fs.existsSync('.planning/ROADMAP.md'))process.exit(0);
+const roadmap=fs.readFileSync('.planning/ROADMAP.md','utf8');
+const phases=[...roadmap.matchAll(/^## Phase (\d+):/mg)].map(m=>m[1]);
+const phasesDir='.planning/phases';
+const dirs=fs.existsSync(phasesDir)?fs.readdirSync(phasesDir):[];
+for(const n of phases){
+  const pad=n.padStart(2,'0');
+  if(!dirs.some(d=>d.startsWith(pad+'-')))console.log('W006: Phase '+n+' in roadmap but no directory');
+}
+for(const d of dirs){
+  const slug=d.replace(/^\d+-/,'');
+  if(!roadmap.includes(slug))console.log('W007: Directory '+d+' not in roadmap');
+}
+"
 ```
 
 ### Plans Without Summaries
@@ -79,21 +88,18 @@ done
 ### Uncommitted Changes
 ```bash
 git status --short .planning/ 2>/dev/null | head -10
+# PowerShell: git status --short .planning/ 2>$null | Select-Object -First 10
 ```
 
 ### Config Fields
 ```bash
-# Check for required config keys
-python3 -c "
-import json
-cfg = json.load(open('.planning/config.json'))
-missing = []
-for key in ['mode', 'granularity', 'model_profile', 'learning_mode']:
-    if key not in cfg:
-        missing.append(key)
-if missing:
-    print('W004: config.json missing fields: ' + ', '.join(missing))
-" 2>/dev/null
+node -e "
+try{
+  const cfg=JSON.parse(require('fs').readFileSync('.planning/config.json','utf8'));
+  const missing=['mode','granularity','model_profile','learning_mode'].filter(k=>!(k in cfg));
+  if(missing.length)console.log('W004: config.json missing fields: '+missing.join(', '));
+}catch(e){}
+"
 ```
 
 ## Step 4: Format Output

@@ -27,7 +27,7 @@ find .planning/ -name "*.md" | sort
 
 Read the most recent SUMMARY.md files (last 3 phases):
 ```bash
-ls -t .planning/phases/*/*-SUMMARY.md 2>/dev/null | head -6
+node -e "const fs=require('fs'),path=require('path');function find(d){let r=[];try{for(const e of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,e.name);r=r.concat(e.isDirectory()?find(f):e.name.endsWith('-SUMMARY.md')?[f]:[]);}}catch(e){}return r;}const files=find('.planning/phases').map(f=>({f,t:fs.statSync(f).mtimeMs})).sort((a,b)=>b.t-a.t).slice(0,6).map(x=>x.f);files.forEach(f=>console.log(f));"
 ```
 
 Check git status:

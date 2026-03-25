@@ -40,7 +40,7 @@ Configuration options for `.planning/` directory behavior.
 
 ```bash
 # Read commit_docs from config.json
-COMMIT_DOCS=$(python3 -c "import json; c=json.load(open('.planning/config.json')); print(c.get('planning',{}).get('commit_docs','true'))" 2>/dev/null || echo 'true')
+COMMIT_DOCS=$(node -e "try{const c=JSON.parse(require('fs').readFileSync('.planning/config.json','utf8'));process.stdout.write(String((c.planning||{}).commit_docs??'true'));}catch(e){process.stdout.write('true');}" 2>/dev/null || echo 'true')
 ```
 
 **Auto-detection:** If `.planning/` is gitignored, treat `commit_docs` as `false` regardless of config.json. This prevents git errors.
@@ -139,7 +139,7 @@ To use uncommitted mode:
 
 Read config directly:
 ```bash
-python3 -c "import json; c=json.load(open('.planning/config.json')); g=c.get('git',{}); print(g.get('branching_strategy','none'), g.get('phase_branch_template','phase-{phase}-{slug}'), g.get('milestone_branch_template','{milestone}-{slug}'))"
+node -e "const c=JSON.parse(require('fs').readFileSync('.planning/config.json','utf8')),g=c.git||{};console.log(g.branching_strategy||'none',g.phase_branch_template||'phase-{phase}-{slug}',g.milestone_branch_template||'{milestone}-{slug}')"
 ```
 
 **Branch creation:**

@@ -9,7 +9,7 @@ Check where you are in the project, what's been done, and what comes next.
 ## Step 1: Check for Planning Structure
 
 ```bash
-python3 -c "import os; print('EXISTS' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md') ? 'EXISTS' : 'MISSING')"
 ```
 
 If `.planning/` doesn't exist: stop — run `new-project` to initialize.
@@ -24,7 +24,7 @@ cat .planning/ROADMAP.md
 
 Find the 2-3 most recent SUMMARY.md files:
 ```bash
-find .planning -name "*-SUMMARY.md" -type f 2>/dev/null | xargs ls -t 2>/dev/null | head -3
+node -e "const fs=require('fs'),path=require('path');function find(d){let r=[];try{for(const e of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,e.name);r=r.concat(e.isDirectory()?find(f):e.name.endsWith('-SUMMARY.md')?[f]:[]);}}catch(e){}return r;}const files=find('.planning').map(f=>({f,t:fs.statSync(f).mtimeMs})).sort((a,b)=>b.t-a.t).slice(0,3).map(x=>x.f);files.forEach(f=>console.log(f));"
 ```
 
 Read each to extract what was recently accomplished (one-liner per plan).

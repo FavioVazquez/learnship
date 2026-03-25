@@ -15,7 +15,9 @@ A structured learning retrospective after a milestone ships. Five focused questi
 Read the milestone that just shipped:
 ```bash
 ls .planning/milestones/ | sort -V | tail -3
+# PowerShell: Get-ChildItem .planning/milestones/ | Sort-Object Name | Select-Object -Last 3
 cat .planning/milestones/[VERSION]-ROADMAP.md 2>/dev/null | head -60
+# PowerShell: Get-Content .planning/milestones/[VERSION]-ROADMAP.md -ErrorAction SilentlyContinue | Select-Object -First 60
 ```
 
 Read all phase SUMMARY.md files from this milestone:

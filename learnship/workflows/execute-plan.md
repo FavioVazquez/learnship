@@ -13,6 +13,7 @@ Execute a single PLAN.md file in isolation. Useful when one plan in a phase fail
 Find the phase directory:
 ```bash
 ls .planning/phases/ | grep -E "^0*[phase]-" | head -1
+# PowerShell: Get-ChildItem .planning/phases/ | Where-Object { $_.Name -match "^0*[phase]-" } | Select-Object -First 1 -ExpandProperty Name
 PHASE_DIR=".planning/phases/[matched]"
 ```
 

@@ -47,6 +47,7 @@ Ask for confirmation:
 Read `.planning/STATE.md` and check for existing version tags:
 ```bash
 git tag --list "v*" | sort -V | tail -5
+# PowerShell: git tag --list "v*" | Sort-Object | Select-Object -Last 5
 ```
 
 Propose the next version (e.g., `v1.0`, `v1.1`, `v2.0`). Ask for confirmation or let user specify.
@@ -55,7 +56,7 @@ Propose the next version (e.g., `v1.0`, `v1.1`, `v2.0`). Ask for confirmation or
 
 Create the milestones archive directory:
 ```bash
-mkdir -p .planning/milestones
+node -e "require('fs').mkdirSync('.planning/milestones',{recursive:true})"
 ```
 
 Archive the roadmap for this milestone:

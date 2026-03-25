@@ -11,7 +11,7 @@ Interactive configuration editor for the current project. Updates `.planning/con
 ## Step 1: Ensure Config Exists
 
 ```bash
-python3 -c "import os; print('exists' if os.path.exists('.planning/config.json') else 'missing')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/config.json') ? 'exists' : 'missing')"
 ```
 
 If missing, create from template:

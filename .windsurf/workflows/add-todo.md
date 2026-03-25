@@ -11,7 +11,7 @@ Capture an idea, task, or issue that surfaces during a session. Fast "thought â†
 ## Step 1: Ensure Directories Exist
 
 ```bash
-mkdir -p .planning/todos/pending .planning/todos/done
+node -e "require('fs').mkdirSync('.planning/todos/pending',{recursive:true});require('fs').mkdirSync('.planning/todos/done',{recursive:true})"
 ```
 
 ## Step 2: Extract Content

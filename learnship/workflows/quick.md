@@ -34,7 +34,7 @@ Display banner based on active flags:
 
 Check that a project exists:
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/PROJECT.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md') ? 'OK' : 'MISSING')"
 ```
 
 If PROJECT.md missing: stop — run `new-project` first. Quick tasks require an active project.
@@ -46,13 +46,15 @@ Generate a slug from the description (lowercase, hyphens, max 40 chars).
 Find the next task number:
 ```bash
 ls .planning/quick/ 2>/dev/null | grep -E "^[0-9]+" | sort -n | tail -1
+# PowerShell: Get-ChildItem .planning/quick/ -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^[0-9]+' } | Sort-Object Name | Select-Object -Last 1
 ```
 
 Set `NEXT_NUM` to the next available number (001, 002, etc.).
 
 Create task directory:
 ```bash
-mkdir -p ".planning/quick/${NEXT_NUM}-${SLUG}"
+node -e "require('fs').mkdirSync('.planning/quick/${NEXT_NUM}-${SLUG}',{recursive:true})"
+# PowerShell: New-Item -ItemType Directory -Force -Path ".planning/quick/${NEXT_NUM}-${SLUG}"
 ```
 
 Report: "Creating quick task ${NEXT_NUM}: ${DESCRIPTION}"
@@ -130,7 +132,7 @@ If `--full`: also include `must_haves` in plan frontmatter (truths, artifacts, k
 
 Verify plan was created (substitute actual NEXT_NUM and SLUG values):
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/quick/NEXT_NUM-SLUG/NEXT_NUM-PLAN.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/quick/NEXT_NUM-SLUG/NEXT_NUM-PLAN.md') ? 'OK' : 'MISSING')"
 ```
 
 ## Step 5: Plan Check (only with `--full`)

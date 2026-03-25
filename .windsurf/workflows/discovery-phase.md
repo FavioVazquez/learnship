@@ -33,13 +33,16 @@ Search for code related to the target area using key terms from the phase goal:
 ```bash
 # Find files mentioning key terms
 grep -rl "[key term 1]" src/ 2>/dev/null | head -15
+# PowerShell: Select-String -Path src/ -Recurse -Pattern "[key term 1]" | Select-Object -ExpandProperty Path -Unique | Select-Object -First 15
 grep -rl "[key term 2]" src/ 2>/dev/null | head -10
+# PowerShell: Select-String -Path src/ -Recurse -Pattern "[key term 2]" | Select-Object -ExpandProperty Path -Unique | Select-Object -First 10
 
 # Find related directories
 find src/ -type d | grep -i "[key term]" 2>/dev/null
 
 # Find entry points
 grep -rn "export\|module.exports\|def " src/ --include="*.ts" --include="*.js" --include="*.py" 2>/dev/null | grep -i "[key term]" | head -20
+# PowerShell: Select-String -Path src/ -Recurse -Pattern 'export|module.exports|def ' | Where-Object { $_.Line -imatch '[key term]' } | Select-Object -First 20
 ```
 
 Read the 5-8 most relevant files. Focus on interfaces, types, exports, and public API — not implementation details.
@@ -51,6 +54,7 @@ For the relevant files, trace what they depend on and what depends on them:
 **Incoming dependencies** (who calls this code):
 ```bash
 grep -rl "import.*[module name]\|require.*[module name]" src/ 2>/dev/null | head -10
+# PowerShell: Select-String -Path src/ -Recurse -Pattern 'import.*[module name]|require.*[module name]' | Select-Object -ExpandProperty Path -Unique | Select-Object -First 10
 ```
 
 **Outgoing dependencies** (what this code calls):
@@ -80,6 +84,7 @@ Look specifically for:
 ```bash
 # Files with most lines of code in the area
 wc -l $(find src/ -name "*.ts" -o -name "*.py" 2>/dev/null | xargs grep -l "[key term]" 2>/dev/null) | sort -n | tail -10
+# PowerShell: Select-String -Path src/ -Recurse -Pattern '[key term]' -Include '*.ts','*.py' | Select-Object -ExpandProperty Path -Unique | ForEach-Object { (Get-Content $_).Count } | Sort-Object | Select-Object -Last 10
 ```
 
 **Test coverage gaps:**
@@ -90,6 +95,7 @@ find . -name "*.test.*" -o -name "test_*.py" | xargs grep -l "[key term]" 2>/dev
 **TODO/FIXME in the area:**
 ```bash
 grep -rn "TODO\|FIXME\|HACK\|XXX" src/ 2>/dev/null | grep -i "[key term]" | head -10
+# PowerShell: Select-String -Path src/ -Recurse -Pattern 'TODO|FIXME|HACK|XXX' | Where-Object { $_.Line -imatch '[key term]' } | Select-Object -First 10
 ```
 
 **Known issues from DECISIONS.md:**

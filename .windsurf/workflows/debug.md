@@ -11,7 +11,7 @@ Systematic debugging workflow: triage → root cause diagnosis → fix planning 
 ## Step 1: Create Debug Session
 
 ```bash
-mkdir -p .planning/debug
+node -e "require('fs').mkdirSync('.planning/debug',{recursive:true})"
 DATE=$(date +%Y%m%d-%H%M)
 ```
 
@@ -196,7 +196,7 @@ Update session file:
 
 Move to resolved:
 ```bash
-mkdir -p .planning/debug/resolved
+node -e "require('fs').mkdirSync('.planning/debug/resolved',{recursive:true})"
 mv ".planning/debug/[session-file]" ".planning/debug/resolved/"
 ```
 

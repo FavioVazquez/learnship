@@ -20,6 +20,7 @@ Example: add-tests 3 focus on edge cases in the pricing module
 Find the phase directory:
 ```bash
 ls .planning/phases/ | grep -E "^0*[N]-" | head -1
+# PowerShell: Get-ChildItem .planning/phases/ | Where-Object { $_.Name -match "^0*[N]-" } | Select-Object -First 1 -ExpandProperty Name
 PHASE_DIR=".planning/phases/[matched]"
 ```
 
@@ -45,6 +46,7 @@ Extract the list of files modified by the phase from SUMMARY.md.
 find . \( -name "jest.config.*" -o -name "vitest.config.*" -o -name "pytest.ini" -o -name "pyproject.toml" -o -name "playwright.config.*" \) -not -path "*/node_modules/*" 2>/dev/null
 
 find . \( -name "*.test.*" -o -name "*.spec.*" -o -name "test_*.py" \) -not -path "*/node_modules/*" 2>/dev/null | head -10
+# PowerShell: Get-ChildItem -Recurse | Where-Object { $_.Name -match '\.test\.|spec\.|^test_.*\.py' -and $_.FullName -notmatch 'node_modules' } | Select-Object -First 10
 ```
 
 Identify: test framework, E2E framework (if any), how to run tests, existing test file patterns and locations.

@@ -48,6 +48,7 @@ Follow the thread. When you have enough to write clear goals, ask for confirmati
 Read the last version from `.planning/milestones/`:
 ```bash
 ls .planning/milestones/ | grep -E "^v[0-9]" | sort -V | tail -3
+# PowerShell: Get-ChildItem .planning/milestones/ | Where-Object { $_.Name -match '^v[0-9]' } | Sort-Object Name | Select-Object -Last 3
 ```
 
 Propose the next version (e.g., `v1.0 → v1.1`, or `v2.0` for a major scope change). Confirm with user or let them specify.

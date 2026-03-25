@@ -25,7 +25,7 @@ cat .planning/config.json
 
 Create the phase directory if it doesn't exist:
 ```bash
-mkdir -p ".planning/phases/[padded_phase]-[phase_slug]"
+node -e "require('fs').mkdirSync('.planning/phases/[padded_phase]-[phase_slug]',{recursive:true})"
 ```
 
 Check what already exists:

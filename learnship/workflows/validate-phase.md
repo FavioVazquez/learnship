@@ -22,7 +22,7 @@ If `nyquist_validation: false`: stop — "Validation is disabled. Enable it in `
 ## Step 2: Validate Phase
 
 ```bash
-python3 -c "import os; print('OK' if os.path.exists('.planning/ROADMAP.md') else 'MISSING')"
+node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/ROADMAP.md') ? 'OK' : 'MISSING')"
 ```
 
 Determine the phase directory:
@@ -61,6 +61,7 @@ Extract:
 find . \( -name "jest.config.*" -o -name "vitest.config.*" -o -name "pytest.ini" -o -name "pyproject.toml" \) -not -path "*/node_modules/*" 2>/dev/null
 
 find . \( -name "*.test.*" -o -name "*.spec.*" -o -name "test_*.py" \) -not -path "*/node_modules/*" 2>/dev/null | head -20
+# PowerShell: Get-ChildItem -Recurse | Where-Object { $_.Name -match '\.test\.|spec\.|^test_.*\.py' -and $_.FullName -notmatch 'node_modules' } | Select-Object -First 20
 ```
 
 Identify: test framework, how to run tests, existing test file patterns.
