@@ -519,13 +519,22 @@ function replacePaths(content, pathPrefix, platform) {
     .replace(/\$HOME\/\.claude\//g, toHomePrefix(pathPrefix))
     // Local ./.claude/ refs → ./<dirName>/
     .replace(/\.\/.claude\//g, `./${dirName}/`);
-  // Also replace platform-specific dir refs that may appear in source
+  // Replace platform-specific dir refs that may appear in source
   if (platform === 'opencode') {
     c = c.replace(/~\/\.opencode\//g, pathPrefix);
   } else if (platform === 'gemini') {
     c = c.replace(/~\/\.gemini\//g, pathPrefix);
   } else if (platform === 'codex') {
     c = c.replace(/~\/\.codex\//g, pathPrefix);
+  }
+  // Replace @mention skill syntax — @mention dispatch is Windsurf-native only
+  if (platform === 'claude') {
+    c = c.replace(/@agentic-learning\b/g, '/agentic-learning');
+    c = c.replace(/@impeccable\b/g, '/impeccable');
+  } else if (platform === 'opencode' || platform === 'gemini' || platform === 'codex') {
+    // Strip @ so tips show plain skill names (no dispatch mechanism on these platforms)
+    c = c.replace(/@agentic-learning\b/g, 'agentic-learning');
+    c = c.replace(/@impeccable\b/g, 'impeccable');
   }
   return c;
 }
@@ -552,15 +561,44 @@ Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, 
 Windsurf loads \`@impeccable\` natively as a skill. When the user (or a workflow) invokes \`@impeccable <action>\`, Windsurf automatically routes it to the installed skill.
 
 Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \`clarify\`, \`colorize\`, \`critique\`, \`delight\`, \`distill\`, \`extract\`, \`frontend-design\`, \`harden\`, \`normalize\`, \`onboard\`, \`optimize\`, \`overdrive\`, \`polish\`, \`quieter\`, \`teach-impeccable\`, \`typeset\``;
+  } else if (platform === 'claude') {
+    // Claude Code: skills live at ~/.claude/skills/ (installed by installClaudeSkills).
+    // @mention dispatch is Windsurf-native — use /skill-name slash command syntax instead.
+    // pathPrefix = targetDir + '/learnship/' so strip 'learnship/' to get the skills parent.
+    const claudeDir = pathPrefix.replace(/\/learnship\/$/, '');
+    const skillsPath = claudeDir + '/skills';
+
+    block = `### Learning Partner — \`/agentic-learning\`
+
+The \`agentic-learning\` skill is installed at \`${skillsPath}/agentic-learning/SKILL.md\`. When a workflow checkpoint or the user mentions \`/agentic-learning <action>\` or asks you to use the agentic-learning skill:
+
+1. Use the \`agentic-learning\` skill (invoke via the Skill tool or \`/agentic-learning\` slash command, or read \`${skillsPath}/agentic-learning/SKILL.md\`)
+2. Find the section for the requested action (e.g. \`either-or\`, \`brainstorm\`, \`reflect\`, \`quiz\`, etc.)
+3. Execute those instructions directly in this conversation
+
+Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, \`explain-first\`, \`struggle\`, \`either-or\`, \`interleave\`, \`cognitive-load\`
+
+**Do NOT say "agentic-learning isn't installed" — it is installed. Run the action.**
+
+### Design System — \`/impeccable\`
+
+The \`impeccable\` skill is installed at \`${skillsPath}/impeccable/SKILL.md\`. When a workflow checkpoint or the user mentions \`/impeccable <action>\` or asks you to use the impeccable skill:
+
+1. Use the \`impeccable\` skill (invoke via the Skill tool or \`/impeccable\` slash command, or read \`${skillsPath}/impeccable/SKILL.md\`)
+2. Find the section for the requested action (e.g. \`audit\`, \`critique\`, \`polish\`, etc.)
+3. Execute those instructions directly in this conversation
+
+Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \`clarify\`, \`colorize\`, \`critique\`, \`delight\`, \`distill\`, \`extract\`, \`frontend-design\`, \`harden\`, \`normalize\`, \`onboard\`, \`optimize\`, \`overdrive\`, \`polish\`, \`quieter\`, \`teach-impeccable\`, \`typeset\`
+
+**Do NOT say "impeccable isn't installed" — it is installed. Run the action.**`;
   } else {
-    // For all non-Windsurf platforms: @mention is not a native dispatch mechanism.
-    // The AI must read the skill file directly and execute the instructions inside it.
-    // pathPrefix ends with learnship/ — skills are at learnship/skills/
+    // gemini, opencode, codex: @mention is not a native dispatch mechanism.
+    // Skills are copied into learnship/skills/ — the AI reads SKILL.md directly.
     const skillsPath = pathPrefix + 'skills';
 
-    block = `### Learning Partner — \`@agentic-learning\`
+    block = `### Learning Partner — \`agentic-learning\`
 
-**There is no native @mention skill dispatch on this platform.** When a workflow checkpoint or the user mentions \`@agentic-learning <action>\`, you must:
+The \`agentic-learning\` skill is installed at \`${skillsPath}/agentic-learning/SKILL.md\`. When a workflow checkpoint or the user asks you to use the agentic-learning skill:
 
 1. Read \`${skillsPath}/agentic-learning/SKILL.md\`
 2. Find the section for the requested action (e.g. \`either-or\`, \`brainstorm\`, \`reflect\`, \`quiz\`, etc.)
@@ -568,11 +606,11 @@ Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \
 
 Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, \`explain-first\`, \`struggle\`, \`either-or\`, \`interleave\`, \`cognitive-load\`
 
-**Do NOT say "@agentic-learning isn't installed" — it is installed. Read the SKILL.md and run the action.**
+**Do NOT say "agentic-learning isn't installed" — it is installed. Read the SKILL.md file and run the action.**
 
-### Design System — \`@impeccable\`
+### Design System — \`impeccable\`
 
-**There is no native @mention skill dispatch on this platform.** When a workflow checkpoint or the user mentions \`@impeccable <action>\`, you must:
+The \`impeccable\` skill is installed at \`${skillsPath}/impeccable/SKILL.md\`. When a workflow checkpoint or the user asks you to use the impeccable skill:
 
 1. Read \`${skillsPath}/impeccable/SKILL.md\`
 2. Find the section for the requested action (e.g. \`audit\`, \`critique\`, \`polish\`, etc.)
@@ -580,7 +618,7 @@ Available actions: \`learn\`, \`quiz\`, \`reflect\`, \`space\`, \`brainstorm\`, 
 
 Available actions: \`adapt\`, \`animate\`, \`arrange\`, \`audit\`, \`bolder\`, \`clarify\`, \`colorize\`, \`critique\`, \`delight\`, \`distill\`, \`extract\`, \`frontend-design\`, \`harden\`, \`normalize\`, \`onboard\`, \`optimize\`, \`overdrive\`, \`polish\`, \`quieter\`, \`teach-impeccable\`, \`typeset\`
 
-**Do NOT say "@impeccable isn't installed" — it is installed. Read the SKILL.md and run the action.**`;
+**Do NOT say "impeccable isn't installed" — it is installed. Read the SKILL.md file and run the action.**`;
   }
 
   return content.replace('<!-- LEARNSHIP_SKILLS_BLOCK -->', block);
@@ -615,6 +653,13 @@ function rewriteNewProject(content, platform) {
   }
   content = content.replace('<!-- LEARNSHIP_PARALLEL_BLOCK -->', parallelBlock);
 
+  // Platform-specific AGENTS.md note
+  // Gemini CLI reads GEMINI.md automatically but NOT AGENTS.md — copy it so sessions have context
+  const agentsMdNote = platform === 'gemini'
+    ? `> **Gemini CLI** reads \`GEMINI.md\` automatically at session start, not \`AGENTS.md\`. Copy it now so every future session has project context:\n> \`\`\`bash\n> cp AGENTS.md GEMINI.md\n> git add GEMINI.md && git commit -m "docs: add GEMINI.md for Gemini CLI auto-loading"\n> \`\`\``
+    : '';
+  content = content.replace('<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->', agentsMdNote);
+
   return content;
 }
 
@@ -634,27 +679,13 @@ function installClaudeCommands(srcDir, targetDir, pathPrefix) {
   return count;
 }
 
-/** Install Claude Code native plugin skills (plugins/learnship/skills/) */
-function installClaudePlugins(skillsSrc, targetDir) {
-  const pluginDir = path.join(targetDir, 'plugins', 'learnship');
-  const pluginSkillsDir = path.join(pluginDir, 'skills');
-  const pluginMetaDir = path.join(pluginDir, '.claude-plugin');
+/** Install Claude Code native skills to ~/.claude/skills/<skillname>/ */
+function installClaudeSkills(skillsSrc, targetDir) {
+  const skillsDir = path.join(targetDir, 'skills');
 
-  // Clean install
-  if (fs.existsSync(pluginDir)) fs.rmSync(pluginDir, { recursive: true });
-  fs.mkdirSync(pluginSkillsDir, { recursive: true });
-  fs.mkdirSync(pluginMetaDir, { recursive: true });
-
-  // Write plugin manifest
-  const manifest = {
-    name: 'learnship',
-    description: 'Learnship skills — agentic-learning partner and impeccable design system',
-    author: { name: 'favio-vazquez' },
-  };
-  fs.writeFileSync(
-    path.join(pluginMetaDir, 'plugin.json'),
-    JSON.stringify(manifest, null, 2) + '\n'
-  );
+  // Clean up legacy plugins/learnship/ if it exists from pre-1.9.23 installs
+  const legacyPluginDir = path.join(targetDir, 'plugins', 'learnship');
+  if (fs.existsSync(legacyPluginDir)) fs.rmSync(legacyPluginDir, { recursive: true });
 
   let count = 0;
 
@@ -665,13 +696,12 @@ function installClaudePlugins(skillsSrc, targetDir) {
 
     if (!fs.existsSync(path.join(srcPath, 'SKILL.md'))) continue;
 
-    const dest = path.join(pluginSkillsDir, skillName);
+    const dest = path.join(skillsDir, skillName);
 
     if (skillName === 'impeccable') {
       // impeccable: build a single inlined SKILL.md that contains all sub-skill
-      // content inline — same pattern as agentic-learning.
-      // Claude Code cannot follow markdown reference links to sibling files, so
-      // the hollow index approach produced an "@impeccable isn't installed" error.
+      // content inline — Claude Code cannot follow markdown reference links to
+      // sibling files, so the hollow index approach produced an "isn't installed" error.
       fs.mkdirSync(dest, { recursive: true });
 
       // Read root frontmatter + intro (everything up to the ## Actions section)
@@ -695,23 +725,22 @@ function installClaudePlugins(skillsSrc, targetDir) {
         const subContent = fs.readFileSync(subSkillPath, 'utf8');
         // Strip YAML frontmatter, keep body only
         const subBody = subContent.replace(/^---[\s\S]*?---\n/, '').trim();
-        // Also copy sub-skill directory (for Windsurf native skill support)
+        // Also copy sub-skill directory for reference files
         const subDest = path.join(dest, subName);
         copyDir(path.join(srcPath, subName), subDest, '', 'claude');
         inlinedSections.push(`\n## Action: \`${subName}\`\n\n${subBody}`);
       }
 
-      // Root frontmatter: keep original header but update description to remove
-      // the "Invoke with @impeccable" preamble that confused Claude Code's matcher
+      // Description without @mention syntax — Claude Code discovers skills by description
+      // content matching the user's request, not by @mention dispatch.
       const inlinedSkillMd =
         `---\nname: impeccable\ndescription: >\n` +
         `  A design quality system for frontend interfaces. 21 focused actions for\n` +
         `  auditing, refining, and elevating UI quality. Use when the user asks to\n` +
         `  audit, critique, polish, improve, review, or refine a frontend interface.\n` +
-        `  Invoke with @impeccable followed by one of: adapt, animate, arrange, audit,\n` +
-        `  bolder, clarify, colorize, critique, delight, distill, extract,\n` +
-        `  frontend-design, harden, normalize, onboard, optimize, overdrive, polish,\n` +
-        `  quieter, teach-impeccable, or typeset.\n` +
+        `  Actions: adapt, animate, arrange, audit, bolder, clarify, colorize,\n` +
+        `  critique, delight, distill, extract, frontend-design, harden, normalize,\n` +
+        `  onboard, optimize, overdrive, polish, quieter, teach-impeccable, typeset.\n` +
         `---\n\n` +
         rootBody.replace(/## Actions[\s\S]*?---\n\n## How to use/, '## How to use') +
         `\n\n` +
@@ -720,8 +749,17 @@ function installClaudePlugins(skillsSrc, targetDir) {
       fs.writeFileSync(path.join(dest, 'SKILL.md'), inlinedSkillMd);
       count++;
     } else {
-      // agentic-learning and any future top-level skills — copy verbatim
+      // agentic-learning and any future top-level skills — copy then fix description
       copyDir(srcPath, dest, '', 'claude');
+      // Remove @mention invocation hint from description — it's Windsurf-only syntax.
+      // Claude Code discovers skills by description content, not @mention dispatch.
+      const skillMdPath = path.join(dest, 'SKILL.md');
+      let skillContent = fs.readFileSync(skillMdPath, 'utf8');
+      skillContent = skillContent.replace(
+        /\n( +)Invoke with @\S+ followed by one of:[^\n]*(\n\1[^\n]+)*/g,
+        ''
+      );
+      fs.writeFileSync(skillMdPath, skillContent);
       count++;
     }
   }
@@ -1147,11 +1185,11 @@ function install(platform, isGlobal) {
     const aCount = installAgents(agentsSrc, targetDir, pathPrefix, 'claude');
     if (aCount > 0) console.log(`  ${green}✓${reset} Installed ${aCount} agents to agents/`);
     else failures.push('agents/');
-    const pCount = installClaudePlugins(skillsSrc, targetDir);
+    const pCount = installClaudeSkills(skillsSrc, targetDir);
     if (pCount > 0) {
-      console.log(`  ${green}✓${reset} Installed ${pCount} skills to plugins/learnship/skills/`);
+      console.log(`  ${green}✓${reset} Installed ${pCount} skills to skills/`);
     } else {
-      failures.push('plugins/learnship/skills/');
+      failures.push('skills/');
     }
   } else if (platform === 'opencode') {
     const count = installOpencodeCommands(commandsSrc, targetDir, pathPrefix);
@@ -1230,11 +1268,21 @@ function uninstall(platform, isGlobal) {
     if (fs.existsSync(commandsDir)) { fs.rmSync(commandsDir, { recursive: true }); removed++; console.log(`  ${green}✓${reset} Removed commands/learnship/`); }
   }
   if (platform === 'claude') {
+    // Remove skills installed to ~/.claude/skills/ (post-1.9.23)
+    for (const skillName of ['agentic-learning', 'impeccable']) {
+      const skillDir = path.join(targetDir, 'skills', skillName);
+      if (fs.existsSync(skillDir)) {
+        fs.rmSync(skillDir, { recursive: true });
+        removed++;
+        console.log(`  ${green}✓${reset} Removed skills/${skillName}/`);
+      }
+    }
+    // Remove legacy plugins/learnship/ from pre-1.9.23 installs
     const pluginDir = path.join(targetDir, 'plugins', 'learnship');
     if (fs.existsSync(pluginDir)) {
       fs.rmSync(pluginDir, { recursive: true });
       removed++;
-      console.log(`  ${green}✓${reset} Removed plugins/learnship/`);
+      console.log(`  ${green}✓${reset} Removed plugins/learnship/ (legacy)`);
     }
   }
   if (platform === 'opencode') {
@@ -1397,7 +1445,7 @@ if (process.env.LEARNSHIP_TEST_MODE) {
     replacePaths,
     rewriteNewProject,
     rewriteAgentsMd,
-    installClaudePlugins,
+    installClaudeSkills,
     toHomePrefix,
     LEARNSHIP_CODEX_MARKER,
     CODEX_AGENT_SANDBOX,
