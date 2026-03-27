@@ -384,6 +384,15 @@ else
   fail "new-project missing STOP gate after Step 4 commit — can skip research question"
 fi
 
+# new-project source must have all 3 platform-substitution markers (not hardcoded Windsurf values)
+if grep -q "<!-- LEARNSHIP_PLATFORM_LABEL -->" "$NEW_PROJECT_WF" && \
+   grep -q "<!-- LEARNSHIP_GITIGNORE_CMD -->" "$NEW_PROJECT_WF" && \
+   grep -q "<!-- LEARNSHIP_PARALLEL_BLOCK -->" "$NEW_PROJECT_WF"; then
+  ok "new-project source has all 3 platform markers (not hardcoded Windsurf values)"
+else
+  fail "new-project source missing platform markers — non-Windsurf installs will show Windsurf-specific text"
+fi
+
 # .windsurf mirror must match learnship source for new-project
 WINDSURF_NP="$REPO/.windsurf/workflows/new-project.md"
 if grep -q "Exchange 1" "$WINDSURF_NP" && grep -q "ANSWER_4" "$WINDSURF_NP"; then
@@ -750,7 +759,8 @@ process.env.LEARNSHIP_TEST_MODE = '1';
 const REPO = process.argv[2];
 const {
   convertToOpencode, convertAgentForGemini, convertToGeminiToml,
-  replacePaths, rewriteNewProject, parseJsonc, mergeCodexConfig, generateCodexConfigBlock,
+  replacePaths, rewriteNewProject, rewriteAgentsMd,
+  parseJsonc, mergeCodexConfig, generateCodexConfigBlock,
   LEARNSHIP_CODEX_MARKER,
 } = require(REPO + '/bin/install.js');
 const os = require('os');
@@ -866,8 +876,8 @@ check('mergeCodexConfig Case 3: appends to file without marker', () => {
   assert(out.includes('[agents.learnship-debugger]'), 'agent not appended');
 });
 
-// rewriteNewProject: build a minimal source with all three markers
-const NP_SRC = '<!-- LEARNSHIP_PLATFORM_LABEL -->\n```bash\n<!-- LEARNSHIP_GITIGNORE_CMD -->\n```\n<!-- LEARNSHIP_PARALLEL_BLOCK -->';
+// rewriteNewProject: build a minimal source with all four markers
+const NP_SRC = '<!-- LEARNSHIP_PLATFORM_LABEL -->\n```bash\n<!-- LEARNSHIP_GITIGNORE_CMD -->\n```\n<!-- LEARNSHIP_PARALLEL_BLOCK -->\n<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->';
 
 // 11. Claude Code: platform label says Claude Code
 check('rewriteNewProject(claude): platform label contains "Claude Code"', () => {
@@ -965,6 +975,115 @@ check('rewriteNewProject: all v1.9.21 ceremony gates preserved after platform re
     // Routing protocol suspended notice
     assert(out.includes('Routing protocol suspended'), `[${p}] routing suspension notice missing after rewrite`);
   }
+});
+
+// 19. rewriteNewProject(gemini): adds GEMINI.md copy instruction
+check('rewriteNewProject(gemini): adds cp AGENTS.md GEMINI.md instruction', () => {
+  const out = rewriteNewProject(NP_SRC, 'gemini');
+  assert(!out.includes('<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->'), 'marker not replaced for gemini');
+  assert(out.includes('GEMINI.md'), 'gemini note should mention GEMINI.md; got:\n' + out);
+  assert(out.includes('cp AGENTS.md GEMINI.md'), 'gemini note should have cp command; got:\n' + out);
+});
+
+// 20. rewriteNewProject(claude): no GEMINI.md note (marker replaced with empty string)
+check('rewriteNewProject(claude): no GEMINI.md note, marker removed', () => {
+  const out = rewriteNewProject(NP_SRC, 'claude');
+  assert(!out.includes('<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->'), 'marker not replaced for claude');
+  assert(!out.includes('GEMINI.md'), 'claude output should not mention GEMINI.md; got:\n' + out);
+});
+
+// 21. rewriteNewProject(opencode): no GEMINI.md note, marker removed
+check('rewriteNewProject(opencode): no GEMINI.md note, marker removed', () => {
+  const out = rewriteNewProject(NP_SRC, 'opencode');
+  assert(!out.includes('<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->'), 'marker not replaced for opencode');
+  assert(!out.includes('GEMINI.md'), 'opencode output should not mention GEMINI.md; got:\n' + out);
+});
+
+// 22. replacePaths: claude platform replaces @agentic-learning with /agentic-learning
+check('replacePaths: claude replaces @agentic-learning with /agentic-learning', () => {
+  const input = 'Use @agentic-learning to learn. Also see @agentic-learning learn action.';
+  const out = replacePaths(input, '/home/user/.claude/learnship/', 'claude');
+  assert(!out.includes('@agentic-learning'), '@agentic-learning not replaced; got:\n' + out);
+  assert(out.includes('/agentic-learning'), '/agentic-learning not found; got:\n' + out);
+});
+
+// 20. replacePaths: claude platform replaces @impeccable with /impeccable
+check('replacePaths: claude replaces @impeccable with /impeccable', () => {
+  const input = 'Run @impeccable audit on the UI. Then @impeccable polish.';
+  const out = replacePaths(input, '/home/user/.claude/learnship/', 'claude');
+  assert(!out.includes('@impeccable'), '@impeccable not replaced; got:\n' + out);
+  assert(out.includes('/impeccable'), '/impeccable not found; got:\n' + out);
+});
+
+// 21. replacePaths: windsurf platform preserves @agentic-learning and @impeccable
+check('replacePaths: windsurf preserves @agentic-learning and @impeccable', () => {
+  const input = 'Use @agentic-learning quiz and @impeccable audit.';
+  const out = replacePaths(input, '/home/user/.codeium/windsurf/learnship/', 'windsurf');
+  assert(out.includes('@agentic-learning'), '@agentic-learning was removed for windsurf; got:\n' + out);
+  assert(out.includes('@impeccable'), '@impeccable was removed for windsurf; got:\n' + out);
+});
+
+// 22. rewriteAgentsMd: windsurf keeps @agentic-learning and says "Windsurf loads"
+check('rewriteAgentsMd: windsurf keeps @agentic-learning, says Windsurf loads', () => {
+  const input = 'header\n<!-- LEARNSHIP_SKILLS_BLOCK -->\nfooter';
+  const out = rewriteAgentsMd(input, 'windsurf', '/home/user/.codeium/windsurf/learnship/');
+  assert(out.includes('@agentic-learning'), 'windsurf block missing @agentic-learning; got:\n' + out);
+  assert(out.includes('@impeccable'), 'windsurf block missing @impeccable; got:\n' + out);
+  assert(out.includes('Windsurf loads'), 'windsurf block missing "Windsurf loads"; got:\n' + out);
+  assert(!out.includes('<!-- LEARNSHIP_SKILLS_BLOCK -->'), 'marker not replaced');
+});
+
+// 23. rewriteAgentsMd: claude uses /agentic-learning, references ~/.claude/skills/, not "natively in Claude Code" string
+check('rewriteAgentsMd: claude uses /agentic-learning slash syntax and ~/.claude/skills/', () => {
+  const input = 'header\n<!-- LEARNSHIP_SKILLS_BLOCK -->\nfooter';
+  const out = rewriteAgentsMd(input, 'claude', '/home/user/.claude/learnship/');
+  assert(out.includes('/agentic-learning'), 'claude block missing /agentic-learning; got:\n' + out);
+  assert(out.includes('/impeccable'), 'claude block missing /impeccable; got:\n' + out);
+  assert(!out.includes('@agentic-learning'), 'claude block must not contain @agentic-learning');
+  assert(!out.includes('@impeccable'), 'claude block must not contain @impeccable');
+  assert(out.includes('/home/user/.claude/skills'), 'claude block should reference skills at ~/.claude/skills; got:\n' + out);
+  assert(!out.includes('<!-- LEARNSHIP_SKILLS_BLOCK -->'), 'marker not replaced');
+});
+
+// 24. rewriteAgentsMd: opencode block does NOT say "natively in Claude Code", references SKILL.md
+check('rewriteAgentsMd: opencode references SKILL.md, not "natively in Claude Code"', () => {
+  const input = 'header\n<!-- LEARNSHIP_SKILLS_BLOCK -->\nfooter';
+  const out = rewriteAgentsMd(input, 'opencode', '/home/user/.config/opencode/learnship/');
+  assert(!out.includes('natively in Claude Code'), 'opencode block must not say "natively in Claude Code"; got:\n' + out);
+  assert(!out.includes('@agentic-learning'), 'opencode block should not say @agentic-learning is a dispatch mechanism');
+  assert(out.includes('SKILL.md'), 'opencode block should reference SKILL.md; got:\n' + out);
+  assert(out.includes('/home/user/.config/opencode/learnship/skills'), 'opencode block should reference correct skills path; got:\n' + out);
+  assert(!out.includes('<!-- LEARNSHIP_SKILLS_BLOCK -->'), 'marker not replaced');
+});
+
+// 25. replacePaths: opencode strips @ from @agentic-learning and @impeccable
+check('replacePaths: opencode strips @ from @agentic-learning and @impeccable', () => {
+  const input = 'Tip: `@agentic-learning quiz [topic]`. Also `@impeccable audit` the UI.';
+  const out = replacePaths(input, '/home/user/.config/opencode/learnship/', 'opencode');
+  assert(!out.includes('@agentic-learning'), '@agentic-learning not stripped for opencode; got:\n' + out);
+  assert(!out.includes('@impeccable'), '@impeccable not stripped for opencode; got:\n' + out);
+  assert(out.includes('agentic-learning'), 'plain agentic-learning missing; got:\n' + out);
+  assert(out.includes('impeccable'), 'plain impeccable missing; got:\n' + out);
+});
+
+// 26. replacePaths: gemini strips @ from @agentic-learning and @impeccable
+check('replacePaths: gemini strips @ from @agentic-learning and @impeccable', () => {
+  const input = '> `@agentic-learning reflect` — use this. Also `@impeccable frontend-design`.';
+  const out = replacePaths(input, '/home/user/.gemini/learnship/', 'gemini');
+  assert(!out.includes('@agentic-learning'), '@agentic-learning not stripped for gemini; got:\n' + out);
+  assert(!out.includes('@impeccable'), '@impeccable not stripped for gemini; got:\n' + out);
+  assert(out.includes('agentic-learning'), 'plain agentic-learning missing; got:\n' + out);
+  assert(out.includes('impeccable'), 'plain impeccable missing; got:\n' + out);
+});
+
+// 27. replacePaths: codex strips @ from @agentic-learning and @impeccable
+check('replacePaths: codex strips @ from @agentic-learning and @impeccable', () => {
+  const input = 'Use `@agentic-learning struggle` and `@impeccable polish`.';
+  const out = replacePaths(input, '/home/user/.codex/learnship/', 'codex');
+  assert(!out.includes('@agentic-learning'), '@agentic-learning not stripped for codex; got:\n' + out);
+  assert(!out.includes('@impeccable'), '@impeccable not stripped for codex; got:\n' + out);
+  assert(out.includes('agentic-learning'), 'plain agentic-learning missing; got:\n' + out);
+  assert(out.includes('impeccable'), 'plain impeccable missing; got:\n' + out);
 });
 
 console.log('\nSECTION8_PASS=' + pass);
@@ -1093,19 +1212,19 @@ check('Windsurf install: skills copied to skills/ (native), not learnship/skills
   );
 });
 
-// 8. Claude Code installer routes skills to plugins/learnship/skills/ and handles impeccable sub-skills
-check('Claude Code install: installer routes skills to plugins/learnship/skills/ with sub-skill handling', () => {
+// 8. Claude Code installer routes skills to ~/.claude/skills/ (not plugins/) with impeccable inlining
+check('Claude Code install: installer routes skills to skills/ (native ~/.claude/skills/) with impeccable inlining', () => {
   const installSrc = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
-  // installClaudePlugins must exist
-  assert(installSrc.includes('function installClaudePlugins'), 'installClaudePlugins function missing');
-  // Must target plugins/learnship/skills/
-  assert(installSrc.includes("'plugins', 'learnship'"), 'installer missing plugins/learnship path for Claude');
-  // Must handle impeccable sub-skills specially (copies into references/)
+  // installClaudeSkills must exist (renamed from installClaudePlugins in v1.9.23)
+  assert(installSrc.includes('function installClaudeSkills'), 'installClaudeSkills function missing');
+  // Must NOT target plugins/learnship/skills/ (that path is not read by Claude Code)
+  assert(!installSrc.includes('pluginSkillsDir'), 'installer still references pluginSkillsDir — should use skillsDir');
+  // Must handle impeccable sub-skills (inline into single SKILL.md)
   assert(installSrc.includes("skillName === 'impeccable'"), 'installer missing impeccable sub-skill handling');
-  assert(installSrc.includes("'references'"), 'installer missing references/ destination for impeccable sub-skills');
-  // Must handle agentic-learning (verbatim copy path)
-  assert(installSrc.includes('agentic-learning') || installSrc.includes('copyDir(srcPath, dest'),
-    'installer missing agentic-learning copy path');
+  // Must strip @mention invocation hint from agentic-learning description
+  assert(installSrc.includes('Invoke with @'), 'installer missing @mention stripping regex for agentic-learning');
+  // Must handle agentic-learning copy path
+  assert(installSrc.includes('copyDir(srcPath, dest'), 'installer missing agentic-learning copy path');
 });
 
 // 9. Local scope: install() uses process.cwd()-based dir when isGlobal=false
@@ -1164,10 +1283,10 @@ while IFS= read -r line; do
 done <<< "$S9_OUTPUT"
 
 # ──────────────────────────────────────────────────────────────────────────
-# 10. Claude Code native plugin structure
+# 10. Claude Code native skills structure (post-1.9.23)
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
-echo "  [10] Claude Code native plugin structure"
+echo "  [10] Claude Code native skills structure"
 echo "  ─────────────────────────────────────────"
 
 TMPSCRIPT10=$(mktemp /tmp/learnship-test-XXXXXX.cjs)
@@ -1186,62 +1305,61 @@ function check(name, fn) {
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 
 const realSkillsSrc = path.join(REPO, 'skills');
-const { installClaudePlugins } = require(path.join(REPO, 'bin', 'install.js'));
+const { installClaudeSkills } = require(path.join(REPO, 'bin', 'install.js'));
 
-// Use the real installClaudePlugins from install.js
-function runInstallClaudePlugins(tmpDir) {
-  const count = installClaudePlugins(realSkillsSrc, tmpDir);
-  const pluginDir = path.join(tmpDir, 'plugins', 'learnship');
-  const pluginSkillsDir = path.join(pluginDir, 'skills');
-  const pluginMetaDir = path.join(pluginDir, '.claude-plugin');
-  return { pluginDir, pluginSkillsDir, pluginMetaDir, count };
+function runInstallClaudeSkills(tmpDir) {
+  const count = installClaudeSkills(realSkillsSrc, tmpDir);
+  const skillsDir = path.join(tmpDir, 'skills');
+  return { skillsDir, count };
 }
 
-// 1. installClaudePlugins function exists in install.js
-check('installClaudePlugins function exists in install.js', () => {
+// 1. installClaudeSkills function exists in install.js
+check('installClaudeSkills function exists in install.js', () => {
   const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
-  assert(src.includes('function installClaudePlugins'), 'installClaudePlugins function missing');
+  assert(src.includes('function installClaudeSkills'), 'installClaudeSkills function missing');
 });
 
-// 2. installClaudePlugins is called in the claude platform block
-check('installClaudePlugins is called in the claude platform block', () => {
+// 2. installClaudeSkills is called in the claude platform block
+check('installClaudeSkills is called in the claude platform block', () => {
   const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
-  assert(src.includes("installClaudePlugins(skillsSrc, targetDir)"), 'installClaudePlugins not called in claude block');
+  assert(src.includes("installClaudeSkills(skillsSrc, targetDir)"), 'installClaudeSkills not called in claude block');
 });
 
-// 3. plugin.json manifest is created with correct fields
-check('plugin.json created with name, description, author', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginMetaDir } = runInstallClaudePlugins(tmp);
-  const manifest = JSON.parse(fs.readFileSync(path.join(pluginMetaDir, 'plugin.json'), 'utf8'));
-  assert(manifest.name === 'learnship', 'manifest.name wrong');
-  assert(typeof manifest.description === 'string' && manifest.description.length > 0, 'manifest.description missing');
-  assert(manifest.author && manifest.author.name === 'favio-vazquez', 'manifest.author wrong');
-  fs.rmSync(tmp, { recursive: true });
-});
-
-// 4. exactly 2 plugin skills: agentic-learning and impeccable
-check('exactly 2 plugin skills installed: agentic-learning and impeccable', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir, count } = runInstallClaudePlugins(tmp);
+// 3. skills land at targetDir/skills/ — NOT targetDir/plugins/learnship/skills/
+check('skills installed to skills/ not plugins/learnship/skills/', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir, count } = runInstallClaudeSkills(tmp);
   assert(count === 2, 'expected 2 skills (agentic-learning + impeccable), got ' + count);
-  assert(fs.existsSync(path.join(pluginSkillsDir, 'agentic-learning', 'SKILL.md')), 'agentic-learning/SKILL.md missing');
-  assert(fs.existsSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md')), 'impeccable/SKILL.md missing');
+  assert(fs.existsSync(path.join(skillsDir, 'agentic-learning', 'SKILL.md')), 'agentic-learning/SKILL.md missing from skills/');
+  assert(fs.existsSync(path.join(skillsDir, 'impeccable', 'SKILL.md')), 'impeccable/SKILL.md missing from skills/');
+  assert(!fs.existsSync(path.join(tmp, 'plugins', 'learnship')), 'plugins/learnship/ must NOT be created (unread legacy path)');
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 5. agentic-learning has SKILL.md and references/
-check('agentic-learning: SKILL.md and references/ present in plugin', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const alDir = path.join(pluginSkillsDir, 'agentic-learning');
+// 4. agentic-learning has SKILL.md and references/
+check('agentic-learning: SKILL.md and references/ present in skills/', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir } = runInstallClaudeSkills(tmp);
+  const alDir = path.join(skillsDir, 'agentic-learning');
   assert(fs.existsSync(path.join(alDir, 'SKILL.md')), 'agentic-learning/SKILL.md missing');
   assert(fs.existsSync(path.join(alDir, 'references')), 'agentic-learning/references/ missing');
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 6. impeccable SKILL.md names all 21 actions
-check('impeccable SKILL.md references all 21 actions', () => {
+// 5. agentic-learning description has no @mention invocation hint
+check('agentic-learning: @mention invocation hint stripped from description for Claude Code', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir } = runInstallClaudeSkills(tmp);
+  const content = fs.readFileSync(path.join(skillsDir, 'agentic-learning', 'SKILL.md'), 'utf8');
+  // Only inspect the YAML frontmatter block (before the closing ---)
+  const frontmatterEnd = content.indexOf('\n---', 4);
+  const frontmatter = frontmatterEnd > 0 ? content.substring(0, frontmatterEnd) : content;
+  assert(!frontmatter.includes('Invoke with @'), '@mention hint still in agentic-learning description (Windsurf-only syntax)');
+  fs.rmSync(tmp, { recursive: true });
+});
+
+// 6. impeccable SKILL.md source lists all 21 actions
+check('impeccable source SKILL.md references all 21 actions', () => {
   const skillMd = fs.readFileSync(path.join(realSkillsSrc, 'impeccable', 'SKILL.md'), 'utf8');
   const expected = ['adapt','animate','arrange','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
@@ -1250,27 +1368,26 @@ check('impeccable SKILL.md references all 21 actions', () => {
   assert(missing.length === 0, 'impeccable SKILL.md missing actions: ' + missing.join(', '));
 });
 
-// 7. impeccable SKILL.md has all 21 action bodies inlined (not reference links)
-check('impeccable plugin SKILL.md: all 21 action bodies inlined, no reference links', () => {
+// 7. impeccable installed SKILL.md has all 21 action bodies inlined (no reference links)
+check('impeccable skills/ SKILL.md: all 21 action bodies inlined, no markdown reference links', () => {
   const expected = ['adapt','animate','arrange','audit','bolder','clarify','colorize','critique',
     'delight','distill','extract','frontend-design','harden','normalize','onboard',
     'optimize','overdrive','polish','quieter','teach-impeccable','typeset'];
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir } = runInstallClaudeSkills(tmp);
+  const content = fs.readFileSync(path.join(skillsDir, 'impeccable', 'SKILL.md'), 'utf8');
   const missingHeaders = expected.filter(s => !content.includes('## Action: `' + s + '`'));
   assert(missingHeaders.length === 0, 'missing inlined action headers: ' + missingHeaders.join(', '));
-  // No reference links to sibling SKILL.md files
-  assert(!content.includes('[audit/SKILL.md]'), 'reference link found — should be inlined');
-  assert(!content.includes('[critique/SKILL.md]'), 'reference link found — should be inlined');
+  assert(!content.includes('[audit/SKILL.md]'), 'reference link found — impeccable must be fully inlined');
+  assert(!content.includes('[critique/SKILL.md]'), 'reference link found — impeccable must be fully inlined');
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 8. inlined impeccable SKILL.md contains real action bodies (not just headers)
-check('impeccable plugin SKILL.md: inlined bodies contain real content', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+// 8. inlined impeccable SKILL.md contains real action bodies (not just section headers)
+check('impeccable skills/ SKILL.md: inlined bodies contain real content', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir } = runInstallClaudeSkills(tmp);
+  const content = fs.readFileSync(path.join(skillsDir, 'impeccable', 'SKILL.md'), 'utf8');
   assert(content.includes('Run systematic quality checks'), 'audit body missing');
   assert(content.includes('Conduct a holistic design critique'), 'critique body missing');
   assert(content.includes('BOLD aesthetic'), 'frontend-design body missing');
@@ -1281,23 +1398,39 @@ check('impeccable plugin SKILL.md: inlined bodies contain real content', () => {
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 9. impeccable SKILL.md has valid frontmatter (name: impeccable, no sub-skill frontmatter leaked)
-check('impeccable plugin SKILL.md: valid frontmatter, no sub-skill frontmatter leaked', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-plugin-'));
-  const { pluginSkillsDir } = runInstallClaudePlugins(tmp);
-  const content = fs.readFileSync(path.join(pluginSkillsDir, 'impeccable', 'SKILL.md'), 'utf8');
+// 9. impeccable SKILL.md: valid frontmatter, no @mention, no sub-skill frontmatter leaked
+check('impeccable skills/ SKILL.md: valid frontmatter, no @mention, no sub-skill frontmatter leaked', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-skills-'));
+  const { skillsDir } = runInstallClaudeSkills(tmp);
+  const content = fs.readFileSync(path.join(skillsDir, 'impeccable', 'SKILL.md'), 'utf8');
   assert(content.startsWith('---\nname: impeccable'), 'frontmatter must start with name: impeccable');
   assert(!content.includes('\nname: audit\n'), 'sub-skill frontmatter (audit) leaked into inlined file');
   assert(!content.includes('\nname: critique\n'), 'sub-skill frontmatter (critique) leaked');
+  // Description must not contain @mention (Claude Code uses description-based discovery)
+  const frontmatterEnd = content.indexOf('\n---', 4);
+  const frontmatter = frontmatterEnd > 0 ? content.substring(0, frontmatterEnd) : content;
+  assert(!frontmatter.includes('@impeccable'), '@impeccable @mention in description (Windsurf-only syntax)');
   fs.rmSync(tmp, { recursive: true });
 });
 
-// 10. uninstall block removes plugins/learnship/ for claude
-check('uninstall removes plugins/learnship/ for claude platform', () => {
+// 10. uninstall removes skills/agentic-learning/ and skills/impeccable/ for claude
+check('uninstall removes skills/agentic-learning/ and skills/impeccable/ for claude platform', () => {
   const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
   assert(
-    src.includes("platform === 'claude'") && src.includes("'plugins', 'learnship'") && src.includes('rmSync'),
-    'uninstall block missing plugins/learnship/ cleanup for claude'
+    src.includes("platform === 'claude'") &&
+    src.includes("'agentic-learning'") &&
+    src.includes("'impeccable'") &&
+    src.includes('rmSync'),
+    'uninstall block missing skills/agentic-learning/ or skills/impeccable/ cleanup for claude'
+  );
+});
+
+// 11. legacy plugins/learnship/ is cleaned up on install (backward compat)
+check('installClaudeSkills removes legacy plugins/learnship/ directory', () => {
+  const src = fs.readFileSync(path.join(REPO, 'bin', 'install.js'), 'utf8');
+  assert(
+    src.includes('legacyPluginDir') && src.includes("'plugins', 'learnship'") && src.includes('rmSync'),
+    'installClaudeSkills missing legacy plugins/learnship/ cleanup'
   );
 });
 
@@ -1387,9 +1520,9 @@ check('sync-upstream-skills.md has frontmatter description', () => {
 });
 
 // 7. Workflow references both upstream repos
-check('workflow references FavioVazquez/agentic-learn upstream', () => {
+check('workflow references FavioVazquez/agentic-learning upstream', () => {
   const wf = fs.readFileSync(WORKFLOW_SRC, 'utf8');
-  assert(wf.includes('FavioVazquez/agentic-learn'), 'agentic-learn upstream URL missing');
+  assert(wf.includes('FavioVazquez/agentic-learning'), 'agentic-learning upstream URL missing');
 });
 
 check('workflow references pbakaus/impeccable upstream', () => {
@@ -1455,19 +1588,19 @@ check('workflow maps impeccable upstream path source/skills/ correctly', () => {
 
 // ── Simulate the sync logic against local fixtures ─────────────────────────
 
-// 16. Simulated agentic-learn sync: replaces SKILL.md + references/, preserves nothing
-check('simulated agentic-learn sync: SKILL.md and references/ replaced correctly', () => {
+// 16. Simulated agentic-learning sync: replaces SKILL.md + references/, preserves nothing
+check('simulated agentic-learning sync: SKILL.md and references/ replaced correctly', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'learnship-sync-'));
 
-  // Fake upstream agentic-learn clone
-  const upstreamAL = path.join(tmp, 'agentic-learn');
+  // Fake upstream agentic-learning clone
+  const upstreamAL = path.join(tmp, 'upstream', 'agentic-learning');
   const upstreamRefs = path.join(upstreamAL, 'references');
   fs.mkdirSync(upstreamRefs, { recursive: true });
   fs.writeFileSync(path.join(upstreamAL, 'SKILL.md'), '---\nname: agentic-learning\n---\n# Updated upstream');
   fs.writeFileSync(path.join(upstreamRefs, 'learning-science.md'), '# Updated science');
 
   // Fake current install dir
-  const skillDir = path.join(tmp, 'agentic-learning');
+  const skillDir = path.join(tmp, 'install', 'agentic-learning');
   const skillRefs = path.join(skillDir, 'references');
   fs.mkdirSync(skillRefs, { recursive: true });
   fs.writeFileSync(path.join(skillDir, 'SKILL.md'), '---\nname: agentic-learning\n---\n# Old content');

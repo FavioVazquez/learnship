@@ -95,7 +95,7 @@ Syncs `@agentic-learning` and `@impeccable` skills from their upstream repositor
 /sync-upstream-skills
 ```
 
-- Pulls latest `agentic-learn` from `github.com/FavioVazquez/agentic-learn`
+- Pulls latest `agentic-learning` from `github.com/FavioVazquez/agentic-learning`
 - Pulls latest `impeccable` from `github.com/pbakaus/impeccable`
 - Preserves local customizations (impeccable dispatcher `SKILL.md`)
 - Runs the installer to update all platform copies

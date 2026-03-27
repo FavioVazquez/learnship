@@ -180,5 +180,5 @@ Images are saved to `assets/` and referenced in docs and the README.
 learnship builds on:
 
 - **[get-shit-done](https://github.com/davila7/get-shit-done).** Spec-driven workflow and planning artifact patterns
-- **[agentic-learn](https://github.com/faviovazquez/agentic-learn).** Neuroscience-backed learning techniques
+- **[agentic-learning](https://github.com/FavioVazquez/agentic-learning).** Neuroscience-backed learning techniques
 - **[impeccable](https://github.com/pbakaus/impeccable).** Frontend design quality system

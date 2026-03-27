@@ -66,3 +66,31 @@ jobs:
 
       - name: Check Node.js syntax of bin script
         run: node --check bin/learnship.js && echo "bin/learnship.js syntax OK ✓"
+
+      - name: Verify plugin manifests match package.json version
+        run: |
+          PKG_VERSION=$(node -e "console.log(require('./package.json').version)")
+          for f in .claude-plugin/plugin.json .cursor-plugin/plugin.json gemini-extension.json; do
+            MANIFEST_VERSION=$(node -e "console.log(require('./$f').version)")
+            echo "$f: $MANIFEST_VERSION"
+            [ "$MANIFEST_VERSION" = "$PKG_VERSION" ] || (echo "ERROR: $f version $MANIFEST_VERSION does not match package.json $PKG_VERSION" && exit 1)
+          done
+          echo "All plugin manifests match package.json version $PKG_VERSION ✓"
+
+  verify-skills-sync:
+    name: Verify skills/ and .windsurf/skills/ are in sync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check skills/ mirrors .windsurf/skills/
+        run: |
+          if diff -rq skills/ .windsurf/skills/ > /dev/null 2>&1; then
+            echo "skills/ and .windsurf/skills/ are in sync ✓"
+          else
+            echo "ERROR: skills/ and .windsurf/skills/ have diverged:"
+            diff -rq skills/ .windsurf/skills/
+            exit 1
+          fi

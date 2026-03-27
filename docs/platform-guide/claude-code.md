@@ -39,24 +39,27 @@ All learnship workflows use the `/learnship:` prefix:
 
 ## Skills
 
-Skills are installed as context files: Claude reads them automatically:
+Skills are installed as **native Claude Code skills** — they appear as first-class slash commands immediately after install:
 
 ```
-~/.claude/learnship/skills/
+~/.claude/skills/
 ├── agentic-learning/
-│   ├── SKILL.md           ← loaded as context
-│   └── references/
+│   ├── SKILL.md           ← native skill, all actions inline
+│   └── references/        ← supplementary detail files
 └── impeccable/
-    ├── SKILL.md
-    └── [17 sub-skills]/
+    └── SKILL.md           ← all 21 sub-skill bodies inlined
 ```
 
-Reference skills explicitly when you want to invoke them:
+Invoke with slash commands:
 
 ```
-Use the agentic-learning skill: learn React hooks
-Use the agentic-learning skill: quiz: authentication patterns
-Run the impeccable /audit skill on this component
+/agentic-learning learn React hooks
+/agentic-learning quiz
+/agentic-learning either-or
+/agentic-learning brainstorm my auth design
+/impeccable audit
+/impeccable polish
+/impeccable critique
 ```
 
 Or just work normally: skills activate at workflow checkpoints when `learning_mode: "auto"`.
@@ -79,8 +82,8 @@ When enabled:
 | Feature | Status |
 |---------|--------|
 | Slash commands | ✅ `/learnship:*` prefix |
-| `@agentic-learning` skill | ✅ Context file |
-| `impeccable` skill suite | ✅ Context file |
+| `/agentic-learning` skill | ✅ Native skill (`~/.claude/skills/`) |
+| `/impeccable` skill suite | ✅ Native skill, all 21 actions inlined |
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
 | Specialist agent pool | ✅ |

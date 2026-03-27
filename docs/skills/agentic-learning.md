@@ -186,7 +186,8 @@ Breaks an overwhelming concept or task into working-memory-sized chunks. Uses ch
 | Platform | How it works |
 |----------|-------------|
 | **Windsurf** | Native skill: invoke with `@agentic-learning [action]`. Cascade dispatches automatically. |
-| **Claude Code, OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/agentic-learning/`. Reference explicitly: `use the agentic-learning skill: [action]`, or just work: it activates at workflow checkpoints automatically. |
+| **Claude Code** | Native skill: invoke with `/agentic-learning [action]`. Installed to `~/.claude/skills/agentic-learning/`. Activates at workflow checkpoints automatically. |
+| **OpenCode, Gemini CLI, Codex CLI** | Installed as context files in `learnship/skills/agentic-learning/`. Reference explicitly: `use the agentic-learning skill: [action]`, or just work: it activates at workflow checkpoints automatically. |
 
 ---
 
@@ -200,4 +201,4 @@ The actions in `@agentic-learning` are grounded in established cognitive science
 - **Generation effect** (`struggle`): generating answers (even wrong ones) before seeing the correct answer produces stronger encoding
 - **Elaborative interrogation** (`brainstorm`, `either-or`): explaining why and how strengthens schema formation
 
-Based on [@FavioVazquez/agentic-learn](https://github.com/faviovazquez/agentic-learn).
+Based on [@FavioVazquez/agentic-learning](https://github.com/FavioVazquez/agentic-learning).

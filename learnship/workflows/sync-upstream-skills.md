@@ -1,5 +1,5 @@
 ---
-description: Sync agentic-learning and impeccable skills from their upstream repos (FavioVazquez/agentic-learn + pbakaus/impeccable) — run this when upstream skills have been updated
+description: Sync agentic-learning and impeccable skills from their upstream repos (FavioVazquez/agentic-learning + pbakaus/impeccable) — run this when upstream skills have been updated
 ---
 
 # sync-upstream-skills
@@ -33,8 +33,8 @@ If any check fails, stop and report what is missing.
 Show the user what they're about to pull so there are no surprises:
 
 ```bash
-# Latest commit on agentic-learn main
-git ls-remote https://github.com/FavioVazquez/agentic-learn.git HEAD | awk '{print "agentic-learn HEAD: " $1}'
+# Latest commit on agentic-learning main
+git ls-remote https://github.com/FavioVazquez/agentic-learning.git HEAD | awk '{print "agentic-learning HEAD: " $1}'
 
 # Latest commit on impeccable main
 git ls-remote https://github.com/pbakaus/impeccable.git HEAD | awk '{print "impeccable HEAD:    " $1}'
@@ -53,7 +53,7 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Will pull from:
-  agentic-learn  → github.com/FavioVazquez/agentic-learn (main)
+  agentic-learning  → github.com/FavioVazquez/agentic-learning (main)
   impeccable     → github.com/pbakaus/impeccable (main)
 
 Files updated:
@@ -75,11 +75,11 @@ Wait for confirmation.
 
 ```bash
 TMPDIR=$(mktemp -d)
-AGENTIC_LEARN_TMP="$TMPDIR/agentic-learn"
+AGENTIC_LEARN_TMP="$TMPDIR/agentic-learning"
 IMPECCABLE_TMP="$TMPDIR/impeccable"
 
-echo "Cloning agentic-learn..."
-git clone --depth 1 https://github.com/FavioVazquez/agentic-learn.git "$AGENTIC_LEARN_TMP"
+echo "Cloning agentic-learning..."
+git clone --depth 1 https://github.com/FavioVazquez/agentic-learning.git "$AGENTIC_LEARN_TMP"
 
 echo "Cloning impeccable..."
 git clone --depth 1 https://github.com/pbakaus/impeccable.git "$IMPECCABLE_TMP"
@@ -223,7 +223,7 @@ node bin/install.js --all
 
 This ensures:
 - **Windsurf** — skills already live in `.windsurf/skills/` (updated in place above)
-- **Claude Code** — `~/.claude/plugins/learnship/` rebuilt with updated skill content + rewritten `references/` paths
+- **Claude Code** — `~/.claude/skills/` rebuilt with updated skill content + rewritten `references/` paths
 - **OpenCode / Gemini CLI / Codex** — `learnship/skills/` context files updated
 
 ---
@@ -247,7 +247,7 @@ Display summary:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 agentic-learning:
-  SKILL.md       ✓ synced from FavioVazquez/agentic-learn
+  SKILL.md       ✓ synced from FavioVazquez/agentic-learning
   references/    ✓ synced ([N] files)
 
 impeccable:
@@ -256,7 +256,7 @@ impeccable:
 
 All platforms updated (installer re-run):
   Windsurf       ✓ skills updated in place
-  Claude Code    ✓ plugins/learnship/ rebuilt
+  Claude Code    ✓ ~/.claude/skills/ rebuilt
   Other platforms ✓ learnship/skills/ context files updated
 
 Backup saved at: .windsurf/skills/.upstream-backup-<timestamp>/
