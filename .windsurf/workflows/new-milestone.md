@@ -225,6 +225,10 @@ git commit -m "docs: update AGENTS.md — milestone [VERSION] started"
 **[VERSION] — [Name]** — [N] phases, [X] requirements
 
 ▶ Next: discuss-phase 1 → plan-phase 1 → execute-phase 1 → verify-work 1 → review → ship → compound
+
+💡 Not sure what to prioritize? Run `/ideate` for codebase-grounded idea generation.
+💡 For ambitious milestones, consider running `/challenge` to stress-test the scope before starting Phase 1.
+💡 Working near sensitive areas? Run `/guard [scope]` to activate safety mode.
 ```
 
 ---

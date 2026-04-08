@@ -109,6 +109,18 @@ Shows what the agent intends to do before creating any plans. Redirect early if 
 
 ---
 
+## Safety mode for sensitive areas
+
+When working near auth, payments, database migrations, or other critical code:
+
+```
+/guard auth/ payments/ config/
+```
+
+This activates safety mode: the agent warns before any destructive command (`rm -rf`, `DROP TABLE`, `git reset --hard`) and before writing to files outside the guarded scope. Guard state persists across sessions via `.planning/guard-state.md`. Deactivate with `/guard --off`.
+
+---
+
 ## Key differences from greenfield
 
 | | Greenfield | Brownfield |
@@ -118,3 +130,4 @@ Shows what the agent intends to do before creating any plans. Redirect early if 
 | Planner context | Domain research only | Codebase map + domain research |
 | Anti-goals | Optional | Essential: scope what must not change |
 | Per-phase prep | `/discuss-phase` | `/discuss-phase` + optionally `/discovery-phase` |
+| Safety mode | Optional | Recommended: `/guard` for sensitive areas |

@@ -16,14 +16,15 @@ learnship/
 ├── .windsurf/workflows/    # 49 workflows as slash commands (source of truth)
 ├── learnship/workflows/    # installed payload: must stay in sync with .windsurf/
 ├── .windsurf/skills/       # agentic-learning + impeccable native skills
-├── agents/                 # 10 agent persona files
+├── agents/                 # 10 agent persona files (source of truth)
+├── learnship/agents/       # installed agent payload: must stay in sync with agents/
+├── learnship/skills/       # installed skills payload (agentic-learning + impeccable)
 ├── commands/               # Claude Code-style slash command wrappers
 ├── learnship/references/   # reference docs loaded by workflows
 ├── learnship/templates/    # document templates for .planning/ + AGENTS.md
 ├── tests/
-│   └── validate_multiplatform.sh  # full test suite (146+ checks)
+│   └── validate_multiplatform.sh  # full test suite (313+ checks)
 ├── docs/                   # this documentation site (MkDocs)
-├── generate_images.py      # brand image generator (Gemini)
 ├── bin/install.js          # multi-platform installer
 └── install.sh              # shell installer wrapper
 ```
@@ -151,27 +152,6 @@ git commit -m "feat: [description] (vX.Y.Z)"
 git push origin feat/your-feature
 # open PR → label with enhancement/bug/documentation
 ```
-
----
-
-## Generating brand images
-
-```bash
-# List available images
-python generate_images.py --list
-
-# Generate a specific image
-python generate_images.py --only [key]
-
-# Generate all 19 images (16 original + 3 v2.0)
-python generate_images.py
-
-# Requirements
-pip install google-genai python-dotenv
-# GOOGLE_CLOUD_API_KEY in .env
-```
-
-Images are saved to `assets/` and referenced in docs and the README.
 
 ---
 

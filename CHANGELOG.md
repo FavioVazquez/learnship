@@ -9,6 +9,27 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.5] — 2026-04-08
+
+### Fixed
+
+- **`docs/getting-started/first-project.md`** — Complete rewrite: now covers the full `/new-project` experience including configuration questions, research decision (always user's choice), AGENTS.md structure (Soul, Principles, Platform Context explained), and the full 7-step phase loop with dedicated sections for `/review` (Step 10), `/ship` (Step 11), and `/compound` (Step 12). Shows `config.json` with 22 keys, `.planning/solutions/` directory, and milestone closure flow.
+- **`docs/getting-started/five-commands.md`** — Session pattern updated to show full 7-step loop including review, ship, compound.
+- **`docs/index.md`** — "Your First Project" card description updated to reference the full loop.
+- **`docs/workflow-reference/compounding-quality.md`** — Removed "optional but recommended" framing; now says "recommended after every phase."
+- **`docs/examples/greenfield.md`** — Expanded Session 6 with realistic `/review` findings (P1/P2/P3), `/ship` output, and `/compound` examples. Added "What's next?" section with `/ideate`, `/challenge` for post-milestone flow. Expanded key patterns to include `/review`→`/ship`→`/compound`, `/guard`.
+- **`docs/examples/brownfield.md`** — Added "Safety mode for sensitive areas" section explaining `/guard` with example. Added `/guard` row to greenfield vs brownfield comparison table.
+- **`docs/core-concepts/planning-artifacts.md`** — Added `guard-state.md` and ideation artifacts to the `.planning/` directory tree.
+- **`learnship/workflows/new-project.md`** — Added `/challenge` and `/guard` suggestions to the done banner.
+- **`learnship/workflows/new-milestone.md`** — Added `/ideate`, `/challenge`, and `/guard` suggestions to the done banner.
+- **`generate_images.py`** — Added `new_project_flow` image prompt (5-step flow: Questions → Research → Requirements → Roadmap → AGENTS.md). Updated `config_schema` prompt to include `commit_mode` and `validation` keys. Updated `extended_phase_loop` title from "optional" to "7-Step Phase Loop."
+- **New image: `assets/new-project-flow.png`** — Generated diagram showing the full `/new-project` initialization flow.
+- **Regenerated: `assets/config-schema.png`** — Now includes all 22 config keys.
+- **Regenerated: `assets/extended-phase-loop.png`** — Updated title and framing.
+- **`docs/contributing.md`** — Removed entire "Generating brand images" section (internal-only tool). Removed `generate_images.py` from the repository structure tree. Added `learnship/agents/` and `learnship/skills/` to the repo structure. Fixed test count from "146+" to "313+".
+
+---
+
 ## [v2.0.4] — 2026-04-08
 
 ### Fixed

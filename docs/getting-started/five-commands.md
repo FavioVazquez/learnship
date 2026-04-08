@@ -105,6 +105,9 @@ Session 2:  /ls                 ← see where you are
 Session 3:  /ls                 ← resume
             /execute-phase 1    ← build
             /verify-work 1      ← test and fix
+            /review             ← multi-persona code review
+            /ship               ← test → lint → commit → push → PR
+            /compound           ← capture what you learned
 Session 4:  /ls                 ← next phase, repeat
 ```
 

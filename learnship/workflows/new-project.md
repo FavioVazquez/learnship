@@ -479,6 +479,10 @@ The full phase loop:
 
 After verify-work passes: `/review` for multi-persona code review, `/ship` to test+commit+push+PR, `/compound` to capture what you learned.
 
+💡 For ambitious projects, consider running `/challenge` to stress-test the scope through product and engineering lenses before starting Phase 1.
+
+💡 Working near sensitive areas (auth, payments, migrations)? Run `/guard [scope]` to activate safety mode.
+
 > **Platform detected:** `[PLATFORM]` — parallelization is `[true/false]`
 ```
 

@@ -238,7 +238,7 @@ flowchart LR
 /discuss-phase N+1   # next phase
 ```
 
-The three new steps are **optional but recommended**: the core loop still works without them. They surface naturally through done-banner suggestions.
+The last three steps are recommended after every phase. They surface naturally through done-banner suggestions after `/verify-work` passes.
 
 ---
 
