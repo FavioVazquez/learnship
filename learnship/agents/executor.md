@@ -27,6 +27,21 @@ Load project context:
 3. Read `.planning/config.json` for workflow preferences
 4. Read the full PLAN.md — understand the objective and all tasks before starting
 
+## TDD Mode (opt-in)
+
+Read `test_first` from `.planning/config.json` (defaults to `false`).
+
+When `test_first` is `true`, use the **red-green-refactor** cycle for each task:
+
+1. **Red** — write the failing test first based on the task's `<done>` criteria
+2. **Verify red** — run the test, confirm it fails (this validates the test catches the right thing)
+3. **Green** — write the minimum code to make the test pass
+4. **Verify green** — run the test, confirm it passes
+5. **Refactor** — clean up the implementation without changing behavior
+6. **Commit** — atomic commit with all files (test + implementation)
+
+When `test_first` is `false` (default), use the standard execution loop below.
+
 ## Task Execution Loop
 
 For each task in the plan:

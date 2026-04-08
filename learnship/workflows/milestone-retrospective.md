@@ -67,6 +67,51 @@ Ask each question and wait for a real answer before moving to the next. These ar
 **Question 5: What should carry forward?**
 "Any patterns, decisions, or lessons from this milestone that should explicitly inform the next one? What goes into the decision register?"
 
+## Step 2b: Quantitative Summary
+
+Gather data-driven metrics for this milestone:
+
+```bash
+# Commits per phase
+for dir in .planning/phases/*/; do
+  PHASE=$(basename "$dir")
+  COUNT=$(git log --oneline --all -- "$dir" 2>/dev/null | wc -l | tr -d ' ')
+  echo "$PHASE: $COUNT commits"
+done
+
+# Total LOC changed
+git log --oneline --format="" --numstat $(git log --all --oneline .planning/ 2>/dev/null | tail -1 | cut -d' ' -f1)..HEAD 2>/dev/null | awk '{add+=$1; del+=$2} END {print "+" add " -" del " lines"}'
+
+# Test file ratio
+TOTAL_FILES=$(find . -name "*.ts" -o -name "*.js" -o -name "*.py" -o -name "*.rb" -o -name "*.go" 2>/dev/null | grep -v node_modules | grep -v .git | wc -l | tr -d ' ')
+TEST_FILES=$(find . -name "*.test.*" -o -name "*.spec.*" -o -name "*_test.*" 2>/dev/null | grep -v node_modules | grep -v .git | wc -l | tr -d ' ')
+echo "Test ratio: $TEST_FILES test files / $TOTAL_FILES total files"
+
+# Debug sessions count
+DEBUG_COUNT=$(ls .planning/debug/resolved/ 2>/dev/null | wc -l | tr -d ' ')
+echo "Debug sessions resolved: $DEBUG_COUNT"
+
+# Velocity (days from first to last commit in milestone)
+FIRST_DATE=$(git log --reverse --format="%ai" .planning/ 2>/dev/null | head -1 | cut -d' ' -f1)
+LAST_DATE=$(git log --format="%ai" .planning/ 2>/dev/null | head -1 | cut -d' ' -f1)
+echo "Duration: $FIRST_DATE to $LAST_DATE"
+```
+
+Present the quantitative summary before the qualitative questions:
+
+```
+## Quantitative Summary
+
+| Metric | Value |
+|--------|-------|
+| Phases completed | [N] |
+| Total commits | [N] |
+| LOC changed | +[N] / -[N] |
+| Test file ratio | [N]% |
+| Debug sessions | [N] |
+| Duration | [N] days |
+```
+
 ## Step 3: Synthesize Themes
 
 After all five answers, synthesize the key themes:

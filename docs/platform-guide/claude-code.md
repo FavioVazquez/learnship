@@ -35,6 +35,11 @@ All learnship workflows use the `/learnship:` prefix:
 /learnship:verify-work 1
 /learnship:quick "fix the login bug"
 /learnship:help
+/learnship:review              # v2.0: multi-persona code review
+/learnship:ship                # v2.0: test → commit → push → PR
+/learnship:compound            # v2.0: capture solved problem as knowledge
+/learnship:challenge           # v2.0: stress-test scope
+/learnship:ideate              # v2.0: codebase-grounded idea generation
 ```
 
 ## Skills
@@ -76,6 +81,10 @@ When enabled:
 - `plan-phase` spawns three dedicated subagents (researcher, planner, plan-checker) each with a fresh 200k context budget
 - `execute-phase` dispatches each independent plan to its own executor agent: plans in the same wave run in parallel
 - `debug` spawns a dedicated debugger subagent for deep root-cause investigation
+- `review` spawns a code-reviewer subagent through 6 review lenses (v2.0)
+- `challenge` spawns a challenger subagent for scope stress-testing (v2.0)
+- `compound` spawns a solution-writer subagent to capture knowledge (v2.0)
+- `ideate` spawns an ideation-agent for codebase-grounded idea generation (v2.0)
 
 ## Capabilities
 

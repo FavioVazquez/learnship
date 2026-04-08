@@ -92,7 +92,7 @@ Executes a small, self-contained task with full guarantees. No phase planning ce
 
 ## `/help`
 
-Lists all 42 workflows organized by category with one-line descriptions.
+Lists all 49 workflows organized by category with one-line descriptions.
 
 ```
 /help

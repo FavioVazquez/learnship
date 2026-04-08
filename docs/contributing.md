@@ -13,10 +13,10 @@ learnship is built in the open. Contributions: new workflows, skill improvements
 
 ```
 learnship/
-├── .windsurf/workflows/    # 42 workflows as slash commands (source of truth)
+├── .windsurf/workflows/    # 49 workflows as slash commands (source of truth)
 ├── learnship/workflows/    # installed payload: must stay in sync with .windsurf/
 ├── .windsurf/skills/       # agentic-learning + impeccable native skills
-├── agents/                 # 6+ agent persona files
+├── agents/                 # 10 agent persona files
 ├── commands/               # Claude Code-style slash command wrappers
 ├── learnship/references/   # reference docs loaded by workflows
 ├── learnship/templates/    # document templates for .planning/ + AGENTS.md
@@ -129,14 +129,14 @@ Every PR must include:
 bash tests/validate_multiplatform.sh
 ```
 
-The suite has 13 sections covering:
-- Installer correctness across all 5 platforms
+The suite has 5 sections covering:
+- Installer correctness across all 6 platforms
 - Workflow structure and sync
 - Skills installation
 - Learning Checkpoint coverage
 - Documentation site integrity
 
-146+ checks. All must pass before merging.
+313+ checks. All must pass before merging.
 
 ---
 
@@ -163,7 +163,7 @@ python generate_images.py --list
 # Generate a specific image
 python generate_images.py --only [key]
 
-# Generate all 16 images
+# Generate all 19 images (16 original + 3 v2.0)
 python generate_images.py
 
 # Requirements

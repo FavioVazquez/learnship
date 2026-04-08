@@ -38,6 +38,10 @@ const CODEX_AGENT_SANDBOX = {
   'learnship-verifier':          'workspace-write',
   'learnship-debugger':          'workspace-write',
   'learnship-plan-checker':      'read-only',
+  'learnship-solution-writer':   'workspace-write',
+  'learnship-code-reviewer':     'read-only',
+  'learnship-challenger':        'read-only',
+  'learnship-ideation-agent':    'read-only',
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────

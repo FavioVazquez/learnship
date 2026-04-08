@@ -54,6 +54,7 @@ Aggregates all decisions, lessons, and key findings from across all sessions int
 - Key lessons from phase `SUMMARY.md` files
 - Bug patterns from `debug/resolved/` sessions
 - Research findings from `research/` and per-phase `RESEARCH.md` files
+- Solution documents from `.planning/solutions/` (v2.0 — created by `/compound`)
 
 **When to use:** Before starting a new milestone (to ensure all prior knowledge is captured), before onboarding a new team member, when you need to recall why something was built a certain way.
 

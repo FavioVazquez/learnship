@@ -37,6 +37,12 @@ Every learnship project creates a `.planning/` directory at the project root. Th
 ├── todos/
 │   ├── pending/              # Ideas captured with /add-todo
 │   └── done/                 # Completed todos
+├── solutions/                # Knowledge compounding (from /compound) (v2.0)
+│   ├── auth/                 # Solutions by category
+│   │   └── jwt-refresh-race-condition.md
+│   ├── performance/
+│   │   └── react-memo-overuse.md
+│   └── ...
 ├── debug/                    # Active debug sessions
 │   └── resolved/             # Archived debug sessions
 ├── quick/
@@ -49,7 +55,7 @@ Every learnship project creates a `.planning/` directory at the project root. Th
         ├── 01-CONTEXT.md     # Your implementation preferences (from /discuss-phase)
         ├── 01-DISCOVERY.md   # Unfamiliar area mapping (from /discovery-phase)
         ├── 01-RESEARCH.md    # Ecosystem research findings
-        ├── 01-VALIDATION.md  # Test coverage contract (Nyquist)
+        ├── 01-VALIDATION.md  # Test coverage contract (from /validate-phase)
         ├── 01-01-PLAN.md     # Executable plan: wave 1, plan 1
         ├── 01-02-PLAN.md     # Executable plan: wave 1, plan 2 (independent)
         ├── 01-01-SUMMARY.md  # Execution outcomes
@@ -101,6 +107,17 @@ Written by `/discuss-phase` before planning. Contains your preferences, constrai
 ### `REQUIREMENTS.md`
 
 Requirements with unique REQ-IDs written during `/new-project`. `/audit-milestone` checks that each REQ-ID has corresponding implementation before release.
+
+### `solutions/` (v2.0)
+
+![Solutions store](../assets/solutions-store.png)
+
+A structured knowledge store created by `/compound`. Each file has YAML frontmatter with track (bug or knowledge), category, tags, and severity. Two tracks:
+
+- **Bug track:** Problem, root cause, solution with code snippets, prevention tips
+- **Knowledge track:** Context, guidance, examples, applicability notes
+
+`/plan-phase` searches this directory for prior art before research (Step 2b). `/knowledge-base` aggregates it alongside decisions and lessons. The schema is defined in `@./references/solution-schema.md`.
 
 ---
 

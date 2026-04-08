@@ -35,7 +35,7 @@ cp node_modules/learnship/cursor-rules/learnship.mdc .cursor/rules/
 
 Cursor uses `.mdc` rule files to inject persistent context into every agent session. The `learnship.mdc` rule:
 
-- Loads all 42 workflow commands with when-to-use guidance
+- Loads all 49 workflow commands with when-to-use guidance
 - Explains `.planning/` artifact structure so the agent always knows where state lives
 - Activates learning mode and design system behaviors
 - Defines key agent behaviors (atomic commits, no scope creep, goal-backward verification)

@@ -3,6 +3,8 @@
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
+  "parallelization": false,
+  "test_first": false,
   "planning": {
     "commit_docs": true,
     "commit_mode": "auto",
@@ -12,7 +14,17 @@
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "nyquist_validation": true
+    "validation": true,
+    "review": true,
+    "solutions_search": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
   },
   "git": {
     "branching_strategy": "none",

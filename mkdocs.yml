@@ -131,6 +131,7 @@ nav:
     - Debugging: workflow-reference/debugging.md
     - Decision Intelligence: workflow-reference/decision-intelligence.md
     - Milestone: workflow-reference/milestone.md
+    - Compounding & Quality: workflow-reference/compounding-quality.md
     - Maintenance: workflow-reference/maintenance.md
   - Configuration: configuration.md
   - Examples:

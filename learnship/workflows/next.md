@@ -67,7 +67,8 @@ Evaluate in order:
 | Plans exist, summaries < plans | `execute-phase [X]` |
 | Plans = 0, CONTEXT.md exists | `plan-phase [X]` |
 | Plans = 0, no CONTEXT.md | `discuss-phase [X]` |
-| All summaries complete, more phases remain | `discuss-phase [X+1]` |
+| All summaries complete, UAT not done | `verify-work [X]` |
+| All summaries complete, UAT passed, more phases remain | `discuss-phase [X+1]` |
 | All phases complete | `audit-milestone` |
 
 ---
@@ -97,4 +98,4 @@ If no — show `/ls` output so the user can choose manually.
 
 - `/next` always confirms before acting (never fully silent).
 - For status-only with manual choice, use `/ls` instead.
-- To see all available commands: `/help`
+- To see all 49 available commands: `/help`

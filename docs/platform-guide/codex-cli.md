@@ -28,6 +28,11 @@ $learnship-execute-phase 1
 $learnship-verify-work 1
 $learnship-quick "fix the login bug"
 $learnship-help
+$learnship-review              # v2.0: multi-persona code review
+$learnship-ship                # v2.0: test → commit → push → PR
+$learnship-compound            # v2.0: capture solved problem as knowledge
+$learnship-challenge           # v2.0: stress-test scope
+$learnship-ideate              # v2.0: codebase-grounded idea generation
 ```
 
 ## Skills

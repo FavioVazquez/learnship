@@ -101,7 +101,9 @@ Use this any time you feel the project state might be inconsistent: after a long
 
 ```bash
 # Start of a milestone
+/ideate                      # codebase-grounded idea generation (v2.0, optional)
 /discuss-milestone v2.0      # capture goals + anti-goals
+/challenge                   # stress-test the scope (v2.0, optional)
 /new-milestone v2.0          # create roadmap
 
 # Phase loop (repeats)
@@ -109,10 +111,16 @@ Use this any time you feel the project state might be inconsistent: after a long
 /plan-phase N
 /execute-phase N
 /verify-work N
+/review                      # multi-persona code review (v2.0)
+/ship                        # test → commit → push → PR (v2.0)
+/compound                    # capture what you learned (v2.0)
 
 # End of milestone
+/sync-docs                   # detect stale documentation (v2.0)
 /audit-milestone             # verify completeness
 /plan-milestone-gaps         # if audit found gaps
 /complete-milestone          # archive + tag + advance
 /milestone-retrospective     # learn and schedule review
 ```
+
+See [Compounding & Quality](compounding-quality.md) for full details on the 7 new v2.0 workflows.

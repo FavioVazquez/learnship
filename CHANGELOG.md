@@ -9,6 +9,73 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.0] — The Compounding Harness
+
+**Released:** 2026-04-08
+
+### Added
+
+- **`/compound` workflow** — Capture a recently solved problem or learned pattern while context is fresh. Creates structured documentation in `.planning/solutions/` with YAML frontmatter for searchability. Full mode (parallel research, overlap detection, dedup) and lightweight mode (single pass, fewer tokens). Integrates with `@agentic-learning` for spaced review.
+
+- **`/review` workflow** — Multi-persona code review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Produces severity-ranked (P0-P3) findings with confidence scores (0.0-1.0). Three modes: interactive (default), report-only, autofix. Conditional persona selection based on diff content.
+
+- **`/challenge` workflow** — Product and engineering challenge gate. Asks forcing questions through two lenses to determine whether a proposal is worth building before investing in planning. Verdicts: proceed, rethink, or reduce scope. Records decisions to DECISIONS.md.
+
+- **`/ship` workflow** — End-to-end ship pipeline: detect test runner → run tests → lint → stage → conventional commit → push → create PR with auto-description. Closes the loop from verified code to production-ready PR.
+
+- **`/ideate` workflow** — Codebase-grounded divergent ideation. Scans for TODOs, test gaps, hotspots, and friction points. Generates 15-25 ideas across four thinking frames (user pain, inversion, assumption-breaking, leverage). Adversarial filter eliminates weak ideas, presents top 5-7 ranked survivors.
+
+- **`/guard` workflow** — Safety mode for sensitive phases. Warns before destructive commands, locks file scope to prevent accidental changes outside the working area. Persists guard state across sessions via `.planning/guard-state.md`.
+
+- **`/sync-docs` workflow** — Scans documentation against recent code changes to detect stale sections, outdated references, and drift. Auto-fixes simple cases (renamed references, updated paths), flags complex ones for manual review.
+
+- **`solution-writer` agent** (inline + dispatch) — Analyzes solved problems, classifies by track (bug vs knowledge) and category, writes structured solution documents with YAML frontmatter. Performs overlap detection across five dimensions.
+
+- **`code-reviewer` agent** (inline + dispatch) — Reviews code through persona-specific lenses. Returns structured findings with severity and confidence. Read-only — does not edit files.
+
+- **`challenger` agent** (inline + dispatch) — Stress-tests proposals through product and engineering forcing questions. Returns verdicts with evidence-based rationale.
+
+- **`ideation-agent`** (inline + dispatch) — Generates codebase-grounded improvement ideas through assigned thinking frames. Pushes past obvious first ideas.
+
+- **`solution-schema.md` reference** — YAML frontmatter schema for `.planning/solutions/`, including tracks, required fields, category mapping, and templates.
+
+- **TDD mode** — Opt-in via `"test_first": true` in config. Executors (both inline and dispatch) use red-green-refactor cycle: write failing test → verify red → write minimum code → verify green → refactor → commit.
+
+### Changed
+
+- **Phase loop extended** — `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work` → `/review` → `/ship` → `/compound`
+
+- **`plan-phase` Step 2b** — New step: search `.planning/solutions/` for prior art before research. Surfaces relevant past solutions to avoid reinventing known approaches.
+
+- **`debug` Step 9** — Now suggests `/compound` after resolving a fix to capture the problem, root cause, and solution while context is fresh.
+
+- **`verify-work` Step 6** — Suggests `/compound` after successful UAT to capture notable patterns from the phase.
+
+- **`knowledge-base` Step 2** — Now reads `.planning/solutions/` as an additional source. Step 3 extracts knowledge items from compounded solutions (bug track → lesson, knowledge track → pattern/anti-pattern).
+
+- **`milestone-retrospective` Step 2b** — New quantitative summary section with metrics: phases completed, total commits, LOC changed, test file ratio, debug sessions, duration.
+
+- **`execute-phase` Step 2c** — TDD mode check and banner when `test_first` is `true`.
+
+- **AGENTS.md template** — Platform Context updated with solutions store reference and extended phase loop. Skills section includes Solutions Store with `/compound` and `/plan-phase` search integration.
+
+- **`planning-config.md`** — Added v2.0.0 configuration options documentation: `test_first`, `workflow.review`, `workflow.solutions_search`, `review.auto_after_verify`, `ship.auto_test`, `ship.conventional_commits`, `ship.pr_template`.
+
+- **`model-profiles.md`** — Added 4 new agent rows: solution-writer (sonnet/sonnet/haiku), code-reviewer (opus/sonnet/sonnet), challenger (opus/sonnet/sonnet), ideation-agent (opus/sonnet/haiku).
+
+- **`help.md`** — Added "Compounding & Quality" section with all 7 new workflows. Updated workflow count to 49.
+
+- **`gen-commands.js`** — Added 7 new workflow entries to WORKFLOWS array. Updated comment to 49 workflows.
+
+- **`bin/install.js` CODEX_AGENT_SANDBOX** — Added 4 new agents: solution-writer (workspace-write), code-reviewer (read-only), challenger (read-only), ideation-agent (read-only).
+
+### Tests
+
+- **`validate_workflows.sh`** — Minimum workflow count raised from 32 to 39. Added 7 required workflows: compound, review, challenge, ship, ideate, guard, sync-docs.
+- **`validate_multiplatform.sh`** — Expected command wrapper count raised from 42 to 49. Expected workflow file count raised from 42 to 49. Required agents list expanded to include 4 new dispatch agents. Inline persona check expanded to 9 personas.
+
+---
+
 ## [v1.9.24] — Docs, images, and repo URL corrections
 
 **Released:** 2026-03-27

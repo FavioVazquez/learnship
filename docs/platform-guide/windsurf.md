@@ -28,6 +28,11 @@ All learnship workflows are available as slash commands directly:
 /verify-work 1
 /quick "fix the search bug"
 /help
+/review              # v2.0: multi-persona code review
+/ship                # v2.0: test → commit → push → PR
+/compound            # v2.0: capture solved problem as knowledge
+/challenge           # v2.0: stress-test scope
+/ideate              # v2.0: codebase-grounded idea generation
 ```
 
 ## Native skills

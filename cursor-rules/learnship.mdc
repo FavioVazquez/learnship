@@ -71,6 +71,13 @@ Suggest the appropriate workflow slash command when relevant:
 | `/pause-work` | User is stopping mid-phase |
 | `/resume-work` | User is returning to an in-progress project |
 | `/complete-milestone` | All phases in the current milestone are done |
+| `/compound` | Just solved a problem or learned a pattern — capture it while fresh |
+| `/review` | Code ready for review — multi-persona quality check |
+| `/challenge` | About to commit to a milestone or big feature — stress-test the scope |
+| `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
+| `/ideate` | Looking for what to build next — codebase-grounded idea generation |
+| `/guard` | Working on sensitive files — enable safety mode with destructive command warnings |
+| `/sync-docs` | After code changes — detect stale documentation |
 
 ## Planning Artifacts
 

@@ -120,6 +120,11 @@ Goals: [N] captured
 Anti-goals: [N] captured
 
 ▶ Next: new-milestone [VERSION]  (will read this context automatically)
+
+💡 For ambitious milestones, consider running `/challenge` first to stress-test
+the scope through product and engineering lenses before committing.
+
+💡 Not sure what to build? Run `/ideate` for codebase-grounded idea generation.
 ```
 
 ---

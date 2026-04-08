@@ -18,6 +18,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "model_profile": "balanced",
   "learning_mode": "auto",
   "parallelization": false,
+  "test_first": false,
   "planning": {
     "commit_docs": true,
     "search_gitignored": false
@@ -26,7 +27,17 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "nyquist_validation": true
+    "validation": true,
+    "review": true,
+    "solutions_search": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
   },
   "git": {
     "branching_strategy": "none",
@@ -69,10 +80,10 @@ Sets the tier of AI model used per agent role.
 | `"balanced"` | large | medium | medium | medium |
 | `"budget"` | medium | medium | small | small |
 
-> `large` = Claude Opus / Gemini 2.5 Pro / GPT-4o  
-> `medium` = Claude Sonnet / Gemini 2.0 Flash  
-> `small` = Claude Haiku / Gemini Flash Lite  
-> Exact model depends on your platform.
+> `large` = Claude Opus 4.6 / Gemini 3.1 Pro / GPT-5.4  
+> `medium` = Claude Sonnet 4.6 / Gemini 3.1 Flash / GPT-5.4-mini  
+> `small` = Claude Haiku 4.5 / Gemini 3.1 Flash-Lite / GPT-5.4-nano  
+> Windsurf, Cursor, and OpenCode use the platform default — tiers signal intended task complexity.
 
 Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profile budget`
 
@@ -89,6 +100,13 @@ Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profi
 |-------|----------|
 | `false` | Sequential execution. Always safe. Default. |
 | `true` | Parallel subagents on Claude Code, OpenCode, Gemini CLI, Codex CLI. Each plan gets its own 200k context. |
+
+### `test_first` (v2.0)
+
+| Value | Behavior |
+|-------|----------|
+| `false` | Normal execution. Default. |
+| `true` | TDD mode: executors write failing test first, verify red, write minimum code, verify green, then refactor. |
 
 ---
 
@@ -117,7 +135,27 @@ Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profi
 | `workflow.research` | `true` | Domain research before planning each phase. Turn off for familiar domains to save tokens. |
 | `workflow.plan_check` | `true` | Verification loop (up to 3 passes) after plans are created. Turn off for quick iterations. |
 | `workflow.verifier` | `true` | Post-execution verification against phase goals. |
-| `workflow.nyquist_validation` | `true` | Test coverage mapping during plan-phase. Ensures testable acceptance criteria. |
+| `workflow.validation` | `true` | Test coverage mapping during plan-phase. Ensures testable acceptance criteria. |
+| `workflow.review` | `true` | Enable `/review` suggestions after `/verify-work`. (v2.0) |
+| `workflow.solutions_search` | `true` | Search `.planning/solutions/` for prior art during `/plan-phase`. (v2.0) |
+
+---
+
+## Review settings (v2.0)
+
+| Key | Default | What it controls |
+|-----|---------|------------------|
+| `review.auto_after_verify` | `false` | When `true`, `/review` runs automatically after `/verify-work` passes. |
+
+---
+
+## Ship settings (v2.0)
+
+| Key | Default | What it controls |
+|-----|---------|------------------|
+| `ship.auto_test` | `true` | Run test suite before shipping. |
+| `ship.conventional_commits` | `true` | Use conventional commit format (`feat:`, `fix:`, `chore:`, etc.). |
+| `ship.pr_template` | `true` | Auto-generate PR description from commit history and SUMMARY.md files. |
 
 ---
 

@@ -82,6 +82,27 @@ Check if `@impeccable teach-impeccable` has been run for this project (look for 
 
 Carry these principles through every task in every wave of this phase.
 
+## Step 2c: TDD Mode Check
+
+Read `test_first` from `.planning/config.json` (defaults to `false`).
+
+If `test_first` is `true`:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► TDD MODE ACTIVE — red-green-refactor per task
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+In TDD mode, each executor uses the red-green-refactor cycle:
+1. **Red** — write the failing test first
+2. **Verify red** — confirm the test fails
+3. **Green** — write minimum code to pass
+4. **Verify green** — confirm the test passes
+5. **Refactor** — clean up without changing behavior
+6. **Commit** — atomic commit (test + implementation together)
+
+Both inline (`@./agents/executor.md`) and subagent (`learnship-executor`) executors honor this setting.
+
 ## Step 3: Execute Waves
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).
@@ -323,7 +344,10 @@ git commit -m "docs: update AGENTS.md — phase [X] complete"
 **Phase [X]: [Name]** — all plans complete, goals verified.
 
 ▶ Next: verify-work [X]  (manual UAT)
+   Then: /review → /ship → /compound
    Then: discuss-phase [X+1] → plan-phase [X+1]
+
+💡 Working on sensitive files? Run `/guard [scope]` to enable safety mode.
 ```
 
 ---

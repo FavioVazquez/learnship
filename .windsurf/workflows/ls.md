@@ -119,10 +119,14 @@ Determine the next action (same logic as `progress`):
 5. **Plans = 0, no CONTEXT.md** → needs discussion
    - Next: `discuss-phase [X]`
 
-6. **All plans have summaries, more phases remain** → move forward
-   - Next: `discuss-phase [X+1]`
+6. **All plans have summaries, UAT not done** → verify before moving on
+   - Next: `verify-work [X]`
 
-7. **All phases done** → ready to ship
+7. **All plans have summaries, UAT passed, more phases remain** → move forward
+   - Next: `discuss-phase [X+1]`
+   - Suggest: `/review` → `/ship` → `/compound` before starting next phase
+
+8. **All phases done** → ready to ship
    - Next: `audit-milestone`
 
 Display clearly, then **ask**:
@@ -142,4 +146,4 @@ If the user says yes (or "go", "do it", "run it", "proceed") — immediately inv
 
 - `/ls` is an alias for the status + routing logic in `progress`. Use either.
 - For full auto-pilot (no prompt), use `/next` instead.
-- To see all 40+ available commands: `/help`
+- To see all 49 available commands: `/help`
