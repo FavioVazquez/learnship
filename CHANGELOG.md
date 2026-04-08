@@ -9,6 +9,15 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.7] — 2026-04-08
+
+### Fixed
+
+- **Marketplace auto-sync** — `publish.yml` now dynamically counts workflows, agent personas, and impeccable commands from the source repo and pushes both an updated `marketplace.json` (version + description) and a regenerated `README.md` to `learnship-marketplace`. Previously only the version field was bumped, leaving workflow/agent counts stale (was "42 workflows, 6 agents, 18 commands" → now correctly "49 workflows, 10 agents, 21 commands").
+- **Immediate marketplace fix** — Pushed correct counts to `learnship-marketplace` repo (marketplace.json + README.md) without waiting for the next tag.
+
+---
+
 ## [v2.0.6] — 2026-04-08
 
 ### Fixed

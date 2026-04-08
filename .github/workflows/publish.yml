@@ -63,32 +63,121 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Update learnship-marketplace version
+      - name: Update learnship-marketplace
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           VERSION=$(node -e "console.log(require('./package.json').version)")
+
+          # Dynamic counts from source repo
+          WORKFLOW_COUNT=$(ls learnship/workflows/*.md | grep -cv help.md)
+          AGENT_COUNT=$(ls learnship/agents/*.md 2>/dev/null | wc -l)
+          IMPECCABLE_COUNT=$(grep -c '^### `' .windsurf/skills/impeccable/SKILL.md 2>/dev/null || echo 21)
+          echo "Counts: $WORKFLOW_COUNT workflows, $AGENT_COUNT agents, $IMPECCABLE_COUNT impeccable commands"
+
+          DESCRIPTION="${WORKFLOW_COUNT} structured workflows, persistent cross-session memory, integrated learning partner, and impeccable UI design system. Works on Claude Code, Cursor, Windsurf, Gemini CLI, OpenCode, and Codex."
+
+          # --- Update marketplace.json (version + description) ---
           CURRENT=$(curl -s -H "Authorization: token $GH_PAT" \
             "https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/.claude-plugin/marketplace.json" \
-            | python3 -c "import sys,json,base64; r=json.load(sys.stdin); print(json.loads(base64.b64decode(r['content']))['plugins'][0]['version'])")
-          if [ "$CURRENT" = "$VERSION" ]; then
-            echo "Marketplace already at $VERSION — skipping"
-            exit 0
-          fi
-          curl -s -H "Authorization: token $GH_PAT" \
-            "https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/.claude-plugin/marketplace.json" \
-            | python3 -c "
+            | python3 -c "import sys,json,base64; r=json.load(sys.stdin); d=json.loads(base64.b64decode(r['content'])); print(d['plugins'][0]['version']+'|'+d['plugins'][0].get('description',''))")
+          CURRENT_VER="${CURRENT%%|*}"
+          CURRENT_DESC="${CURRENT#*|}"
+
+          if [ "$CURRENT_VER" = "$VERSION" ] && echo "$CURRENT_DESC" | grep -q "^${WORKFLOW_COUNT} structured"; then
+            echo "Marketplace already at $VERSION with correct counts — skipping marketplace.json"
+          else
+            curl -s -H "Authorization: token $GH_PAT" \
+              "https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/.claude-plugin/marketplace.json" \
+              | python3 -c "
           import sys,json,base64,urllib.request,os
           pat=os.environ['GH_PAT']
           r=json.load(sys.stdin)
           content=json.loads(base64.b64decode(r['content']))
           content['plugins'][0]['version']='$VERSION'
+          content['plugins'][0]['description']='$DESCRIPTION'
           new_b64=base64.b64encode(json.dumps(content,indent=2).encode()+b'\n').decode()
-          payload=json.dumps({'message':'chore: bump version to $VERSION','sha':r['sha'],'content':new_b64}).encode()
+          payload=json.dumps({'message':'chore: sync to v$VERSION ($WORKFLOW_COUNT workflows, $AGENT_COUNT agents)','sha':r['sha'],'content':new_b64}).encode()
           req=urllib.request.Request(
             'https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/.claude-plugin/marketplace.json',
             data=payload, method='PUT',
             headers={'Authorization':'token '+pat,'Content-Type':'application/json'})
           resp=json.loads(urllib.request.urlopen(req).read())
-          print('Marketplace updated to $VERSION:', resp['commit']['sha'][:12])
+          print('marketplace.json updated to v$VERSION:', resp['commit']['sha'][:12])
           "
+          fi
+
+          # --- Update README.md with current counts ---
+          README_CONTENT=$(cat <<'READMEEOF'
+          # learnship Marketplace
+
+          Community marketplace for [learnship](https://github.com/FavioVazquez/learnship) — the agentic engineering system with structured workflows, persistent memory, and integrated learning.
+
+          ## Installation
+
+          Add this marketplace to Claude Code:
+
+          ```
+          /plugin marketplace add FavioVazquez/learnship-marketplace
+          ```
+
+          Then install learnship:
+
+          ```
+          /plugin install learnship@learnship-marketplace
+          ```
+
+          ## What you get
+
+          - **WORKFLOW_COUNT structured workflows** — full project lifecycle from `/new-project` to `/complete-milestone`
+          - **Persistent memory** — `AGENTS.md` and `DECISIONS.md` survive across sessions
+          - **Learning partner** — neuroscience-backed `agentic-learning` skill with 11 actions
+          - **Design system** — IMPECCABLE_COUNT `impeccable` commands for production-grade UI quality
+          - **AGENT_COUNT agent personas** — planner, executor, verifier, debugger, researcher, phase-researcher, solution-writer, code-reviewer, challenger, ideation-agent
+
+          ## Also available via
+
+          ```bash
+          # npm (all platforms)
+          npx learnship
+
+          # Gemini CLI native extension
+          gemini extensions install https://github.com/FavioVazquez/learnship
+
+          # Cursor marketplace
+          /add-plugin learnship
+          ```
+
+          ## Links
+
+          - [Documentation](https://faviovazquez.github.io/learnship/)
+          - [GitHub](https://github.com/FavioVazquez/learnship)
+          - [Changelog](https://github.com/FavioVazquez/learnship/blob/main/CHANGELOG.md)
+          READMEEOF
+          )
+
+          # Substitute counts into README template
+          README_CONTENT=$(echo "$README_CONTENT" | sed "s/WORKFLOW_COUNT/$WORKFLOW_COUNT/g; s/IMPECCABLE_COUNT/$IMPECCABLE_COUNT/g; s/AGENT_COUNT/$AGENT_COUNT/g")
+          # Remove leading whitespace from heredoc indentation
+          README_CONTENT=$(echo "$README_CONTENT" | sed 's/^          //')
+
+          curl -s -H "Authorization: token $GH_PAT" \
+            "https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/README.md" \
+            | python3 -c "
+          import sys,json,base64,urllib.request,os
+          pat=os.environ['GH_PAT']
+          r=json.load(sys.stdin)
+          new_content=os.environ['README_CONTENT']
+          current=base64.b64decode(r['content']).decode()
+          if current.strip()==new_content.strip():
+            print('README.md already up to date — skipping')
+            sys.exit(0)
+          new_b64=base64.b64encode(new_content.encode()+b'\n').decode()
+          payload=json.dumps({'message':'docs: sync README to v$VERSION ($WORKFLOW_COUNT workflows, $AGENT_COUNT agents)','sha':r['sha'],'content':new_b64}).encode()
+          req=urllib.request.Request(
+            'https://api.github.com/repos/FavioVazquez/learnship-marketplace/contents/README.md',
+            data=payload, method='PUT',
+            headers={'Authorization':'token '+pat,'Content-Type':'application/json'})
+          resp=json.loads(urllib.request.urlopen(req).read())
+          print('README.md updated:', resp['commit']['sha'][:12])
+          " || echo "README.md update skipped (no changes or error)"
