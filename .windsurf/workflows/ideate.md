@@ -9,9 +9,24 @@ Codebase-grounded divergent ideation. Scans the actual codebase for hotspots, TO
 **Usage:** `ideate` — open-ended ideation on the current project
 **Usage:** `ideate [focus]` — focused ideation on a specific area, concept, or constraint
 
-**Sequencing:** Run before `/new-project`, `/challenge`, or `/discuss-milestone` to discover what's worth building.
+**Sequencing:** Run between milestones — after `/complete-milestone`, before `/discuss-milestone` or `/new-milestone`. Requires an existing project with `AGENTS.md` and `.planning/`.
 
-## Step 1: Scope
+> **No project yet?** Use `@agentic-learning brainstorm [idea]` for pure divergent thinking without codebase grounding. `/ideate` is for projects that already have code to scan.
+
+## Step 1: Pre-flight Check
+
+Verify the project has artifacts to ground ideation on:
+
+```bash
+ls AGENTS.md 2>/dev/null && ls .planning/PROJECT.md 2>/dev/null
+```
+
+**If neither exists:** Stop. Tell the user:
+> `/ideate` needs an existing project to scan. Run `/new-project` first to set up the project, or use `@agentic-learning brainstorm [idea]` for pre-project ideation.
+
+**If project exists:** Continue.
+
+## Step 2: Scope
 
 If a focus argument was provided, use it as the ideation lens.
 If no argument, proceed with open-ended ideation.
@@ -23,7 +38,7 @@ find .planning/ -name "*-ideation-*.md" -mtime -30 2>/dev/null
 
 If recent ideation exists, ask: "Found recent ideation work. Resume from it, or start fresh?"
 
-## Step 2: Codebase Scan
+## Step 3: Codebase Scan
 
 Gather grounding context before generating ideas:
 
@@ -55,7 +70,7 @@ ls .planning/solutions/ 2>/dev/null
 cat .planning/KNOWLEDGE.md 2>/dev/null
 ```
 
-## Step 3: Divergent Ideation
+## Step 4: Divergent Ideation
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).
 
@@ -94,7 +109,7 @@ Task(
 
 Using `@./agents/ideation-agent.md`, generate 15-25 ideas across all four frames sequentially.
 
-## Step 4: Deduplicate & Filter
+## Step 5: Deduplicate & Filter
 
 Merge ideas from all frames:
 
@@ -106,7 +121,7 @@ Merge ideas from all frames:
    - Would a senior engineer roll their eyes at this suggestion?
 3. **Eliminate** weak ideas with explicit reasons
 
-## Step 5: Rank Survivors
+## Step 6: Rank Survivors
 
 Rank the surviving ideas (target: 5-7) by:
 
@@ -117,7 +132,7 @@ Rank the surviving ideas (target: 5-7) by:
 | **Feasibility** — can this be done in a reasonable scope? | Medium |
 | **Compounding** — does this make future work easier? | Medium |
 
-## Step 6: Present Results
+## Step 7: Present Results
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -155,13 +170,13 @@ git add .planning/[DATE]-ideation-[slug].md
 git commit -m "docs: ideation — [focus or 'open-ended'] ([N] survivors)"
 ```
 
-## Step 7: Route to Action
+## Step 8: Route to Action
 
 Present the "What's next?" options using the platform's blocking question tool:
 
 - **Deep-dive an idea** → expand on the selected idea with more detail
-- **Start a new project** → feed selected idea into `/new-project`
 - **Add to current milestone** → feed into `/add-phase`
+- **Start a new milestone** → feed into `/discuss-milestone` then `/new-milestone`
 - **Challenge an idea** → run `/challenge [idea]` to stress-test it
 - **Save and return later** → already saved to `.planning/`
 

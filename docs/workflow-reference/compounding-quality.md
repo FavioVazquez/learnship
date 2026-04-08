@@ -155,7 +155,7 @@ Codebase-grounded divergent ideation — discover what's worth building next.
 3. Deduplicates and adversarial-filters weak ideas
 4. Presents top 5–7 ranked survivors with effort estimates
 
-**When to use:** Before `/discuss-milestone`, between milestones, or when you feel stuck on what to build next.
+**When to use:** Between milestones (after `/complete-milestone`, before `/discuss-milestone`), or when you feel stuck on what to build next. Requires an existing project — for pre-project ideation, use `@agentic-learning brainstorm [idea]` instead.
 
 **Agent:** `ideation-agent` (inline persona or `learnship-ideation-agent` subagent).
 
