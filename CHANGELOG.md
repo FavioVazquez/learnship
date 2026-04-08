@@ -9,6 +9,20 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.2] — 2026-04-08
+
+### Fixed
+
+- **`/new-project` config completeness** — Now asks about model profile, test-first mode, review workflow, solutions search, ship pipeline, and auto-review. Writes all 22 config keys instead of 9. Done banner shows full 7-step phase loop.
+- **`/settings` menu completeness** — Fallback config includes all v2 keys. Menu expanded from 10 to 17 items covering test-first, review, solutions search, auto-review, and ship pipeline options. Save template writes full config schema.
+- **`/verify-work` auto-review** — Now reads `review.auto_after_verify` from config. If true, auto-triggers `/review` after UAT passes. If false, shows recommended next steps including `/review`, `/ship`, and `/compound`.
+- **`/new-milestone` config upgrade** — New Step 6b detects missing v2 config keys and offers to merge defaults for projects started before v2.
+- **`/health` config check** — Expanded from 4 top-level keys to all v2 keys including nested `workflow.review`, `workflow.solutions_search`, `review.auto_after_verify`, `ship.*`, `planning.commit_mode`.
+- **`AGENTS.md` template** — Phase loop updated from 4-step to full 7-step: discuss → plan → execute → verify → review → ship → compound.
+- **`/new-milestone` done banner** — Shows full 7-step phase loop instead of truncated 3-step.
+
+---
+
 ## [v2.0.1] — 2026-04-08
 
 ### Changed

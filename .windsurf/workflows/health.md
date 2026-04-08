@@ -96,7 +96,14 @@ git status --short .planning/ 2>/dev/null | head -10
 node -e "
 try{
   const cfg=JSON.parse(require('fs').readFileSync('.planning/config.json','utf8'));
-  const missing=['mode','granularity','model_profile','learning_mode'].filter(k=>!(k in cfg));
+  const top=['mode','granularity','model_profile','learning_mode','parallelization','test_first'].filter(k=>!(k in cfg));
+  const nested=[];
+  if(!cfg.planning||!('commit_mode' in cfg.planning)) nested.push('planning.commit_mode');
+  if(!cfg.workflow||!('review' in cfg.workflow)) nested.push('workflow.review');
+  if(!cfg.workflow||!('solutions_search' in cfg.workflow)) nested.push('workflow.solutions_search');
+  if(!cfg.review||!('auto_after_verify' in cfg.review)) nested.push('review.auto_after_verify');
+  if(!cfg.ship) nested.push('ship.*');
+  const missing=[...top,...nested];
   if(missing.length)console.log('W004: config.json missing fields: '+missing.join(', '));
 }catch(e){}
 "

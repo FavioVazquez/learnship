@@ -99,14 +99,40 @@ Ask: "How should the learning partner (agentic-learning) work during this projec
 - **Auto** (recommended) — I'll offer relevant learning actions at natural checkpoints (after planning, after execution, etc.)
 - **Manual** — I'll only activate when you explicitly invoke `@agentic-learning`
 
-**Group C — Workflow agents (these add quality but cost tokens/time):**
+**Group C — Model profile:**
 
-Ask: "Which workflow agents should be enabled?"
+Ask: "Which model quality tier do you want?"
+- **Quality** — Large-tier models for all decision-making agents (highest cost, best results)
+- **Balanced** (recommended) — Large for planning, medium for execution
+- **Budget** — Medium for code, small for research/verification (lowest cost)
+
+**Group D — Development style:**
+
+Ask: "Test-first (TDD) mode?"
+- **No** (recommended) — Write tests alongside implementation
+- **Yes** — Enforce red-green-refactor: write failing test first, verify red, implement, verify green
+
+**Group E — Workflow agents (these add quality but cost tokens/time):**
+
+Ask: "Which workflow agents and quality steps should be enabled?"
 - **Research** (recommended) — Investigate domain before planning each phase
 - **Plan Check** (recommended) — Verify plans achieve their goals before execution
 - **Verifier** (recommended) — Confirm deliverables match phase goals after execution
+- **Review** (recommended) — Multi-persona code review after verification
+- **Solutions Search** (recommended) — Search prior solutions for reusable patterns during planning
 
-**Group D — Parallel execution:**
+Ask: "Auto-trigger review after verify-work passes?"
+- **No** (recommended) — Run `/review` manually when ready
+- **Yes** — Automatically start review after verification succeeds
+
+**Group F — Ship pipeline defaults:**
+
+Ask: "Ship pipeline preferences?"
+- **Auto-test before shipping** (recommended: yes) — Run tests before every ship
+- **Conventional commits** (recommended: yes) — Use `feat:`, `fix:`, `docs:` commit prefixes
+- **Auto-generate PR description** (recommended: yes) — Create PR body from commit messages
+
+**Group G — Parallel execution:**
 
 <!-- LEARNSHIP_PARALLEL_BLOCK -->
 
@@ -124,30 +150,51 @@ Create `.planning/config.json` with all settings:
 {
   "mode": "yolo|interactive",
   "granularity": "coarse|standard|fine",
-  "commit_docs": true|false,
-  "commit_mode": "auto|manual",
+  "model_profile": "quality|balanced|budget",
   "learning_mode": "auto|manual",
   "parallelization": false|true,
+  "test_first": false|true,
+  "planning": {
+    "commit_docs": true|false,
+    "commit_mode": "auto|manual",
+    "search_gitignored": false
+  },
   "workflow": {
     "research": true|false,
     "plan_check": true|false,
-    "verifier": true|false
+    "verifier": true|false,
+    "validation": true|false,
+    "review": true|false,
+    "solutions_search": true|false
+  },
+  "review": {
+    "auto_after_verify": false|true
+  },
+  "ship": {
+    "auto_test": true|false,
+    "conventional_commits": true|false,
+    "pr_template": true|false
+  },
+  "git": {
+    "branching_strategy": "none|phase|milestone",
+    "phase_branch_template": "phase-{phase}-{slug}",
+    "milestone_branch_template": "{milestone}-{slug}"
   }
 }
 ```
 
-If `commit_docs` is false, add `.planning/` to `.gitignore`:
+If `planning.commit_docs` is false, add `.planning/` to `.gitignore`:
 ```bash
 echo ".planning/" >> .gitignore
 ```
 
-**If `commit_mode` is `auto`:** Stage and commit the initial setup now:
+**If `planning.commit_mode` is `auto`:** Stage and commit the initial setup now:
 ```bash
 git add .gitignore .planning/config.json
 git commit -m "chore: initialize learnship project setup"
 ```
 
-**If `commit_mode` is `manual`:** Show this message and skip all future commit steps:
+**If `planning.commit_mode` is `manual`:** Show this message and skip all future commit steps:
 ```
 → Manual commit mode — I will not run any git commits.
   Stage and commit whenever you are ready.
@@ -401,8 +448,12 @@ Files created:
 
 ▶ Next: `/discuss-phase 1` — **start here, not `/plan-phase`**
 
-The phase loop is: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`
+The full phase loop:
+`discuss-phase` → `plan-phase` → `execute-phase` → `verify-work` → `review` → `ship` → `compound`
+
 `discuss-phase` is mandatory before planning — it captures your intent and writes the CONTEXT.md that plan-phase depends on. Skipping it means planning without context.
+
+After verify-work passes: `/review` for multi-persona code review, `/ship` to test+commit+push+PR, `/compound` to capture what you learned.
 
 > **Platform detected:** `[PLATFORM]` — parallelization is `[true/false]`
 ```

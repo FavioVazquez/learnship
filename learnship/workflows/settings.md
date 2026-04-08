@@ -22,15 +22,28 @@ cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/co
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
+  "parallelization": false,
+  "test_first": false,
   "planning": {
     "commit_docs": true,
+    "commit_mode": "auto",
     "search_gitignored": false
   },
   "workflow": {
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "validation": true
+    "validation": true,
+    "review": true,
+    "solutions_search": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
   },
   "git": {
     "branching_strategy": "none",
@@ -64,12 +77,19 @@ Current configuration:
 [2] Granularity:       [current] (coarse | standard | fine)
 [3] Model profile:     [current] (quality | balanced | budget)
 [4] Learning mode:     [current] (auto | manual)
-[5] Research agent:    [on/off]
-[6] Plan check agent:  [on/off]
-[7] Verifier agent:    [on/off]
-[8] Test validation:  [on/off]
-[9] Git branching:     [current] (none | phase | milestone)
-[10] Commit docs:      [on/off]
+[5] Test-first (TDD):  [on/off]
+[6] Research agent:    [on/off]
+[7] Plan check agent:  [on/off]
+[8] Verifier agent:    [on/off]
+[9] Test validation:   [on/off]
+[10] Review workflow:   [on/off]
+[11] Solutions search:  [on/off]
+[12] Auto-review after verify: [on/off]
+[13] Ship: auto-test:   [on/off]
+[14] Ship: conventional commits: [on/off]
+[15] Ship: PR template: [on/off]
+[16] Git branching:     [current] (none | phase | milestone)
+[17] Commit docs:       [on/off]
 
 Enter a number to change a setting, or 'done' to save.
 ```
@@ -118,7 +138,16 @@ Learning mode controls when learning actions are offered:
 Current: [current]. New value?
 ```
 
-**[5-7] Agent toggles (research / plan_check / verifier):**
+**[5] Test-first (TDD):**
+```
+Test-first mode enforces red-green-refactor during execute-phase:
+- on: write failing test → verify red → implement → verify green
+- off: write tests alongside implementation (default)
+
+Current: [current]. New value? (on/off)
+```
+
+**[6-8] Agent toggles (research / plan_check / verifier):**
 ```
 [Research / Plan check / Verifier] agent:
 - on: agent runs (recommended for production work)
@@ -127,7 +156,7 @@ Current: [current]. New value?
 Current: [current]. New value? (on/off)
 ```
 
-**[8] Test validation:**
+**[9] Test validation:**
 ```
 Test validation maps automated test coverage to requirements during plan-phase.
 - on: plans include automated verify commands per task (recommended)
@@ -136,7 +165,43 @@ Test validation maps automated test coverage to requirements during plan-phase.
 Current: [current]. New value? (on/off)
 ```
 
-**[9] Git branching:**
+**[10] Review workflow:**
+```
+Multi-persona code review after verification:
+- on: /review is available and can be auto-triggered (recommended)
+- off: skip review workflow
+
+Current: [current]. New value? (on/off)
+```
+
+**[11] Solutions search:**
+```
+Search .planning/solutions/ for prior art during plan-phase:
+- on: reuse patterns from solved problems (recommended)
+- off: skip solutions search
+
+Current: [current]. New value? (on/off)
+```
+
+**[12] Auto-review after verify:**
+```
+Automatically trigger /review after verify-work passes:
+- on: review starts immediately after successful verification
+- off: run /review manually when ready (default)
+
+Current: [current]. New value? (on/off)
+```
+
+**[13-15] Ship pipeline (auto_test / conventional_commits / pr_template):**
+```
+[Auto-test / Conventional commits / PR template]:
+- on: enabled (recommended)
+- off: disabled
+
+Current: [current]. New value? (on/off)
+```
+
+**[16] Git branching:**
 ```
 Branching strategy:
 - none: no automatic branches (good for solo work)
@@ -146,7 +211,7 @@ Branching strategy:
 Current: [current]. New value?
 ```
 
-**[10] Commit docs:**
+**[17] Commit docs:**
 ```
 Whether .planning/ files are committed to git:
 - on: planning artifacts tracked in git (default)
@@ -166,15 +231,28 @@ cat > .planning/config.json << EOF
   "granularity": "[value]",
   "model_profile": "[value]",
   "learning_mode": "[value]",
+  "parallelization": [true/false],
+  "test_first": [true/false],
   "planning": {
     "commit_docs": [true/false],
+    "commit_mode": "[auto/manual]",
     "search_gitignored": false
   },
   "workflow": {
     "research": [true/false],
     "plan_check": [true/false],
     "verifier": [true/false],
-    "validation": [true/false]
+    "validation": [true/false],
+    "review": [true/false],
+    "solutions_search": [true/false]
+  },
+  "review": {
+    "auto_after_verify": [true/false]
+  },
+  "ship": {
+    "auto_test": [true/false],
+    "conventional_commits": [true/false],
+    "pr_template": [true/false]
   },
   "git": {
     "branching_strategy": "[value]",

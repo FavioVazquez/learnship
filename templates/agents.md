@@ -97,7 +97,7 @@ follow. The map should become territory.
 This project uses **learnship**. Key facts:
 
 - All planning artifacts live in `.planning/` — read STATE.md and ROADMAP.md first when unsure where we are
-- The phase loop: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`
+- The phase loop: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work` → `review` → `ship` → `compound`
 - Current status is always in `.planning/STATE.md`
 - Decisions are tracked in `.planning/DECISIONS.md` — read it before proposing approaches that may conflict
 - Run `/ls` if context is unclear about what phase we're on or what to do next — it shows status and offers to run the next step
