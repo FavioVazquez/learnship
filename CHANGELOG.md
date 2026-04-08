@@ -9,6 +9,14 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.1] — 2026-04-08
+
+### Changed
+
+- **Credits & Inspiration** — Added compound-engineering, superpowers, and gstack to credits in README and docs/contributing.md. Updated get-shit-done URL to current org.
+
+---
+
 ## [v2.0.0] — The Compounding Harness
 
 **Released:** 2026-04-08
