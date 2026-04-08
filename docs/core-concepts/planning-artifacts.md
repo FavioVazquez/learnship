@@ -43,6 +43,8 @@ Every learnship project creates a `.planning/` directory at the project root. Th
 │   ├── performance/
 │   │   └── react-memo-overuse.md
 │   └── ...
+├── guard-state.md            # Active guard mode scope and log (from /guard)
+├── [DATE]-ideation-[slug].md # Ideation results (from /ideate)
 ├── debug/                    # Active debug sessions
 │   └── resolved/             # Archived debug sessions
 ├── quick/

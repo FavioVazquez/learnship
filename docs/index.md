@@ -154,7 +154,7 @@ See the [Platform Guide](platform-guide/windsurf/) for platform-specific setup a
   </a>
   <a href="getting-started/first-project/" class="ls-card">
     <div class="ls-card-title">📋 Your First Project</div>
-    <p class="ls-card-desc">Walk through new-project → discuss → plan → execute → verify from scratch.</p>
+    <p class="ls-card-desc">Walk through the full loop: new-project → discuss → plan → execute → verify → review → ship → compound.</p>
   </a>
   <a href="getting-started/five-commands/" class="ls-card">
     <div class="ls-card-title">⚡ The 5 Commands</div>

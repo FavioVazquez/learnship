@@ -127,12 +127,35 @@ Same pattern repeats. By the end of Phase 3:
 All pass clean.
 
 ```
-/review                # v2.0: multi-persona code review before shipping
-/ship                  # v2.0: test → lint → commit → push → PR
-/compound              # v2.0: capture notable patterns from this phase
+/review
 ```
 
+Multi-persona code review across 6 lenses. Findings:
+
 ```
+P1 (security): Rate limiter on /auth/login allows 100 req/s — should be 10
+P2 (testing): No integration test for WebSocket reconnection after token refresh
+P3 (maintainability): TaskRepository.getFiltered() has 6 parameters — extract filter object
+```
+
+Fix the P1, note the P2 for next milestone, accept the P3 as known tech debt.
+
+```
+/ship
+```
+
+Runs test suite (47 passing), stages changes, creates conventional commit `feat(phase-4): integration tests and hardening`, pushes, opens PR.
+
+```
+/compound
+```
+
+Captures two solutions:
+- `testing/integration-test-websocket-auth.md` — pattern for testing authenticated WebSocket connections
+- `performance/prisma-connection-pool-sizing.md` — connection pool tuning learned during Phase 4
+
+```
+/sync-docs
 /audit-milestone
 ```
 
@@ -169,9 +192,26 @@ Schedules: Prisma error handling, JWT refresh pattern, WebSocket broadcast archi
 
 ---
 
+## What's next?
+
+After `/complete-milestone`, you have several paths:
+
+```
+/ideate                         # scan codebase for what to build next
+/discuss-milestone v2.0         # capture goals + anti-goals for the next version
+/challenge                      # stress-test an ambitious scope before committing
+/new-milestone v2.0             # create the next roadmap
+```
+
+`/ideate` is especially valuable between milestones — it scans for TODOs, test gaps, hotspots, and friction points in the codebase you just built, then ranks improvement ideas by impact and feasibility.
+
+---
+
 ## Key patterns to carry forward
 
 - Always `/discuss-phase` before `/plan-phase`: the context file is the planner's primary input
 - `/verify-work` is you doing real testing, not the agent running scripts
+- `/review` → `/ship` → `/compound` after every phase: code review catches what testing misses, shipping ensures clean delivery, compounding turns solved problems into searchable knowledge
 - Bugs found during UAT are learning moments: use `@agentic-learning learn [domain]`
 - `/audit-milestone` before releasing: it catches what manual testing misses
+- `/guard` when working near sensitive areas (auth, payments, migrations): prevents accidental destructive changes
