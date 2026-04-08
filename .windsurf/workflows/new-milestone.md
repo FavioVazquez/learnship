@@ -133,11 +133,15 @@ If yes: merge missing keys into `.planning/config.json` using the defaults from 
 
 ## Step 7: Research Decision
 
+> **🔴 MANDATORY USER CHOICE — You must ask this question and wait for a reply. You are NOT allowed to decide this yourself, even if the domain seems trivial, familiar, or well-understood. The user decides. Always.**
+
 Read `workflow.research` from `.planning/config.json`.
 
-Ask: "Research the domain for the new features before defining requirements?"
+Ask: **"Research the domain for the new features before defining requirements?"**
 - **Research first** (recommended) — investigate new capabilities' ecosystem
 - **Skip research** — domain is familiar
+
+> 🛑 STOP. Wait for the user's explicit choice. Do not default to either option. Do not reason about whether research is needed — that is the user's call. Do not proceed until the user replies.
 
 Update config accordingly:
 ```bash
