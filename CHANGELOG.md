@@ -9,6 +9,18 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.3] — 2026-04-08
+
+### Fixed
+
+- **`docs/configuration.md`** — Added missing `planning.commit_mode` key to schema and documentation section.
+- **`README.md`** — Added `planning.commit_mode`, `parallelization`, `test_first` to Core Settings table. Removed duplicate `test_first` from v2.0 Settings. Updated phase loop framing from "core 4 + 3 optional" to "7-step loop".
+- **`docs/index.md`** — Workflow Engine card shows full 7-step loop instead of 4-step.
+- **`docs/workflow-reference/core.md`** — "core 4-step loop" comment replaced with "7-step loop".
+- **`docs/core-concepts/phase-loop.md`** — Description and framing updated to 7-step loop as the standard.
+
+---
+
 ## [v2.0.2] — 2026-04-08
 
 ### Fixed

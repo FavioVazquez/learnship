@@ -202,7 +202,7 @@ learnship has 49 workflows. You don't need to know them all. Start with these fi
 
 ![Phase loop](assets/phase-loop.png)
 
-Once you have a project, every feature ships through the phase loop. The core is four steps, and v2.0 extends it with three optional quality steps:
+Once you have a project, every feature ships through a 7-step phase loop:
 
 ```mermaid
 flowchart LR
@@ -419,6 +419,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "test_first": false,
   "planning": {
     "commit_docs": true,
+    "commit_mode": "auto",
     "search_gitignored": false
   },
   "workflow": {
@@ -453,6 +454,9 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `granularity` | `coarse`, `standard`, `fine` | `standard` | Phase size: 3-5 / 5-8 / 8-12 phases |
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
+| `parallelization` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
+| `test_first` | `true`, `false` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
+| `planning.commit_mode` | `auto`, `manual` | `auto` | `auto` commits after each workflow step; `manual` skips all git commits |
 
 ### Workflow Toggles
 
@@ -465,11 +469,10 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `workflow.review` | `true` | Enable `/review` suggestions after `/verify-work` (v2.0) |
 | `workflow.solutions_search` | `true` | Search `.planning/solutions/` during `/plan-phase` (v2.0) |
 
-### v2.0 Settings
+### Review & Ship Settings
 
 | Setting | Default | What it controls |
 |---------|---------|------------------|
-| `test_first` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
 | `review.auto_after_verify` | `false` | Auto-run `/review` after `/verify-work` passes |
 | `ship.auto_test` | `true` | Run test suite before shipping |
 | `ship.conventional_commits` | `true` | Use conventional commit format |

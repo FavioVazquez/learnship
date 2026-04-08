@@ -143,10 +143,10 @@ Starts a new milestone version cycle.
 ## Common patterns
 
 ```bash
-# Standard phase lifecycle (core 4-step loop)
-/discuss-phase N → /plan-phase N → /execute-phase N → /verify-work N
+# Full phase lifecycle (7-step loop)
+/discuss-phase N → /plan-phase N → /execute-phase N → /verify-work N → /review → /ship → /compound
 
-# Extended v2.0 lifecycle (with quality steps)
+# Same loop, one command per line:
 /discuss-phase N
 /plan-phase N
 /execute-phase N
