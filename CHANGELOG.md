@@ -9,6 +9,16 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.4] — 2026-04-08
+
+### Fixed
+
+- **`/new-project` AGENTS.md generation** — Step 8 now explicitly lists which template sections must be copied verbatim (Soul, Principles, Platform Context, Skills, Regressions) vs which are fill-in (Title, Current Phase, Project Structure, Tech Stack). Includes a 9-point verification checklist to prevent agents from free-styling the file. Project-specific sections (Conventions, etc.) are allowed but only in the designated slot.
+- **`/new-project` research decision** — Added 🔴 MANDATORY USER CHOICE gate. The agent is now explicitly forbidden from auto-deciding whether to research, even if the domain seems familiar. The user always decides.
+- **`/new-milestone` research decision** — Same mandatory user choice gate and 🛑 STOP added to prevent agents from skipping the research question.
+
+---
+
 ## [v2.0.3] — 2026-04-08
 
 ### Fixed

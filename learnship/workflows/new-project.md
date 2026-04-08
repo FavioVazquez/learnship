@@ -275,11 +275,13 @@ git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 
 ## Step 5: Research Decision
 
+> **🔴 MANDATORY USER CHOICE — You must ask this question and wait for a reply. You are NOT allowed to decide this yourself, even if the domain seems trivial, familiar, or well-understood. The user decides. Always.**
+
 Ask: **"Before I write the requirements — do you want me to research the domain ecosystem first?"**
 - **Research first** (recommended) — Discover standard stacks, expected features, architecture patterns
 - **Skip research** — I know this domain well, go straight to requirements
 
-> 🛑 STOP. Wait for the user's explicit choice. Do not default to either option. Do not write REQUIREMENTS.md yet. Do not proceed until the user replies.
+> 🛑 STOP. Wait for the user's explicit choice. Do not default to either option. Do not reason about whether research is needed — that is the user's call. Do not write REQUIREMENTS.md yet. Do not proceed until the user replies.
 
 **If Research first:**
 
@@ -394,9 +396,26 @@ git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git
 
 > **🔴 MANDATORY — This step must always be completed. Do not skip it, do not defer it, do not move to Step 9 without writing AGENTS.md to the project root. AGENTS.md is the persistent memory file that every future session depends on.**
 
-Copy `@./templates/agents.md` to the project root as `AGENTS.md`.
+Start by reading `@./templates/agents.md` in full. This is the **canonical template**. The generated AGENTS.md must follow its exact structure.
 
-Fill in the placeholder sections using information gathered in this session:
+**Sections to copy VERBATIM (do not rewrite, do not summarize, do not rephrase):**
+- `## Soul — Who We Are Together` (entire section including Voice & Character and Relationship Model)
+- `## Principles — How We Operate` (all 10 principles, verbatim)
+- `## Platform Context` (the learnship key facts block, verbatim)
+- `## Skills — Operational Knowledge` (CHANGELOG Discipline and Decisions Register, verbatim)
+- `## Regressions — What Broke and What We Learned` (the empty starter block, verbatim)
+
+**Sections to FILL IN with project-specific information:**
+
+**Title** — Replace `[PROJECT NAME]` with the actual project name.
+
+**Current Phase** block:
+```
+Milestone: v1.0 — [Milestone Name from PROJECT.md]
+Phase: 1 — [Phase 1 name from ROADMAP.md]
+Status: planning
+Last updated: [today's date]
+```
 
 **Project Structure** — derive from the project description and any existing directories:
 ```bash
@@ -413,13 +432,18 @@ Populate the `## Project Structure` tree with real directories and one-line desc
 - How to run the dev server
 - How to run tests
 
-**Current Phase** block:
-```
-Milestone: v1.0 — [Milestone Name from PROJECT.md]
-Phase: 1 — [Phase 1 name from ROADMAP.md]
-Status: planning
-Last updated: [today's date]
-```
+**You may ADD project-specific sections** (e.g., Conventions, Content Sources, Definition of Done) **after** the Tech Stack section and **before** Skills. But you must NEVER remove, rename, or replace the template sections listed above.
+
+**Verification checklist (run before committing):**
+- [ ] File starts with `# AGENTS.md — [Project Name]`
+- [ ] `## Soul — Who We Are Together` exists with Voice & Character and Relationship Model
+- [ ] `## Principles — How We Operate` exists with all 10 numbered principles
+- [ ] `## Platform Context` exists with the 7-step phase loop
+- [ ] `## Current Phase` exists with milestone, phase, status, and date
+- [ ] `## Project Structure` exists with a directory tree
+- [ ] `## Tech Stack` exists with language, framework, libraries, dev server, tests
+- [ ] `## Skills — Operational Knowledge` exists with CHANGELOG Discipline and Decisions Register
+- [ ] `## Regressions — What Broke and What We Learned` exists at the end
 
 **If `commit_mode` is `auto`:**
 ```bash
