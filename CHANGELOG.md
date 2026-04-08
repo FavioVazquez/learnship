@@ -9,6 +9,16 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.6] — 2026-04-08
+
+### Fixed
+
+- **`/ideate` sequencing** — Removed incorrect "Run before `/new-project`" claim. `/ideate` requires an existing project with `AGENTS.md` and `.planning/` to ground its codebase scan. Added pre-flight check (Step 1) that stops with a helpful message if no project exists, directing users to `@agentic-learning brainstorm` for pre-project ideation instead. Updated "Route to Action" (Step 8) to offer "Start a new milestone" instead of "Start a new project."
+- **`/ideate` documentation** — Updated "When to use" in `docs/workflow-reference/compounding-quality.md` to clarify project requirement and point to `@agentic-learning brainstorm` as the pre-project alternative.
+- **`/complete-milestone` done banner** — Added `/ideate` and `/challenge` suggestions. This is the most natural moment to suggest between-milestone workflows, and it was the only milestone lifecycle workflow that didn't route to them.
+
+---
+
 ## [v2.0.5] — 2026-04-08
 
 ### Fixed
