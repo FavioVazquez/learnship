@@ -136,13 +136,19 @@ AGENTS.md                   ← AI reads this every session
 /plan-phase 2
 /execute-phase 2
 /verify-work 2
+/review              # v2.0: multi-persona code review (optional)
+/ship                # v2.0: test → commit → push → PR (optional)
+/compound            # v2.0: capture what you learned (optional)
 ```
 
-`/ls` at any time shows your current position and what to do next. When all phases are done:
+`/ls` at any time shows your current position and what to do next. The v2.0 quality steps (`/review`, `/ship`, `/compound`) are optional but recommended — they surface naturally through done-banner suggestions.
+
+When all phases are done:
 
 ```
-/audit-milestone    # check coverage before releasing
-/complete-milestone # archive, tag, done
+/sync-docs           # v2.0: detect stale documentation (optional)
+/audit-milestone     # check coverage before releasing
+/complete-milestone  # archive, tag, done
 ```
 
 See [Examples → Greenfield Project](../examples/greenfield.md) for a full end-to-end walkthrough with real output.

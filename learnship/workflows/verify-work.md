@@ -185,6 +185,9 @@ Display summary:
 ```
 All tests passed. ✓
 
+💡 Compound learnings? Run `/compound` to capture any notable solutions
+or patterns from this phase while context is fresh.
+
 ▶ Next: discuss-phase [X+1]
 ```
 

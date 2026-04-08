@@ -186,7 +186,7 @@ else
   fail "commands/learnship/ directory missing"
 fi
 
-EXPECTED_COUNT=42
+EXPECTED_COUNT=49
 ACTUAL_COUNT=$(ls "$COMMANDS_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
 if [ "$ACTUAL_COUNT" -ge "$EXPECTED_COUNT" ]; then
   ok "commands/learnship/ has $ACTUAL_COUNT command wrappers (>= $EXPECTED_COUNT expected)"
@@ -256,10 +256,10 @@ for subdir in workflows references templates; do
 done
 
 WF_COUNT=$(ls "$REPO/learnship/workflows"/*.md 2>/dev/null | wc -l | tr -d ' ')
-if [ "$WF_COUNT" -ge 42 ]; then
-  ok "learnship/workflows/ has $WF_COUNT workflow files (>= 42)"
+if [ "$WF_COUNT" -ge 49 ]; then
+  ok "learnship/workflows/ has $WF_COUNT workflow files (>= 49)"
 else
-  fail "learnship/workflows/ has $WF_COUNT files, expected >= 42"
+  fail "learnship/workflows/ has $WF_COUNT files, expected >= 49"
 fi
 
 # templates/agents.md must exist (used by new-project Step 8 to generate AGENTS.md)
@@ -303,7 +303,7 @@ else
   fail "learnship/agents/ directory missing — @./agents/ references in ceremony workflows will silently fail"
 fi
 
-for PERSONA in researcher planner executor verifier debugger; do
+for PERSONA in researcher planner executor verifier debugger solution-writer code-reviewer challenger ideation-agent; do
   if [ -f "$AGENTS_DIR/$PERSONA.md" ]; then
     ok "learnship/agents/$PERSONA.md exists"
   else
@@ -508,6 +508,10 @@ REQUIRED_AGENTS=(
   "learnship-plan-checker.md"
   "learnship-verifier.md"
   "learnship-debugger.md"
+  "learnship-solution-writer.md"
+  "learnship-code-reviewer.md"
+  "learnship-challenger.md"
+  "learnship-ideation-agent.md"
 )
 
 for agent in "${REQUIRED_AGENTS[@]}"; do

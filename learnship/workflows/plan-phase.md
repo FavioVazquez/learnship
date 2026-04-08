@@ -53,6 +53,29 @@ Ask: "No CONTEXT.md found for Phase [X]. Plans will use research and requirement
 
 **If CONTEXT.md exists:** Load it and confirm: "Using phase context from: [path]"
 
+## Step 2b: Search Solutions for Prior Art
+
+**Skip if:** `workflow.solutions_search` is `false` in config (defaults to `true`).
+
+Search `.planning/solutions/` for prior art matching this phase's keywords:
+
+```bash
+# Check if solutions directory exists
+ls .planning/solutions/ 2>/dev/null
+
+# Search for matching solutions by phase keywords
+grep -ril "[phase_keyword1]\|[phase_keyword2]\|[phase_keyword3]" .planning/solutions/ 2>/dev/null
+```
+
+If matches found, read the frontmatter (first 30 lines) of each match. Surface relevant prior solutions to the planner:
+
+```
+Solutions prior art found:
+- .planning/solutions/[category]/[file].md — [title] (relevant: [why])
+```
+
+These solutions provide context for planning — the planner should reference them to avoid reinventing known solutions.
+
 ## Step 3: Research Phase
 
 **Skip if:** `--skip-research` flag, or `workflow.research` is `false` in config, or RESEARCH.md already exists (unless `--research` flag forces re-research).

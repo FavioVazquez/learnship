@@ -10,7 +10,7 @@
   <a href="https://github.com/FavioVazquez/learnship/stargazers"><img src="https://img.shields.io/github/stars/FavioVazquez/learnship?style=flat&color=f59e0b" alt="Stars"></a>
   <a href="https://www.npmjs.com/package/learnship"><img src="https://img.shields.io/npm/v/learnship?color=cb3837&label=npm" alt="npm"></a>
   <img src="https://img.shields.io/badge/platforms-6-0ea5e9" alt="6 platforms">
-  <img src="https://img.shields.io/badge/workflows-42-3b82f6" alt="42 workflows">
+  <img src="https://img.shields.io/badge/workflows-49-3b82f6" alt="49 workflows">
 </p>
 
 <p align="center">
@@ -36,7 +36,8 @@ Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on th
 learnship gives you that harness as a portable, open-source layer that runs inside Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, or Codex CLI and adds three things your agent doesn't have by default:
 
 - **Persistent memory.** `/new-project` generates an `AGENTS.md` at your project root. Windsurf, Claude Code, and Cursor load it automatically every session; on other platforms the workflows reference it explicitly. No more repeating yourself.
-- **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
+- **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify → Review → Ship → Compound) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
+- **Knowledge compounding (v2.0).** `/compound` captures solved problems as searchable documentation. `/review` runs multi-persona code review. `/challenge` stress-tests scope. `/ship` runs the full delivery pipeline. `/ideate` generates codebase-grounded ideas. `/guard` adds safety mode. `/sync-docs` detects stale documentation.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
@@ -117,7 +118,7 @@ Or specify your platform explicitly. See [Platform Support](#-platform-support) 
 
 ### Why `npx learnship`?
 
-learnship v1.9.0 is published to npm — `npx learnship` pulls the latest release directly. No `github:` prefix, no clone needed, no version pinning. The same `bin/install.js` runs regardless of whether you install via npm, marketplace, or native extension.
+learnship is published to npm — `npx learnship` pulls the latest release directly. No `github:` prefix, no clone needed, no version pinning. The same `bin/install.js` runs regardless of whether you install via npm, marketplace, or native extension.
 
 ### 2. Start your AI agent and type
 
@@ -139,7 +140,7 @@ What's covered:
 - **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
 - **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
 - **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 21 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 42 workflows documented with when and why to use each
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 49 workflows documented with when and why to use each
 - **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
 
 ---
@@ -183,7 +184,7 @@ Each platform gets the best experience it supports:
 
 ![5 commands diagram](assets/quick-start-flow.png)
 
-learnship has 42 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
+learnship has 49 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
@@ -191,7 +192,7 @@ learnship has 42 workflows. You don't need to know them all. Start with these fi
 | `/next` | Read state and immediately run the right next workflow | When you just want to keep moving |
 | `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
-| `/help` | All 42 workflows organized by category | Discovering capabilities |
+| `/help` | All 49 workflows organized by category | Discovering capabilities |
 
 > **Tip:** `/ls` works for both new and returning users. New user with no project? It explains learnship and offers to run `/new-project`. Returning user? It shows your progress and suggests exactly what to do next.
 
@@ -201,7 +202,7 @@ learnship has 42 workflows. You don't need to know them all. Start with these fi
 
 ![Phase loop](assets/phase-loop.png)
 
-Once you have a project, every feature ships through the same four-step loop:
+Once you have a project, every feature ships through the phase loop. The core is four steps, and v2.0 extends it with three optional quality steps:
 
 ```mermaid
 flowchart LR
@@ -209,9 +210,13 @@ flowchart LR
     PP["/plan-phase N<br/>Research + plans"]
     EP["/execute-phase N<br/>Build + commit"]
     VW["/verify-work N<br/>UAT + diagnose"]
+    RV["/review<br/>Multi-persona review"]
+    SH["/ship<br/>Test → PR"]
+    CP["/compound<br/>Capture knowledge"]
 
     DP --> PP --> EP --> VW
-    VW -->|"next phase"| DP
+    VW --> RV --> SH --> CP
+    CP -->|"next phase"| DP
     VW -->|"all done"| DONE["✓ /complete-milestone"]
 ```
 
@@ -221,6 +226,9 @@ flowchart LR
 | **2. Plan** | `/plan-phase N` | Agent researches the domain, creates executable plans, verifies them |
 | **3. Execute** | `/execute-phase N` | Plans run in dependency order, one atomic commit per task |
 | **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
+| **5. Review** | `/review` | Multi-persona code review through 6 lenses (v2.0) |
+| **6. Ship** | `/ship` | Test → lint → commit → push → PR (v2.0) |
+| **7. Compound** | `/compound` | Capture what you learned as searchable documentation (v2.0) |
 
 **Just starting?** `/ls` or `/next` will route you into the right step automatically.
 
@@ -302,7 +310,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 
 ## 📖 Workflow Reference: Advanced
 
-> These are all 42 workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
+> These are all 49 workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
 
 ### Core Workflow
 
@@ -370,6 +378,18 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | `/milestone-retrospective` | 5-question retrospective + spaced review | After `/complete-milestone` |
 | `/transition` | Write full handoff document for new session/collaborator | Before handing off or long break |
 
+### Compounding & Quality (v2.0)
+
+| Workflow | Purpose | When to use |
+|----------|---------|-------------|
+| `/compound` | Capture solved problem as searchable documentation | After `/debug`, `/verify-work`, or any aha moment |
+| `/review` | Multi-persona code review (6 lenses) | After `/verify-work`, before shipping |
+| `/challenge` | Stress-test scope through product + engineering lenses | Before committing to a milestone or large feature |
+| `/ship` | Test → lint → commit → push → PR | After review, ready to deploy |
+| `/ideate` | Codebase-grounded idea generation | Before `/discuss-milestone`, between milestones |
+| `/guard` | Safety mode: protect sensitive directories | Working on auth, payments, migrations |
+| `/sync-docs` | Detect stale documentation | Before `/complete-milestone`, after refactors |
+
 ### Maintenance
 
 | Workflow | Purpose | When to use |
@@ -395,6 +415,8 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
+  "parallelization": false,
+  "test_first": false,
   "planning": {
     "commit_docs": true,
     "search_gitignored": false
@@ -403,7 +425,17 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "nyquist_validation": true
+    "validation": true,
+    "review": true,
+    "solutions_search": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
   },
   "git": {
     "branching_strategy": "none",
@@ -429,7 +461,19 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `workflow.research` | `true` | Domain research before planning each phase |
 | `workflow.plan_check` | `true` | Plan verification loop (up to 3 iterations) |
 | `workflow.verifier` | `true` | Post-execution verification against phase goals |
-| `workflow.nyquist_validation` | `true` | Test coverage mapping during plan-phase |
+| `workflow.validation` | `true` | Test coverage mapping during plan-phase |
+| `workflow.review` | `true` | Enable `/review` suggestions after `/verify-work` (v2.0) |
+| `workflow.solutions_search` | `true` | Search `.planning/solutions/` during `/plan-phase` (v2.0) |
+
+### v2.0 Settings
+
+| Setting | Default | What it controls |
+|---------|---------|------------------|
+| `test_first` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
+| `review.auto_after_verify` | `false` | Auto-run `/review` after `/verify-work` passes |
+| `ship.auto_test` | `true` | Run test suite before shipping |
+| `ship.conventional_commits` | `true` | Use conventional commit format |
+| `ship.pr_template` | `true` | Auto-generate PR description |
 
 ### Git Branching
 
@@ -446,13 +490,15 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | Planner | large | large | medium |
 | Executor | large | medium | medium |
 | Phase Researcher | large | medium | small |
-| Project Researcher | large | medium | small |
+| Debugger | large | medium | medium |
 | Verifier | medium | medium | small |
 | Plan Checker | medium | medium | small |
-| Debugger | large | medium | medium |
-| Codebase Mapper | medium | small | small |
+| Solution Writer | medium | medium | small |
+| Code Reviewer | large | medium | medium |
+| Challenger | large | medium | medium |
+| Ideation Agent | large | medium | small |
 
-> **Platform note:** `large` = Claude Opus / Gemini 2.5 Pro / GPT-4o, `medium` = Claude Sonnet / Gemini 2.0 Flash, `small` = Claude Haiku / Gemini Flash Lite. Exact model used depends on your platform.
+> **Platform note:** Tiers map to the best available model on your platform: `large` = Claude Opus 4.6 / Gemini 3.1 Pro / GPT-5.4, `medium` = Claude Sonnet 4.6 / Gemini 3.1 Flash / GPT-5.4-mini, `small` = Claude Haiku 4.5 / Gemini 3.1 Flash-Lite / GPT-5.4-nano. Windsurf, Cursor, and OpenCode use the platform default model — tiers signal intended task complexity.
 
 ### Speed vs. Quality Presets
 
@@ -555,7 +601,11 @@ The **impeccable** skill suite is always active as project context for any UI wo
 /plan-phase 1             # Research + plan + verify
 /execute-phase 1          # Wave-ordered execution
 /verify-work 1            # Manual UAT
+/review                   # v2.0: multi-persona code review
+/ship                     # v2.0: test → commit → push → PR
+/compound                 # v2.0: capture what you learned
                           # Repeat for each phase
+/sync-docs                # v2.0: detect stale documentation
 /audit-milestone          # Check everything shipped
 /complete-milestone       # Archive, tag, done
 ```
@@ -669,6 +719,10 @@ Every project creates a structured `.planning/` directory:
 ├── todos/
 │   ├── pending/              # Captured ideas awaiting work
 │   └── done/                 # Completed todos
+├── solutions/               # Knowledge compounding (from /compound) (v2.0)
+│   ├── auth/                # Solutions by category
+│   ├── performance/
+│   └── ...
 ├── debug/                    # Active debug sessions
 │   └── resolved/             # Archived debug sessions
 ├── quick/
@@ -681,7 +735,7 @@ Every project creates a structured `.planning/` directory:
         ├── 01-CONTEXT.md     # Your implementation preferences
         ├── 01-DISCOVERY.md   # Unfamiliar area mapping (from discovery-phase)
         ├── 01-RESEARCH.md    # Ecosystem research findings
-        ├── 01-VALIDATION.md  # Test coverage contract (Nyquist)
+        ├── 01-VALIDATION.md  # Test coverage contract (from /validate-phase)
         ├── 01-01-PLAN.md     # Executable plan (wave 1)
         ├── 01-02-PLAN.md     # Executable plan (wave 1, independent)
         ├── 01-01-SUMMARY.md  # Execution outcomes
@@ -745,7 +799,7 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 ```
 learnship/
 ├── .windsurf/
-│   ├── workflows/          # 42 workflows as slash commands
+│   ├── workflows/          # 49 workflows as slash commands
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references), native on Windsurf + Claude Code
 │       └── impeccable/         # Design suite: 21 skills, native on Windsurf + Claude Code
@@ -755,13 +809,13 @@ learnship/
 │           ├── polish/          #   /polish
 │           └── …14 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
 │                               # → on OpenCode/Gemini/Codex: both skills copied to learnship/skills/ as context files
-├── commands/               # 42 Claude Code-style slash command wrappers
+├── commands/               # 49 Claude Code-style slash command wrappers
 │   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
 ├── learnship/              # Payload installed into the target platform config dir
-│   ├── workflows/          # 42 workflow markdown files (the actual instructions)
+│   ├── workflows/          # 49 workflow markdown files (the actual instructions)
 │   ├── references/         # Reference docs (questioning, verification, git, design, learning)
 │   └── templates/          # Document templates for .planning/ + AGENTS.md template
-├── agents/                 # 6 agent personas (planner, researcher, executor, verifier, debugger, plan-checker)
+├── agents/                 # 10 agent personas (planner, researcher, executor, verifier, debugger, plan-checker, solution-writer, code-reviewer, challenger, ideation-agent)
 ├── assets/                 # Brand images (banner, explainers, diagrams)
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)

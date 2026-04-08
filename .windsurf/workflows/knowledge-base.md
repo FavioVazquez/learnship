@@ -32,6 +32,9 @@ find .planning/ -name "*-RESEARCH.md" | sort
 
 # AGENTS.md regressions
 grep -A 5 "### 20" AGENTS.md 2>/dev/null
+
+# Compounded solutions
+find .planning/solutions/ -name "*.md" -type f 2>/dev/null | sort
 ```
 
 ## Step 3: Extract Knowledge
@@ -52,6 +55,11 @@ From each source, extract structured knowledge items:
 **From RESEARCH.md files:**
 - "Don't Hand-Roll" entries → Knowledge item: `library`
 - "Common Pitfalls" entries → Knowledge item: `pitfall`
+
+**From compounded solutions (`.planning/solutions/`):**
+- Bug track solutions → Knowledge item: `lesson` (root cause + prevention)
+- Knowledge track solutions → Knowledge item: `pattern` or `anti-pattern`
+- Read YAML frontmatter for classification (module, problem_type, severity, tags)
 
 Deduplicate: if the same concept appears multiple times, merge into one entry with multiple `sources`.
 

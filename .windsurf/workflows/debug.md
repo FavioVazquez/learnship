@@ -200,6 +200,13 @@ node -e "require('fs').mkdirSync('.planning/debug/resolved',{recursive:true})"
 mv ".planning/debug/[session-file]" ".planning/debug/resolved/"
 ```
 
+Suggest compounding the solution:
+```
+💡 Compound this fix? Run `/compound` to capture the problem, root cause,
+and solution while context is fresh. Future plan-phase runs will search
+these solutions before planning.
+```
+
 ## Step 9b: Update AGENTS.md Regressions
 
 If `AGENTS.md` exists at the project root, append a regression entry to the `## Regressions` section:

@@ -101,9 +101,15 @@ Context: [✓ CONTEXT.md exists | — not yet]
    - If CONTEXT.md exists: `▶ Next: plan-phase [X]`
    - If no CONTEXT.md: `▶ Next: discuss-phase [X]` (recommended) or `plan-phase [X]`
 
-5. **Summaries = plans AND plans > 0** → phase complete
-   - If more phases remain: `▶ Next: discuss-phase [X+1]`
-   - If all phases done: `▶ Next: audit-milestone`
+5. **Summaries = plans AND plans > 0, UAT not done** → verify first
+   - `▶ Next: verify-work [X]`
+
+6. **Summaries = plans, UAT passed, more phases remain** → move forward
+   - `▶ Next: discuss-phase [X+1]`
+   - Suggest: `/review` → `/ship` → `/compound` before starting next phase
+
+7. **All phases done** → ready to ship
+   - `▶ Next: audit-milestone`
 
 After presenting the recommended next step, ask:
 

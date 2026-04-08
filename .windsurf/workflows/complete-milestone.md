@@ -163,6 +163,15 @@ git add AGENTS.md
 git commit -m "docs: update AGENTS.md — milestone [VERSION] complete"
 ```
 
+## Step 7c: Sync Documentation
+
+Suggest running `/sync-docs` before the release tag to catch stale documentation:
+
+```
+💡 Before tagging the release, consider running `/sync-docs` to detect
+any documentation that drifted during this milestone.
+```
+
 ## Step 8: Offer Next Milestone
 
 Ask: "Ready to start the next milestone?"

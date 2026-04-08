@@ -28,6 +28,13 @@ The following workflows are available as platform slash commands (Windsurf) or c
 | `/pause-work` | User is stopping mid-phase |
 | `/resume-work` | User is returning to an in-progress project |
 | `/complete-milestone` | All phases in the current milestone are done |
+| `/compound` | Just solved a problem or learned a pattern — capture it while fresh |
+| `/review` | Code ready for review — multi-persona quality check |
+| `/challenge` | About to commit to a milestone or big feature — stress-test the scope |
+| `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
+| `/ideate` | Looking for what to build next — codebase-grounded idea generation |
+| `/guard` | Working on sensitive files — enable safety mode |
+| `/sync-docs` | After code changes — detect stale documentation |
 
 ## Planning Artifacts
 
@@ -50,6 +57,11 @@ Reference these files when adopting a specific role:
 - `@./agents/executor.md` — Implementing plans (atomic commits, no scope creep)
 - `@./agents/verifier.md` — Verifying plans or phase goal achievement
 - `@./agents/debugger.md` — Diagnosing root causes (read-only, never fix)
+- `@./agents/solution-writer.md` — Writing solution documents for `.planning/solutions/`
+- `@./agents/code-reviewer.md` — Multi-persona code review through specific lenses
+- `@./agents/challenger.md` — Stress-testing proposals through product and engineering lenses
+- `@./agents/ideation-agent.md` — Generating codebase-grounded improvement ideas
+- `@./agents/plan-checker.md` — Verifying PLAN.md completeness, goal coverage, wave correctness
 
 ## Learning Mode
 
@@ -64,6 +76,10 @@ Learning checkpoints:
 - After plan-phase → `@agentic-learning cognitive-load`
 - After execute-phase → `@agentic-learning reflect`
 - After verify-work passes → `@agentic-learning space`
+- After `/review` → `@agentic-learning learn` (review findings as learning material)
+- After `/challenge` → `@agentic-learning either-or` (which lens was most valuable?)
+- After `/ship` → `@agentic-learning reflect` (what went well in this cycle?)
+- After `/ideate` → `@agentic-learning brainstorm` (explore top idea collaboratively)
 - During complex quick tasks → `@agentic-learning struggle`
 
 ## Design Skill
@@ -104,3 +120,4 @@ Does .planning/PROJECT.md exist?
 - `@./references/verification-patterns.md` — How to verify implementation quality
 - `@./references/git-integration.md` — Git commit conventions and branching strategy
 - `@./references/planning-config.md` — Config.json schema and options
+- `@./references/solution-schema.md` — YAML frontmatter schema for `.planning/solutions/`

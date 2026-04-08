@@ -14,10 +14,10 @@ Retroactively audit and fill test coverage gaps for a completed phase. Useful af
 
 Read `.planning/config.json`:
 ```bash
-cat .planning/config.json | grep "nyquist_validation"
+cat .planning/config.json | grep "validation"
 ```
 
-If `nyquist_validation: false`: stop — "Validation is disabled. Enable it in `/settings` to use this workflow."
+If `validation: false`: stop — "Validation is disabled. Enable it in `/settings` to use this workflow."
 
 ## Step 2: Validate Phase
 
@@ -76,7 +76,7 @@ For each requirement ID assigned to this phase:
    - **PARTIAL** — test exists but incomplete or failing
    - **MISSING** — no test found
 
-If no gaps (all COVERED): proceed directly to step 8 with `nyquist_compliant: true`.
+If no gaps (all COVERED): proceed directly to step 8 with `compliant: true`.
 
 ## Step 7: Present Gap Plan and Fill
 
@@ -118,7 +118,7 @@ Write `$PHASE_DIR/[padded_phase]-VALIDATION.md`:
 
 ```markdown
 ---
-nyquist_compliant: true | false
+compliant: true | false
 wave_0_complete: true | false
 phase: [N]
 validated: [date]

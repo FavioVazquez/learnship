@@ -114,6 +114,7 @@ Retroactive test coverage audit for a completed phase.
 ```bash
 # Single bug
 /debug "Description of what's broken"
+/compound                    # capture the fix as searchable knowledge (v2.0)
 
 # Multiple bugs from UAT
 /verify-work N
@@ -126,3 +127,6 @@ Retroactive test coverage audit for a completed phase.
 # Re-run a failed plan
 /execute-plan [N] [id]      # without re-running the whole phase
 ```
+
+!!! tip "Compound after debugging (v2.0)"
+    After resolving a bug with `/debug`, run `/compound` to capture the problem, root cause, and fix while context is fresh. Future `/plan-phase` runs will search your solutions store before doing domain research — preventing the same bug from recurring.

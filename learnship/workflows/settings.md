@@ -30,7 +30,7 @@ cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/co
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "nyquist_validation": true
+    "validation": true
   },
   "git": {
     "branching_strategy": "none",
@@ -67,7 +67,7 @@ Current configuration:
 [5] Research agent:    [on/off]
 [6] Plan check agent:  [on/off]
 [7] Verifier agent:    [on/off]
-[8] Nyquist validation:[on/off]
+[8] Test validation:  [on/off]
 [9] Git branching:     [current] (none | phase | milestone)
 [10] Commit docs:      [on/off]
 
@@ -102,9 +102,9 @@ Current: [current]. New value?
 **[3] Model profile:**
 ```
 Model profile controls which model tier each agent uses:
-- quality: Opus for all decision-making agents (highest cost, best results)
-- balanced: Opus for planning, Sonnet for execution (default — good balance)
-- budget: Sonnet for writing code, Haiku for research/verification (lowest cost)
+- quality: large-tier for all decision-making agents (highest cost, best results)
+- balanced: large for planning, medium for execution (default — good balance)
+- budget: medium for writing code, small for research/verification (lowest cost)
 
 Current: [current]. New value?
 ```
@@ -127,9 +127,9 @@ Current: [current]. New value?
 Current: [current]. New value? (on/off)
 ```
 
-**[8] Nyquist validation:**
+**[8] Test validation:**
 ```
-Nyquist validation maps automated test coverage to requirements during plan-phase.
+Test validation maps automated test coverage to requirements during plan-phase.
 - on: plans include automated verify commands per task (recommended)
 - off: skip validation research (good for rapid prototyping)
 
@@ -174,7 +174,7 @@ cat > .planning/config.json << EOF
     "research": [true/false],
     "plan_check": [true/false],
     "verifier": [true/false],
-    "nyquist_validation": [true/false]
+    "validation": [true/false]
   },
   "git": {
     "branching_strategy": "[value]",

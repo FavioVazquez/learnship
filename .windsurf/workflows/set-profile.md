@@ -15,9 +15,9 @@ If no argument provided:
 Usage: set-profile [profile]
 
 Profiles:
-  quality   — Opus for all agents (highest quality, highest cost)
-  balanced  — Opus for planning, Sonnet for execution (recommended)
-  budget    — Sonnet for writing, Haiku for research/verification (lowest cost)
+  quality   — large-tier models for all agents (highest quality, highest cost)
+  balanced  — large for planning, medium for execution (recommended)
+  budget    — medium for writing, small for research/verification (lowest cost)
 
 Current profile: [read from .planning/config.json]
 ```
@@ -70,9 +70,9 @@ git commit -m "chore(config): set model profile to [profile]"
 ```
 Profile updated: [old] → [profile]
 
-[quality]  — Opus agents for all tasks. Use for production milestones.
-[balanced] — Opus for planning, Sonnet for execution. Best default.
-[budget]   — Sonnet/Haiku. Use for prototyping or exploration.
+[quality]  — Large-tier agents for all tasks. Use for production milestones.
+[balanced] — Large for planning, medium for execution. Best default.
+[budget]   — Medium/small tier. Use for prototyping or exploration.
 
 Takes effect immediately on the next workflow run.
 ```

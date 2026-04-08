@@ -143,8 +143,17 @@ Starts a new milestone version cycle.
 ## Common patterns
 
 ```bash
-# Standard phase lifecycle
+# Standard phase lifecycle (core 4-step loop)
 /discuss-phase N → /plan-phase N → /execute-phase N → /verify-work N
+
+# Extended v2.0 lifecycle (with quality steps)
+/discuss-phase N
+/plan-phase N
+/execute-phase N
+/verify-work N
+/review              # multi-persona code review (v2.0)
+/ship                # test → lint → commit → push → PR (v2.0)
+/compound            # capture what you learned (v2.0)
 
 # With explicit review before executing
 /discuss-phase N
@@ -157,3 +166,5 @@ Starts a new milestone version cycle.
 /new-project                  # questions focus on what you're ADDING
 # normal phase lifecycle
 ```
+
+See [Compounding & Quality](compounding-quality.md) for the 7 new v2.0 workflows.

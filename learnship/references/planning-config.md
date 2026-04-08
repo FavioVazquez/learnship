@@ -181,4 +181,53 @@ Squash merge is recommended — keeps main branch history clean while preserving
 
 </branching_strategy_behavior>
 
+<v2_config_options>
+
+## v2.0.0 Configuration Options
+
+These options were added in v2.0.0 to support the new compounding, review, ship, and safety workflows.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `test_first` | `false` | Enable TDD mode — red-green-refactor cycle in executor |
+| `workflow.review` | `true` | Enable the `/review` code review workflow |
+| `workflow.solutions_search` | `true` | Search `.planning/solutions/` for prior art during plan-phase |
+| `review.auto_after_verify` | `false` | Automatically run `/review` after verify-work passes |
+| `ship.auto_test` | `true` | Run tests before shipping |
+| `ship.conventional_commits` | `true` | Use conventional commit format in `/ship` |
+| `ship.pr_template` | `true` | Auto-generate PR description in `/ship` |
+
+### Example config.json with v2 options
+
+```json
+{
+  "mode": "interactive",
+  "model_profile": "balanced",
+  "learning_mode": "auto",
+  "parallelization": false,
+  "test_first": false,
+  "workflow": {
+    "review": true,
+    "solutions_search": true,
+    "research": true,
+    "plan_check": true,
+    "verifier": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
+  },
+  "planning": {
+    "commit_docs": true,
+    "search_gitignored": false
+  }
+}
+```
+
+</v2_config_options>
+
 </planning_config>

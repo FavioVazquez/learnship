@@ -16,7 +16,7 @@ You only need to remember **5 commands** to use learnship effectively:
 | `/next` | Auto-pilot — reads state and runs the right workflow for you |
 | `/new-project` | Starting a brand new project |
 | `/quick "..."` | One-off task with atomic commit, no ceremony |
-| `/help` | This screen — see all 42 commands |
+| `/help` | This screen — see all 49 commands |
 
 Everything else below is discoverable from `/ls` as you go.
 
@@ -79,6 +79,18 @@ Everything else below is discoverable from `/ls` as you go.
 | `/check-todos` | Review and act on captured todos |
 | `/add-tests [N]` | Generate unit and E2E tests post-execution |
 
+### Compounding & Quality — capture, review, ship
+
+| Workflow | What it does |
+|----------|-------------|
+| `/compound` | Capture a solution while context is fresh → `.planning/solutions/` |
+| `/review [mode]` | Multi-persona code review (correctness, testing, security, performance, maintainability) |
+| `/challenge [description]` | Product + engineering challenge gate — is this worth building? |
+| `/ship` | Ship pipeline: test → lint → commit → push → PR |
+| `/ideate [focus]` | Codebase-grounded divergent thinking — discover what to work on |
+| `/guard [scope\|off]` | Safety mode — warn on destructive commands, lock file scope |
+| `/sync-docs` | Detect stale documentation after code changes |
+
 ### Decision Intelligence — institutional memory
 
 | Workflow | What it does |
@@ -119,7 +131,7 @@ Everything else below is discoverable from `/ls` as you go.
 
 **Standard phase loop:**
 ```
-/discuss-phase N → /plan-phase N → /execute-phase N → /verify-work N
+/discuss-phase N → /plan-phase N → /execute-phase N → /verify-work N → /review → /ship → /compound
 ```
 
 **Quick fix:**

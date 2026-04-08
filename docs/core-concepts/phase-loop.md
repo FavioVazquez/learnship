@@ -7,7 +7,7 @@ description: "How learnship structures work into phases: discuss, plan, execute,
 
 ![Phase loop diagram](../assets/phase-loop.png)
 
-Every feature in learnship ships through the same four-step loop. The loop repeats for each phase of your project until all phases are done.
+Every feature in learnship ships through a repeating loop. The core is four steps (discuss → plan → execute → verify), and v2.0 extends it with three optional quality steps (review → ship → compound) before advancing to the next phase.
 
 ```mermaid
 flowchart LR
@@ -15,11 +15,19 @@ flowchart LR
     PP["/plan-phase N<br/>Research + plans"]
     EP["/execute-phase N<br/>Build + commit"]
     VW["/verify-work N<br/>UAT + diagnose"]
+    RV["/review<br/>Multi-persona review"]
+    SH["/ship<br/>Test → PR"]
+    CP["/compound<br/>Capture knowledge"]
 
     DP --> PP --> EP --> VW
-    VW -->|"next phase"| DP
+    VW --> RV --> SH --> CP
+    CP -->|"next phase"| DP
     VW -->|"all done"| DONE["✓ /complete-milestone"]
 ```
+
+The three new steps (`/review`, `/ship`, `/compound`) are **optional but recommended**. They surface naturally through done-banner suggestions.
+
+![Extended phase loop](../assets/extended-phase-loop.png)
 
 ---
 
@@ -100,6 +108,38 @@ When all criteria pass, the phase is marked complete and `STATE.md` advances.
 
 ---
 
+## Step 5: Review (v2.0)
+
+```
+/review
+```
+
+Multi-persona code review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Only activates lenses relevant to the diff. Produces severity-ranked findings (P0–P3).
+
+See [Workflow Reference → Compounding & Quality](../workflow-reference/compounding-quality.md) for details.
+
+---
+
+## Step 6: Ship (v2.0)
+
+```
+/ship
+```
+
+End-to-end pipeline: detect test runner → run tests → lint → stage → conventional commit → push → create PR. Closes the loop from verified code to production.
+
+---
+
+## Step 7: Compound (v2.0)
+
+```
+/compound
+```
+
+Capture what you learned while context is fresh. Creates structured documentation in `.planning/solutions/` that future `/plan-phase` runs search before research. Turns solved problems into searchable project knowledge.
+
+---
+
 ## Learning is continuous
 
 <span class="ls-learn-badge">learn</span> Every step in the loop has a Learning Checkpoint that fires automatically when `learning_mode: "auto"` (the default).
@@ -111,6 +151,9 @@ When all criteria pass, the phase is marked complete and `STATE.md` advances.
 | After execute | `@agentic-learning reflect` + `quiz` + `interleave` |
 | After verify (pass) | `@agentic-learning space` + `quiz` |
 | After verify (bugs found) | `@agentic-learning learn`: turn the bug into a pattern |
+| After review | `@agentic-learning learn`: review findings as learning material |
+| After ship | `@agentic-learning reflect`: what went well in this cycle? |
+| After compound | `@agentic-learning either-or`: which approach was best? |
 
 See [Skills → Learning Partner](../skills/agentic-learning.md) for all 11 actions.
 
@@ -122,8 +165,13 @@ The phase loop sits inside a milestone lifecycle:
 
 ```mermaid
 flowchart LR
-    DM["/discuss-milestone"] --> NM["/new-milestone"] --> LOOP["Phase loop × N"]
-    LOOP --> AM["/audit-milestone"] --> CM["/complete-milestone"] --> MR["/milestone-retrospective"]
+    ID["/ideate"] -.->|"optional"| DM["/discuss-milestone"]
+    DM --> CH["/challenge"] -.->|"optional"| NM["/new-milestone"]
+    NM --> LOOP["Phase loop × N"]
+    LOOP --> SD["/sync-docs"] -.->|"optional"| AM["/audit-milestone"]
+    AM --> CM["/complete-milestone"] --> MR["/milestone-retrospective"]
 ```
+
+v2.0 adds `/ideate` (before milestone planning), `/challenge` (scope stress-test), and `/sync-docs` (documentation drift detection) as optional steps in the milestone arc.
 
 See [Workflow Reference → Milestone](../workflow-reference/milestone.md) for details.

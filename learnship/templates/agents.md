@@ -140,9 +140,10 @@ Always tell the user which workflow you're about to invoke and why, then wait fo
 This project uses **learnship**. Key facts:
 
 - All planning artifacts live in `.planning/` — read STATE.md and ROADMAP.md first when unsure where we are
-- The phase loop: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`
+- The phase loop: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work` → `/review` → `/ship` → `/compound`
 - Current status is always in `.planning/STATE.md`
 - Decisions are tracked in `.planning/DECISIONS.md` — read it before proposing approaches that may conflict
+- Compounded solutions live in `.planning/solutions/` — organized by category with YAML frontmatter (module, problem_type, severity, tags). Search these before planning to avoid reinventing known solutions
 - Run `/ls` if context is unclear about what phase we're on or what to do next — it shows status and offers to run the next step
 
 ---
@@ -200,6 +201,10 @@ Every significant change gets a dated entry in `CHANGELOG.md` with:
 Architectural and scope decisions are tracked in `.planning/DECISIONS.md`.
 Read it before proposing an approach that has been previously considered.
 When a new decision is made during a session, capture it with `/decision-log`.
+
+### Solutions Store
+
+Compounded solutions live in `.planning/solutions/` — organized by category (build-errors, runtime-errors, best-practices, etc.) with YAML frontmatter for searchability. After fixing a bug or completing a notable feature, run `/compound` to capture the solution while context is fresh. The `/plan-phase` workflow automatically searches these before planning.
 
 ---
 

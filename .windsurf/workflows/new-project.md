@@ -21,7 +21,7 @@ Initialize a new project with full context gathering, optional research, require
 
 ## Step 1: Setup
 
-You are running on **Windsurf**. Platform config directory: `.windsurf/`
+<!-- LEARNSHIP_PLATFORM_LABEL -->
 
 > **Routing protocol suspended.** While this workflow is running, every user message is an answer to a workflow question — not a task to route. Do NOT apply the request routing protocol until `/new-project` is fully complete and `.planning/PROJECT.md` exists.
 
@@ -59,7 +59,7 @@ git init
 
 Add the platform config directory to `.gitignore` so AI platform files are not tracked in the project repo:
 ```bash
-grep -q '.windsurf/' .gitignore 2>/dev/null || echo '.windsurf/' >> .gitignore
+<!-- LEARNSHIP_GITIGNORE_CMD -->
 ```
 
 Create the planning directory:
@@ -108,7 +108,7 @@ Ask: "Which workflow agents should be enabled?"
 
 **Group D — Parallel execution:**
 
-Windsurf does not support real subagents. Parallelization is automatically set to `false`.
+<!-- LEARNSHIP_PARALLEL_BLOCK -->
 
 Ask: "Commit planning docs to git?"
 - **Yes** (recommended) — Planning docs tracked in version control
@@ -378,6 +378,8 @@ Last updated: [today's date]
 ```bash
 git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 ```
+
+<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->
 
 ## Step 9: Done
 

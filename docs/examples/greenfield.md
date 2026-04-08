@@ -127,6 +127,12 @@ Same pattern repeats. By the end of Phase 3:
 All pass clean.
 
 ```
+/review                # v2.0: multi-persona code review before shipping
+/ship                  # v2.0: test → lint → commit → push → PR
+/compound              # v2.0: capture notable patterns from this phase
+```
+
+```
 /audit-milestone
 ```
 

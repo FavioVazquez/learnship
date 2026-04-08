@@ -7,7 +7,7 @@ description: The only 5 commands you need to know to get through 95% of your wor
 
 ![Quick start flow](../assets/quick-start-flow.png)
 
-learnship has 42 workflows. You don't need to know them all. Start with these five: everything else surfaces naturally from `/ls` as you need it.
+learnship has 49 workflows. You don't need to know them all. Start with these five: everything else surfaces naturally from `/ls` as you need it.
 
 ## At a glance
 
@@ -17,7 +17,7 @@ learnship has 42 workflows. You don't need to know them all. Start with these fi
 | `/next` | Auto-pilot: reads state and runs the right workflow | When you just want to keep moving |
 | `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
-| `/help` | All 42 workflows organized by category | Discovering capabilities |
+| `/help` | All 49 workflows organized by category | Discovering capabilities |
 
 ---
 
@@ -91,7 +91,7 @@ Executes a small, atomic task with full guarantees: atomic commits, rollback on 
 /help
 ```
 
-Lists all 42 workflows organized by category with one-line descriptions. Use this when you want to check if a specific capability exists: scope changes, debugging workflows, decision logging, milestone management, and more.
+Lists all 49 workflows organized by category with one-line descriptions. Use this when you want to check if a specific capability exists: scope changes, debugging workflows, decision logging, milestone management, and more.
 
 ---
 

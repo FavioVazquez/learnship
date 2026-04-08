@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate commands/learnship/*.md — Claude Code format wrappers for all 42 workflows.
+ * Generate commands/learnship/*.md — Claude Code format wrappers for all 49 workflows.
  * Run: node scripts/gen-commands.js
  */
 
@@ -96,6 +96,22 @@ const WORKFLOWS = [
   ['transition', 'Hand off a project context to a new session or collaborator — writes a HANDOFF.md with full state snapshot', null,
     ['Read', 'Bash', 'Write']],
 
+  // Compounding & Quality
+  ['compound', 'Capture a solution at the moment of solving — structured doc to .planning/solutions/', null,
+    ['Read', 'Bash', 'Write', 'Task']],
+  ['review', 'Multi-persona code review — correctness, testing, security, performance, maintainability', '[mode]',
+    ['Read', 'Bash', 'Write', 'Task']],
+  ['challenge', 'Product + engineering challenge gate — is this worth building?', '[description]',
+    ['Read', 'Write', 'AskUserQuestion']],
+  ['ship', 'Ship pipeline — test, lint, commit, push, PR', null,
+    ['Read', 'Bash', 'Write']],
+  ['ideate', 'Codebase-grounded divergent thinking — discover what is worth working on', '[focus]',
+    ['Read', 'Bash', 'Write', 'Task']],
+  ['guard', 'Safety mode — warn on destructive commands, lock file scope', '[scope|off]',
+    ['Read', 'Write']],
+  ['sync-docs', 'Detect stale documentation after code changes', null,
+    ['Read', 'Bash', 'Write']],
+
   // Maintenance
   ['settings', 'Interactive settings editor for .planning/config.json', null,
     ['Read', 'Write', 'AskUserQuestion']],
@@ -124,7 +140,7 @@ ${toolsList}
 ---
 
 <execution_context>
-@~/.claude/learnship/workflows/${name}.md
+@~/.claude/workflows/${name}.md
 </execution_context>
 
 <context>
