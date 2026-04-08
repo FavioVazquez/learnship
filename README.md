@@ -832,13 +832,16 @@ learnship/
 
 ## 🙏 Inspiration & Credits
 
-**learnship** was built on top of ideas and work from three open-source projects:
+**learnship** builds on ideas and work from these open-source projects:
 
-- **[get-shit-done](https://github.com/davila7/get-shit-done)**: the spec-driven, context-engineered workflow system that inspired the phase lifecycle, planning artifacts, and agent coordination patterns
-- **[agentic-learning](https://github.com/FavioVazquez/agentic-learning)**: the learning partner skill whose neuroscience-backed techniques (retrieval, spacing, generation, reflection) power the Learning Partner layer
-- **[impeccable](https://github.com/pbakaus/impeccable)**: the frontend design skill that raised the bar on UI quality standards and powers the Design System layer
+- **[get-shit-done](https://github.com/gsd-build/get-shit-done)**: spec-driven development with structured workflows and planning artifacts — no sprint ceremonies, just build
+- **[agentic-learning](https://github.com/FavioVazquez/agentic-learning)**: neuroscience-backed learning techniques woven into the development cycle
+- **[impeccable](https://github.com/pbakaus/impeccable)**: frontend design quality system with auditing and refinement actions
+- **[compound-engineering](https://github.com/EveryInc/compound-engineering-plugin)**: the philosophy that each unit of engineering work should make subsequent units easier — compounding knowledge through structured review and documentation
+- **[superpowers](https://github.com/obra/superpowers)**: complete development workflow for coding agents with subagent-driven execution, TDD enforcement, and plan-based task dispatching
+- **[gstack](https://github.com/nichochar/gstack)**: builder-first engineering system with safety guards, shipping pipelines, multi-specialist review, and the "Boil the Lake" philosophy of AI-assisted completeness
 
-learnship adapts, combines, and extends these into a unified, multi-platform system. All three are used as inspiration and learnship is original work built on their shoulders.
+learnship adapts, combines, and extends these into a unified, multi-platform system with integrated learning. All are used as inspiration and learnship is original work built on their shoulders.
 
 ---
 
