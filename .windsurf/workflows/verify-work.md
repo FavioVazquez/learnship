@@ -181,14 +181,28 @@ Display summary:
 | Skipped | [N]   |
 ```
 
-**If no issues:** 
+**If no issues:**
+
+Read `review.auto_after_verify` from `.planning/config.json` (defaults to `false`).
+
+**If `review.auto_after_verify` is `true`:**
 ```
 All tests passed. ✓
 
-💡 Compound learnings? Run `/compound` to capture any notable solutions
-or patterns from this phase while context is fresh.
+Auto-review is enabled — starting multi-persona code review now.
+```
+Immediately run the `review` workflow for this phase's changes.
 
-▶ Next: discuss-phase [X+1]
+**If `review.auto_after_verify` is `false`:**
+```
+All tests passed. ✓
+
+▶ Recommended next steps:
+  `/review`   — multi-persona code review (6 lenses: correctness, testing, security, performance, maintainability, adversarial)
+  `/ship`     — test → lint → commit → push → PR
+  `/compound` — capture notable solutions or patterns while context is fresh
+
+▶ Or continue: discuss-phase [X+1]
 ```
 
 **If issues found:** Continue to Step 7.

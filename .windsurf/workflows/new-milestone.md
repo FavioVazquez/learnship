@@ -94,6 +94,43 @@ If a MILESTONE-CONTEXT.md was consumed, delete it:
 git rm .planning/MILESTONE-CONTEXT.md 2>/dev/null || true
 ```
 
+## Step 6b: Config Review
+
+Check if the project config has all v2 keys:
+
+```bash
+node -e "
+const fs=require('fs');
+try{
+  const cfg=JSON.parse(fs.readFileSync('.planning/config.json','utf8'));
+  const missing=[];
+  if(!('model_profile' in cfg)) missing.push('model_profile');
+  if(!('test_first' in cfg)) missing.push('test_first');
+  if(!('parallelization' in cfg)) missing.push('parallelization');
+  if(!cfg.workflow||!('review' in cfg.workflow)) missing.push('workflow.review');
+  if(!cfg.workflow||!('solutions_search' in cfg.workflow)) missing.push('workflow.solutions_search');
+  if(!cfg.review||!('auto_after_verify' in cfg.review)) missing.push('review.auto_after_verify');
+  if(!cfg.ship) missing.push('ship.*');
+  if(!cfg.planning||!('commit_mode' in cfg.planning)) missing.push('planning.commit_mode');
+  if(missing.length)console.log('MISSING: '+missing.join(', '));
+  else console.log('CONFIG_COMPLETE');
+}catch(e){console.log('NO_CONFIG');}
+"
+```
+
+**If MISSING or NO_CONFIG:** Offer to update config with v2 defaults:
+
+```
+Your config is missing some v2 settings: [list]
+
+These control: multi-persona review, solutions search, ship pipeline, TDD mode.
+Want me to add them with recommended defaults? (yes/no)
+```
+
+If yes: merge missing keys into `.planning/config.json` using the defaults from `@./templates/config.json`. Show the updated config for confirmation.
+
+**If CONFIG_COMPLETE:** Continue silently.
+
 ## Step 7: Research Decision
 
 Read `workflow.research` from `.planning/config.json`.
@@ -183,7 +220,7 @@ git commit -m "docs: update AGENTS.md — milestone [VERSION] started"
 
 **[VERSION] — [Name]** — [N] phases, [X] requirements
 
-▶ Next: discuss-phase 1 → plan-phase 1 → execute-phase 1
+▶ Next: discuss-phase 1 → plan-phase 1 → execute-phase 1 → verify-work 1 → review → ship → compound
 ```
 
 ---
