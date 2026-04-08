@@ -95,7 +95,7 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
   <div class="ls-card">
     <div class="ls-card-title">⚙️ Workflow Engine</div>
     <p class="ls-card-desc">49 slash commands that take a project from idea to shipped. Spec-driven phases, context-engineered plans, wave-ordered execution, automated verification.</p>
-    <span class="ls-card-command">/discuss-phase → /plan-phase → /execute-phase → /verify-work</span>
+    <span class="ls-card-command">/discuss → /plan → /execute → /verify → /review → /ship → /compound</span>
   </div>
   <div class="ls-card">
     <div class="ls-card-title">🧠 Learning Partner</div>

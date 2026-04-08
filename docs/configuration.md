@@ -21,6 +21,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "test_first": false,
   "planning": {
     "commit_docs": true,
+    "commit_mode": "auto",
     "search_gitignored": false
   },
   "workflow": {
@@ -118,6 +119,13 @@ Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profi
 |-------|----------|
 | `true` | Planning artifacts (`.planning/`) are committed to git. Default. |
 | `false` | Artifacts stay local. Add `.planning/` to `.gitignore`. |
+
+### `planning.commit_mode`
+
+| Value | Behavior |
+|-------|----------|
+| `"auto"` | Commit after each workflow step (config, requirements, roadmap, AGENTS.md). Default. |
+| `"manual"` | No automatic commits. Stage and commit when you choose. |
 
 ### `planning.search_gitignored`
 

@@ -1,13 +1,13 @@
 ---
 title: The Phase Loop
-description: "How learnship structures work into phases: discuss, plan, execute, verify, and repeat."
+description: "How learnship structures work into phases: discuss, plan, execute, verify, review, ship, compound, and repeat."
 ---
 
 # The Phase Loop
 
 ![Phase loop diagram](../assets/phase-loop.png)
 
-Every feature in learnship ships through a repeating loop. The core is four steps (discuss → plan → execute → verify), and v2.0 extends it with three optional quality steps (review → ship → compound) before advancing to the next phase.
+Every feature in learnship ships through a repeating 7-step loop: discuss → plan → execute → verify → review → ship → compound.
 
 ```mermaid
 flowchart LR
@@ -25,7 +25,7 @@ flowchart LR
     VW -->|"all done"| DONE["✓ /complete-milestone"]
 ```
 
-The three new steps (`/review`, `/ship`, `/compound`) are **optional but recommended**. They surface naturally through done-banner suggestions.
+The last three steps (`/review`, `/ship`, `/compound`) are recommended after every phase. They surface naturally through done-banner suggestions after `/verify-work` passes.
 
 ![Extended phase loop](../assets/extended-phase-loop.png)
 
