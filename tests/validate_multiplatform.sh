@@ -2761,6 +2761,119 @@ else
 fi
 
 # ──────────────────────────────────────────────────────────────────────────
+# 10. Harness enforcement depth
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [10] Harness enforcement depth"
+echo "  ──────────────────────────────"
+
+# Research format spec exists in new-project
+if grep -q "## Recommended Stack" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "## Table Stakes" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "## Component Boundaries" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "## Common Mistakes" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has research format spec (required ## headers for STACK, FEATURES, ARCHITECTURE, PITFALLS)"
+else
+  fail "new-project missing research format spec — research files can be freeform prose"
+fi
+
+# Research post-verification uses node -e (cross-platform)
+if grep -q "RESEARCH VERIFIED OK\|RESEARCH INCOMPLETE" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "node -e.*planning/research" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has cross-platform research verification (node -e)"
+else
+  fail "new-project missing post-research verification command"
+fi
+
+# Deep Questioning hard gate (count check)
+if grep -q "HARD GATE.*count your messages" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "4 separate question messages" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has hard count-check gate for Deep Questioning (4 exchanges)"
+else
+  fail "new-project missing hard count-check gate — AI can skip exchanges"
+fi
+
+# AGENTS.md automated verification exists in new-project (node -e, not grep)
+if grep -q "AGENTS.md VERIFIED OK\|AGENTS.md INCOMPLETE" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "node -e.*readFileSync.*AGENTS.md" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has cross-platform AGENTS.md verification (node -e)"
+else
+  fail "new-project missing automated AGENTS.md verification"
+fi
+
+# AGENTS.md verification also in execute-phase
+if grep -q "AGENTS.md sections intact\|AGENTS.md sections lost" "$REPO/learnship/workflows/execute-phase.md" && \
+   grep -q "node -e.*readFileSync.*AGENTS.md" "$REPO/learnship/workflows/execute-phase.md"; then
+  ok "execute-phase has cross-platform AGENTS.md update verification (node -e)"
+else
+  fail "execute-phase missing AGENTS.md update verification"
+fi
+
+# /compound suggested in all canonical done banners
+for WF in quick discuss-phase execute-phase verify-work debug ship review; do
+  WF_FILE="$REPO/learnship/workflows/$WF.md"
+  if grep -q "/compound" "$WF_FILE"; then
+    ok "$WF suggests /compound in done banner"
+  else
+    fail "$WF missing /compound suggestion — canonical loop broken"
+  fi
+done
+
+# /ls WELCOME has brainstorm and ideate
+if grep -q "brainstorm" "$REPO/learnship/workflows/ls.md" && \
+   grep -q "/ideate" "$REPO/learnship/workflows/ls.md"; then
+  ok "ls WELCOME banner has brainstorm and /ideate suggestions"
+else
+  fail "ls WELCOME banner missing brainstorm or /ideate — undecided users not guided"
+fi
+
+# /next MISSING has brainstorm and ideate
+if grep -q "brainstorm" "$REPO/learnship/workflows/next.md" && \
+   grep -q "/ideate" "$REPO/learnship/workflows/next.md"; then
+  ok "next MISSING state has brainstorm and /ideate suggestions"
+else
+  fail "next MISSING state missing brainstorm or /ideate — undecided users not guided"
+fi
+
+# audit-milestone suggests /sync-docs
+if grep -q "/sync-docs" "$REPO/learnship/workflows/audit-milestone.md"; then
+  ok "audit-milestone suggests /sync-docs before release"
+else
+  fail "audit-milestone missing /sync-docs suggestion — docs may be stale at release"
+fi
+
+# discuss-phase suggests /challenge
+if grep -q "/challenge" "$REPO/learnship/workflows/discuss-phase.md"; then
+  ok "discuss-phase suggests /challenge for ambitious phases"
+else
+  fail "discuss-phase missing /challenge suggestion"
+fi
+
+# quick suggests /ship
+if grep -q "/ship" "$REPO/learnship/workflows/quick.md"; then
+  ok "quick suggests /ship in done banner"
+else
+  fail "quick missing /ship suggestion"
+fi
+
+# AGENTS.md template has directive /compound language
+if grep -q "Run.*compound.*after any of these events" "$REPO/learnship/templates/agents.md"; then
+  ok "AGENTS.md template has directive /compound enforcement language"
+else
+  fail "AGENTS.md template missing directive /compound language — compound not enforced"
+fi
+
+# Cross-platform: new verification commands use node -e, NOT bare grep
+NP_VERIFY_LINES=$(grep -n "AGENTS.md VERIFIED\|RESEARCH VERIFIED\|AGENTS.md sections intact" "$REPO/learnship/workflows/new-project.md" "$REPO/learnship/workflows/execute-phase.md" 2>/dev/null)
+if echo "$NP_VERIFY_LINES" | grep -q "node -e"; then
+  ok "verification commands use node -e (cross-platform)"
+elif [ -z "$NP_VERIFY_LINES" ]; then
+  fail "no verification commands found"
+else
+  fail "verification commands may use non-cross-platform tools (should be node -e)"
+fi
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""

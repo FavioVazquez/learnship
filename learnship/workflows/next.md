@@ -19,10 +19,14 @@ node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md
 **If MISSING:**
 
 ```
-No project found. Starting /new-project...
+No project found.
+
+▶ Starting: /new-project — initialize a new project
+▶ Not sure what to build? `@agentic-learning brainstorm [idea]` — think through it first
+▶ Have an existing codebase? /ideate — scan for improvement opportunities
 ```
 
-Immediately run the `new-project` workflow. Stop here.
+Ask the user which option they'd like. If they choose `/new-project` or don't specify, run the `new-project` workflow. Stop here.
 
 ---
 

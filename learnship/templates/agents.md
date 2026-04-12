@@ -204,7 +204,16 @@ When a new decision is made during a session, capture it with `/decision-log`.
 
 ### Solutions Store
 
-Compounded solutions live in `.planning/solutions/` — organized by category (build-errors, runtime-errors, best-practices, etc.) with YAML frontmatter for searchability. After fixing a bug or completing a notable feature, run `/compound` to capture the solution while context is fresh. The `/plan-phase` workflow automatically searches these before planning.
+Compounded solutions live in `.planning/solutions/` — organized by category (build-errors, runtime-errors, best-practices, etc.) with YAML frontmatter for searchability. The `/plan-phase` workflow automatically searches these before planning.
+
+**Run `/compound` after any of these events — do not skip:**
+- Fixing a bug (especially root-cause discoveries)
+- Completing a phase (`execute-phase` → `verify-work` → `/compound`)
+- Shipping a feature (`/ship` → `/compound`)
+- Any aha moment or pattern discovery during development
+- Resolving a debugging session (`/debug` → `/compound`)
+
+Context fades fast. If a solution was worth finding, it's worth capturing.
 
 ---
 

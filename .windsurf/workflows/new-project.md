@@ -243,6 +243,13 @@ Based on all previous answers, ask a third follow-up that clarifies scope, edge 
 
 **Gate check — before proceeding to Step 4:**
 
+> 🛑 **HARD GATE — count your messages.** Before continuing, verify:
+> 1. You sent exactly **4 separate question messages** (Exchanges 1–4)
+> 2. You received exactly **4 separate user answers** (`ANSWER_1` through `ANSWER_4`)
+> 3. Each answer came from a **different user message** (not extracted from one long reply)
+>
+> If any count is wrong, go back and complete the missing exchanges. Do NOT proceed with fewer than 4 exchanges under any circumstances — even if the user's first answer was extremely detailed.
+
 Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4` recorded? If any is missing, go back and ask it. Only after all four answers are in hand may you ask:
 
 "I think I have a solid picture of what you're building. Ready for me to write PROJECT.md, or is there more you want to cover first?"
@@ -291,14 +298,46 @@ Ask: **"Before I write the requirements — do you want me to research the domai
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Run 4 research passes sequentially. Each writes a file to `.planning/research/`:
+Run 4 research passes sequentially. Each writes a file to `.planning/research/` with **mandatory sections** as specified below. Do not write freeform prose — each file must contain the required `##` headers.
 
-1. **STACK.md** — Standard tech stack for this domain (specific libraries, versions, what NOT to use and why)
-2. **FEATURES.md** — What features exist in this domain: table stakes vs. differentiators vs. anti-features
-3. **ARCHITECTURE.md** — How systems in this domain are typically structured, component boundaries, data flow, suggested build order
-4. **PITFALLS.md** — Common mistakes, warning signs, prevention strategies
+1. **STACK.md** — Standard tech stack for this domain
+   - Required sections: `## Recommended Stack`, `## Alternatives Considered`, `## What NOT to Use` (with reasons), `## Versions`
+2. **FEATURES.md** — What features exist in this domain
+   - Required sections: `## Table Stakes` (must-haves), `## Differentiators` (nice-to-haves), `## Anti-Features` (what to avoid)
+3. **ARCHITECTURE.md** — How systems in this domain are typically structured
+   - Required sections: `## Component Boundaries`, `## Data Flow`, `## Build Order` (suggested sequence), `## Integration Points`
+4. **PITFALLS.md** — Common mistakes and prevention strategies
+   - Required sections: `## Common Mistakes`, `## Warning Signs`, `## Prevention Strategies`
 
-After all four complete, synthesize into `.planning/research/SUMMARY.md` covering: recommended stack, table stakes features, key architecture decisions, top pitfalls to avoid.
+After all four complete, synthesize into `.planning/research/SUMMARY.md`:
+   - Required sections: `## Recommended Stack`, `## Table Stakes Features`, `## Key Architecture Decisions`, `## Top Pitfalls`
+
+**Post-research verification (cross-platform):**
+
+```bash
+node -e "
+const fs=require('fs'),path=require('path');
+const dir='.planning/research/';
+const checks={
+  'STACK.md':['Recommended Stack','What NOT to Use'],
+  'FEATURES.md':['Table Stakes','Differentiators'],
+  'ARCHITECTURE.md':['Component Boundaries','Data Flow'],
+  'PITFALLS.md':['Common Mistakes','Prevention Strategies'],
+  'SUMMARY.md':['Recommended Stack','Top Pitfalls']
+};
+const missing=[];
+for(const[file,sections]of Object.entries(checks)){
+  const fp=path.join(dir,file);
+  if(!fs.existsSync(fp)){missing.push(file+' MISSING');continue;}
+  const c=fs.readFileSync(fp,'utf8');
+  for(const s of sections){if(!c.includes('## '+s))missing.push(file+': missing ## '+s);}
+}
+if(missing.length){console.log('RESEARCH INCOMPLETE:\\n'+missing.join('\\n'));process.exit(1);}
+console.log('RESEARCH VERIFIED OK');
+"
+```
+
+> 🛑 If verification fails, fix the missing files or sections before proceeding. Do not skip research verification.
 
 Display key findings:
 ```
@@ -438,12 +477,21 @@ Populate the `## Project Structure` tree with real directories and one-line desc
 - [ ] File starts with `# AGENTS.md — [Project Name]`
 - [ ] `## Soul — Who We Are Together` exists with Voice & Character and Relationship Model
 - [ ] `## Principles — How We Operate` exists with all 10 numbered principles
+- [ ] `## Request Routing Protocol` exists with decision tree
 - [ ] `## Platform Context` exists with the 7-step phase loop
 - [ ] `## Current Phase` exists with milestone, phase, status, and date
 - [ ] `## Project Structure` exists with a directory tree
 - [ ] `## Tech Stack` exists with language, framework, libraries, dev server, tests
 - [ ] `## Skills — Operational Knowledge` exists with CHANGELOG Discipline and Decisions Register
 - [ ] `## Regressions — What Broke and What We Learned` exists at the end
+
+**Automated verification (cross-platform — run this, do not skip):**
+
+```bash
+node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGENTS.md NOT FOUND');process.exit(1);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md INCOMPLETE — missing sections:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}console.log('AGENTS.md VERIFIED OK — all '+required.length+' mandatory sections present');"
+```
+
+> 🛑 If verification fails, fix the missing sections before committing. Do NOT proceed to Step 9 with an incomplete AGENTS.md. Re-read `@./templates/agents.md` and add the missing sections.
 
 **If `commit_mode` is `auto`:**
 ```bash

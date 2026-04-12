@@ -9,6 +9,24 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.8] — 2026-04-12
+
+### Added
+
+- **Research format enforcement** — `/new-project` Step 5 now specifies mandatory `##` section headers for each research file (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) and includes a cross-platform `node -e` post-research verification command that checks all 5 files exist with required sections.
+- **Deep Questioning hard gate** — `/new-project` Step 3 now has a hard count-check gate: the AI must verify it sent exactly 4 separate question messages and received 4 separate answers before proceeding. Prevents treating a detailed Exchange 1 answer as satisfying all 4 exchanges.
+- **AGENTS.md automated verification** — `/new-project` Step 8 now includes a cross-platform `node -e` verification command that checks the generated AGENTS.md contains all 9 mandatory sections (Soul, Principles, Request Routing Protocol, Platform Context, Current Phase, Project Structure, Tech Stack, Skills, Regressions). Stops and requests regeneration if any section is missing.
+- **AGENTS.md update verification** — `/execute-phase` Step 7b now verifies mandatory AGENTS.md sections survive the update, using the same cross-platform `node -e` check.
+- **`/ls` new user routing** — WELCOME banner now suggests `@agentic-learning brainstorm` for users who don't know what to build, and `/ideate` for users with an existing codebase.
+- **`/next` new user routing** — MISSING state now shows `/new-project`, brainstorm, and `/ideate` options instead of auto-running `/new-project`.
+- **`/quick` done banner** — Now suggests `/compound` (capture solutions) and `/ship` (push pipeline).
+- **`/discuss-phase` done banner** — Now suggests `/challenge` (stress-test ambitious scope) and `/compound` (capture important decisions).
+- **`/audit-milestone` done banner** — Now suggests `/sync-docs` before release in both PASSED and GAPS FOUND states.
+- **AGENTS.md template `/compound` enforcement** — Solutions Store section now has an explicit list of events after which `/compound` must be run (bug fixes, phase completions, shipping, debugging, aha moments).
+- **Harness enforcement tests** — 20 new tests in `validate_multiplatform.sh` covering: research format spec, post-research verification, Deep Questioning count gate, AGENTS.md verification in new-project and execute-phase, `/compound` in all 7 canonical done banners, brainstorm/ideate in `/ls` and `/next`, `/sync-docs` in audit-milestone, `/challenge` in discuss-phase, `/ship` in quick, AGENTS.md template enforcement language, and cross-platform `node -e` verification.
+
+---
+
 ## [v2.0.7] — 2026-04-08
 
 ### Fixed
