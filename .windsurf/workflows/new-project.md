@@ -282,13 +282,47 @@ git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 
 ## Step 5: Research Decision
 
-> **🔴 MANDATORY USER CHOICE — You must ask this question and wait for a reply. You are NOT allowed to decide this yourself, even if the domain seems trivial, familiar, or well-understood. The user decides. Always.**
+> **🔴 MANDATORY USER CHOICE — You must ask this question and wait for a reply. You are NOT allowed to decide this yourself.**
 
-Ask: **"Before I write the requirements — do you want me to research the domain ecosystem first?"**
-- **Research first** (recommended) — Discover standard stacks, expected features, architecture patterns
-- **Skip research** — I know this domain well, go straight to requirements
+Display this question to the user exactly as written:
 
-> 🛑 STOP. Wait for the user's explicit choice. Do not default to either option. Do not reason about whether research is needed — that is the user's call. Do not write REQUIREMENTS.md yet. Do not proceed until the user replies.
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► RESEARCH DECISION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before I write the requirements — do you want me to
+research the domain ecosystem first?
+
+ 1. Research first (recommended)
+    → Discover standard stacks, expected features,
+      architecture patterns, common pitfalls
+
+ 2. Skip research
+    → Go straight to requirements
+
+Reply 1 or 2.
+```
+
+> � **HARD GATE — This is a user decision. You MUST wait for the user to reply.**
+>
+> **You are FORBIDDEN from deciding this yourself.** It does not matter if:
+> - The tech stack is already defined in PROJECT.md
+> - The domain seems trivial or well-understood
+> - You already know the ecosystem
+> - The user gave detailed answers in Deep Questioning
+> - The project seems simple
+>
+> **None of these are valid reasons to skip the question.** The user ALWAYS gets asked. The user ALWAYS decides.
+>
+> **Forbidden responses (do NOT say anything like these):**
+> - "The tech stack is already well-defined in PROJECT.md. No research needed."
+> - "Since you've already described the stack, I'll skip research."
+> - "Moving straight to requirements/roadmap."
+> - "Research isn't necessary for this project."
+> - Any sentence that contains "no research needed" or "skip research" that you wrote yourself (not the user).
+>
+> **The ONLY acceptable next action is: display the question above and wait.** Do not write REQUIREMENTS.md. Do not write ROADMAP.md. Do not proceed to Step 6. Wait for the user's reply.
 
 **If Research first:**
 
