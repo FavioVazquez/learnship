@@ -9,6 +9,19 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.9] — 2026-04-12
+
+### Fixed
+
+- **Research creates 5 separate files, not one monolith** — `/new-project` Step 5 now has explicit per-file instructions ("File 1 of 5 — Write STACK.md now", etc.) with anti-monolith language. Previously the AI would write a single research file instead of the required STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, and SUMMARY.md. The `node -e` verification gate now blocks progression unless all 5 files exist with required sections.
+- **AGENTS.md generated from template, not improvised** — Step 8 restructured into substeps: 8a (read template — hard gate), 8b (write with numbered section order specifying which sections are VERBATIM vs FILL IN), 8c (verify — now checks both section headers AND verbatim content phrases like "pair programmer", "Friction Is Signal", "decision tree"). Previously the AI would generate AGENTS.md without reading the template, producing files missing the Request Routing Protocol and other critical sections.
+- **No auto-execution of Phase 1 after `/new-project`** — Step 9 now has a `HARD STOP` gate explicitly forbidding the AI from starting `/discuss-phase 1`, saying "Let me start Phase 1", or running any phase workflow. The routing suspension is explicitly lifted. Previously the AI would flow directly from the done banner into Phase 1 execution without user input.
+- **SKILL.md ceremony enforcement (Windsurf)** — Added `/new-project` Ceremony Enforcement section with the 3 hard gates (5 research files, template-based AGENTS.md, STOP after done). This is Windsurf's primary entry point and previously had no reinforcement of these gates.
+- **Cursor .mdc ceremony enforcement** — Added research file gate, AGENTS.md template gate, and Step 9 STOP gate to the critical gates list. Previously only had 4 gates; now has 6.
+- **9 new enforcement tests** — Research file individuality, anti-monolith instruction, AGENTS.md substep structure, verbatim content verification, Step 9 HARD STOP, SKILL.md enforcement section, Cursor .mdc gates (research, template, STOP).
+
+---
+
 ## [v2.0.8] — 2026-04-12
 
 ### Added

@@ -2873,6 +2873,84 @@ else
   fail "verification commands may use non-cross-platform tools (should be node -e)"
 fi
 
+# Research files are listed individually (not monolithic)
+if grep -q "File 1 of 5.*STACK.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "File 2 of 5.*FEATURES.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "File 3 of 5.*ARCHITECTURE.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "File 4 of 5.*PITFALLS.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "File 5 of 5.*SUMMARY.md" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project lists all 5 research files individually (not monolithic)"
+else
+  fail "new-project missing individual research file instructions — AI may write single monolithic file"
+fi
+
+# Research files must be created as separate write operations
+if grep -q "MUST create exactly 5 separate markdown files" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Do NOT write a single monolithic research file" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project explicitly forbids monolithic research file"
+else
+  fail "new-project missing anti-monolith instruction for research files"
+fi
+
+# AGENTS.md generation has substep structure (8a read, 8b write, 8c verify)
+if grep -q "Substep 8a.*Read the template" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Substep 8b.*Write AGENTS.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Substep 8c.*Verify AGENTS.md" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has AGENTS.md substep structure (8a read, 8b write, 8c verify)"
+else
+  fail "new-project missing AGENTS.md substep structure — AI may skip template read"
+fi
+
+# AGENTS.md verification checks verbatim content (not just section headers)
+if grep -q "TEMPLATE VIOLATION" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "pair programmer" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Friction Is Signal" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project AGENTS.md verification checks verbatim template content"
+else
+  fail "new-project AGENTS.md verification only checks section headers — AI can rewrite template content"
+fi
+
+# Step 9 has HARD STOP preventing auto-execution of Phase 1
+if grep -q "HARD STOP.*new-project.*is now complete\|HARD STOP.*workflow is FINISHED" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Do NOT automatically start.*discuss-phase" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Do NOT say.*Let me start Phase 1\|Do NOT say.*Now starting Phase 1" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project Step 9 has HARD STOP preventing auto-execution of Phase 1"
+else
+  fail "new-project Step 9 missing HARD STOP — AI auto-runs Phase 1 after ceremony"
+fi
+
+# SKILL.md has /new-project ceremony enforcement section
+if grep -q "Ceremony Enforcement" "$SKILL_MD" && \
+   grep -q "5 separate files" "$SKILL_MD" && \
+   grep -q "copy from template" "$SKILL_MD" && \
+   grep -q "Done = STOP" "$SKILL_MD"; then
+  ok "SKILL.md has /new-project ceremony enforcement (research files, template, STOP)"
+else
+  fail "SKILL.md missing /new-project ceremony enforcement section"
+fi
+
+# Cursor .mdc has research = 5 separate files gate
+if grep -q "5 separate files\|5 files in" "$CURSOR_MDC" && \
+   grep -q "RESEARCH VERIFIED OK" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has research = 5 separate files gate"
+else
+  fail "cursor-rules/learnship.mdc missing research file enforcement"
+fi
+
+# Cursor .mdc has AGENTS.md template gate
+if grep -q "copy from template\|copy VERBATIM\|AGENTS.md VERIFIED OK" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has AGENTS.md template enforcement gate"
+else
+  fail "cursor-rules/learnship.mdc missing AGENTS.md template enforcement"
+fi
+
+# Cursor .mdc has Step 9 STOP gate
+if grep -q "STOP completely\|Do NOT automatically start" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has Step 9 STOP gate (no auto Phase 1)"
+else
+  fail "cursor-rules/learnship.mdc missing Step 9 STOP gate — AI auto-runs Phase 1"
+fi
+
 # ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
