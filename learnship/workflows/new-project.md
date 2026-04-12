@@ -298,46 +298,56 @@ Ask: **"Before I write the requirements — do you want me to research the domai
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Run 4 research passes sequentially. Each writes a file to `.planning/research/` with **mandatory sections** as specified below. Do not write freeform prose — each file must contain the required `##` headers.
+**You MUST create exactly 5 separate markdown files.** Do NOT write a single monolithic research file. Do NOT combine multiple files into one. Each file is a separate write operation.
 
-1. **STACK.md** — Standard tech stack for this domain
-   - Required sections: `## Recommended Stack`, `## Alternatives Considered`, `## What NOT to Use` (with reasons), `## Versions`
-2. **FEATURES.md** — What features exist in this domain
-   - Required sections: `## Table Stakes` (must-haves), `## Differentiators` (nice-to-haves), `## Anti-Features` (what to avoid)
-3. **ARCHITECTURE.md** — How systems in this domain are typically structured
-   - Required sections: `## Component Boundaries`, `## Data Flow`, `## Build Order` (suggested sequence), `## Integration Points`
-4. **PITFALLS.md** — Common mistakes and prevention strategies
-   - Required sections: `## Common Mistakes`, `## Warning Signs`, `## Prevention Strategies`
-
-After all four complete, synthesize into `.planning/research/SUMMARY.md`:
-   - Required sections: `## Recommended Stack`, `## Table Stakes Features`, `## Key Architecture Decisions`, `## Top Pitfalls`
-
-**Post-research verification (cross-platform):**
+Create the research directory first:
 
 ```bash
-node -e "
-const fs=require('fs'),path=require('path');
-const dir='.planning/research/';
-const checks={
-  'STACK.md':['Recommended Stack','What NOT to Use'],
-  'FEATURES.md':['Table Stakes','Differentiators'],
-  'ARCHITECTURE.md':['Component Boundaries','Data Flow'],
-  'PITFALLS.md':['Common Mistakes','Prevention Strategies'],
-  'SUMMARY.md':['Recommended Stack','Top Pitfalls']
-};
-const missing=[];
-for(const[file,sections]of Object.entries(checks)){
-  const fp=path.join(dir,file);
-  if(!fs.existsSync(fp)){missing.push(file+' MISSING');continue;}
-  const c=fs.readFileSync(fp,'utf8');
-  for(const s of sections){if(!c.includes('## '+s))missing.push(file+': missing ## '+s);}
-}
-if(missing.length){console.log('RESEARCH INCOMPLETE:\\n'+missing.join('\\n'));process.exit(1);}
-console.log('RESEARCH VERIFIED OK');
-"
+node -e "require('fs').mkdirSync('.planning/research',{recursive:true})"
 ```
 
-> 🛑 If verification fails, fix the missing files or sections before proceeding. Do not skip research verification.
+Now create each file one at a time. After writing each file, move to the next.
+
+**File 1 of 5 — Write `.planning/research/STACK.md` now:**
+Research the standard tech stack for this domain. The file MUST contain these exact `##` headers:
+- `## Recommended Stack`
+- `## Alternatives Considered`
+- `## What NOT to Use` (with reasons)
+- `## Versions`
+
+**File 2 of 5 — Write `.planning/research/FEATURES.md` now:**
+Research what features exist in this domain. The file MUST contain these exact `##` headers:
+- `## Table Stakes` (must-haves)
+- `## Differentiators` (nice-to-haves)
+- `## Anti-Features` (what to avoid)
+
+**File 3 of 5 — Write `.planning/research/ARCHITECTURE.md` now:**
+Research how systems in this domain are typically structured. The file MUST contain these exact `##` headers:
+- `## Component Boundaries`
+- `## Data Flow`
+- `## Build Order` (suggested sequence)
+- `## Integration Points`
+
+**File 4 of 5 — Write `.planning/research/PITFALLS.md` now:**
+Research common mistakes and prevention strategies. The file MUST contain these exact `##` headers:
+- `## Common Mistakes`
+- `## Warning Signs`
+- `## Prevention Strategies`
+
+**File 5 of 5 — Write `.planning/research/SUMMARY.md` now:**
+Synthesize the 4 files above into a summary. The file MUST contain these exact `##` headers:
+- `## Recommended Stack`
+- `## Table Stakes Features`
+- `## Key Architecture Decisions`
+- `## Top Pitfalls`
+
+> 🔴 **HARD GATE — Run this verification command now. Do not skip it. Do not proceed without running it.**
+
+```bash
+node -e "const fs=require('fs'),path=require('path');const dir='.planning/research/';const checks={'STACK.md':['Recommended Stack','What NOT to Use'],'FEATURES.md':['Table Stakes','Differentiators'],'ARCHITECTURE.md':['Component Boundaries','Data Flow'],'PITFALLS.md':['Common Mistakes','Prevention Strategies'],'SUMMARY.md':['Recommended Stack','Top Pitfalls']};const missing=[];for(const[file,sections]of Object.entries(checks)){const fp=path.join(dir,file);if(!fs.existsSync(fp)){missing.push(file+' MISSING');continue;}const c=fs.readFileSync(fp,'utf8');for(const s of sections){if(!c.includes('## '+s))missing.push(file+': missing ## '+s);}}if(missing.length){console.log('RESEARCH INCOMPLETE:\\n'+missing.join('\\n'));process.exit(1);}console.log('RESEARCH VERIFIED OK — all 5 files present with required sections');"
+```
+
+> 🛑 **If the command prints `RESEARCH INCOMPLETE` or exits with code 1:** Go back and create or fix the missing files. Then run the verification again. You MUST see `RESEARCH VERIFIED OK` before continuing. Do NOT proceed to Step 6 without a passing verification.
 
 Display key findings:
 ```
@@ -435,63 +445,49 @@ git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git
 
 > **🔴 MANDATORY — This step must always be completed. Do not skip it, do not defer it, do not move to Step 9 without writing AGENTS.md to the project root. AGENTS.md is the persistent memory file that every future session depends on.**
 
-Start by reading `@./templates/agents.md` in full. This is the **canonical template**. The generated AGENTS.md must follow its exact structure.
+**Substep 8a — Read the template.** Read `@./templates/agents.md` in full RIGHT NOW before writing anything. This is the canonical template. You need its exact content.
 
-**Sections to copy VERBATIM (do not rewrite, do not summarize, do not rephrase):**
-- `## Soul — Who We Are Together` (entire section including Voice & Character and Relationship Model)
-- `## Principles — How We Operate` (all 10 principles, verbatim)
-- `## Platform Context` (the learnship key facts block, verbatim)
-- `## Skills — Operational Knowledge` (CHANGELOG Discipline and Decisions Register, verbatim)
-- `## Regressions — What Broke and What We Learned` (the empty starter block, verbatim)
+> 🛑 **HARD GATE:** Did you just read `@./templates/agents.md`? If not, go back and read it now. The next substep requires copying sections verbatim from the template. You cannot do that without reading it first.
 
-**Sections to FILL IN with project-specific information:**
+**Substep 8b — Write AGENTS.md.** Create the file `AGENTS.md` at the project root. The file structure MUST follow the template exactly. Here is the required section order:
 
-**Title** — Replace `[PROJECT NAME]` with the actual project name.
+1. `# AGENTS.md — [Project Name]` — replace `[PROJECT NAME]` with the actual project name
+2. `## Soul — Who We Are Together` — **copy VERBATIM from the template** including all of Voice & Character and Relationship Model. Do not rewrite, summarize, or rephrase any of it.
+3. `## Principles — How We Operate` — **copy VERBATIM from the template**. All 10 numbered principles, word for word.
+4. `## Request Routing Protocol` — **copy VERBATIM from the template**. The entire decision tree and examples.
+5. `## Platform Context` — **copy VERBATIM from the template**. The learnship key facts block.
+6. `## Current Phase` — **FILL IN** with project-specific data:
+   ```
+   **Milestone:** v1.0 — [Milestone Name from PROJECT.md]
+   **Phase:** 1 — [Phase 1 name from ROADMAP.md]
+   **Status:** planning
+   **Last updated:** [today's date]
+   ```
+7. `## Project Structure` — **FILL IN** by scanning existing directories:
+   ```bash
+   node -e "const{readdirSync,statSync}=require('fs'),{join}=require('path');const walk=(d,dep=0)=>{if(dep>2)return;try{readdirSync(d).filter(f=>!f.startsWith('.')&&f!=='node_modules').forEach(f=>{const p=join(d,f);if(statSync(p).isDirectory()){console.log(' '.repeat(dep*2)+'├── '+f+'/');walk(p,dep+1);}});}catch{}};walk('.');"
+   ```
+   Populate the tree with real directories and one-line descriptions.
+8. `## Tech Stack` — **FILL IN** using research output (if available) or user's stated stack:
+   - Language + version
+   - Framework
+   - Key libraries (the 3-5 most important)
+   - How to run the dev server
+   - How to run tests
+9. `## Skills — Operational Knowledge` — **copy VERBATIM from the template**. CHANGELOG Discipline, Decisions Register, and Solutions Store sections.
+10. `## Regressions — What Broke and What We Learned` — **copy VERBATIM from the template**. The empty starter block.
 
-**Current Phase** block:
-```
-Milestone: v1.0 — [Milestone Name from PROJECT.md]
-Phase: 1 — [Phase 1 name from ROADMAP.md]
-Status: planning
-Last updated: [today's date]
-```
+**You may ADD project-specific sections** (e.g., Conventions, Content Sources, Definition of Done) **after** Tech Stack and **before** Skills. But you must NEVER remove, rename, or replace the 10 sections listed above.
 
-**Project Structure** — derive from the project description and any existing directories:
-```bash
-find . -maxdepth 2 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -type d | sort | head -20
-# PowerShell: Get-ChildItem -Directory -Recurse -Depth 2 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning' } | Select-Object -First 20
-```
+**Substep 8c — Verify AGENTS.md.** Run this command now. Do not skip it.
 
-Populate the `## Project Structure` tree with real directories and one-line descriptions.
-
-**Tech Stack** — use the research output (if research was run) or the user's stated stack:
-- Language + version
-- Framework
-- Key libraries (the 3-5 most important)
-- How to run the dev server
-- How to run tests
-
-**You may ADD project-specific sections** (e.g., Conventions, Content Sources, Definition of Done) **after** the Tech Stack section and **before** Skills. But you must NEVER remove, rename, or replace the template sections listed above.
-
-**Verification checklist (run before committing):**
-- [ ] File starts with `# AGENTS.md — [Project Name]`
-- [ ] `## Soul — Who We Are Together` exists with Voice & Character and Relationship Model
-- [ ] `## Principles — How We Operate` exists with all 10 numbered principles
-- [ ] `## Request Routing Protocol` exists with decision tree
-- [ ] `## Platform Context` exists with the 7-step phase loop
-- [ ] `## Current Phase` exists with milestone, phase, status, and date
-- [ ] `## Project Structure` exists with a directory tree
-- [ ] `## Tech Stack` exists with language, framework, libraries, dev server, tests
-- [ ] `## Skills — Operational Knowledge` exists with CHANGELOG Discipline and Decisions Register
-- [ ] `## Regressions — What Broke and What We Learned` exists at the end
-
-**Automated verification (cross-platform — run this, do not skip):**
+> 🔴 **HARD GATE — Run this verification command now. Do not skip it. Do not proceed without running it.**
 
 ```bash
-node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGENTS.md NOT FOUND');process.exit(1);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md INCOMPLETE — missing sections:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}console.log('AGENTS.md VERIFIED OK — all '+required.length+' mandatory sections present');"
+node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGENTS.md NOT FOUND');process.exit(1);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md INCOMPLETE — missing sections:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}const verbatim=['pair programmer','Direct, no fluff','Have opinions','Friction Is Signal','Minimal Upstream Fix','decision tree'];const missingV=verbatim.filter(s=>!f.includes(s));if(missingV.length){console.log('AGENTS.md TEMPLATE VIOLATION — these verbatim phrases are missing (did you rewrite instead of copy?):\\n'+missingV.join('\\n'));process.exit(1);}console.log('AGENTS.md VERIFIED OK — all '+required.length+' sections present, verbatim content intact');"
 ```
 
-> 🛑 If verification fails, fix the missing sections before committing. Do NOT proceed to Step 9 with an incomplete AGENTS.md. Re-read `@./templates/agents.md` and add the missing sections.
+> 🛑 **If the command prints `INCOMPLETE` or `TEMPLATE VIOLATION` or exits with code 1:** The AGENTS.md is broken. Re-read `@./templates/agents.md` and fix the missing sections or restore the verbatim content. Run the verification again. You MUST see `AGENTS.md VERIFIED OK` before continuing to Step 9.
 
 **If `commit_mode` is `auto`:**
 ```bash
@@ -501,6 +497,8 @@ git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 <!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->
 
 ## Step 9: Done
+
+Display this banner and then **STOP. Do not continue. Do not run any other workflow. Do not start Phase 1.**
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -534,16 +532,26 @@ After verify-work passes: `/review` for multi-persona code review, `/ship` to te
 > **Platform detected:** `[PLATFORM]` — parallelization is `[true/false]`
 ```
 
+> 🔴 **HARD STOP — `/new-project` is now complete. This workflow is FINISHED.**
+>
+> **Do NOT automatically start `/discuss-phase 1`.** Do NOT run any phase workflow. Do NOT begin implementing Phase 1. Do NOT say "Let me start Phase 1" or "Now starting Phase 1" or anything similar.
+>
+> The user must explicitly type `/discuss-phase 1` (or another command) in a **new message** to continue. Your only job now is to display the banner above and wait.
+>
+> If the user's next message is a new task or question, apply the Request Routing Protocol from AGENTS.md — the routing suspension from Step 1 is now lifted.
+
 ---
 
 ## Learning Checkpoint
 
 Read `learning_mode` from `.planning/config.json`.
 
-**If `auto`:** Offer this now:
+**If `auto`:** Offer this after the done banner (still within this message, but AFTER the banner):
 
 > 💡 **Learning moment:** You've just defined what you're building. Want to validate your mental model before coding starts?
 > 
 > `@agentic-learning brainstorm [your project topic]` — Talk through the design and surface any blind spots before the first line of code.
 
 **If `manual`:** Add a quiet note: *"Tip: `@agentic-learning brainstorm [topic]` is available whenever you want to think through the design."*
+
+**After displaying the learning checkpoint, STOP. Wait for the user's next message.**

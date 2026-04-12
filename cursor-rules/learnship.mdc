@@ -47,9 +47,13 @@ When the user runs `/new-project`, execute these **9 mandatory steps in order**.
 
 2. **After Step 4 (PROJECT.md confirmed):** Do NOT write REQUIREMENTS.md or ROADMAP.md. First ask: "Before I write the requirements — do you want me to research the domain ecosystem first?" Wait for reply.
 
-3. **After Step 7 (roadmap approved):** Do NOT display the done banner or suggest next steps. Generate AGENTS.md (Step 8) first.
+3. **Research = 5 separate files.** If the user chooses research, create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. Run the `node -e` verification command from the workflow — it must print `RESEARCH VERIFIED OK` before proceeding.
 
-4. **Step 9 next step is `/discuss-phase 1` — not `/plan-phase`.** The phase loop is: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`. `discuss-phase` is mandatory first — it writes the CONTEXT.md that planning depends on.
+4. **After Step 7 (roadmap approved):** Do NOT display the done banner or suggest next steps. Generate AGENTS.md (Step 8) first.
+
+5. **AGENTS.md = copy from template.** Read `@./templates/agents.md` BEFORE writing. Sections marked "copy VERBATIM" (Soul, Principles, Request Routing Protocol, Platform Context, Skills, Regressions) must be copied word-for-word. Run the `node -e` verification — it must print `AGENTS.md VERIFIED OK` before proceeding.
+
+6. **Step 9 = STOP.** After displaying the done banner, **STOP completely**. Do NOT automatically start `/discuss-phase 1`. Do NOT say "Let me start Phase 1." Wait for the user's next message. The next step is `/discuss-phase 1` — **start here, not `/plan-phase`**. The phase loop is: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work`.
 
 **Routing protocol suspended during `/new-project`.** Every user message while the ceremony is in progress is an answer to a workflow question, not a task to route.
 

@@ -106,6 +106,16 @@ Does .planning/PROJECT.md exist?
 
 **This gate applies to ALL messages** — bug reports, feature requests, "quick fixes", detailed specs, anything. The only exception: if the user is currently mid-ceremony in `/new-project` (i.e., they are answering your questions), their messages are workflow answers, not tasks to route.
 
+## `/new-project` Ceremony Enforcement
+
+When running `/new-project`, these are non-negotiable hard gates. Violating any of them produces a broken project:
+
+1. **Research = 5 separate files.** If the user chooses research, you MUST create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. After writing all 5, run the `node -e` verification command from the workflow. If it fails, fix the files before proceeding.
+
+2. **AGENTS.md = copy from template.** Read `@./templates/agents.md` BEFORE writing AGENTS.md. Sections marked "copy VERBATIM" must be copied word-for-word — do not rewrite, summarize, or rephrase them. After writing, run the `node -e` verification command. If it fails, fix AGENTS.md before proceeding.
+
+3. **Done = STOP.** After displaying the Step 9 done banner, **STOP completely**. Do NOT automatically start `/discuss-phase 1`. Do NOT say "Let me start Phase 1" or "Now starting Phase 1." Wait for the user to type their next command.
+
 ## Key Behaviors
 
 - **Context efficiency**: Reference file paths rather than inlining file contents. Load context fresh when needed rather than carrying it forward.
