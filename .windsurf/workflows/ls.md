@@ -30,6 +30,8 @@ spec-driven phases, context-engineered plans, atomic execution,
 and a learning partner woven into every phase transition.
 
 ▶ To start: /new-project
+▶ Not sure what to build? `@agentic-learning brainstorm [idea]` — think through it first
+▶ Have an existing codebase? /ideate — scan for improvement opportunities
 ▶ For a quick one-off task: /quick "description"
 ▶ To see all commands: /help
 ```

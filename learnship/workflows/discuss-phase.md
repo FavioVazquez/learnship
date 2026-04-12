@@ -224,6 +224,9 @@ Created: .planning/phases/[padded_phase]-[slug]/[padded_phase]-CONTEXT.md
 ---
 
 ▶ Next Up: plan-phase [X]
+
+💡 Ambitious scope? `/challenge` — stress-test the approach before planning
+💡 Made important decisions? `/compound` — capture them while context is fresh
 ```
 
 ---

@@ -238,6 +238,9 @@ Summary: .planning/quick/[NEXT_NUM]-[SLUG]/[NEXT_NUM]-SUMMARY.md
 [If --full: Verification: [status]]
 Commit: [hash]
 
+💡 Solved something notable? `/compound` — capture the solution while context is fresh
+💡 Ready to push? `/ship` — test → commit → push → PR
+
 Ready for next task: quick
 ```
 

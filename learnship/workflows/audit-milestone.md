@@ -154,6 +154,8 @@ Status: [PASSED ✓ | GAPS FOUND ⚠️]
 Milestone [VERSION] is ready to ship.
 
 ▶ Next: complete-milestone
+
+💡 Run `/sync-docs` first to check for stale documentation before release.
 ```
 
 **If GAPS FOUND:**
@@ -164,6 +166,8 @@ Milestone [VERSION] is ready to ship.
 
 ▶ Next: plan-milestone-gaps — create fix phases for all gaps
     OR: complete-milestone — ship anyway (mark gaps as known issues)
+
+💡 Run `/sync-docs` to check for stale documentation alongside the gap fixes.
 ```
 
 ---

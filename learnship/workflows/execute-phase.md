@@ -329,6 +329,14 @@ If `AGENTS.md` exists at the project root, update the `## Current Phase` block t
 
 Also append any newly created key files or modules to the `## Project Structure` tree if significant new directories were created during this phase.
 
+**Post-update verification (cross-platform):**
+
+```bash
+node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){process.exit(0);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md sections lost during update:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}console.log('AGENTS.md sections intact');"
+```
+
+> If verification fails, restore the missing sections from `@./templates/agents.md` before committing.
+
 ```bash
 git add AGENTS.md
 git commit -m "docs: update AGENTS.md — phase [X] complete"
