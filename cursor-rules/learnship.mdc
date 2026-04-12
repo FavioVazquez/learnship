@@ -45,7 +45,7 @@ When the user runs `/new-project`, execute these **9 mandatory steps in order**.
 
 1. **Exchange 1 answer does NOT skip Exchanges 2–4.** No matter how detailed the user's answer to "What do you want to build?" — it is raw material for follow-ups, not a replacement. You MUST still ask Exchanges 2, 3, and 4.
 
-2. **After Step 4 (PROJECT.md confirmed):** Do NOT write REQUIREMENTS.md or ROADMAP.md. First ask: "Before I write the requirements — do you want me to research the domain ecosystem first?" Wait for reply.
+2. **Research decision = always ask the user.** After PROJECT.md is confirmed, ask: "Do you want me to research the domain ecosystem first?" and WAIT for the user's reply. You are FORBIDDEN from deciding this yourself — even if the tech stack is defined in PROJECT.md, the domain seems trivial, or the user gave detailed answers. Never say "no research needed" or "skipping research" on your own.
 
 3. **Research = 5 separate files.** If the user chooses research, create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. Run the `node -e` verification command from the workflow — it must print `RESEARCH VERIFIED OK` before proceeding.
 

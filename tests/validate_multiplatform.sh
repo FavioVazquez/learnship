@@ -2951,6 +2951,39 @@ else
   fail "cursor-rules/learnship.mdc missing Step 9 STOP gate — AI auto-runs Phase 1"
 fi
 
+# Research decision gate has forbidden-response list
+if grep -q "Forbidden responses" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "no research needed" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "FORBIDDEN from deciding this yourself" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has research decision anti-skip enforcement (forbidden responses list)"
+else
+  fail "new-project missing research decision anti-skip — AI can self-decide to skip research"
+fi
+
+# Research decision gate has explicit anti-pattern for PROJECT.md reasoning
+if grep -q "tech stack is already defined in PROJECT.md" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "None of these are valid reasons to skip" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project research gate explicitly forbids PROJECT.md-based skip reasoning"
+else
+  fail "new-project research gate missing PROJECT.md anti-skip — AI skips when stack is in PROJECT.md"
+fi
+
+# SKILL.md has research decision gate
+if grep -q "Research decision = always ask the user" "$SKILL_MD" && \
+   grep -q "FORBIDDEN from deciding this yourself" "$SKILL_MD"; then
+  ok "SKILL.md has research decision gate (always ask user)"
+else
+  fail "SKILL.md missing research decision gate — Windsurf AI can self-skip research"
+fi
+
+# Cursor .mdc has research decision gate
+if grep -q "Research decision = always ask the user" "$CURSOR_MDC" && \
+   grep -q "FORBIDDEN from deciding this yourself" "$CURSOR_MDC"; then
+  ok "cursor-rules/learnship.mdc has research decision gate (always ask user)"
+else
+  fail "cursor-rules/learnship.mdc missing research decision gate"
+fi
+
 # ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────

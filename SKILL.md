@@ -110,11 +110,13 @@ Does .planning/PROJECT.md exist?
 
 When running `/new-project`, these are non-negotiable hard gates. Violating any of them produces a broken project:
 
-1. **Research = 5 separate files.** If the user chooses research, you MUST create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. After writing all 5, run the `node -e` verification command from the workflow. If it fails, fix the files before proceeding.
+1. **Research decision = always ask the user.** After PROJECT.md is confirmed, you MUST ask: "Do you want me to research the domain ecosystem first?" and WAIT for a reply. You are FORBIDDEN from deciding this yourself — even if the tech stack is defined in PROJECT.md, the domain seems trivial, or the user gave detailed answers. Never say "no research needed" or "skipping research" on your own.
 
-2. **AGENTS.md = copy from template.** Read `@./templates/agents.md` BEFORE writing AGENTS.md. Sections marked "copy VERBATIM" must be copied word-for-word — do not rewrite, summarize, or rephrase them. After writing, run the `node -e` verification command. If it fails, fix AGENTS.md before proceeding.
+2. **Research = 5 separate files.** If the user chooses research, you MUST create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. After writing all 5, run the `node -e` verification command from the workflow. If it fails, fix the files before proceeding.
 
-3. **Done = STOP.** After displaying the Step 9 done banner, **STOP completely**. Do NOT automatically start `/discuss-phase 1`. Do NOT say "Let me start Phase 1" or "Now starting Phase 1." Wait for the user to type their next command.
+3. **AGENTS.md = copy from template.** Read `@./templates/agents.md` BEFORE writing AGENTS.md. Sections marked "copy VERBATIM" must be copied word-for-word — do not rewrite, summarize, or rephrase them. After writing, run the `node -e` verification command. If it fails, fix AGENTS.md before proceeding.
+
+4. **Done = STOP.** After displaying the Step 9 done banner, **STOP completely**. Do NOT automatically start `/discuss-phase 1`. Do NOT say "Let me start Phase 1" or "Now starting Phase 1." Wait for the user to type their next command.
 
 ## Key Behaviors
 

@@ -9,6 +9,17 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.10] — 2026-04-12
+
+### Fixed
+
+- **Research decision gate — AI can no longer self-skip research** — Step 5 now has a formatted banner question (RESEARCH DECISION), a forbidden-responses list with exact phrases the AI must not say ("no research needed", "skipping research", etc.), and an exhaustive list of invalid skip reasons (tech stack in PROJECT.md, trivial domain, detailed answers, etc.). Previously the AI would reason "The tech stack is already well-defined in PROJECT.md. No research needed" and skip directly to requirements.
+- **SKILL.md (Windsurf) research decision gate** — Added "Research decision = always ask the user" as gate #1 in ceremony enforcement. Windsurf was the platform where the skip was observed.
+- **Cursor .mdc research decision gate** — Replaced the soft "ask and wait" gate #2 with explicit anti-skip language matching the new enforcement.
+- **4 new tests** — Research decision forbidden-responses, PROJECT.md anti-skip pattern, SKILL.md gate, Cursor .mdc gate. (345 total)
+
+---
+
 ## [v2.0.9] — 2026-04-12
 
 ### Fixed
