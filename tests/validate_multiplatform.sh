@@ -2985,6 +2985,112 @@ else
 fi
 
 # ──────────────────────────────────────────────────────────────────────────
+# 11. Principles consolidation & platform-native file creation
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [11] Principles consolidation & platform-native files"
+echo "  ──────────────────────────────────────────────────────"
+
+# Consolidated principle #2: Minimal Fix, Surgical Change
+if grep -q "Minimal Fix, Surgical Change" "$REPO/learnship/templates/agents.md" && \
+   grep -q "Touch only what you must" "$REPO/learnship/templates/agents.md" && \
+   grep -q "Every changed line should trace" "$REPO/learnship/templates/agents.md"; then
+  ok "agents.md template has consolidated principle #2 (Minimal Fix, Surgical Change)"
+else
+  fail "agents.md template missing consolidated principle #2"
+fi
+
+# Consolidated principle #7: One Thing at a Time, Nothing Extra
+if grep -q "One Thing at a Time, Nothing Extra" "$REPO/learnship/templates/agents.md" && \
+   grep -q "no speculative features" "$REPO/learnship/templates/agents.md" && \
+   grep -q "If 200 lines could be 50" "$REPO/learnship/templates/agents.md"; then
+  ok "agents.md template has consolidated principle #7 (One Thing at a Time, Nothing Extra)"
+else
+  fail "agents.md template missing consolidated principle #7"
+fi
+
+# Consolidated principle #8: Understand First, Then Change
+if grep -q "Understand First, Then Change" "$REPO/learnship/templates/agents.md" && \
+   grep -q "present them and ask" "$REPO/learnship/templates/agents.md" && \
+   grep -q "Name what's unclear" "$REPO/learnship/templates/agents.md"; then
+  ok "agents.md template has consolidated principle #8 (Understand First, Then Change)"
+else
+  fail "agents.md template missing consolidated principle #8"
+fi
+
+# Voice & Character: Stop when confused
+if grep -q "Stop when confused, not after" "$REPO/learnship/templates/agents.md"; then
+  ok "agents.md template has 'Stop when confused' Voice & Character bullet"
+else
+  fail "agents.md template missing 'Stop when confused' Voice & Character bullet"
+fi
+
+# new-project.md has existing-file detection (substep 8a-pre)
+if grep -q "EXISTING CONTEXT FILES DETECTED" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "AGENTS.md.*CLAUDE.md.*GEMINI.md" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has existing-file detection (substep 8a-pre)"
+else
+  fail "new-project missing existing-file detection for AGENTS.md/CLAUDE.md/GEMINI.md"
+fi
+
+# new-project.md verification uses new principle names
+if grep -q "Surgical Change" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Nothing Extra" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Understand First" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project verification checks new consolidated principle names"
+else
+  fail "new-project verification still uses old principle names"
+fi
+
+# install.js has Claude Code CLAUDE.md copy instruction
+if grep -q "CLAUDE.md" "$REPO/bin/install.js" && \
+   grep -q "cp AGENTS.md CLAUDE.md" "$REPO/bin/install.js"; then
+  ok "install.js generates CLAUDE.md copy instruction for Claude Code"
+else
+  fail "install.js missing CLAUDE.md copy instruction for Claude Code"
+fi
+
+# execute-phase.md has platform-native copy sync
+if grep -q "Sync platform-native copies" "$REPO/learnship/workflows/execute-phase.md" && \
+   grep -q "CLAUDE.md.*Claude Code" "$REPO/learnship/workflows/execute-phase.md"; then
+  ok "execute-phase has platform-native copy sync (CLAUDE.md, GEMINI.md)"
+else
+  fail "execute-phase missing platform-native copy sync"
+fi
+
+# learnship's own AGENTS.md exists and has all required sections + verbatim content
+if [ -f "$REPO/AGENTS.md" ]; then
+  ok "learnship repo has its own AGENTS.md"
+else
+  fail "learnship repo missing its own AGENTS.md"
+fi
+
+if [ -f "$REPO/AGENTS.md" ]; then
+  AGENTS_CONTENT=$(cat "$REPO/AGENTS.md")
+  AGENTS_OK=true
+  for section in "Soul" "Principles" "Project Structure" "Tech Stack" "Conventions" "Regressions"; do
+    if ! echo "$AGENTS_CONTENT" | grep -q "## $section"; then
+      AGENTS_OK=false
+      break
+    fi
+  done
+  if [ "$AGENTS_OK" = true ]; then
+    ok "learnship AGENTS.md has all required sections (Soul, Principles, Structure, Stack, Conventions, Regressions)"
+  else
+    fail "learnship AGENTS.md missing required sections"
+  fi
+
+  # Verify it uses the new consolidated principles (not old names)
+  if echo "$AGENTS_CONTENT" | grep -q "Surgical Change" && \
+     echo "$AGENTS_CONTENT" | grep -q "Nothing Extra" && \
+     echo "$AGENTS_CONTENT" | grep -q "Understand First"; then
+    ok "learnship AGENTS.md uses consolidated principle names"
+  else
+    fail "learnship AGENTS.md uses old principle names — not synced with template"
+  fi
+fi
+
+# ──────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────
 echo ""
