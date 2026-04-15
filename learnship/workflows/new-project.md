@@ -40,13 +40,18 @@ node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/PROJECT.md
 ```bash
 node -e "
 const fs=require('fs'),path=require('path');
-function walk(dir,skip){let n=0;try{for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(skip.some(s=>f.includes(s)))continue;n+=e.isDirectory()?walk(f,skip):1;}}catch(e){}return n;}
-const n=walk('.',['/.git/','node_modules','.planning','__pycache__','.venv']);
-console.log(n>2?'HAS_CODE':'BLANK');console.log(n+' files');
+const skip=new Set(['.git','node_modules','.planning','__pycache__','.venv','.windsurf','.claude','.cursor','.codex','.gemini','.opencode','.config']);
+const codeExt=new Set(['.ts','.js','.py','.go','.rs','.swift','.java','.kt','.c','.cpp','.h','.cs','.rb','.php','.dart','.scala','.lua','.r','.R','.zig','.ex','.exs','.clj']);
+const pkgFiles=['package.json','requirements.txt','Cargo.toml','go.mod','Package.swift','build.gradle','pom.xml','Gemfile','composer.json','pubspec.yaml','CMakeLists.txt','Makefile','mix.exs'];
+function hasCode(dir,depth){if(depth>3)return false;try{for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(e.isFile()&&codeExt.has(path.extname(e.name)))return true;if(e.isDirectory()&&!skip.has(e.name)&&hasCode(path.join(dir,e.name),depth+1))return true;}}catch{}return false;}
+const hasPkg=pkgFiles.some(f=>fs.existsSync(f));
+const hasCodeFiles=hasCode('.',0);
+const hasCbMap=fs.existsSync('.planning/codebase');
+if(hasCodeFiles||hasPkg){console.log('HAS_CODE');console.log('has_package: '+(hasPkg?'yes':'no'));console.log('has_codebase_map: '+(hasCbMap?'yes':'no'));console.log('needs_map: '+(!hasCbMap?'yes':'no'));}else{console.log('BLANK');}
 "
 ```
 
-**If HAS_CODE:** Note this internally as `EXISTING_CODEBASE = true`. You will scan the codebase briefly in Step 1b before questioning. Do NOT use existing code as an excuse to skip or shorten the questioning ceremony — the ceremony exists precisely because you need the user's intent, not just their code.
+**If HAS_CODE:** Note this internally as `EXISTING_CODEBASE = true`. Also record `needs_map` (true if `.planning/codebase/` doesn't exist yet). You will offer codebase mapping in Step 1b before questioning. Do NOT use existing code as an excuse to skip or shorten the questioning ceremony — the ceremony exists precisely because you need the user's intent, not just their code.
 
 Check if git is initialized:
 
@@ -69,13 +74,47 @@ Create the planning directory:
 node -e "require('fs').mkdirSync('.planning/research',{recursive:true})"
 ```
 
-## Step 1b: Existing Codebase Scan (only if EXISTING_CODEBASE = true)
+## Step 1b: Existing Codebase Handling (only if EXISTING_CODEBASE = true)
 
-If `EXISTING_CODEBASE = true`, do a quick structural scan before questioning so your follow-up questions are grounded in reality:
+If `EXISTING_CODEBASE = true`, first check whether a codebase map is needed.
+
+**If `needs_map` is true** (existing code detected but no `.planning/codebase/`):
+
+```
+AskUserQuestion([
+  {
+    header: "Existing Codebase Detected",
+    question: "I detected existing code in this directory. Would you like to map the codebase first? This produces structured reference docs that make the questioning phase sharper.",
+    multiSelect: false,
+    options: [
+      { label: "Map codebase first (Recommended)", description: "Run /map-codebase to analyze architecture, stack, conventions, and concerns — then return here" },
+      { label: "Quick scan only", description: "Do a fast structural scan and continue without full mapping" },
+      { label: "Skip — I know this codebase", description: "Proceed directly to configuration questions" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
+
+- **Map codebase first:** Tell the user: "Run `/map-codebase` first, then come back to `/new-project` — the codebase map will be available for the questioning phase." Then **STOP. Exit this workflow.** The user will return to `/new-project` after mapping completes.
+- **Quick scan only:** Continue with the quick scan below.
+- **Skip:** Continue directly to Step 2 (configuration).
+
+**If `needs_map` is false** (codebase map already exists): Read the existing map for context and continue with the quick scan below.
+
+**Quick structural scan** (for "Quick scan only" or when map already exists):
 
 ```bash
-find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' | sort | head -40
-# PowerShell: Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning|__pycache__|\.venv' } | Select-Object -First 40
+find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' -not -path './.windsurf/*' -not -path './.claude/*' -not -path './.cursor/*' -not -path './.codex/*' -not -path './.gemini/*' -not -path './.opencode/*' | sort | head -40
+# PowerShell: Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning|__pycache__|\.venv|\.windsurf|\.claude|\.cursor|\.codex|\.gemini|\.opencode' } | Select-Object -First 40
+```
+
+If `.planning/codebase/` exists, also read the summary docs:
+```bash
+cat .planning/codebase/ARCHITECTURE.md 2>/dev/null | head -40
+cat .planning/codebase/STACK.md 2>/dev/null | head -40
+cat .planning/codebase/CONCERNS.md 2>/dev/null | head -20
 ```
 
 Note the tech stack, key directories, and any README content internally. Use this ONLY to ask sharper follow-up questions — never to infer the user's intent or skip ceremony steps.
@@ -1038,6 +1077,8 @@ The full phase loop:
 After verify-work passes: `/review` for multi-persona code review, `/ship` to test+commit+push+PR, `/compound` to capture what you learned.
 
 💡 For ambitious projects, consider running `/challenge` to stress-test the scope through product and engineering lenses before starting Phase 1.
+
+💡 Building on an existing codebase? Run `/ideate` for codebase-grounded idea generation — it scans your code for hotspots and improvement opportunities.
 
 💡 Working near sensitive areas (auth, payments, migrations)? Run `/guard [scope]` to activate safety mode.
 
