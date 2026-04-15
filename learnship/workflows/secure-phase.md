@@ -94,6 +94,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 ## Step 5: Resolve Open Threats
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).
@@ -151,6 +153,8 @@ AskUserQuestion([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 6: Write SECURITY.md
 

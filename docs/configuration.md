@@ -84,7 +84,7 @@ Controls how much the agent auto-approves vs. asks for confirmation.
 
 | Value | Behavior |
 |-------|----------|
-| `"yolo"` | Agent auto-approves intermediate steps. Faster. Default. |
+| `"auto"` | Agent auto-approves intermediate steps. Faster. Default. |
 | `"interactive"` | Agent pauses at each decision point and waits for your explicit approval. Safer for production work. |
 
 ### `granularity`
@@ -228,8 +228,8 @@ Template variables: `{phase}` = phase number, `{slug}` = kebab-case phase name, 
 
 | Scenario | `mode` | `granularity` | `model_profile` | Toggles |
 |----------|--------|--------------|----------------|---------|
-| Prototype / spike | `yolo` | `coarse` | `budget` | research: off, plan_check: off |
-| Normal development | `yolo` | `standard` | `balanced` | all on |
+| Prototype / spike | `auto` | `coarse` | `budget` | research: off, plan_check: off |
+| Normal development | `auto` | `standard` | `balanced` | all on |
 | Production / client | `interactive` | `fine` | `quality` | all on |
 
 Apply a preset with `/settings` or edit `config.json` directly. The `/set-profile` command switches `model_profile` only: for full preset changes use `/settings`.

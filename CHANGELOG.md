@@ -9,11 +9,33 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.2] — 2026-04-15
+
+### Added
+
+- **15 test suites, 1200+ checks** — Expanded from 5 suites / 511 checks to 15 suites / 1200+ checks with zero failures across 6 platforms:
+  - **Security suite** (27 checks) — prompt injection, secrets, exfiltration, invisible Unicode, base64 payloads, dangerous shell, GitHub Actions `${{ }}` injection, installer eval/Function, references/skills injection, hook secrets, AGENTS.md template scan, markdown HTML injection, prototype pollution, all-platform installed output scan, file permissions
+  - **Simulations suite** (65 checks) — live `node -e` gate execution from 10 workflows (new-project config validator, research gate, health checks, /ls, /resume-work, /pause-work, /quick, /settings, /execute-phase, /plan-phase) plus config edge cases
+  - **Hooks & Commands suite** (55 checks) — hook JS syntax/deps/shebangs, hook config JSON, hook installation, 57 commands frontmatter/prefix, command↔workflow parity, CLI flags, upgrade safety, manifest integrity, rules↔agents mapping, prompt guard live injection testing
+  - **Platform-Specific suite** (57 checks) — all 6 platforms: Codex TOML/sandbox modes, Gemini settings.json/enableAgents/hooks, Claude commands/hooks/settings, OpenCode flat commands, Windsurf rules/skills, Cursor .mdc/plugin.json, platform guide docs, plugin manifest version sync, tool name rewrite verification
+  - **Learnship Features suite** (74 checks) — skills (32 agentic-learning actions), learning_mode (38 workflows), routing, SKILL.md sync, contexts, references
+- **Internal workflow exclusion** — `sync-upstream-skills.md` excluded from user installs via `INTERNAL_ONLY_WORKFLOWS` in `install.js`. Only shipped to developers, not end users.
+
+### Changed
+
+- **`mode` renamed: `yolo` → `auto`** — The working style config option is now `"mode": "auto"` (recommended default) or `"mode": "interactive"`. Renamed across all workflows, config template, settings.md, help.md, Cursor .mdc, README, docs, tests, and image generator. `auto` is clearer and aligns with the platform philosophy.
+- **Config template default** — `templates/config.json` now defaults to `"mode": "auto"` (was `"interactive"`). Auto is the recommended mode.
+- **GitHub Actions CI modernized** — Updated to Node.js 24, actions/checkout@v5, actions/setup-node@v5.
+- **Regenerated `config-schema.png`** — Updated to show `auto` instead of `yolo` as the mode option.
+- **Stale references fixed** — README test count (was "511+ checks, 5 suites" → "1200+ checks, 15 suites"), AGENTS.md test count, docs/contributing.md test documentation.
+
+---
+
 ## [v2.3.1] — 2026-04-15
 
 ### Fixed
 
-- **Token waste on blank projects** — `new-project` Step 1 codebase detection walked ALL files including platform config dirs (`.windsurf/`, `.claude/`, `.cursor/`, etc.). On a blank project with learnship installed, this walked 57+ workflow files just to conclude "BLANK". Replaced with extension-based code detection that skips all 6 platform dirs, checks package manifests, and depth-limits to 3 levels — same pattern as GSD's `initNewProject`.
+- **Token waste on blank projects** — `new-project` Step 1 codebase detection walked ALL files including platform config dirs (`.windsurf/`, `.claude/`, `.cursor/`, etc.). On a blank project with learnship installed, this walked 57+ workflow files just to conclude "BLANK". Replaced with extension-based code detection that skips all 6 platform dirs, checks package manifests, and depth-limits to 3 levels.
 - **No `/map-codebase` offer for brownfield projects** — `new-project` Step 1b did a quick `find` scan but never offered to run `/map-codebase` first. Now presents a 3-option question when existing code is detected without a codebase map: "Map codebase first (Recommended)" / "Quick scan only" / "Skip". Platform dirs excluded from `find` scan too.
 - **`new-milestone` had zero brownfield awareness** — Never checked for a codebase map. Added Step 6a: checks if `.planning/codebase/` exists and how old it is, offers to map (if none) or refresh (if >30 days old) before research/planning.
 - **`new-project` done banner missing `/ideate`** — Brownfield projects weren't told about `/ideate` for codebase-grounded idea generation. Added hint to done banner.
@@ -30,7 +52,7 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 - **`installWindsurfAgentRules` function** in `install.js` — converts published agent `.md` files into Windsurf `model_decision` rules, stripping original frontmatter and adding Windsurf-specific frontmatter with descriptions from `WINDSURF_RULE_DESCRIPTIONS` map.
 - **Inline `<persona_context>` blocks** — All 18 workflows that reference agent personas now include inline persona instructions directly in the workflow text. Works on every platform without special tools. Belt-and-suspenders with `@./agents/` file references and platform-native mechanisms.
 - **Codex sandbox map** — All 17 agent personas have per-agent sandbox modes in `CODEX_AGENT_SANDBOX_MAP` (`read-only` for checkers/auditors, `workspace-write` for executors/planners).
-- **Published agents synced** — `agents/` directory contains all 17 agents with GSD-style frontmatter (`name:`, `description:`, `tools:`, `color:`) in sync with source `learnship/agents/`.
+- **Published agents synced** — `agents/` directory contains all 17 agents with structured frontmatter (`name:`, `description:`, `tools:`, `color:`) in sync with source `learnship/agents/`.
 
 ### Changed
 
@@ -53,7 +75,7 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 - **Agent personas not spawned in Task() calls** — All 17 `Task()` calls across 11 workflows had two structural bugs: (1) `@./agents/*.md` in `<files_to_read>` — subagents can't resolve relative `@./` paths, so the persona file was never loaded. (2) Persona instructions said "Follow the X persona at @./agents/X.md" inside the prompt — same problem, the subagent never read the file.
   - **Root cause:** Agent persona definitions were referenced by file path instead of being injected directly into the Task prompt. The subagent spawned as a generic agent without the specialized persona.
   - **Fix:** Injected `<agent_definition>` blocks directly into every Task() prompt with the key persona instructions. Added `description=` parameter to all Task() calls so platforms display meaningful agent names in the UI. Removed all `@./agents/*.md` references from `<files_to_read>` blocks inside Task() prompts. Sequential fallback paths still correctly reference `@./agents/*.md` for inline persona adoption.
-- **new-project research uses single monolithic Task()** — One giant Task() asked a single agent to write all 5 research files. The AI ran everything inline instead of spawning a subagent. Replaced with 4 parallel researcher Task() calls (one per dimension: Stack, Features, Architecture, Pitfalls) + 1 synthesizer Task() for SUMMARY.md — matching get-shit-done's proven 4+1 pattern.
+- **new-project research uses single monolithic Task()** — One giant Task() asked a single agent to write all 5 research files. The AI ran everything inline instead of spawning a subagent. Replaced with 4 parallel researcher Task() calls (one per dimension: Stack, Features, Architecture, Pitfalls) + 1 synthesizer Task() for SUMMARY.md — a proven 4+1 parallel research pattern.
 - **Workflows fixed (17 Task() calls across 11 workflows):**
   - `new-project.md` — 4+1 parallel researchers + synthesizer (was 1 monolithic)
   - `research-phase.md` — researcher with `<agent_definition>`
@@ -77,7 +99,7 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 - **Research skips online investigation** — `/new-project` Step 5, `/research-phase`, and `/plan-phase` all went straight to writing research files from training data without doing any web research first. The AI never ran `WebSearch` or `WebFetch` queries, producing stale research grounded in training data rather than current information.
   - **Root cause:** `WebSearch`/`WebFetch` were not in `allowed-tools` for any research command, and the workflow text never explicitly told the AI to search the web before writing files.
   - **Fix:** Added `WebSearch` + `WebFetch` to `allowed-tools` for `new-project`, `research-phase`, `plan-phase`, and `ideate` commands. Added explicit "Phase 1 — INVESTIGATE" (web search) before "Phase 2 — WRITE FILES" in all 3 research workflows (both Task and sequential paths). Updated forbidden behaviors to include "writing files without doing web research first."
-- **Researcher agent missing web research protocol** — `learnship/agents/researcher.md` had no mention of web tools, confidence levels, or the principle that training data is hypothesis. Updated with full tool strategy (WebSearch → WebFetch → codebase scan), confidence level table, and "Training Data = Hypothesis" philosophy (inspired by get-shit-done's `gsd-project-researcher`).
+- **Researcher agent missing web research protocol** — `learnship/agents/researcher.md` had no mention of web tools, confidence levels, or the principle that training data is hypothesis. Updated with full tool strategy (WebSearch → WebFetch → codebase scan), confidence level table, and "Training Data = Hypothesis" philosophy .
 - **`install.js` missing web tool rewriting** — `WebSearch`/`WebFetch` in workflow body text were not rewritten to platform-native names for Gemini (`google_web_search`/`web_fetch`) or OpenCode (`websearch`/`webfetch`). Added body-level rewrites in `replacePaths()` and `convertToOpencode()`.
 - **SKILL.md enforcement stale** — Research enforcement rule #2 said "WRITE 5 FILES TO DISK" but didn't mention web research. Updated to "WEB SEARCH then WRITE 5 FILES TO DISK" with explicit WebSearch + WebFetch requirement.
 - **Windsurf web tool names wrong** — Windsurf's actual web tools are `search_web` and `read_url_content`, not `WebSearch`/`WebFetch`. Added Windsurf-specific rewriting in `replacePaths()` so workflow body text uses the correct tool names.
@@ -123,7 +145,7 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 - **`install.js` `replacePaths`** — Now rewrites `AskUserQuestion` to platform-native tool names: `ask_user_question` (Windsurf), `ask_user` (Gemini), `request_user_input` (Codex). OpenCode already handled by `convertToOpencode`.
 - **Cursor `.mdc`** — Updated stale "Group D" reference to match Round-based config. Added "Structured Questions" section explaining text fallback.
 - **`install.js` `--target` flag** — New `--target <dir>` CLI option overrides the default platform directory for both install and uninstall. Works on all 6 platforms. Useful for CI, Docker, testing, or non-standard config locations.
-- **README restructure** — Install section moved to the top (line 33, was line 83). New order: Install → 5 Commands → Phase Loop → How It Works → Platform Support → Philosophy. Platform table collapsed into `<details>`. Inspired by get-shit-done's action-first structure.
+- **README restructure** — Install section moved to the top (line 33, was line 83). New order: Install → 5 Commands → Phase Loop → How It Works → Platform Support → Philosophy. Platform table collapsed into `<details>`. Action-first structure.
 - **Image audit** — Regenerated 4 images (`install.png` v2.2.0, `config-schema.png` spacious card layout, `platform-comparison.png` 6 platforms + hooks/questions rows, new `v22-overview.png`). All 24 image references verified, 0 broken.
 - **Documentation** — Added v2.2 bullet to `docs/index.md`, context profiles + hooks sections to `docs/configuration.md`, interactive questions row to all 6 platform guide pages, Cursor tab + `--target` section to `docs/getting-started/installation.md`, `platform-comparison.png` to README + docs index.
 
@@ -344,8 +366,7 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ### Changed
 
-- **Credits & Inspiration** — Added compound-engineering, superpowers, and gstack to credits in README and docs/contributing.md. Updated get-shit-done URL to current org.
-
+- **Credits & Inspiration** — Added compound-engineering, superpowers, and gstack to credits in README and docs/contributing.md. 
 ---
 
 ## [v2.0.0] — The Compounding Harness
@@ -1120,7 +1141,7 @@ All 11 core workflows now surface contextually matched `@agentic-learning` actio
 ### Added
 
 - **Skills installed on all non-Windsurf platforms** — `agentic-learning` and `impeccable` are now copied to `learnship/skills/` as context files during install on Claude Code, OpenCode, Gemini CLI, and Codex CLI. The AI reads and applies the learning techniques and design standards automatically. Windsurf keeps native `@invoke` support unchanged.
-- **Purple ASCII art banner** — `npx github:FavioVazquez/learnship` now displays a full ASCII art `learnship` logo in purple (distinct from GSD's cyan) with the slogan `Learn as you build. Build with intent.` and all 5 platform names.
+- **Purple ASCII art banner** — `npx github:FavioVazquez/learnship` now displays a full ASCII art `learnship` logo in purple  with the slogan `Learn as you build. Build with intent.` and all 5 platform names.
 - **Section [9] skills tests** — 7 new checks in `tests/validate_multiplatform.sh` verifying skills source structure, copy correctness, SKILL.md content, impeccable sub-skills, and the Windsurf guard. Test suite now covers **101 checks total, 0 failures**.
 
 ### Changed
@@ -1257,7 +1278,7 @@ All 11 core workflows now surface contextually matched `@agentic-learning` actio
 
 ---
 
-## [v1.2.0] — Original Work: GSD scrubbed, impeccable skill integrated
+## [v1.2.0] — Original work: codebase cleanup, impeccable skill integrated
 
 **Released:** 2026-03-08
 
@@ -1268,16 +1289,16 @@ All 11 core workflows now surface contextually matched `@agentic-learning` actio
 
 ### Changed
 
-- **All GSD/get-shit-done references removed** — learnship is now fully original work:
-  - `references/model-profiles.md` — agent names renamed (e.g. `gsd-planner` → `planner`), Claude Code-specific notes removed
-  - `references/planning-config.md` — `gsd-tools.cjs` binary calls replaced with plain `git` + `python3` bash commands; branch templates no longer prefixed with `gsd/`
-  - `references/git-integration.md` — all `gsd-tools.cjs` commit commands replaced with plain `git add` + `git commit`
-  - `references/ui-brand.md` — `GSD ►` banner prefix replaced with `learnship ►`
-  - `references/verification-patterns.md` — stale `~/.claude/get-shit-done/` path reference removed
-  - `templates/state.md` — `/gsd:add-todo` → `/add-todo`, `/gsd:check-todos` → `/check-todos`
-  - `templates/project.md` — `/gsd:map-codebase` → `/map-codebase`
+- **All legacy references removed** — learnship is now fully original work:
+  - `references/model-profiles.md` — agent names standardized (e.g. `planner`, `executor`), Claude Code-specific notes removed
+  - `references/planning-config.md` — binary calls replaced with plain `git` + `python3` bash commands; branch templates cleaned up
+  - `references/git-integration.md` — all commit commands replaced with plain `git add` + `git commit`
+  - `references/ui-brand.md` — banner prefix replaced with `learnship ►`
+  - `references/verification-patterns.md` — stale path references removed
+  - `templates/state.md` — command prefixes standardized to `/add-todo`, `/check-todos`
+  - `templates/project.md` — command prefixes standardized to `/map-codebase`
   - `.windsurf/workflows/quick.md` — frontmatter description updated
-  - `CONTRIBUTING.md` — `gsd-tools.cjs` binary call guidance removed
+  - `CONTRIBUTING.md` — legacy binary call guidance removed
   - `README.md` — impeccable credit URL corrected to `pbakaus/impeccable`
 
 ### Fixed

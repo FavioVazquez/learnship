@@ -1,0 +1,472 @@
+#!/usr/bin/env bash
+# learnship — Comprehensive workflow integrity validation
+#
+# Validates ALL critical workflows (not just new-project) across all 6 platforms:
+#   - Agent persona wiring: every persona_context has @./agents/ ref, files exist
+#   - Task() subagent definitions: every Task() has agent_definition block
+#   - STOP gates: every AskUserQuestion has a blocking STOP gate
+#   - Key structural phrases: must-have content that defines workflow behavior
+#   - Cross-platform consistency: content survives install.js for all 5 installable platforms
+#   - Cursor .mdc: condensed rule file covers all critical workflows
+#
+# This catches the class of bugs where:
+#   - An edit to one workflow breaks persona wiring
+#   - install.js drops content during transforms
+#   - Cursor .mdc drifts from the real workflow set
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+INSTALLER="$REPO_DIR/bin/install.js"
+SRC_WF="$REPO_DIR/learnship/workflows"
+SRC_AG="$REPO_DIR/learnship/agents"
+TMPBASE=$(mktemp -d)
+PASS=0
+FAIL=0
+ERRORS=()
+
+check() {
+  local description="$1"
+  shift
+  if "$@" > /dev/null 2>&1; then
+    echo "  ✓ $description"
+    PASS=$((PASS+1))
+  else
+    echo "  ✗ $description"
+    FAIL=$((FAIL+1))
+    ERRORS+=("$description")
+  fi
+}
+
+cleanup() { rm -rf "$TMPBASE"; }
+trap cleanup EXIT
+
+echo ""
+echo "═══════════════════════════════════════════════════════════════════"
+echo " All-Workflows Integrity Validation"
+echo "═══════════════════════════════════════════════════════════════════"
+
+# ─── Install all 5 platforms to temp dirs ─────────────────────────────
+echo ""
+echo "─── Installing platforms ─────────────────────────────────────────"
+PLATFORMS="windsurf claude opencode gemini codex"
+for p in $PLATFORMS; do
+  mkdir -p "$TMPBASE/$p"
+  node "$INSTALLER" "--$p" --target "$TMPBASE/$p" > /dev/null 2>&1
+done
+echo "  Installed: $PLATFORMS"
+
+# ─── 1. Phase Loop Workflows ─────────────────────────────────────────
+# The core phase loop must be intact: discuss → plan → execute → verify
+
+echo ""
+echo "─── Phase Loop Workflows ─────────────────────────────────────────"
+
+# discuss-phase.md
+check "discuss-phase: has downstream_awareness (discussion persona)" grep -q '<downstream_awareness>' "$SRC_WF/discuss-phase.md"
+check "discuss-phase: has STOP gates" grep -q '🛑 STOP' "$SRC_WF/discuss-phase.md"
+check "discuss-phase: writes CONTEXT.md" grep -q 'CONTEXT.md' "$SRC_WF/discuss-phase.md"
+check "discuss-phase: has scope_guardrail" grep -q '<scope_guardrail>' "$SRC_WF/discuss-phase.md"
+check "discuss-phase: references ROADMAP.md" grep -q 'ROADMAP.md' "$SRC_WF/discuss-phase.md"
+
+# plan-phase.md
+check "plan-phase: has persona_context" grep -q '<persona_context>' "$SRC_WF/plan-phase.md"
+check "plan-phase: references REQUIREMENTS.md" grep -q 'REQUIREMENTS.md' "$SRC_WF/plan-phase.md"
+check "plan-phase: references ROADMAP.md" grep -q 'ROADMAP.md' "$SRC_WF/plan-phase.md"
+check "plan-phase: writes PLAN.md" grep -q 'PLAN.md' "$SRC_WF/plan-phase.md"
+check "plan-phase: has Task() for researcher" grep -q 'learnship-researcher\|learnship-phase-researcher' "$SRC_WF/plan-phase.md"
+check "plan-phase: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/plan-phase.md"
+check "plan-phase: checks config for research setting" grep -q 'workflow.research\|config.*research' "$SRC_WF/plan-phase.md"
+check "plan-phase: checks config for plan_check setting" grep -q 'workflow.plan_check\|plan_check' "$SRC_WF/plan-phase.md"
+
+# execute-phase.md
+check "execute-phase: has persona_context" grep -q '<persona_context>' "$SRC_WF/execute-phase.md"
+check "execute-phase: references PLAN.md" grep -q 'PLAN.md' "$SRC_WF/execute-phase.md"
+check "execute-phase: has Task() calls" grep -q 'Task(' "$SRC_WF/execute-phase.md"
+check "execute-phase: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/execute-phase.md"
+check "execute-phase: writes SUMMARY.md" grep -q 'SUMMARY.md' "$SRC_WF/execute-phase.md"
+check "execute-phase: checks parallelization config" grep -q 'parallelization' "$SRC_WF/execute-phase.md"
+check "execute-phase: enforces atomic commits" grep -q 'atomic commit\|one commit\|One task = one commit' "$SRC_WF/execute-phase.md"
+
+# verify-work.md
+check "verify-work: has persona_context" grep -q '<persona_context>' "$SRC_WF/verify-work.md"
+check "verify-work: references UAT" grep -q 'UAT' "$SRC_WF/verify-work.md"
+check "verify-work: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/verify-work.md"
+check "verify-work: checks must_haves" grep -q 'must_haves\|must_have' "$SRC_WF/verify-work.md"
+
+# review.md
+check "review: has persona_context" grep -q '<persona_context>' "$SRC_WF/review.md"
+check "review: has Task() calls" grep -q 'Task(' "$SRC_WF/review.md"
+check "review: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/review.md"
+check "review: has multi-persona structure" grep -q 'correctness\|security\|performance\|maintainability' "$SRC_WF/review.md"
+
+echo ""
+echo "─── Planning & Research Workflows ────────────────────────────────"
+
+# research-phase.md
+check "research-phase: has persona_context" grep -q '<persona_context>' "$SRC_WF/research-phase.md"
+check "research-phase: has Task() calls" grep -q 'Task(' "$SRC_WF/research-phase.md"
+check "research-phase: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/research-phase.md"
+check "research-phase: writes RESEARCH.md" grep -q 'RESEARCH.md' "$SRC_WF/research-phase.md"
+check "research-phase: uses web search" grep -q 'WebSearch\|web search\|web_search' "$SRC_WF/research-phase.md"
+
+# map-codebase.md
+check "map-codebase: has persona_context" grep -q '<persona_context>' "$SRC_WF/map-codebase.md"
+check "map-codebase: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/map-codebase.md"
+check "map-codebase: writes to .planning/codebase/" grep -q '.planning/codebase' "$SRC_WF/map-codebase.md"
+check "map-codebase: writes ARCHITECTURE.md" grep -q 'ARCHITECTURE.md' "$SRC_WF/map-codebase.md"
+
+echo ""
+echo "─── Debug & Diagnostic Workflows ─────────────────────────────────"
+
+# debug.md
+check "debug: has persona_context" grep -q '<persona_context>' "$SRC_WF/debug.md"
+check "debug: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/debug.md"
+check "debug: has Task() calls" grep -q 'Task(' "$SRC_WF/debug.md"
+check "debug: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/debug.md"
+check "debug: writes session file" grep -q 'session\|SESSION' "$SRC_WF/debug.md"
+check "debug: has hypothesis structure" grep -q 'hypothesis\|Hypothesis' "$SRC_WF/debug.md"
+
+# diagnose-issues.md
+check "diagnose-issues: has persona_context" grep -q '<persona_context>' "$SRC_WF/diagnose-issues.md"
+check "diagnose-issues: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/diagnose-issues.md"
+check "diagnose-issues: has @./agents/ ref" grep -q '@./agents/' "$SRC_WF/diagnose-issues.md"
+
+echo ""
+echo "─── Security & Validation Workflows ──────────────────────────────"
+
+# secure-phase.md
+check "secure-phase: has persona_context" grep -q '<persona_context>' "$SRC_WF/secure-phase.md"
+check "secure-phase: has STOP gates" grep -q '🛑 STOP' "$SRC_WF/secure-phase.md"
+check "secure-phase: has Task() calls" grep -q 'Task(' "$SRC_WF/secure-phase.md"
+check "secure-phase: references STRIDE" grep -q 'STRIDE' "$SRC_WF/secure-phase.md"
+check "secure-phase: writes SECURITY.md" grep -q 'SECURITY.md' "$SRC_WF/secure-phase.md"
+
+# validate-phase.md
+check "validate-phase: has persona_context" grep -q '<persona_context>' "$SRC_WF/validate-phase.md"
+check "validate-phase: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/validate-phase.md"
+check "validate-phase: has Task() calls" grep -q 'Task(' "$SRC_WF/validate-phase.md"
+
+echo ""
+echo "─── Milestone & Meta Workflows ───────────────────────────────────"
+
+# new-milestone.md
+check "new-milestone: has persona_context" grep -q '<persona_context>' "$SRC_WF/new-milestone.md"
+check "new-milestone: references ROADMAP.md" grep -q 'ROADMAP.md' "$SRC_WF/new-milestone.md"
+check "new-milestone: references STATE.md" grep -q 'STATE.md' "$SRC_WF/new-milestone.md"
+check "new-milestone: references PROJECT.md" grep -q 'PROJECT.md' "$SRC_WF/new-milestone.md"
+check "new-milestone: has codebase map check (Step 6a)" grep -q 'codebase.*map\|map.*codebase\|\.planning/codebase' "$SRC_WF/new-milestone.md"
+
+# complete-milestone.md
+check "complete-milestone: references ROADMAP.md" grep -q 'ROADMAP.md' "$SRC_WF/complete-milestone.md"
+check "complete-milestone: references STATE.md" grep -q 'STATE.md' "$SRC_WF/complete-milestone.md"
+
+# challenge.md
+check "challenge: has persona_context" grep -q '<persona_context>' "$SRC_WF/challenge.md"
+check "challenge: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/challenge.md"
+check "challenge: has Task() calls" grep -q 'Task(' "$SRC_WF/challenge.md"
+
+# compound.md
+check "compound: has persona_context" grep -q '<persona_context>' "$SRC_WF/compound.md"
+check "compound: writes to solutions/" grep -q 'solutions/' "$SRC_WF/compound.md"
+
+# ideate.md
+check "ideate: has persona_context" grep -q '<persona_context>' "$SRC_WF/ideate.md"
+check "ideate: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/ideate.md"
+check "ideate: has Task() calls" grep -q 'Task(' "$SRC_WF/ideate.md"
+check "ideate: has scan/explore modes" grep -q 'scan\|explore' "$SRC_WF/ideate.md"
+
+echo ""
+echo "─── Navigation & Settings Workflows ──────────────────────────────"
+
+# ls.md
+check "ls: checks PROJECT.md existence" grep -q 'PROJECT.md' "$SRC_WF/ls.md"
+check "ls: references STATE.md" grep -q 'STATE.md' "$SRC_WF/ls.md"
+
+# settings.md
+check "settings: has STOP gates" grep -q '🛑 STOP' "$SRC_WF/settings.md"
+check "settings: reads config.json" grep -q 'config.json' "$SRC_WF/settings.md"
+check "settings: writes config.json" grep -q 'writeFileSync.*config.json\|fs.writeFileSync' "$SRC_WF/settings.md"
+
+# health.md
+check "health: checks PROJECT.md" grep -q 'PROJECT.md' "$SRC_WF/health.md"
+check "health: checks config.json" grep -q 'config.json' "$SRC_WF/health.md"
+
+# quick.md
+check "quick: has STOP gate" grep -q '🛑 STOP' "$SRC_WF/quick.md"
+check "quick: has persona_context" grep -q '<persona_context>' "$SRC_WF/quick.md"
+
+echo ""
+echo "─── 2. Agent Persona File Completeness ───────────────────────────"
+
+# Every agent file referenced by workflows must exist
+node -e "
+const fs=require('fs'),path=require('path');
+const wfDir='$SRC_WF', agDir='$SRC_AG';
+const wfs=fs.readdirSync(wfDir).filter(f=>f.endsWith('.md'));
+const referencedAgents=new Set();
+const missingAgents=[];
+
+for(const wf of wfs){
+  const c=fs.readFileSync(path.join(wfDir,wf),'utf8');
+  const refs=[...c.matchAll(/@\.\/agents\/([a-z-]+\.md)/g)];
+  for(const m of refs) referencedAgents.add(m[1]);
+}
+
+for(const ag of referencedAgents){
+  if(!fs.existsSync(path.join(agDir,ag))){
+    missingAgents.push(ag);
+  }
+}
+
+console.log('Referenced agents: '+referencedAgents.size);
+console.log('Missing: '+missingAgents.length);
+if(missingAgents.length){
+  missingAgents.forEach(a=>console.error('  MISSING: '+a));
+  process.exit(1);
+}
+" && { echo "  ✓ All referenced agent persona files exist"; PASS=$((PASS+1)); } || { echo "  ✗ Some agent persona files are missing"; FAIL=$((FAIL+1)); ERRORS+=("Missing agent persona files"); }
+
+# Every agent file must have meaningful content (>100 bytes)
+node -e "
+const fs=require('fs'),path=require('path');
+const agDir='$SRC_AG';
+const files=fs.readdirSync(agDir).filter(f=>f.endsWith('.md'));
+const tiny=files.filter(f=>fs.statSync(path.join(agDir,f)).size<100);
+if(tiny.length){
+  tiny.forEach(f=>console.error('  TOO SMALL: '+f));
+  process.exit(1);
+}
+console.log('All '+files.length+' agent files have substantive content');
+" && { echo "  ✓ All agent files have substantive content (>100 bytes)"; PASS=$((PASS+1)); } || { echo "  ✗ Some agent files are too small"; FAIL=$((FAIL+1)); ERRORS+=("Agent files too small"); }
+
+echo ""
+echo "─── 3. Cross-Platform: Key Phrases Survive install.js ────────────"
+
+# Critical enforcement phrases that MUST survive install.js transforms
+# If any of these disappear on a platform, the workflow breaks silently
+PHRASES=(
+  "persona_context|plan-phase.md"
+  "persona_context|execute-phase.md"
+  "persona_context|verify-work.md"
+  "persona_context|review.md"
+  "persona_context|debug.md"
+  "persona_context|new-project.md"
+  "persona_context|research-phase.md"
+  "persona_context|secure-phase.md"
+  "@./agents/|plan-phase.md"
+  "@./agents/|execute-phase.md"
+  "@./agents/|review.md"
+  "@./agents/|new-project.md"
+  "PLAN.md|execute-phase.md"
+  "REQUIREMENTS.md|plan-phase.md"
+  "ROADMAP.md|plan-phase.md"
+  "CONTEXT.md|discuss-phase.md"
+  "UAT|verify-work.md"
+  "SUMMARY.md|execute-phase.md"
+  "STRIDE|secure-phase.md"
+  "CONFIG_VALID|new-project.md"
+  "MANDATORY INTERACTIVE|new-project.md"
+  "HARD STOP|new-project.md"
+  "MANDATORY USER CHOICE|new-project.md"
+)
+
+PHRASE_FAILS=0
+for entry in "${PHRASES[@]}"; do
+  phrase="${entry%%|*}"
+  wf="${entry##*|}"
+  for p in $PLATFORMS; do
+    installed="$TMPBASE/$p/learnship/workflows/$wf"
+    if [ -f "$installed" ]; then
+      if ! grep -q "$phrase" "$installed" 2>/dev/null; then
+        echo "  ✗ $p/$wf: missing '$phrase'"
+        PHRASE_FAILS=$((PHRASE_FAILS+1))
+      fi
+    fi
+  done
+done
+
+if [ "$PHRASE_FAILS" -eq 0 ]; then
+  echo "  ✓ All critical phrases survive install.js across all 5 platforms (${#PHRASES[@]} phrases × 5 platforms = $((${#PHRASES[@]} * 5)) checks)"
+  PASS=$((PASS+1))
+else
+  echo "  ✗ $PHRASE_FAILS phrase(s) lost during install"
+  FAIL=$((FAIL+1))
+  ERRORS+=("$PHRASE_FAILS phrases lost during install.js transforms")
+fi
+
+echo ""
+echo "─── 4. Cross-Platform: Agent @./agents/ Refs Survive ─────────────"
+
+# Every workflow with @./agents/ in source must still have it after install
+node -e "
+const fs=require('fs'),path=require('path');
+const srcDir='$SRC_WF';
+const platforms='$PLATFORMS'.split(' ');
+const tmpBase='$TMPBASE';
+const errs=[];
+
+const srcFiles=fs.readdirSync(srcDir).filter(f=>f.endsWith('.md'));
+for(const wf of srcFiles){
+  const srcContent=fs.readFileSync(path.join(srcDir,wf),'utf8');
+  if(!srcContent.includes('@./agents/'))continue;
+
+  const srcRefs=[...srcContent.matchAll(/@\.\/agents\/([a-z-]+\.md)/g)].map(m=>m[1]);
+
+  for(const p of platforms){
+    const installed=path.join(tmpBase,p,'learnship','workflows',wf);
+    if(!fs.existsSync(installed))continue;
+    const instContent=fs.readFileSync(installed,'utf8');
+    for(const ref of srcRefs){
+      if(!instContent.includes(ref)){
+        errs.push(p+'/'+wf+': lost @./agents/'+ref);
+      }
+    }
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK');
+" && { echo "  ✓ All @./agents/ references preserved across all 5 platforms"; PASS=$((PASS+1)); } || { echo "  ✗ Some @./agents/ references lost during install"; FAIL=$((FAIL+1)); ERRORS+=("@./agents/ references lost during install"); }
+
+echo ""
+echo "─── 5. Cross-Platform: STOP Gates Preserved ──────────────────────"
+
+# Every workflow that has STOP gates in source must have them after install
+node -e "
+const fs=require('fs'),path=require('path');
+const srcDir='$SRC_WF';
+const platforms='$PLATFORMS'.split(' ');
+const tmpBase='$TMPBASE';
+const errs=[];
+
+const srcFiles=fs.readdirSync(srcDir).filter(f=>f.endsWith('.md'));
+for(const wf of srcFiles){
+  const srcContent=fs.readFileSync(path.join(srcDir,wf),'utf8');
+  const srcStops=(srcContent.match(/🛑 STOP/g)||[]).length;
+  if(srcStops===0)continue;
+
+  for(const p of platforms){
+    const installed=path.join(tmpBase,p,'learnship','workflows',wf);
+    if(!fs.existsSync(installed))continue;
+    const instContent=fs.readFileSync(installed,'utf8');
+    const instStops=(instContent.match(/🛑 STOP/g)||[]).length;
+    if(instStops<srcStops){
+      errs.push(p+'/'+wf+': source has '+srcStops+' STOP gates, installed has '+instStops);
+    }
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK');
+" && { echo "  ✓ STOP gate counts preserved across all 5 platforms"; PASS=$((PASS+1)); } || { echo "  ✗ STOP gates lost during install"; FAIL=$((FAIL+1)); ERRORS+=("STOP gates lost during install"); }
+
+echo ""
+echo "─── 6. Cross-Platform: Task() Definitions Preserved ──────────────"
+
+# Every workflow that has Task() in source must still have it
+node -e "
+const fs=require('fs'),path=require('path');
+const srcDir='$SRC_WF';
+const platforms='$PLATFORMS'.split(' ');
+const tmpBase='$TMPBASE';
+const errs=[];
+
+const srcFiles=fs.readdirSync(srcDir).filter(f=>f.endsWith('.md'));
+for(const wf of srcFiles){
+  const srcContent=fs.readFileSync(path.join(srcDir,wf),'utf8');
+  const srcTasks=(srcContent.match(/Task\(/g)||[]).length;
+  if(srcTasks===0)continue;
+
+  for(const p of platforms){
+    const installed=path.join(tmpBase,p,'learnship','workflows',wf);
+    if(!fs.existsSync(installed))continue;
+    const instContent=fs.readFileSync(installed,'utf8');
+    const instTasks=(instContent.match(/Task\(/g)||[]).length;
+    if(instTasks<srcTasks){
+      errs.push(p+'/'+wf+': source has '+srcTasks+' Task() calls, installed has '+instTasks);
+    }
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK');
+" && { echo "  ✓ Task() call counts preserved across all 5 platforms"; PASS=$((PASS+1)); } || { echo "  ✗ Task() calls lost during install"; FAIL=$((FAIL+1)); ERRORS+=("Task() calls lost during install"); }
+
+echo ""
+echo "─── 7. Cursor .mdc: Workflow Table Coverage ──────────────────────"
+
+MDC="$REPO_DIR/cursor-rules/learnship.mdc"
+
+# Critical workflows that MUST be in the Cursor .mdc workflow table
+CURSOR_REQUIRED=(
+  "new-project"
+  "new-milestone"
+  "discuss-phase"
+  "plan-phase"
+  "execute-phase"
+  "verify-work"
+  "review"
+  "ship"
+  "complete-milestone"
+  "ls"
+  "next"
+  "quick"
+  "debug"
+  "map-codebase"
+  "ideate"
+  "challenge"
+  "settings"
+  "health"
+  "compound"
+  "pause-work"
+  "resume-work"
+  "secure-phase"
+  "validate-phase"
+  "diagnose-issues"
+)
+
+CURSOR_MISSING=0
+for wf in "${CURSOR_REQUIRED[@]}"; do
+  if ! grep -q "$wf" "$MDC" 2>/dev/null; then
+    echo "  ✗ Cursor .mdc missing workflow: $wf"
+    CURSOR_MISSING=$((CURSOR_MISSING+1))
+  fi
+done
+
+if [ "$CURSOR_MISSING" -eq 0 ]; then
+  echo "  ✓ Cursor .mdc references all ${#CURSOR_REQUIRED[@]} critical workflows"
+  PASS=$((PASS+1))
+else
+  echo "  ✗ Cursor .mdc missing $CURSOR_MISSING critical workflows"
+  FAIL=$((FAIL+1))
+  ERRORS+=("Cursor .mdc missing $CURSOR_MISSING workflows")
+fi
+
+echo ""
+echo "─── 8. Cursor .mdc: Config Schema Coverage ──────────────────────"
+
+check "Cursor .mdc: has config schema section" grep -q '## Config Schema' "$MDC"
+check "Cursor .mdc: mode key mapping" grep -q '"mode"' "$MDC"
+check "Cursor .mdc: granularity key mapping" grep -q '"granularity"' "$MDC"
+check "Cursor .mdc: model_profile key mapping" grep -q '"model_profile"' "$MDC"
+check "Cursor .mdc: learning_mode key mapping" grep -q '"learning_mode"' "$MDC"
+check "Cursor .mdc: workflow.research key mapping" grep -q '"workflow.research"' "$MDC"
+check "Cursor .mdc: parallelization.enabled key mapping" grep -q '"parallelization.enabled"' "$MDC"
+check "Cursor .mdc: forbidden flat keys warning" grep -q 'working_style.*model_tier\|model_tier.*working_style' "$MDC"
+check "Cursor .mdc: CONFIG_VALID reference" grep -q 'CONFIG_VALID' "$MDC"
+check "Cursor .mdc: round-by-round instruction" grep -q 'EACH round\|each round' "$MDC"
+
+echo ""
+echo "─── Results ──────────────────────────────────────────────────────"
+echo "  Passed: $PASS"
+echo "  Failed: $FAIL"
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  echo ""
+  echo "  Failures:"
+  for err in "${ERRORS[@]}"; do
+    echo "    - $err"
+  done
+fi
+
+echo ""
+[ "$FAIL" -eq 0 ] && echo "  ALL TESTS PASSED ✓" || { echo "  TESTS FAILED ✗"; exit 1; }

@@ -69,7 +69,7 @@ for platform in windsurf claude opencode gemini codex; do
   fi
 done
 
-# GSD-level correctness checks
+# Core correctness checks
 if grep -q "LEARNSHIP_CODEX_MARKER" "$REPO/bin/install.js"; then
   ok "installer has LEARNSHIP_CODEX_MARKER constant"
 else

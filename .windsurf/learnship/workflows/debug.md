@@ -40,7 +40,7 @@ If no description was provided as an argument, ask: **"What is the exact symptom
 If description was provided, use it as starting context. Then gather triage details using structured questions:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Frequency",
     question: "When does this happen?",
@@ -63,6 +63,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 Then ask as follow-ups (one at a time):
 - "What did you expect to happen?"

@@ -76,7 +76,7 @@ a problem you're trying to solve, or something you're not sure about yet.
 If the conversation surfaces factual questions, technology comparisons, or unknowns:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Research Opportunity",
     question: "This touches on [specific question]. Want me to do a quick research pass before we continue?",
@@ -89,6 +89,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If yes: read `parallelization` from `.planning/config.json`. If `parallelization.enabled` is true, spawn a researcher agent:
 ```
 Task(
@@ -97,7 +99,7 @@ Task(
   prompt="
     <agent_definition>
     You are a learnship researcher doing a quick, focused research pass.
-    Your training data is stale — use search_web to verify current state. Be concise.
+    Your training data is stale — use WebSearch to verify current state. Be concise.
     </agent_definition>
 
     <objective>
@@ -109,7 +111,7 @@ Task(
 ```
 <persona_context>
 You are now the **learnship researcher**. Do a quick research pass on the ideation domain.
-Use search_web to discover current state. Tag confidence levels. Share findings before ideation begins.
+Use WebSearch to discover current state. Tag confidence levels. Share findings before ideation begins.
 </persona_context>
 
 If parallelization is false, read `@./agents/researcher.md` for the full persona definition. Do a quick research pass. Share findings and continue.

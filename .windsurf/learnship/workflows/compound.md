@@ -11,7 +11,7 @@ Capture a recently solved problem or learned pattern while context is fresh. Cre
 
 ## Step 1: Choose Mode
 
-Present the user with two options before proceeding. Use the platform's blocking question tool (`ask_user_question` in Claude Code, `request_user_input` in Codex, `ask_user` in Gemini, `ask_user_question` in Windsurf). If no question tool is available, present the options and wait for the user's reply.
+Present the user with two options before proceeding. Use the platform's blocking question tool (`AskUserQuestion` in Claude Code, `request_user_input` in Codex, `ask_user` in Gemini, `ask_user_question` in Windsurf). If no question tool is available, present the options and wait for the user's reply.
 
 ```
 1. Full (recommended) — the complete compound workflow. Researches,

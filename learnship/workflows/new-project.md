@@ -121,9 +121,13 @@ Note the tech stack, key directories, and any README content internally. Use thi
 
 ## Step 2: Configuration
 
-Present configuration questions using structured question rounds. Use your platform's interactive question tool, or numbered text lists if unavailable.
+> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each round as a blocking question using `AskUserQuestion` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Each round is a SEPARATE blocking call. Do NOT combine all rounds into one. Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply after EACH round before showing the next round.**
+>
+> **🛑 FORBIDDEN:** Do NOT present all questions at once as a text wall. Do NOT skip any question. Do NOT invent answers. Do NOT proceed to the config.json write step until ALL 4 rounds have been answered by the user.
 
 **Round 1 — Core settings (4 questions):**
+
+> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
 
 ```
 AskUserQuestion([
@@ -132,7 +136,7 @@ AskUserQuestion([
     question: "How do you want to work?",
     multiSelect: false,
     options: [
-      { label: "YOLO (Recommended)", description: "Auto-approve steps, just execute" },
+      { label: "Auto (Recommended)", description: "Auto-approve steps, just execute" },
       { label: "Interactive", description: "Confirm at each step" }
     ]
   },
@@ -168,7 +172,11 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's Round 1 reply before continuing.
+
 **Round 2 — Workflow agents (5 questions):**
+
+> Present these 5 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 3.
 
 ```
 AskUserQuestion([
@@ -220,7 +228,11 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's Round 2 reply before continuing.
+
 **Round 3 — Pipeline & git (4 questions):**
+
+> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 4.
 
 ```
 AskUserQuestion([
@@ -264,13 +276,35 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's Round 3 reply before continuing.
+
 <!-- LEARNSHIP_PARALLEL_BLOCK -->
+
+> 🛑 STOP. Wait for the user's Round 4 reply (parallelization) before continuing.
+
+**Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.
+
+**Key mapping from questions to config:**
+- Working Style → `"mode"`: `"auto"` or `"interactive"`
+- Granularity → `"granularity"`: `"coarse"`, `"standard"`, or `"fine"`
+- Learning Partner → `"learning_mode"`: `"auto"` or `"manual"`
+- AI Models → `"model_profile"`: `"balanced"`, `"quality"`, or `"budget"`
+- Research → `"workflow.research"`: `true` or `false`
+- Plan Check → `"workflow.plan_check"`: `true` or `false`
+- Verifier → `"workflow.verifier"`: `true` or `false`
+- Review → `"workflow.review"`: `true` or `false`
+- Solutions Search → `"workflow.solutions_search"`: `true` or `false`
+- TDD → `"test_first"`: `true` or `false`
+- Ship Pipeline → `"ship.auto_test"`, `"ship.conventional_commits"`, `"ship.pr_template"`: each `true` or `false`
+- Git Tracking → `"planning.commit_docs"`: `true` or `false`
+- Commit Mode → `"planning.commit_mode"`: `"auto"` or `"manual"`
+- Parallel Execution → `"parallelization.enabled"`: `true` or `false`
 
 Create `.planning/config.json` with all settings:
 
 ```json
 {
-  "mode": "yolo|interactive",
+  "mode": "auto|interactive",
   "granularity": "coarse|standard|fine",
   "model_profile": "quality|balanced|budget",
   "learning_mode": "auto|manual",
@@ -331,6 +365,38 @@ Create `.planning/config.json` with all settings:
 ```
 
 **Note:** The `parallelization` field is now an object (not a flat boolean). Legacy flat `"parallelization": true` is still honored for backward compatibility. The `gates` and `safety` sections use sensible defaults — only ask users about them if they specifically want to customize.
+
+**Verify config.json was written correctly:**
+
+```bash
+node -e "
+const fs=require('fs');
+try{
+  const c=JSON.parse(fs.readFileSync('.planning/config.json','utf8'));
+  const errs=[];
+  if(!['auto','interactive'].includes(c.mode)) errs.push('mode must be auto|interactive, got: '+c.mode);
+  if(!['coarse','standard','fine'].includes(c.granularity)) errs.push('granularity must be coarse|standard|fine');
+  if(!['quality','balanced','budget'].includes(c.model_profile)) errs.push('model_profile must be quality|balanced|budget');
+  if(!['auto','manual'].includes(c.learning_mode)) errs.push('learning_mode must be auto|manual');
+  if(typeof c.test_first!=='boolean') errs.push('test_first must be boolean');
+  if(!c.planning||!['auto','manual'].includes(c.planning.commit_mode)) errs.push('planning.commit_mode must be auto|manual');
+  if(!c.workflow||typeof c.workflow.research!=='boolean') errs.push('workflow.research must be boolean');
+  if(!c.workflow||typeof c.workflow.plan_check!=='boolean') errs.push('workflow.plan_check must be boolean');
+  if(!c.workflow||typeof c.workflow.verifier!=='boolean') errs.push('workflow.verifier must be boolean');
+  if(!c.workflow||typeof c.workflow.review!=='boolean') errs.push('workflow.review must be boolean');
+  if(!c.parallelization||typeof c.parallelization.enabled!=='boolean') errs.push('parallelization.enabled must be boolean');
+  if(!c.ship||typeof c.ship.auto_test!=='boolean') errs.push('ship.auto_test must be boolean');
+  const bad=['working_style','model_tier','platform','milestone','phases','commit_mode'];
+  for(const k of bad){if(k in c)errs.push('FORBIDDEN top-level key: '+k+' — use the nested schema');}
+  if(errs.length){console.log('CONFIG_INVALID');errs.forEach(e=>console.log('  - '+e));}
+  else console.log('CONFIG_VALID');
+}catch(e){console.log('CONFIG_MISSING_OR_CORRUPT: '+e.message);}
+"
+```
+
+**If `CONFIG_INVALID` or `CONFIG_MISSING_OR_CORRUPT`:** The config file is wrong. Fix it to match the schema above exactly, then re-run the verification. Do NOT proceed until it passes.
+
+**If `CONFIG_VALID`:** Continue.
 
 If `planning.commit_docs` is false, add `.planning/` to `.gitignore`:
 ```bash

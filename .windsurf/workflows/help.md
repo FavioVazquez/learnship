@@ -178,6 +178,6 @@ Edit project settings with `/settings` or directly:
 cat .planning/config.json
 ```
 
-Key settings: `mode` (yolo/interactive), `model_profile` (quality/balanced/budget), `learning_mode` (auto/manual).
+Key settings: `mode` (auto/interactive), `model_profile` (quality/balanced/budget), `learning_mode` (auto/manual).
 
 See `README.md` for the full configuration reference.

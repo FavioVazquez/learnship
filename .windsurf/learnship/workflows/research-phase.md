@@ -32,7 +32,7 @@ ls ".planning/phases/"*"/"*"-RESEARCH.md" 2>/dev/null | grep "^[N]-\|/[N][^0-9]"
 If RESEARCH.md already exists for this phase:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Existing Research",
     question: "Research already exists for this phase. What do you want to do?",
@@ -83,18 +83,18 @@ Task(
     <agent_definition>
     You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
     Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
     </agent_definition>
 
     <objective>
     Research how to implement phase [N] for this project. Write [padded_phase]-RESEARCH.md.
-    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read the phase goal from ROADMAP.md, requirements from REQUIREMENTS.md, and any CONTEXT.md decisions
-    2. Run at least 3 search_web queries: '[phase technology] best practices [current year]', '[phase technology] common mistakes', '[phase technology] recommended libraries'
-    3. read_url_content official docs for key libraries or frameworks discovered
+    2. Run at least 3 WebSearch queries: '[phase technology] best practices [current year]', '[phase technology] common mistakes', '[phase technology] recommended libraries'
+    3. WebFetch official docs for key libraries or frameworks discovered
     4. Scan the codebase for existing patterns relevant to this phase
     5. Write [padded_phase]-RESEARCH.md with confidence levels and source citations
     </research_steps>
@@ -119,20 +119,20 @@ Task(
 <persona_context>
 You are now the **learnship phase researcher**. Your training data is stale — verify before asserting.
 Tag every claim: [VERIFIED: source], [CITED: url], or [ASSUMED]. Never present assumed knowledge as verified fact.
-Use search_web for implementation patterns, read_url_content for official docs, codebase scan for existing patterns to reuse.
+Use WebSearch for implementation patterns, WebFetch for official docs, codebase scan for existing patterns to reuse.
 </persona_context>
 
 Read `@./agents/phase-researcher.md` for the full persona definition. In **phase research mode**:
 
-**Online research first.** Before writing anything, run at least 3 search_web queries relevant to this phase's domain:
+**Online research first.** Before writing anything, run at least 3 WebSearch queries relevant to this phase's domain:
 
 1. `"[phase technology] best practices 2026"` — current recommendations
 2. `"[phase technology] common mistakes gotchas"` — what goes wrong
 3. `"[phase technology] recommended libraries"` — standard tools
 
-Use read_url_content to read official docs for any libraries or frameworks discovered. Record findings internally.
+Use WebFetch to read official docs for any libraries or frameworks discovered. Record findings internally.
 
-> 🛑 STOP. Confirm: did you run at least 3 search_web queries? If you skipped straight to writing the research file, go back and search now.
+> 🛑 STOP. Confirm: did you run at least 3 WebSearch queries? If you skipped straight to writing the research file, go back and search now.
 
 Then write `.planning/phases/[padded_phase]-[slug]/[padded_phase]-RESEARCH.md` based on your web research findings. Include confidence levels and cite sources. The file must have these sections:
 

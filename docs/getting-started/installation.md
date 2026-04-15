@@ -13,7 +13,7 @@ learnship installs as a set of workflow files into your AI platform's configurat
 
 | Requirement | Notes |
 |-------------|-------|
-| **Node.js ≥ 18** | Required by the installer and at workflow runtime. |
+| **Node.js ≥ 22** | Required by the installer and at workflow runtime. |
 | **Git** | Used by workflows to commit changes. |
 
 Both are standard tools you almost certainly have already.

@@ -18,7 +18,7 @@ If missing, create from template:
 ```bash
 cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/config.json << 'EOF'
 {
-  "mode": "interactive",
+  "mode": "auto",
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
@@ -100,7 +100,7 @@ Display the settings banner, then present settings using structured question rou
 **Round 1 — Core settings (4 questions):**
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Model Profile",
     question: "Which model quality tier for agents?",
@@ -117,7 +117,7 @@ ask_user_question([
     question: "Working style?",
     multiSelect: false,
     options: [
-      { label: "YOLO", description: "Auto-approve steps, just execute" },
+      { label: "Auto", description: "Auto-approve steps, just execute" },
       { label: "Interactive", description: "Confirm at each step, more control" }
     ]
   },
@@ -143,10 +143,12 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 **Round 2 — Workflow agents (6 questions):**
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Research",
     question: "Spawn researcher agent before planning?",
@@ -204,10 +206,12 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 **Round 3 — Pipeline & git (4 questions):**
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Ship Pipeline",
     question: "Ship pipeline preferences?",
@@ -248,6 +252,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 5: Save Config
 

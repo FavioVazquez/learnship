@@ -113,7 +113,7 @@ Effort: small | medium | large
 ```
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Diagnosis Review",
     question: "Does this diagnosis look right?",
@@ -126,6 +126,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 6: Create Fix Plans
 

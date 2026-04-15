@@ -73,6 +73,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If "Skip" → exit workflow.
 
 If no CONTEXT.md exists but plans already exist for this phase:
@@ -90,6 +92,8 @@ AskUserQuestion([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 3: Scout Codebase
 
@@ -164,6 +168,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If "All clear" → skip to Step 6.
 
 **For each selected area, discuss:**
@@ -186,6 +192,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 3. After 4 questions, ask: "More questions about [area], or move to next?"
 4. If more → ask 4 more, then check again
 
@@ -206,6 +214,8 @@ AskUserQuestion([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 <scope_guardrail>
 **No scope creep.** The phase boundary comes from ROADMAP.md and is FIXED. Discussion clarifies HOW to implement what's scoped, never WHETHER to add new capabilities.

@@ -91,6 +91,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If "All clear" → skip to Step 4.
 
 For each selected area, ask 1-2 focused questions with concrete options using structured questions. Max 2 questions per area — keep it lightweight.
