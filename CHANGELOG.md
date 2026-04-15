@@ -9,6 +9,14 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.1.1] — 2026-04-15
+
+### Fixed
+
+- **`/new-project` research output gate** — After research completes, the AI was displaying a 3-bullet summary and immediately jumping to Step 6 (requirements) without presenting research findings. Fixed by replacing the sparse banner with a full structured presentation of all 5 research files (stack, features, architecture, pitfalls) and adding a hard gate requiring explicit user confirmation before requirements can begin.
+
+---
+
 ## [v2.1.0] — 2026-04-15
 
 ### Added
