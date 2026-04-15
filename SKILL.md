@@ -128,7 +128,7 @@ When running `/new-project`, these are non-negotiable hard gates. Violating any 
 
 1. **Research decision = always ask the user.** After PROJECT.md is confirmed, you MUST ask: "Do you want me to research the domain ecosystem first?" and WAIT for a reply. You are FORBIDDEN from deciding this yourself — even if the tech stack is defined in PROJECT.md, the domain seems trivial, or the user gave detailed answers. Never say "no research needed" or "skipping research" on your own.
 
-2. **Research = 5 separate files.** If the user chooses research, you MUST create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. After writing all 5, run the `node -e` verification command from the workflow. If it fails, fix the files before proceeding.
+2. **Research = WRITE 5 FILES TO DISK.** "Research" means creating files, not thinking. If the user chooses research, you MUST write exactly 5 files to `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT do web searches or domain analysis and then skip the file writes — that is a workflow failure. Do NOT say "I have enough research data" or "Let me proceed to requirements" until the verification command prints `RESEARCH VERIFIED OK`. The sequence is: mkdir → write 5 files → run verification → present findings → get user confirmation → THEN requirements.
 
 3. **AGENTS.md = copy from template.** Read `@./templates/agents.md` BEFORE writing AGENTS.md. Sections marked "copy VERBATIM" must be copied word-for-word — do not rewrite, summarize, or rephrase them. After writing, run the `node -e` verification command. If it fails, fix AGENTS.md before proceeding.
 

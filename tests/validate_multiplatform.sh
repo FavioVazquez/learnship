@@ -2884,12 +2884,13 @@ else
   fail "new-project missing individual research file instructions — AI may write single monolithic file"
 fi
 
-# Research files must be created as separate write operations
-if grep -q "MUST create exactly 5 separate markdown files" "$REPO/learnship/workflows/new-project.md" && \
-   grep -q "Do NOT write a single monolithic research file" "$REPO/learnship/workflows/new-project.md"; then
-  ok "new-project explicitly forbids monolithic research file"
+# Research files must be created as separate write operations (v2.1.2: stronger enforcement)
+if grep -q "WRITING 5 FILES to disk" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "WRITING RESEARCH FILES" "$REPO/learnship/workflows/new-project.md" && \
+   grep -q "Forbidden behaviors" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project has research file-write enforcement with forbidden behaviors"
 else
-  fail "new-project missing anti-monolith instruction for research files"
+  fail "new-project missing research file-write enforcement — AI may skip file creation"
 fi
 
 # AGENTS.md generation has substep structure (8a read, 8b write, 8c verify)
@@ -2921,20 +2922,20 @@ fi
 
 # SKILL.md has /new-project ceremony enforcement section
 if grep -q "Ceremony Enforcement" "$SKILL_MD" && \
-   grep -q "5 separate files" "$SKILL_MD" && \
+   grep -q "WRITE 5 FILES TO DISK" "$SKILL_MD" && \
    grep -q "copy from template" "$SKILL_MD" && \
    grep -q "Done = STOP" "$SKILL_MD"; then
-  ok "SKILL.md has /new-project ceremony enforcement (research files, template, STOP)"
+  ok "SKILL.md has /new-project ceremony enforcement (research file-write, template, STOP)"
 else
   fail "SKILL.md missing /new-project ceremony enforcement section"
 fi
 
 # Cursor .mdc has research = 5 separate files gate
-if grep -q "5 separate files\|5 files in" "$CURSOR_MDC" && \
+if grep -q "WRITE 5 FILES TO DISK" "$CURSOR_MDC" && \
    grep -q "RESEARCH VERIFIED OK" "$CURSOR_MDC"; then
-  ok "cursor-rules/learnship.mdc has research = 5 separate files gate"
+  ok "cursor-rules/learnship.mdc has research file-write enforcement gate"
 else
-  fail "cursor-rules/learnship.mdc missing research file enforcement"
+  fail "cursor-rules/learnship.mdc missing research file-write enforcement"
 fi
 
 # Cursor .mdc has AGENTS.md template gate

@@ -210,3 +210,13 @@ Never push to main directly. Never merge without explicit user approval.
 **Fix:** Added HARD STOP gate with forbidden phrases ("Let me start Phase 1", "Now starting Phase 1"), explicit routing suspension lift. (v2.0.9)
 
 **Lesson:** "Done" is not "stop." The AI will continue to the next logical action unless explicitly told to halt. Every done banner needs a STOP gate.
+
+### 2026-04-15: AI does research in its head, skips writing the 5 files
+
+**What broke:** During `/new-project`, after the user chose "Research first," the AI did web searches and domain analysis, then said "I have enough research data. Let me proceed to requirements" — without ever writing the 5 research files (`STACK.md`, `FEATURES.md`, etc.). The per-file instructions and verification gate were never reached because the AI considered "research" done after thinking about it.
+
+**Root cause:** The word "research" was interpreted as a cognitive action ("think about the domain") rather than a file-writing action ("create 5 files on disk"). The existing instructions said "create exactly 5 separate markdown files" but led with the action verb "Research the standard tech stack" — the AI treated that as the instruction and the file writing as optional output.
+
+**Fix:** (1) Changed banner from "RESEARCHING" to "WRITING RESEARCH FILES" to frame the action as file creation. (2) Added explicit forbidden-behaviors block listing the exact failure pattern ("doing web searches then saying 'I have enough research data' WITHOUT writing the 5 files"). (3) Added mandatory sequence statement: "mkdir → write file 1 → write file 2 → ... → run verification → see RESEARCH VERIFIED OK → present findings → get user confirmation." (4) Added per-file stop-and-confirm after File 1. (5) Updated SKILL.md and cursor-rules enforcement to say "Research = WRITE 5 FILES TO DISK" instead of "Research = 5 separate files." (v2.1.2)
+
+**Lesson:** When the AI has a choice between "think about X" and "write X to a file," it will always prefer thinking — it's cheaper and faster. Instructions must frame the action as file creation from the start, not as research-then-write. The verb matters: "Write STACK.md now" works; "Research the stack" doesn't.
