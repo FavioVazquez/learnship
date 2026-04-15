@@ -9,6 +9,26 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.0.11] — 2026-04-15
+
+### Changed
+
+- **Principles consolidated (10 → 10, reworked)** — Three principles absorbed anti-overengineering and surgical-change guidance without adding new ones:
+  - **#2** "Minimal Upstream Fix" → **"Minimal Fix, Surgical Change"** — adds "touch only what you must, don't improve adjacent code, every changed line traces to the request"
+  - **#7** "One Moving Part" → **"One Thing at a Time, Nothing Extra"** — adds "no speculative features, no single-use abstractions, if 200 lines could be 50 rewrite"
+  - **#8** "Code Reads > Code Writes" → **"Understand First, Then Change"** — adds "stop when confused, present multiple interpretations, ask"
+- **New Voice & Character bullet** — "Stop when confused, not after" — surface ambiguity immediately, don't silently pick an interpretation
+
+### Fixed
+
+- **Platform-native file creation** — `/new-project` Step 8 now detects existing context files (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.cursorrules`) and asks the user to Replace/Merge/Keep separate before writing
+- **Claude Code CLAUDE.md copy** — `install.js` now generates a `cp AGENTS.md CLAUDE.md` instruction for Claude Code installs. Previously only Gemini CLI got a copy instruction.
+- **Platform-native copy sync** — `execute-phase` Step 7b now auto-syncs `AGENTS.md → CLAUDE.md` and `AGENTS.md → GEMINI.md` if those files exist
+- **11 new tests** (356 total)
+- **learnship's own AGENTS.md** — The repo itself now has a filled-in AGENTS.md with project structure, tech stack, conventions, regressions, and all consolidated principles
+
+---
+
 ## [v2.0.10] — 2026-04-12
 
 ### Fixed

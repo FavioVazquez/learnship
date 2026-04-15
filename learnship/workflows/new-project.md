@@ -479,6 +479,43 @@ git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git
 
 > **🔴 MANDATORY — This step must always be completed. Do not skip it, do not defer it, do not move to Step 9 without writing AGENTS.md to the project root. AGENTS.md is the persistent memory file that every future session depends on.**
 
+**Substep 8a-pre — Check for existing context files.** Run this command now:
+
+```bash
+node -e "const fs=require('fs');const files=['AGENTS.md','CLAUDE.md','GEMINI.md','.cursorrules'];const found=files.filter(f=>fs.existsSync(f));if(found.length){console.log('EXISTING: '+found.join(', '));}else{console.log('NONE FOUND');}"
+```
+
+**If the command prints `EXISTING:`** — Ask the user:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► EXISTING CONTEXT FILES DETECTED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I found existing context file(s): [list from command output]
+
+What would you like to do?
+
+ 1. Replace (recommended for new learnship projects)
+    → Overwrite with learnship's AGENTS.md
+
+ 2. Merge
+    → Keep your existing content, add learnship sections
+
+ 3. Keep separate
+    → Write AGENTS.md alongside your existing file(s)
+
+Reply 1, 2, or 3.
+```
+
+> 🔴 **HARD GATE — Wait for the user's reply. Do NOT auto-decide.**
+
+- **Replace (1):** Continue to substep 8a. The old files will be overwritten.
+- **Merge (2):** Read the existing file(s) first, then in substep 8b, append learnship sections that are missing (Soul, Principles, Request Routing Protocol, etc.) while preserving the user's existing content at the top.
+- **Keep separate (3):** Continue to substep 8a. Write `AGENTS.md` as a new file. Leave existing files untouched.
+
+**If the command prints `NONE FOUND`:** Continue directly to substep 8a.
+
 **Substep 8a — Read the template.** Read `@./templates/agents.md` in full RIGHT NOW before writing anything. This is the canonical template. You need its exact content.
 
 > 🛑 **HARD GATE:** Did you just read `@./templates/agents.md`? If not, go back and read it now. The next substep requires copying sections verbatim from the template. You cannot do that without reading it first.
@@ -518,7 +555,7 @@ git add .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md && git
 > 🔴 **HARD GATE — Run this verification command now. Do not skip it. Do not proceed without running it.**
 
 ```bash
-node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGENTS.md NOT FOUND');process.exit(1);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md INCOMPLETE — missing sections:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}const verbatim=['pair programmer','Direct, no fluff','Have opinions','Friction Is Signal','Minimal Upstream Fix','decision tree'];const missingV=verbatim.filter(s=>!f.includes(s));if(missingV.length){console.log('AGENTS.md TEMPLATE VIOLATION — these verbatim phrases are missing (did you rewrite instead of copy?):\\n'+missingV.join('\\n'));process.exit(1);}console.log('AGENTS.md VERIFIED OK — all '+required.length+' sections present, verbatim content intact');"
+node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGENTS.md NOT FOUND');process.exit(1);}const f=fs.readFileSync('AGENTS.md','utf8');const required=['Soul','Principles','Request Routing Protocol','Platform Context','Current Phase','Project Structure','Tech Stack','Skills','Regressions'];const missing=required.filter(s=>!f.includes('## '+s));if(missing.length){console.log('AGENTS.md INCOMPLETE — missing sections:\\n'+missing.map(s=>'  ## '+s).join('\\n'));process.exit(1);}const verbatim=['pair programmer','Direct, no fluff','Have opinions','Friction Is Signal','Surgical Change','Nothing Extra','Understand First','decision tree'];const missingV=verbatim.filter(s=>!f.includes(s));if(missingV.length){console.log('AGENTS.md TEMPLATE VIOLATION — these verbatim phrases are missing (did you rewrite instead of copy?):\\n'+missingV.join('\\n'));process.exit(1);}console.log('AGENTS.md VERIFIED OK — all '+required.length+' sections present, verbatim content intact');"
 ```
 
 > 🛑 **If the command prints `INCOMPLETE` or `TEMPLATE VIOLATION` or exits with code 1:** The AGENTS.md is broken. Re-read `@./templates/agents.md` and fix the missing sections or restore the verbatim content. Run the verification again. You MUST see `AGENTS.md VERIFIED OK` before continuing to Step 9.

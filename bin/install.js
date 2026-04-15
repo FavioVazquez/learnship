@@ -658,10 +658,13 @@ function rewriteNewProject(content, platform) {
   content = content.replace('<!-- LEARNSHIP_PARALLEL_BLOCK -->', parallelBlock);
 
   // Platform-specific AGENTS.md note
-  // Gemini CLI reads GEMINI.md automatically but NOT AGENTS.md — copy it so sessions have context
-  const agentsMdNote = platform === 'gemini'
-    ? `> **Gemini CLI** reads \`GEMINI.md\` automatically at session start, not \`AGENTS.md\`. Copy it now so every future session has project context:\n> \`\`\`bash\n> cp AGENTS.md GEMINI.md\n> git add GEMINI.md && git commit -m "docs: add GEMINI.md for Gemini CLI auto-loading"\n> \`\`\``
-    : '';
+  // Claude Code reads CLAUDE.md as primary; Gemini CLI reads GEMINI.md — copy so sessions have context
+  let agentsMdNote = '';
+  if (platform === 'claude') {
+    agentsMdNote = `> **Claude Code** reads \`CLAUDE.md\` as its primary context file. Copy AGENTS.md now so every future session has project context:\n> \`\`\`bash\n> cp AGENTS.md CLAUDE.md\n> git add CLAUDE.md && git commit -m "docs: add CLAUDE.md for Claude Code auto-loading"\n> \`\`\`\n>\n> **Keep them in sync:** Whenever you update AGENTS.md (e.g. via \`execute-phase\`), also update CLAUDE.md: \`cp AGENTS.md CLAUDE.md\``;
+  } else if (platform === 'gemini') {
+    agentsMdNote = `> **Gemini CLI** reads \`GEMINI.md\` automatically at session start, not \`AGENTS.md\`. Copy it now so every future session has project context:\n> \`\`\`bash\n> cp AGENTS.md GEMINI.md\n> git add GEMINI.md && git commit -m "docs: add GEMINI.md for Gemini CLI auto-loading"\n> \`\`\`\n>\n> **Keep them in sync:** Whenever you update AGENTS.md (e.g. via \`execute-phase\`), also update GEMINI.md: \`cp AGENTS.md GEMINI.md\``;
+  }
   content = content.replace('<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->', agentsMdNote);
 
   return content;

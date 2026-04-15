@@ -337,8 +337,14 @@ node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){process.exit(0);
 
 > If verification fails, restore the missing sections from `@./templates/agents.md` before committing.
 
+**Sync platform-native copies (if they exist):**
+
 ```bash
-git add AGENTS.md
+node -e "const fs=require('fs');const copies=[['CLAUDE.md','Claude Code'],['GEMINI.md','Gemini CLI']];if(!fs.existsSync('AGENTS.md'))process.exit(0);copies.forEach(([f,p])=>{if(fs.existsSync(f)){fs.copyFileSync('AGENTS.md',f);console.log('Synced AGENTS.md → '+f+' ('+p+')');}});"
+```
+
+```bash
+git add AGENTS.md CLAUDE.md GEMINI.md 2>/dev/null
 git commit -m "docs: update AGENTS.md — phase [X] complete"
 ```
 
