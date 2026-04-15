@@ -132,6 +132,9 @@ nav:
     - Decision Intelligence: workflow-reference/decision-intelligence.md
     - Milestone: workflow-reference/milestone.md
     - Compounding & Quality: workflow-reference/compounding-quality.md
+    - Security & Documentation: workflow-reference/security-docs.md
+    - Recovery: workflow-reference/recovery.md
+    - Session & Learnings: workflow-reference/session.md
     - Maintenance: workflow-reference/maintenance.md
   - Configuration: configuration.md
   - Examples:

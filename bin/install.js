@@ -42,6 +42,8 @@ const CODEX_AGENT_SANDBOX = {
   'learnship-code-reviewer':     'read-only',
   'learnship-challenger':        'read-only',
   'learnship-ideation-agent':    'read-only',
+  'learnship-security-auditor':  'read-only',
+  'learnship-doc-writer':        'workspace-write',
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────

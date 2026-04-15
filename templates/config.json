@@ -1,9 +1,8 @@
 {
-  "mode": "yolo",
+  "mode": "interactive",
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
-  "parallelization": false,
   "test_first": false,
   "planning": {
     "commit_docs": true,
@@ -16,7 +15,30 @@
     "verifier": true,
     "validation": true,
     "review": true,
-    "solutions_search": true
+    "solutions_search": true,
+    "security_enforcement": true,
+    "discuss_mode": "discuss",
+    "tdd_mode": false
+  },
+  "parallelization": {
+    "enabled": false,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
   },
   "review": {
     "auto_after_verify": false
@@ -25,6 +47,9 @@
     "auto_test": true,
     "conventional_commits": true,
     "pr_template": true
+  },
+  "hooks": {
+    "context_warnings": true
   },
   "git": {
     "branching_strategy": "none",

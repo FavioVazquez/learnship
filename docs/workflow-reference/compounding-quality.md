@@ -240,11 +240,38 @@ flowchart LR
 
 The last three steps are recommended after every phase. They surface naturally through done-banner suggestions after `/verify-work` passes.
 
+v2.1 extends this with optional per-phase workflows:
+
+```
+/verify-work N       # manual UAT
+/secure-phase N      # v2.1: STRIDE security verification
+/review              # multi-persona code review
+/ship                # test → commit → push → PR
+/compound            # capture what you learned
+/extract-learnings N # v2.1: structured meta-knowledge extraction
+```
+
+See also: [Security & Documentation](security-docs.md) · [Session & Learnings](session.md) · [Recovery](recovery.md)
+
 ---
 
-## New agent personas
+## `/ideate` (v2.1 enhanced)
 
-v2.0 adds 4 new agent personas, each available as both inline (sequential) and dispatch (parallel subagent):
+v2.1 adds `--explore` mode for Socratic exploration alongside the existing scan mode:
+
+```bash
+/ideate                          # scan mode: codebase hotspots → ranked ideas
+/ideate [focus]                  # focused scan on a specific area
+/ideate --explore [topic]        # v2.1: Socratic exploration with mid-conversation research
+```
+
+In `--explore` mode, the agent asks one question at a time, offers mid-conversation research when factual questions arise, and crystallizes outputs to notes, todos, decisions, or phase proposals.
+
+---
+
+## Agent personas
+
+v2.0–v2.1 agent personas, each available as both inline (sequential) and dispatch (parallel subagent):
 
 | Agent | Role | Sandbox mode (Codex) |
 |-------|------|---------------------|
@@ -252,3 +279,5 @@ v2.0 adds 4 new agent personas, each available as both inline (sequential) and d
 | `code-reviewer` | Reviews code through persona-specific lenses | read-only |
 | `challenger` | Stress-tests proposals through forcing questions | read-only |
 | `ideation-agent` | Generates codebase-grounded improvement ideas | read-only |
+| `security-auditor` | STRIDE threat verification (v2.1) | read-only |
+| `doc-writer` | Documentation generation and verification (v2.1) | workspace-write |

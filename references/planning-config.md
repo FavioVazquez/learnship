@@ -181,4 +181,143 @@ Squash merge is recommended — keeps main branch history clean while preserving
 
 </branching_strategy_behavior>
 
+<v2_config_options>
+
+## v2.0.0 Configuration Options
+
+These options were added in v2.0.0 to support the new compounding, review, ship, and safety workflows.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `test_first` | `false` | Enable TDD mode — red-green-refactor cycle in executor |
+| `workflow.review` | `true` | Enable the `/review` code review workflow |
+| `workflow.solutions_search` | `true` | Search `.planning/solutions/` for prior art during plan-phase |
+| `review.auto_after_verify` | `false` | Automatically run `/review` after verify-work passes |
+| `ship.auto_test` | `true` | Run tests before shipping |
+| `ship.conventional_commits` | `true` | Use conventional commit format in `/ship` |
+| `ship.pr_template` | `true` | Auto-generate PR description in `/ship` |
+
+</v2_config_options>
+
+<v21_config_options>
+
+## v2.1.0 Configuration Options
+
+New sections and fields added in v2.1.0 for security, parallelization control, gates, and safety.
+
+### Workflow Section (new fields)
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `workflow.security_enforcement` | `true` | Enable per-phase security verification via `/secure-phase` |
+| `workflow.discuss_mode` | `"discuss"` | Discussion mode for discuss-phase |
+| `workflow.tdd_mode` | `false` | Instruct planner to apply `type: tdd` to eligible tasks |
+
+### Parallelization Section (replaces flat boolean)
+
+The `parallelization` field is now an object. Legacy flat `"parallelization": true` is still honored for backward compatibility.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `parallelization.enabled` | `false` | Enable parallel subagent execution on supported platforms |
+| `parallelization.plan_level` | `true` | Parallelize at plan level (each plan gets its own agent) |
+| `parallelization.task_level` | `false` | Parallelize at task level within a plan (experimental) |
+| `parallelization.max_concurrent_agents` | `5` | Maximum number of concurrent subagents per wave |
+| `parallelization.min_plans_for_parallel` | `2` | Minimum plans in a wave before parallelization activates |
+
+**Why default 5?** Each subagent gets its own context window (~200k tokens). 5 agents is the sweet spot for cost vs. speed — most phases have 2-5 plans per wave. Going higher risks git lock contention and significant cost spikes without proportional speed gains. Configurable for power users.
+
+### Gates Section
+
+Controls which confirmation prompts are shown during workflows. Set to `false` to skip specific confirmations (useful for experienced users in yolo mode).
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `gates.confirm_project` | `true` | Confirm PROJECT.md before proceeding |
+| `gates.confirm_phases` | `true` | Confirm phase breakdown |
+| `gates.confirm_roadmap` | `true` | Confirm roadmap before proceeding |
+| `gates.confirm_plan` | `true` | Confirm plans before execution |
+| `gates.execute_next_plan` | `true` | Confirm before executing each plan |
+| `gates.issues_review` | `true` | Confirm issue resolution approach |
+| `gates.confirm_transition` | `true` | Confirm before phase transitions |
+
+### Safety Section
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `safety.always_confirm_destructive` | `true` | Always confirm before destructive operations (file deletion, git reset) |
+| `safety.always_confirm_external_services` | `true` | Always confirm before calling external APIs or services |
+
+### Hooks Section
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `hooks.context_warnings` | `true` | Show context budget warnings when usage is high |
+
+### Example config.json with all v2.1 options
+
+```json
+{
+  "mode": "interactive",
+  "granularity": "standard",
+  "model_profile": "balanced",
+  "learning_mode": "auto",
+  "test_first": false,
+  "planning": {
+    "commit_docs": true,
+    "commit_mode": "auto",
+    "search_gitignored": false
+  },
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "validation": true,
+    "review": true,
+    "solutions_search": true,
+    "security_enforcement": true,
+    "discuss_mode": "discuss",
+    "tdd_mode": false
+  },
+  "parallelization": {
+    "enabled": false,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
+  },
+  "review": {
+    "auto_after_verify": false
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
+  },
+  "hooks": {
+    "context_warnings": true
+  },
+  "git": {
+    "branching_strategy": "none",
+    "phase_branch_template": "phase-{phase}-{slug}",
+    "milestone_branch_template": "{milestone}-{slug}"
+  }
+}
+```
+
+</v21_config_options>
+
 </planning_config>

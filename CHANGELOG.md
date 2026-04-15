@@ -9,6 +9,57 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.1.0] — 2026-04-15
+
+### Added
+
+- **8 new workflows:**
+  - `/forensics` — Post-mortem investigation for failed or stuck workflows (read-only diagnostic report)
+  - `/undo` — Safe git revert for phase or plan commits (preserves history, dependency checks)
+  - `/note` — Zero-friction idea capture (one write, one confirmation line, no questions)
+  - `/session-report` — Post-session summary with work performed, outcomes, git activity
+  - `/secure-phase` — Per-phase STRIDE security verification with threat register and SECURITY.md
+  - `/docs-update` — Documentation generation pipeline (detects project type, builds doc queue, verifies against codebase)
+  - `/extract-learnings` — Structured learning extraction from phase artifacts (decisions, lessons, patterns, surprises)
+  - `/milestone-summary` — Comprehensive milestone summary for team onboarding
+- **5 new references:**
+  - `thinking-models.md` — Structured reasoning for planning (Pre-Mortem, MECE, Constraint Analysis, Reversibility, Curse of Knowledge, Base Rate)
+  - `universal-anti-patterns.md` — Rules that apply to all workflows and agents (context budget, subagent, questioning, behavioral, error recovery)
+  - `context-budget.md` — Context window management with degradation tiers (PEAK/GOOD/DEGRADING/POOR)
+  - `gates.md` — Gate taxonomy (pre-flight, revision, escalation, abort) with workflow gate matrix
+  - `common-bug-patterns.md` — Stub detection, wiring gaps, state drift patterns for verification
+- **3 new templates:**
+  - `security.md` — Per-phase security contract (trust boundaries, STRIDE register, accepted risks, audit trail)
+  - `ui-spec.md` — UI design contract (design system, spacing scale, typography, color, impeccable checklist)
+  - `discussion-log.md` — Audit trail for discuss-phase Q&A sessions (options considered, not just selected)
+- **2 new agents:**
+  - `learnship-security-auditor` — Spawned by secure-phase for STRIDE threat verification (read-only)
+  - `learnship-doc-writer` — Spawned by docs-update for documentation generation
+- **Config schema expanded** — New sections: `parallelization` (object with enabled/plan_level/max_concurrent_agents), `gates` (7 confirmation gates), `safety` (destructive/external service guards), `hooks` (context_warnings). New workflow fields: `security_enforcement`, `discuss_mode`, `tdd_mode`. All backward compatible — old configs parse fine.
+
+### Changed
+
+- **`discuss-phase` enhanced** — Downstream awareness section (how CONTEXT.md feeds researcher/planner), scope guardrail with allowed/not-allowed heuristic, discussion-log generation, canonical_refs in output
+- **`execute-phase` enhanced** — `--wave N` flag for targeted execution, context window scaling, runtime compatibility awareness (sequential fallback), context degradation reference
+- **`plan-phase` enhanced** — TDD mode awareness (`workflow.tdd_mode`), context window scaling for prior phase reads, explicit `--skip-research`/`--skip-verify`/`--research`/`--gaps` flags
+- **`verify-work` enhanced** — Goal-backward verification principle (task completion ≠ goal achievement), must-haves extraction from plan frontmatter, stub detection reference
+- **`quick` enhanced** — New composable flags: `--research` (focused research before planning), `--validate` (plan-checking + verification). `--full` = `--discuss --research --validate`
+- **`ideate` enhanced** — New `--explore` mode for Socratic exploration (one question at a time, mid-conversation research offer, crystallize outputs to notes/todos/decisions/phases). Existing scan mode preserved.
+- **`context.md` template overhauled** — New structure with `<domain>`, `<decisions>`, `<specifics>`, `<canonical_refs>`, `<code_context>`, `<deferred>` sections. 2 worked examples (visual feature, CLI tool). Guidelines for downstream agent awareness.
+- **SKILL.md updated** — 8 new workflows in Active Workflows table, 2 new agents in Agent Personas, 4 new learning checkpoints, 5 new references
+- **`new-project` config questioning updated** — Step 2 now writes the full v2.1.0 config schema (parallelization object, gates, safety, hooks, security_enforcement, discuss_mode, tdd_mode)
+- **`settings` menu expanded** — 17 → 21 items (added security enforcement, parallelization with max agents, safety confirm destructive, context warnings). Save logic changed to read-modify-write to preserve fields not in the menu.
+- **`help` updated** — 49 → 58 workflow count, new Recovery and Session categories
+- **`domain-probes.md` reference added** — Domain-aware probing patterns for 11 domains (auth, real-time, dashboard, API, database, search, file upload, caching, testing, deployment, AI/ML). Referenced from discuss-phase and new-project deep questioning.
+- **`planning-config.md` updated** — Full documentation for all v2.1.0 config fields with tables and examples
+- **Parallelization default raised** — `max_concurrent_agents` default changed from 3 to 5. 5 is the sweet spot for cost vs. speed — most phases have 2-5 plans per wave.
+- **Session-start hook enhanced** — Now injects STATE.md last-session context alongside SKILL.md (bash-only, zero deps, backward compatible)
+- **`generate_images.py` updated** — 3 new image prompts: security-workflow, recovery-workflows, v21-overview
+- **All plugin manifests at v2.1.0** (Claude Code, Cursor, Gemini)
+- **Workflow count: 49 → 57** (published) | Templates: 7 → 11 | References: 9 → 15 | Agents: 10 → 12
+
+---
+
 ## [v2.0.11] — 2026-04-15
 
 ### Changed

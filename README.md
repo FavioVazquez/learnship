@@ -10,7 +10,7 @@
   <a href="https://github.com/FavioVazquez/learnship/stargazers"><img src="https://img.shields.io/github/stars/FavioVazquez/learnship?style=flat&color=f59e0b" alt="Stars"></a>
   <a href="https://www.npmjs.com/package/learnship"><img src="https://img.shields.io/npm/v/learnship?color=cb3837&label=npm" alt="npm"></a>
   <img src="https://img.shields.io/badge/platforms-6-0ea5e9" alt="6 platforms">
-  <img src="https://img.shields.io/badge/workflows-49-3b82f6" alt="49 workflows">
+  <img src="https://img.shields.io/badge/workflows-57-3b82f6" alt="57 workflows">
 </p>
 
 <p align="center">
@@ -38,6 +38,7 @@ learnship gives you that harness as a portable, open-source layer that runs insi
 - **Persistent memory.** `/new-project` generates an `AGENTS.md` at your project root. Windsurf, Claude Code, and Cursor load it automatically every session; on other platforms the workflows reference it explicitly. No more repeating yourself.
 - **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify → Review → Ship → Compound) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
 - **Knowledge compounding (v2.0).** `/compound` captures solved problems as searchable documentation. `/review` runs multi-persona code review. `/challenge` stress-tests scope. `/ship` runs the full delivery pipeline. `/ideate` generates codebase-grounded ideas. `/guard` adds safety mode. `/sync-docs` detects stale documentation.
+- **Security, recovery, and session intelligence (v2.1).** `/secure-phase` runs per-phase STRIDE threat verification. `/forensics` investigates failed workflows. `/undo` safely reverts commits. `/note` captures ideas with zero friction. `/session-report` generates stakeholder summaries. `/docs-update` generates and verifies project documentation. `/extract-learnings` captures meta-knowledge from completed phases.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
@@ -140,7 +141,7 @@ What's covered:
 - **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
 - **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
 - **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 21 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 49 workflows documented with when and why to use each
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 57 workflows documented with when and why to use each
 - **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
 
 ---
@@ -176,7 +177,7 @@ Each platform gets the best experience it supports:
 | Skills (native `@invoke`) | ✓ | — | — | — | — |
 | Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave, each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": true` in `.planning/config.json`. All platforms default to sequential (always safe).
+**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave, each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json` (legacy flat `"parallelization": true` also honored). Up to 5 concurrent agents per wave by default — configurable via `max_concurrent_agents`. All platforms default to sequential (always safe).
 
 ---
 
@@ -184,7 +185,7 @@ Each platform gets the best experience it supports:
 
 ![5 commands diagram](assets/quick-start-flow.png)
 
-learnship has 49 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
+learnship has 57 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
@@ -192,7 +193,7 @@ learnship has 49 workflows. You don't need to know them all. Start with these fi
 | `/next` | Read state and immediately run the right next workflow | When you just want to keep moving |
 | `/new-project` | Full init: questions → research → requirements → roadmap | Starting a new project |
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
-| `/help` | All 49 workflows organized by category | Discovering capabilities |
+| `/help` | All 57 workflows organized by category | Discovering capabilities |
 
 > **Tip:** `/ls` works for both new and returning users. New user with no project? It explains learnship and offers to run `/new-project`. Returning user? It shows your progress and suggests exactly what to do next.
 
@@ -231,6 +232,25 @@ flowchart LR
 | **7. Compound** | `/compound` | Capture what you learned as searchable documentation (v2.0) |
 
 **Just starting?** `/ls` or `/next` will route you into the right step automatically.
+
+**Optional per-phase:** `/secure-phase N` (STRIDE security verification), `/extract-learnings N` (capture meta-knowledge).
+**Recovery:** `/forensics` (post-mortem), `/undo` (safe revert).
+
+### What's new in v2.1
+
+![v2.1 overview](assets/v21-overview.png)
+
+v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents — all with learning checkpoints and full 6-platform support:
+
+| Category | New workflows |
+|----------|--------------|
+| **Security** | `/secure-phase` — per-phase STRIDE threat verification |
+| **Documentation** | `/docs-update` — generate and verify project docs against codebase |
+| **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
+| **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
+| **Learning** | `/extract-learnings` — decisions, lessons, patterns, surprises · `/milestone-summary` — team onboarding |
+
+Enhanced: `/discuss-phase` (scope guardrails + domain probes), `/execute-phase` (`--wave` flag + context scaling), `/quick` (`--research --validate --full` composable flags), `/ideate` (`--explore` Socratic mode).
 
 ---
 
@@ -310,7 +330,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 
 ## 📖 Workflow Reference: Advanced
 
-> These are all 49 workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
+> These are all 57 workflows. Most users discover them naturally from `/ls`. Scan this when you want to know if a specific capability exists.
 
 ### Core Workflow
 
@@ -411,11 +431,10 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 
 ```json
 {
-  "mode": "yolo",
+  "mode": "interactive",
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
-  "parallelization": false,
   "test_first": false,
   "planning": {
     "commit_docs": true,
@@ -428,7 +447,30 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
     "verifier": true,
     "validation": true,
     "review": true,
-    "solutions_search": true
+    "solutions_search": true,
+    "security_enforcement": true,
+    "discuss_mode": "discuss",
+    "tdd_mode": false
+  },
+  "parallelization": {
+    "enabled": false,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
   },
   "review": {
     "auto_after_verify": false
@@ -437,6 +479,9 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
     "auto_test": true,
     "conventional_commits": true,
     "pr_template": true
+  },
+  "hooks": {
+    "context_warnings": true
   },
   "git": {
     "branching_strategy": "none",
@@ -454,7 +499,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `granularity` | `coarse`, `standard`, `fine` | `standard` | Phase size: 3-5 / 5-8 / 8-12 phases |
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
-| `parallelization` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
+| `parallelization.enabled` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
 | `test_first` | `true`, `false` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
 | `planning.commit_mode` | `auto`, `manual` | `auto` | `auto` commits after each workflow step; `manual` skips all git commits |
 
@@ -802,7 +847,7 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 ```
 learnship/
 ├── .windsurf/
-│   ├── workflows/          # 49 workflows as slash commands
+│   ├── workflows/          # 57 workflows as slash commands
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references), native on Windsurf + Claude Code
 │       └── impeccable/         # Design suite: 21 skills, native on Windsurf + Claude Code
@@ -812,13 +857,13 @@ learnship/
 │           ├── polish/          #   /polish
 │           └── …14 more/        #   /colorize /animate /bolder /quieter /distill /clarify…
 │                               # → on OpenCode/Gemini/Codex: both skills copied to learnship/skills/ as context files
-├── commands/               # 49 Claude Code-style slash command wrappers
+├── commands/               # 57 Claude Code-style slash command wrappers
 │   └── learnship/          # /learnship:ls, /learnship:new-project, etc.
 ├── learnship/              # Payload installed into the target platform config dir
-│   ├── workflows/          # 49 workflow markdown files (the actual instructions)
+│   ├── workflows/          # 57 workflow markdown files (the actual instructions)
 │   ├── references/         # Reference docs (questioning, verification, git, design, learning)
 │   └── templates/          # Document templates for .planning/ + AGENTS.md template
-├── agents/                 # 10 agent personas (planner, researcher, executor, verifier, debugger, plan-checker, solution-writer, code-reviewer, challenger, ideation-agent)
+├── agents/                 # 12 agent personas (planner, researcher, executor, verifier, debugger, plan-checker, solution-writer, code-reviewer, challenger, ideation-agent, security-auditor, doc-writer)
 ├── assets/                 # Brand images (banner, explainers, diagrams)
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)

@@ -103,6 +103,8 @@ Current state:
 - Committed as WIP
 
 ▶ To resume: resume-work
+▶ Capture an idea before you go: /note [text]
+▶ Generate a session summary: /session-report
 ```
 
 ---

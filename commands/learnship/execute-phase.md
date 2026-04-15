@@ -1,16 +1,12 @@
 ---
 name: learnship:execute-phase
-description: Execute all plans in a phase with wave-based ordered execution, spawning subagents per plan where supported
-argument-hint: "<phase-number>"
+description: Execute all plans in a phase using wave-based ordered execution — spawns subagents per plan where the platform supports it
+argument-hint: "[N]"
 allowed-tools:
   - Read
   - Bash
   - Write
-  - Edit
-  - Glob
-  - Grep
   - Task
-  - AskUserQuestion
 ---
 
 <execution_context>

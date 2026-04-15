@@ -8,9 +8,15 @@ Create executable plans for a roadmap phase. Default flow: Research → Plan →
 
 On platforms with subagent support (Claude Code, OpenCode, Codex), each stage spawns a dedicated specialist agent with its own full context budget. On all other platforms, all stages run sequentially in the same context.
 
-**Usage:** `plan-phase [N]` — optionally add `--skip-research` or `--skip-verify`
+**Usage:** `plan-phase [N]` — optionally add `--skip-research`, `--skip-verify`, or `--research` (force re-research)
 
-> **Platform note:** Read `parallelization` from `.planning/config.json`. When `true`, researcher/planner/checker each run as a spawned subagent. When `false` (default), all stages run inline using agent persona files.
+**Flags:**
+- `--skip-research` — skip the research stage even if enabled in config
+- `--skip-verify` — skip the plan verification stage
+- `--research` — force re-research even if RESEARCH.md already exists
+- `--gaps` — plan only for gaps found during verification
+
+> **Platform note:** Read `parallelization` from `.planning/config.json`. When enabled, researcher/planner/checker each run as a spawned subagent. When `false` (default), all stages run inline using agent persona files.
 
 ## Step 1: Initialize
 
@@ -22,6 +28,15 @@ Read config:
 ```bash
 cat .planning/config.json
 ```
+
+Read TDD mode:
+```bash
+TDD_MODE=$(node -e "try{const c=JSON.parse(require('fs').readFileSync('.planning/config.json','utf8'));process.stdout.write(String((c.workflow||{}).tdd_mode||false));}catch(e){process.stdout.write('false');}" 2>/dev/null || echo 'false')
+```
+
+When `TDD_MODE` is `true`, instruct the planner to apply `type: tdd` to eligible tasks — the executor will use the red-green-refactor cycle for those tasks.
+
+**Context window scaling:** Check `context_window` in config (default: 200000). At >= 500000, include the 3 most recent prior phase CONTEXT.md and SUMMARY.md files in the planner's context. At < 500000, include only frontmatter from prior phases.
 
 Create the phase directory if it doesn't exist:
 ```bash

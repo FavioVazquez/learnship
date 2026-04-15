@@ -152,7 +152,6 @@ Create `.planning/config.json` with all settings:
   "granularity": "coarse|standard|fine",
   "model_profile": "quality|balanced|budget",
   "learning_mode": "auto|manual",
-  "parallelization": false|true,
   "test_first": false|true,
   "planning": {
     "commit_docs": true|false,
@@ -165,7 +164,30 @@ Create `.planning/config.json` with all settings:
     "verifier": true|false,
     "validation": true|false,
     "review": true|false,
-    "solutions_search": true|false
+    "solutions_search": true|false,
+    "security_enforcement": true|false,
+    "discuss_mode": "discuss",
+    "tdd_mode": false|true
+  },
+  "parallelization": {
+    "enabled": false|true,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
   },
   "review": {
     "auto_after_verify": false|true
@@ -175,6 +197,9 @@ Create `.planning/config.json` with all settings:
     "conventional_commits": true|false,
     "pr_template": true|false
   },
+  "hooks": {
+    "context_warnings": true
+  },
   "git": {
     "branching_strategy": "none|phase|milestone",
     "phase_branch_template": "phase-{phase}-{slug}",
@@ -182,6 +207,8 @@ Create `.planning/config.json` with all settings:
   }
 }
 ```
+
+**Note:** The `parallelization` field is now an object (not a flat boolean). Legacy flat `"parallelization": true` is still honored for backward compatibility. The `gates` and `safety` sections use sensible defaults — only ask users about them if they specifically want to customize.
 
 If `planning.commit_docs` is false, add `.planning/` to `.gitignore`:
 ```bash
@@ -257,7 +284,7 @@ Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4
 - **Write PROJECT.md** → proceed to Step 4
 - **More to cover** → continue asking follow-ups, then re-ask this gate question
 
-Use the questioning techniques from `@./references/questioning.md` to shape the follow-up questions.
+Use the questioning techniques from `@./references/questioning.md` and domain-aware probes from `@./references/domain-probes.md` to shape the follow-up questions. When the user mentions a known domain (auth, real-time, dashboard, API, database, search, file uploads, caching, testing, deployment, AI/ML), use the relevant probes to ask sharper questions.
 
 ## Step 4: Write PROJECT.md
 

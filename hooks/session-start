@@ -28,7 +28,18 @@ escape_for_json() {
 
 skill_escaped=$(escape_for_json "$skill_content")
 
-session_context="<learnship>\nYou are working in a project that uses learnship — an agentic engineering system.\n\n${skill_escaped}\n</learnship>"
+# Try to inject last-session context from STATE.md if it exists in the current project
+state_context=""
+if [ -f ".planning/STATE.md" ]; then
+  # Extract the last few lines for session continuity (last activity, current phase, blockers)
+  last_activity=$(grep -i "last activity\|current phase\|blockers\|status" ".planning/STATE.md" 2>/dev/null | head -5 || echo "")
+  if [ -n "$last_activity" ]; then
+    state_escaped=$(escape_for_json "$last_activity")
+    state_context="\\n\\n<session_context>\\nProject state summary (from .planning/STATE.md):\\n${state_escaped}\\n</session_context>"
+  fi
+fi
+
+session_context="<learnship>\nYou are working in a project that uses learnship — an agentic engineering system.\n\n${skill_escaped}${state_context}\n</learnship>"
 
 # Cursor sets CURSOR_PLUGIN_ROOT; Claude Code sets CLAUDE_PLUGIN_ROOT.
 # Emit the field each platform expects to avoid double-injection.

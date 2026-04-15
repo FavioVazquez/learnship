@@ -187,6 +187,8 @@ or patterns while context is fresh.
 ▶ Next steps:
 - Review the PR and request reviews
 - /compound — capture learnings from this work
+- /session-report — generate a session summary for stakeholders
+- /extract-learnings [N] — capture decisions, lessons, patterns from this phase
 ```
 
 ---

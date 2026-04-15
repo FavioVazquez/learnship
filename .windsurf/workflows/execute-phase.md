@@ -6,13 +6,32 @@ description: Execute all plans in a phase using wave-based ordered execution —
 
 Execute all plans in a phase. Plans run in waves — ordered by dependencies. On platforms with subagent support (Claude Code, OpenCode, Codex), plans within a wave are dispatched to dedicated executor agents. On all other platforms, plans execute sequentially.
 
-**Usage:** `execute-phase [N]`
+**Usage:** `execute-phase [N]` or `execute-phase [N] --wave [W]`
 
 **Core principle:** Orchestrate, don't implement directly. Describe each plan's objective clearly, execute each plan in sequence (or in parallel via subagents), collect results.
 
-> **Platform note:** This workflow detects whether subagent spawning is available by reading `parallelization` from `.planning/config.json`. Set `"parallelization": true` to enable parallel agent spawning on supported platforms. Defaults to `false` (sequential — always safe).
+> **Platform note:** This workflow detects whether subagent spawning is available by reading `parallelization.enabled` from `.planning/config.json`. Set `"parallelization": { "enabled": true }` to enable parallel agent spawning on supported platforms. Defaults to `false` (sequential — always safe). The legacy flat `"parallelization": true` is also honored for backward compatibility.
 
-## Step 1: Initialize
+<runtime_compatibility>
+**Subagent spawning is runtime-specific:**
+- **Claude Code:** Uses `Task(subagent_type=..., ...)` — blocks until complete, returns result
+- **OpenCode / Codex:** Subagent spawning supported with platform-native dispatch
+- **Windsurf / Cursor:** No subagent spawning — always use sequential inline execution
+- **Gemini CLI:** Subagents exist but parallel execution limited — default to sequential
+
+**Fallback rule:** If a spawned agent completes its work (commits visible, SUMMARY.md exists) but the orchestrator never receives the completion signal, treat it as successful based on spot-checks and continue to the next wave/plan. Never block indefinitely.
+</runtime_compatibility>
+
+## Step 1: Parse Arguments
+
+Parse `$ARGUMENTS` for:
+- First positional token → `PHASE_ARG` (phase number)
+- Optional `--wave N` → `WAVE_FILTER` (execute only wave N)
+- Optional `--gaps-only` → execute only gap-closure plans
+
+If `--wave` is absent, execute all incomplete waves in the phase.
+
+## Step 1b: Initialize
 
 Read the phase directory:
 ```bash
@@ -30,6 +49,8 @@ If no plans found: stop — run `plan-phase [N]` first.
 
 Read `.planning/STATE.md` for project context.
 Read `.planning/config.json` for settings.
+
+**Context window scaling:** Check for `context_window` in config (default: 200000). At < 500000 tokens: read only frontmatter from prior phase SUMMARYs. At >= 500000: full body reads permitted for direct-dependency phases. See `@./references/context-budget.md` for the complete table.
 
 ## Step 2: Discover and Group Plans
 
@@ -105,7 +126,13 @@ Both inline (`@./agents/executor.md`) and subagent (`learnship-executor`) execut
 
 ## Step 3: Execute Waves
 
-Read `parallelization` from `.planning/config.json` (defaults to `false`).
+Read `parallelization` from `.planning/config.json`. Supports both:
+- New format: `parallelization.enabled` (boolean)
+- Legacy format: `parallelization` (flat boolean)
+
+Defaults to `false` if not found.
+
+If `WAVE_FILTER` is set, skip all waves except the specified one.
 
 For each wave, in sequence:
 
@@ -126,7 +153,7 @@ Executing [count] plan(s)...
 
 ### Execute the plans
 
-**If `parallelization` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+**If parallelization is enabled (subagent mode — Claude Code, OpenCode, Codex):**
 
 For each plan in the wave, spawn a dedicated executor subagent. Pass paths only — each executor reads files itself with a fresh context budget.
 
@@ -159,7 +186,7 @@ Task(
 
 Spawn all plans in the wave before waiting. Wait for all agents to complete, then proceed to spot-checks.
 
-**If `parallelization` is `false` (sequential mode — Windsurf, Gemini CLI, or user preference):**
+**If parallelization is disabled (sequential mode — Windsurf, Cursor, Gemini CLI, or user preference):**
 
 For each plan in the wave, using `@./agents/executor.md` as your execution persona:
 
@@ -361,6 +388,8 @@ git commit -m "docs: update AGENTS.md — phase [X] complete"
    Then: /review → /ship → /compound
    Then: discuss-phase [X+1] → plan-phase [X+1]
 
+💡 Security: `/secure-phase [X]` — run STRIDE threat verification on this phase
+💡 Learnings: `/extract-learnings [X]` — capture decisions, lessons, patterns while fresh
 💡 Working on sensitive files? Run `/guard [scope]` to enable safety mode.
 ```
 

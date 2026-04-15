@@ -1,7 +1,7 @@
 ---
 name: learnship:ideate
 description: Codebase-grounded divergent thinking — discover what is worth working on
-argument-hint: "[focus]"
+argument-hint: "[focus] | --explore [topic]"
 allowed-tools:
   - Read
   - Bash

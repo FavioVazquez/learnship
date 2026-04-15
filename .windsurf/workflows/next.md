@@ -102,4 +102,4 @@ If no — show `/ls` output so the user can choose manually.
 
 - `/next` always confirms before acting (never fully silent).
 - For status-only with manual choice, use `/ls` instead.
-- To see all 49 available commands: `/help`
+- To see all 57 available commands: `/help`
