@@ -92,7 +92,15 @@ Spawn a dedicated code-reviewer agent for each selected persona:
 ```
 Task(
   subagent_type="learnship-code-reviewer",
+  description="Review: [PERSONA]",
   prompt="
+    <agent_definition>
+    You are a learnship code reviewer running the [PERSONA] lens.
+    Review the diff — do NOT edit any files. Read-only review.
+    Return structured findings with severity (P0-P3) and confidence (0.0-1.0).
+    Be specific: cite exact files and lines. Distinguish real issues from style preferences.
+    </agent_definition>
+
     <objective>
     Review the following diff as the [PERSONA] reviewer.
     Focus: [persona-specific focus areas]

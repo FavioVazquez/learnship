@@ -9,6 +9,30 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.2.2] — 2026-04-15
+
+### Fixed
+
+- **Agent personas not spawned in Task() calls** — All 17 `Task()` calls across 11 workflows had two structural bugs: (1) `@./agents/*.md` in `<files_to_read>` — subagents can't resolve relative `@./` paths, so the persona file was never loaded. (2) Persona instructions said "Follow the X persona at @./agents/X.md" inside the prompt — same problem, the subagent never read the file.
+  - **Root cause:** Agent persona definitions were referenced by file path instead of being injected directly into the Task prompt. The subagent spawned as a generic agent without the specialized persona.
+  - **Fix:** Injected `<agent_definition>` blocks directly into every Task() prompt with the key persona instructions. Added `description=` parameter to all Task() calls so platforms display meaningful agent names in the UI. Removed all `@./agents/*.md` references from `<files_to_read>` blocks inside Task() prompts. Sequential fallback paths still correctly reference `@./agents/*.md` for inline persona adoption.
+- **new-project research uses single monolithic Task()** — One giant Task() asked a single agent to write all 5 research files. The AI ran everything inline instead of spawning a subagent. Replaced with 4 parallel researcher Task() calls (one per dimension: Stack, Features, Architecture, Pitfalls) + 1 synthesizer Task() for SUMMARY.md — matching get-shit-done's proven 4+1 pattern.
+- **Workflows fixed (17 Task() calls across 11 workflows):**
+  - `new-project.md` — 4+1 parallel researchers + synthesizer (was 1 monolithic)
+  - `research-phase.md` — researcher with `<agent_definition>`
+  - `plan-phase.md` — researcher, planner, and plan-checker with `<agent_definition>`
+  - `execute-phase.md` — executor with `<agent_definition>`
+  - `challenge.md` — product + engineering challengers with `<agent_definition>`
+  - `compound.md` — solution-writer with `<agent_definition>`
+  - `debug.md` — debugger with `<agent_definition>`
+  - `ideate.md` — researcher + ideation-agent with `<agent_definition>`
+  - `review.md` — code-reviewer with `<agent_definition>`
+  - `secure-phase.md` — security-auditor with `<agent_definition>`
+  - `validate-phase.md` — verifier with `<agent_definition>`
+  - `verify-work.md` — debugger (diagnosis mode) with `<agent_definition>`
+
+---
+
 ## [v2.2.1] — 2026-04-15
 
 ### Fixed

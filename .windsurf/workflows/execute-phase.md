@@ -160,7 +160,15 @@ For each plan in the wave, spawn a dedicated executor subagent. Pass paths only 
 ```
 Task(
   subagent_type="learnship-executor",
+  description="Execute plan [plan_id]",
   prompt="
+    <agent_definition>
+    You are a learnship executor. Execute plan tasks one at a time, commit atomically after each.
+    Read the plan file, follow each task's action field exactly. Verify using the verify field.
+    Mark tasks done. Create SUMMARY.md when complete. Update STATE.md.
+    Never skip tasks. Never batch commits. One task = one commit.
+    </agent_definition>
+
     <objective>
     Execute plan [plan_id] of phase [phase_number]-[phase_name].
     Commit each task atomically. Create SUMMARY.md. Update STATE.md and ROADMAP.md.

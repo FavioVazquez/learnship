@@ -103,7 +103,15 @@ Spawn a dedicated debugger agent with a fresh context budget for deep investigat
 ```
 Task(
   subagent_type="learnship-debugger",
+  description="Investigate bug",
   prompt="
+    <agent_definition>
+    You are a learnship debugger. Trace from user-facing symptoms inward to find root causes.
+    Read-first: understand the current design before proposing changes. Find the specific file and line where behavior diverges.
+    Confirm the root cause with: 'If this were fixed, would the symptom go away?'
+    One hypothesis at a time. Change one thing, verify, then move to the next.
+    </agent_definition>
+
     <objective>
     Investigate the bug described in [session_file].
     Trace from the user-facing symptom inward to find the root cause.

@@ -468,50 +468,231 @@ Read `parallelization` from `.planning/config.json` (defaults to `false`).
 
 **If `parallelization.enabled` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
 
-Spawn a dedicated researcher agent with the project context:
+Display spawning indicator:
+```
+◆ Spawning 4 researchers in parallel...
+  → Stack research
+  → Features research
+  → Architecture research
+  → Pitfalls research
+```
+
+Spawn 4 parallel researcher agents — one per research dimension. Each agent writes ONE file.
+
 ```
 Task(
   subagent_type="learnship-researcher",
+  description="Stack research",
   prompt="
+    <agent_definition>
+    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
+    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    </agent_definition>
+
     <objective>
-    Research the domain ecosystem for a new project, then write 5 research files into .planning/research/.
-
-    IMPORTANT: You MUST do online research BEFORE writing any files. Your training data is stale — verify everything.
-
-    Phase 1 — INVESTIGATE (do this first):
-    1. Read .planning/PROJECT.md to understand the project domain and goals
-    2. Run at least 5 search_web queries to discover: standard tech stacks, recommended libraries, architecture patterns, common pitfalls, and best practices for this domain. Include the current year in queries.
-    3. Use read_url_content to read official documentation for any key libraries or frameworks discovered
-    4. Read the research persona at @./agents/researcher.md for research principles
-
-    Phase 2 — WRITE FILES (only after investigating):
-    Read each template from @./templates/research-project/ for the expected structure, then write each file based on your actual research findings (not just training data). Include confidence levels (HIGH/MEDIUM/LOW) and cite sources.
-
-    Files to write:
-    1. STACK.md — Must have: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
-    2. FEATURES.md — Must have: ## Table Stakes, ## Differentiators, ## Anti-Features
-    3. ARCHITECTURE.md — Must have: ## Component Boundaries, ## Data Flow, ## Build Order, ## Integration Points
-    4. PITFALLS.md — Must have: ## Common Mistakes, ## Warning Signs, ## Prevention Strategies
-    5. SUMMARY.md — Must have: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
-
-    After writing all 5 files, run the verification command to confirm all files exist with required sections.
-    Return: confirmation that all 5 files pass verification, plus a summary of what you found.
+    Research the standard tech stack for [project domain]. Write .planning/research/STACK.md.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
+    <research_steps>
+    1. Read .planning/PROJECT.md to understand the project domain and goals
+    2. Run 2-3 search_web queries: '[domain] recommended tech stack [current year]', '[domain] best libraries [current year]'
+    3. read_url_content official docs for any key libraries discovered
+    4. Write .planning/research/STACK.md with confidence levels and source citations
+    </research_steps>
+
     <files_to_read>
-    - .planning/PROJECT.md (project description and goals)
-    - @./agents/researcher.md (research persona — read for research principles and tool strategy)
-    - @./templates/research-project/STACK.md (template for STACK.md)
-    - @./templates/research-project/FEATURES.md (template for FEATURES.md)
-    - @./templates/research-project/ARCHITECTURE.md (template for ARCHITECTURE.md)
-    - @./templates/research-project/PITFALLS.md (template for PITFALLS.md)
-    - @./templates/research-project/SUMMARY.md (template for SUMMARY.md)
+    - .planning/PROJECT.md (project context and goals)
     </files_to_read>
+
+    <downstream_consumer>
+    Your STACK.md feeds into roadmap creation. Be prescriptive:
+    - Specific libraries with versions
+    - Clear rationale for each choice
+    - What NOT to use and why
+    </downstream_consumer>
+
+    <quality_gate>
+    - [ ] Versions are current (verified via search_web/read_url_content, not training data)
+    - [ ] Rationale explains WHY, not just WHAT
+    - [ ] Confidence levels assigned to each recommendation
+    </quality_gate>
+
+    <output>
+    Write to: .planning/research/STACK.md
+    Required sections: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
+    </output>
+  "
+)
+
+Task(
+  subagent_type="learnship-researcher",
+  description="Features research",
+  prompt="
+    <agent_definition>
+    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
+    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    </agent_definition>
+
+    <objective>
+    Research what features [project domain] products typically have. Write .planning/research/FEATURES.md.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
+    </objective>
+
+    <research_steps>
+    1. Read .planning/PROJECT.md to understand the project domain and goals
+    2. Run 2-3 search_web queries: '[domain] features table stakes [current year]', '[domain] product features comparison'
+    3. read_url_content any relevant product comparison pages or feature lists
+    4. Write .planning/research/FEATURES.md with confidence levels and source citations
+    </research_steps>
+
+    <files_to_read>
+    - .planning/PROJECT.md (project context and goals)
+    </files_to_read>
+
+    <downstream_consumer>
+    Your FEATURES.md feeds into requirements definition. Categorize clearly:
+    - Table stakes (must have or users leave)
+    - Differentiators (competitive advantage)
+    - Anti-features (things to deliberately NOT build)
+    </downstream_consumer>
+
+    <quality_gate>
+    - [ ] Categories are clear (table stakes vs differentiators vs anti-features)
+    - [ ] Complexity noted for each feature
+    - [ ] Dependencies between features identified
+    </quality_gate>
+
+    <output>
+    Write to: .planning/research/FEATURES.md
+    Required sections: ## Table Stakes, ## Differentiators, ## Anti-Features
+    </output>
+  "
+)
+
+Task(
+  subagent_type="learnship-researcher",
+  description="Architecture research",
+  prompt="
+    <agent_definition>
+    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
+    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    </agent_definition>
+
+    <objective>
+    Research how [project domain] systems are typically structured. Write .planning/research/ARCHITECTURE.md.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
+    </objective>
+
+    <research_steps>
+    1. Read .planning/PROJECT.md to understand the project domain and goals
+    2. Run 2-3 search_web queries: '[domain] architecture patterns', '[domain] system design components'
+    3. read_url_content architectural guides or documentation for the chosen stack
+    4. Write .planning/research/ARCHITECTURE.md with confidence levels and source citations
+    </research_steps>
+
+    <files_to_read>
+    - .planning/PROJECT.md (project context and goals)
+    </files_to_read>
+
+    <downstream_consumer>
+    Your ARCHITECTURE.md informs phase structure in roadmap. Include:
+    - Component boundaries (what talks to what)
+    - Data flow (how information moves)
+    - Suggested build order (dependencies between components)
+    </downstream_consumer>
+
+    <quality_gate>
+    - [ ] Components clearly defined with boundaries
+    - [ ] Data flow direction explicit
+    - [ ] Build order implications noted
+    </quality_gate>
+
+    <output>
+    Write to: .planning/research/ARCHITECTURE.md
+    Required sections: ## Component Boundaries, ## Data Flow, ## Build Order, ## Integration Points
+    </output>
+  "
+)
+
+Task(
+  subagent_type="learnship-researcher",
+  description="Pitfalls research",
+  prompt="
+    <agent_definition>
+    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
+    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    </agent_definition>
+
+    <objective>
+    Research what [project domain] projects commonly get wrong. Write .planning/research/PITFALLS.md.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
+    </objective>
+
+    <research_steps>
+    1. Read .planning/PROJECT.md to understand the project domain and goals
+    2. Run 2-3 search_web queries: '[domain] common mistakes gotchas', '[domain] pitfalls beginners'
+    3. read_url_content any detailed postmortems or lessons-learned articles
+    4. Write .planning/research/PITFALLS.md with confidence levels and source citations
+    </research_steps>
+
+    <files_to_read>
+    - .planning/PROJECT.md (project context and goals)
+    </files_to_read>
+
+    <downstream_consumer>
+    Your PITFALLS.md prevents mistakes in roadmap/planning. For each pitfall:
+    - Warning signs (how to detect early)
+    - Prevention strategy (how to avoid)
+    - Which phase should address it
+    </downstream_consumer>
+
+    <quality_gate>
+    - [ ] Pitfalls are specific to this domain (not generic advice)
+    - [ ] Prevention strategies are actionable
+    - [ ] Phase mapping included where relevant
+    </quality_gate>
+
+    <output>
+    Write to: .planning/research/PITFALLS.md
+    Required sections: ## Common Mistakes, ## Warning Signs, ## Prevention Strategies
+    </output>
   "
 )
 ```
 
-Wait for the agent to complete, then proceed to Step 5c (verification) to confirm files were written correctly.
+After all 4 agents complete, spawn a synthesizer to create SUMMARY.md from the other 4 files:
+
+```
+Task(
+  subagent_type="learnship-researcher",
+  description="Synthesize research",
+  prompt="
+    <objective>
+    Synthesize the 4 research files into a single SUMMARY.md.
+    Read all 4 files, extract the key findings, and write a cohesive summary.
+    </objective>
+
+    <files_to_read>
+    - .planning/research/STACK.md
+    - .planning/research/FEATURES.md
+    - .planning/research/ARCHITECTURE.md
+    - .planning/research/PITFALLS.md
+    </files_to_read>
+
+    <output>
+    Write to: .planning/research/SUMMARY.md
+    Required sections: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
+    </output>
+  "
+)
+```
+
+Wait for the synthesizer to complete, then proceed to Step 5c (verification) to confirm all 5 files were written correctly.
 
 **If `parallelization.enabled` is `false` (sequential mode):**
 

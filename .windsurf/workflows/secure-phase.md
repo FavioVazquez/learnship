@@ -104,17 +104,22 @@ Read `parallelization` from `.planning/config.json` (defaults to `false`).
 ```
 Task(
   subagent_type="learnship-security-auditor",
+  description="Security audit phase [N]",
   prompt="
+    <agent_definition>
+    You are a learnship security auditor. Verify threats against the actual codebase using STRIDE methodology.
+    Check each open threat: if mitigation is found in code, mark CLOSED with evidence. If missing, document what's needed.
+    Be thorough — check actual code, not just file names. False negatives are worse than false positives.
+    </agent_definition>
+
     <objective>
     Verify all open threats in the threat register for phase [N].
     Check each threat against the actual codebase. Update status to
     CLOSED if mitigation found, or document what's missing.
-    Follow the security auditor persona at @./agents/security-auditor.md.
     </objective>
 
     <files_to_read>
     - [phase SECURITY.md or threat register]
-    - @./agents/security-auditor.md (persona)
     </files_to_read>
   "
 )
