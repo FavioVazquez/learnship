@@ -109,12 +109,13 @@ follow. The map should become territory.
 learnship/
 ├── bin/                  # CLI entry point (learnship.js, install.js)
 ├── learnship/            # Core source — workflows, templates, agents, references
-│   ├── workflows/        # 49 workflow .md files (new-project, execute-phase, etc.)
-│   ├── templates/        # Canonical templates (agents.md, config.json)
+│   ├── workflows/        # 58 workflow .md files (new-project, execute-phase, etc.)
+│   ├── contexts/         # Output mode profiles (dev.md, research.md, review.md)
+│   ├── templates/        # Canonical templates (agents.md, config.json, research-project/)
 │   ├── agents/           # Agent persona definitions (executor, planner, debugger, etc.)
 │   └── references/       # Reference docs used by workflows
 ├── skills/               # Bundled skills (agentic-learning, impeccable)
-├── hooks/                # Session-start hooks for Claude Code and Cursor
+├── hooks/                # Session hooks for Claude Code and Gemini CLI (statusline, context monitor, prompt guard, session state)
 ├── commands/             # Claude Code slash commands
 ├── cursor-rules/         # Cursor .mdc rules file
 ├── agents/               # Installed agent personas (npm-published copies)
@@ -129,7 +130,7 @@ learnship/
 ├── SKILL.md              # Windsurf global skill entry point
 ├── AGENTS.md             # This file — project context for all AI agents
 ├── CHANGELOG.md          # Versioned change log
-└── package.json          # npm package config (v2.0.x)
+└── package.json          # npm package config (v2.2.x)
 ```
 
 ---
@@ -140,7 +141,7 @@ learnship/
 - **Framework:** CLI tool — no web framework. Entry point is `bin/learnship.js` → `bin/install.js`
 - **Key libraries:** Node.js built-ins only (fs, path, child_process). Zero external dependencies.
 - **Dev server:** N/A — this is a CLI tool, not a web app
-- **Tests:** `bash tests/run_all.sh` — 5 test suites, 350+ tests validating cross-platform correctness
+- **Tests:** `bash tests/run_all.sh` — 5 test suites, 468 tests validating cross-platform correctness
 - **Docs:** MkDocs with Material theme — `cd docs && mkdocs serve`
 
 ---

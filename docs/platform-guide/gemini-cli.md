@@ -76,6 +76,8 @@ Gemini CLI supports parallel execution natively: it's on by default without requ
 | Parallel subagents | ✅ Default |
 | Wave execution | ✅ Default |
 | Specialist agent pool | ✅ |
+| Session hooks | ✅ 4 hooks (v2.2) |
+| Interactive questions | ✅ `ask_user` (v2.2) |
 
 !!! tip
     Gemini CLI is the only platform where parallelization is on by default. If you want sequential execution for debugging, set `"parallelization": false` in `.planning/config.json`.

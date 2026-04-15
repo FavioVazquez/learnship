@@ -67,6 +67,8 @@ const hasGlobal    = args.includes('--global') || args.includes('-g');
 const hasLocal     = args.includes('--local')  || args.includes('-l');
 const hasUninstall = args.includes('--uninstall') || args.includes('-u');
 const hasHelp      = args.includes('--help') || args.includes('-h');
+const targetIdx    = args.indexOf('--target');
+const targetOverride = targetIdx !== -1 && args[targetIdx + 1] ? path.resolve(args[targetIdx + 1]) : null;
 
 let selectedPlatforms = [];
 if (hasAll) {
@@ -111,6 +113,7 @@ const helpText = `
     ${cyan}-l, --local${reset}   Install to current project directory
 
   ${yellow}Options:${reset}
+    ${cyan}--target <dir>${reset}   Install to a custom directory instead of the platform default
     ${cyan}-u, --uninstall${reset}  Remove learnship files
     ${cyan}-h, --help${reset}       Show this help
 
@@ -532,6 +535,16 @@ function replacePaths(content, pathPrefix, platform) {
     c = c.replace(/~\/\.gemini\//g, pathPrefix);
   } else if (platform === 'codex') {
     c = c.replace(/~\/\.codex\//g, pathPrefix);
+  }
+  // Rewrite AskUserQuestion to platform-native interactive question tool name.
+  // Source files use AskUserQuestion (Claude Code syntax). Each platform has its own tool name.
+  // OpenCode is handled separately in convertToOpencode(). Claude keeps AskUserQuestion as-is.
+  if (platform === 'windsurf') {
+    c = c.replace(/\bAskUserQuestion\b/g, 'ask_user_question');
+  } else if (platform === 'gemini') {
+    c = c.replace(/\bAskUserQuestion\b/g, 'ask_user');
+  } else if (platform === 'codex') {
+    c = c.replace(/\bAskUserQuestion\b/g, 'request_user_input');
   }
   // Replace @mention skill syntax — @mention dispatch is Windsurf-native only
   if (platform === 'claude') {
@@ -1084,6 +1097,266 @@ function scanForLeakedPaths(targetDir, platform) {
   }
 }
 
+// ─── Hook installation ────────────────────────────────────────────────────
+
+/** List of learnship hook files managed by the installer */
+const LEARNSHIP_MANAGED_HOOKS = [
+  'learnship-statusline.js',
+  'learnship-context-monitor.js',
+  'learnship-prompt-guard.js',
+  'learnship-session-state.js',
+];
+
+/**
+ * Install Claude Code / Gemini native hooks into settings.json.
+ * Copies hook .js files to target/hooks/ and registers them in settings.json.
+ * Preserves existing non-learnship entries (read-modify-write).
+ */
+function installClaudeHooks(targetDir, isGlobal, platform) {
+  const hooksSrc = path.join(__dirname, '..', 'hooks');
+  const hooksDest = path.join(targetDir, 'hooks');
+  fs.mkdirSync(hooksDest, { recursive: true });
+
+  // Copy hook .js files (skip session-start bash script — replaced by learnship-session-state.js)
+  let copied = 0;
+  for (const file of LEARNSHIP_MANAGED_HOOKS) {
+    const src = path.join(hooksSrc, file);
+    if (fs.existsSync(src)) {
+      // Stamp version header
+      let content = fs.readFileSync(src, 'utf8');
+      content = content.replace(/learnship-hook-version:\s*[\d.]+/, `learnship-hook-version: ${pkg.version}`);
+      fs.writeFileSync(path.join(hooksDest, file), content);
+      copied++;
+    }
+  }
+
+  if (copied === 0) return 0;
+
+  // Write package.json for CJS require() support in hooks
+  const pkgJsonPath = path.join(targetDir, 'package.json');
+  if (!fs.existsSync(pkgJsonPath)) {
+    fs.writeFileSync(pkgJsonPath, '{"type":"commonjs"}\n');
+  }
+
+  // Build hook commands — use $CLAUDE_PROJECT_DIR for local installs
+  const dirName = getDirName(platform);
+  const localPrefix = '"$CLAUDE_PROJECT_DIR"/' + dirName;
+  const buildCmd = (file) => {
+    if (isGlobal) {
+      const resolved = path.resolve(targetDir).replace(/\\/g, '/');
+      return `node "${resolved}/hooks/${file}"`;
+    }
+    return `node ${localPrefix}/hooks/${file}`;
+  };
+
+  // Read-modify-write settings.json
+  const settingsPath = path.join(targetDir, 'settings.json');
+  const settings = readSettings(settingsPath);
+  if (!settings.hooks) settings.hooks = {};
+
+  // Gemini uses AfterTool/BeforeTool instead of PostToolUse/PreToolUse
+  const isGemini = platform === 'gemini';
+  const postToolEvent = isGemini ? 'AfterTool' : 'PostToolUse';
+  const preToolEvent = isGemini ? 'BeforeTool' : 'PreToolUse';
+
+  // --- SessionStart: learnship-session-state.js ---
+  if (!settings.hooks.SessionStart) settings.hooks.SessionStart = [];
+  const hasSessionHook = settings.hooks.SessionStart.some(entry =>
+    entry.hooks && entry.hooks.some(h => h.command && h.command.includes('learnship-session-state'))
+  );
+  if (!hasSessionHook && fs.existsSync(path.join(hooksDest, 'learnship-session-state.js'))) {
+    settings.hooks.SessionStart.push({
+      hooks: [{ type: 'command', command: buildCmd('learnship-session-state.js') }]
+    });
+  }
+
+  // --- PostToolUse: learnship-context-monitor.js ---
+  if (!settings.hooks[postToolEvent]) settings.hooks[postToolEvent] = [];
+  const hasContextHook = settings.hooks[postToolEvent].some(entry =>
+    entry.hooks && entry.hooks.some(h => h.command && h.command.includes('learnship-context-monitor'))
+  );
+  if (!hasContextHook && fs.existsSync(path.join(hooksDest, 'learnship-context-monitor.js'))) {
+    settings.hooks[postToolEvent].push({
+      matcher: 'Bash|Edit|Write|MultiEdit',
+      hooks: [{ type: 'command', command: buildCmd('learnship-context-monitor.js'), timeout: 10 }]
+    });
+  }
+
+  // --- PreToolUse: learnship-prompt-guard.js ---
+  if (!settings.hooks[preToolEvent]) settings.hooks[preToolEvent] = [];
+  const hasPromptGuard = settings.hooks[preToolEvent].some(entry =>
+    entry.hooks && entry.hooks.some(h => h.command && h.command.includes('learnship-prompt-guard'))
+  );
+  if (!hasPromptGuard && fs.existsSync(path.join(hooksDest, 'learnship-prompt-guard.js'))) {
+    settings.hooks[preToolEvent].push({
+      matcher: 'Write|Edit',
+      hooks: [{ type: 'command', command: buildCmd('learnship-prompt-guard.js'), timeout: 5 }]
+    });
+  }
+
+  // --- statusLine: learnship-statusline.js ---
+  if (!settings.statusLine && fs.existsSync(path.join(hooksDest, 'learnship-statusline.js'))) {
+    settings.statusLine = {
+      type: 'command',
+      command: buildCmd('learnship-statusline.js')
+    };
+  }
+
+  writeSettings(settingsPath, settings);
+  return copied;
+}
+
+/**
+ * Remove learnship hooks from settings.json and delete hook files.
+ */
+function uninstallClaudeHooks(targetDir) {
+  const settingsPath = path.join(targetDir, 'settings.json');
+  if (fs.existsSync(settingsPath)) {
+    try {
+      const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+      let modified = false;
+
+      // Remove learnship entries from hook arrays
+      for (const event of ['SessionStart', 'PostToolUse', 'AfterTool', 'PreToolUse', 'BeforeTool']) {
+        if (Array.isArray(settings.hooks?.[event])) {
+          const before = settings.hooks[event].length;
+          settings.hooks[event] = settings.hooks[event].filter(entry =>
+            !entry.hooks || !entry.hooks.some(h => h.command && h.command.includes('learnship-'))
+          );
+          if (settings.hooks[event].length !== before) modified = true;
+          if (settings.hooks[event].length === 0) delete settings.hooks[event];
+        }
+      }
+
+      // Remove statusLine if it's ours
+      if (settings.statusLine?.command?.includes('learnship-')) {
+        delete settings.statusLine;
+        modified = true;
+      }
+
+      // Clean empty hooks object
+      if (settings.hooks && Object.keys(settings.hooks).length === 0) delete settings.hooks;
+
+      if (modified) {
+        writeSettings(settingsPath, settings);
+        console.log(`  ${green}✓${reset} Removed learnship hooks from settings.json`);
+      }
+    } catch (e) { /* ignore parse errors */ }
+  }
+
+  // Remove hook files
+  const hooksDir = path.join(targetDir, 'hooks');
+  if (fs.existsSync(hooksDir)) {
+    let n = 0;
+    for (const file of LEARNSHIP_MANAGED_HOOKS) {
+      const fp = path.join(hooksDir, file);
+      if (fs.existsSync(fp)) { fs.unlinkSync(fp); n++; }
+    }
+    if (n > 0) console.log(`  ${green}✓${reset} Removed ${n} learnship hook files`);
+  }
+
+  // Remove package.json if it's our minimal one
+  const pkgJsonPath = path.join(targetDir, 'package.json');
+  if (fs.existsSync(pkgJsonPath)) {
+    try {
+      const content = fs.readFileSync(pkgJsonPath, 'utf8').trim();
+      if (content === '{"type":"commonjs"}') {
+        fs.unlinkSync(pkgJsonPath);
+      }
+    } catch (e) { /* ignore */ }
+  }
+}
+
+// ─── File manifest ────────────────────────────────────────────────────────
+
+const crypto = require('crypto');
+
+function fileHash(filePath) {
+  const content = fs.readFileSync(filePath);
+  return crypto.createHash('sha256').update(content).digest('hex');
+}
+
+/**
+ * Generate install manifest with SHA-256 hashes for all installed files.
+ */
+function generateManifest(targetDir) {
+  const manifest = {
+    version: pkg.version,
+    timestamp: new Date().toISOString(),
+    files: {}
+  };
+
+  function scanDir(dir, prefix) {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      const rel = prefix ? prefix + '/' + entry.name : entry.name;
+      if (entry.isDirectory()) {
+        scanDir(full, rel);
+      } else {
+        manifest.files[rel] = fileHash(full);
+      }
+    }
+  }
+
+  // Scan learnship/ payload
+  const learnshipDir = path.join(targetDir, 'learnship');
+  if (fs.existsSync(learnshipDir)) scanDir(learnshipDir, 'learnship');
+
+  // Scan hooks/
+  const hooksDir = path.join(targetDir, 'hooks');
+  if (fs.existsSync(hooksDir)) {
+    for (const file of fs.readdirSync(hooksDir)) {
+      if (file.startsWith('learnship-')) {
+        manifest.files['hooks/' + file] = fileHash(path.join(hooksDir, file));
+      }
+    }
+  }
+
+  fs.writeFileSync(path.join(targetDir, 'learnship-file-manifest.json'), JSON.stringify(manifest, null, 2));
+  return manifest;
+}
+
+/**
+ * Detect user-modified files by comparing against install manifest.
+ * Backs up modified files to learnship-local-patches/.
+ */
+function saveLocalPatches(targetDir) {
+  const manifestPath = path.join(targetDir, 'learnship-file-manifest.json');
+  if (!fs.existsSync(manifestPath)) return [];
+
+  let manifest;
+  try { manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')); } catch { return []; }
+
+  const patchesDir = path.join(targetDir, 'learnship-local-patches');
+  const modified = [];
+
+  for (const [relPath, originalHash] of Object.entries(manifest.files || {})) {
+    const fullPath = path.join(targetDir, relPath);
+    if (!fs.existsSync(fullPath)) continue;
+    const currentHash = fileHash(fullPath);
+    if (currentHash !== originalHash) {
+      const backupPath = path.join(patchesDir, relPath);
+      fs.mkdirSync(path.dirname(backupPath), { recursive: true });
+      fs.copyFileSync(fullPath, backupPath);
+      modified.push(relPath);
+    }
+  }
+
+  if (modified.length > 0) {
+    const meta = {
+      backed_up_at: new Date().toISOString(),
+      from_version: manifest.version,
+      files: modified
+    };
+    fs.writeFileSync(path.join(patchesDir, 'backup-meta.json'), JSON.stringify(meta, null, 2));
+    console.log(`\n  ${yellow}i${reset}  Found ${modified.length} locally modified learnship file(s) — backed up to learnship-local-patches/`);
+    for (const f of modified.slice(0, 5)) console.log(`     ${dim}${f}${reset}`);
+    if (modified.length > 5) console.log(`     ${dim}... and ${modified.length - 5} more${reset}`);
+  }
+  return modified;
+}
+
 // ─── Main install function ─────────────────────────────────────────────────
 function install(platform, isGlobal) {
   // Cursor installs via the marketplace plugin, not this CLI.
@@ -1100,7 +1373,7 @@ function install(platform, isGlobal) {
   }
 
   const src = path.join(__dirname, '..');
-  const targetDir = isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform));
+  const targetDir = targetOverride || (isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform)));
   const pathPrefix = `${targetDir.replace(/\\/g, '/')}/learnship/`;
   const label = getPlatformLabel(platform);
   const locationLabel = targetDir.replace(os.homedir(), '~');
@@ -1108,6 +1381,9 @@ function install(platform, isGlobal) {
   console.log(`\n  Installing for ${cyan}${label}${reset} → ${cyan}${locationLabel}${reset}\n`);
 
   fs.mkdirSync(targetDir, { recursive: true });
+
+  // Save locally modified files before overwriting
+  saveLocalPatches(targetDir);
 
   const learnshipSrc = path.join(src, 'learnship');
   const commandsSrc  = path.join(src, 'commands', 'learnship');
@@ -1200,6 +1476,9 @@ function install(platform, isGlobal) {
     } else {
       failures.push('skills/');
     }
+    // Install native Claude Code hooks (settings.json + hook files)
+    const hCount = installClaudeHooks(targetDir, isGlobal, 'claude');
+    if (hCount > 0) console.log(`  ${green}✓${reset} Installed ${hCount} hooks + settings.json (statusline, context monitor, prompt guard, session state)`);
   } else if (platform === 'opencode') {
     const count = installOpencodeCommands(commandsSrc, targetDir, pathPrefix);
     console.log(`  ${green}✓${reset} Installed ${count} commands to command/ (flat)`);
@@ -1222,6 +1501,9 @@ function install(platform, isGlobal) {
       writeSettings(settingsPath, settings);
       console.log(`  ${green}✓${reset} Enabled experimental.enableAgents in settings.json`);
     }
+    // Install native Gemini hooks (settings.json + hook files)
+    const hCount = installClaudeHooks(targetDir, isGlobal, 'gemini');
+    if (hCount > 0) console.log(`  ${green}✓${reset} Installed ${hCount} hooks + settings.json (statusline, context monitor, prompt guard, session state)`);
   } else if (platform === 'codex') {
     const count = installCodexSkills(commandsSrc, targetDir, pathPrefix);
     console.log(`  ${green}✓${reset} Installed ${count} skills to skills/`);
@@ -1237,7 +1519,11 @@ function install(platform, isGlobal) {
   // 4. Scan for leaked .claude paths
   scanForLeakedPaths(targetDir, platform);
 
-  // 5. Post-install tips
+  // 5. Generate file manifest for upgrade safety
+  generateManifest(targetDir);
+  console.log(`  ${green}✓${reset} Generated learnship-file-manifest.json`);
+
+  // 6. Post-install tips
   const firstCmd = platform === 'windsurf' ? '/ls' :
                    platform === 'claude'   ? '/learnship:ls' :
                    platform === 'opencode' ? '/learnship-ls' :
@@ -1251,7 +1537,7 @@ function install(platform, isGlobal) {
 
 // ─── Uninstall function ────────────────────────────────────────────────────
 function uninstall(platform, isGlobal) {
-  const targetDir = isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform));
+  const targetDir = targetOverride || (isGlobal ? getGlobalDir(platform) : path.join(process.cwd(), getDirName(platform)));
   const label = getPlatformLabel(platform);
   const locationLabel = targetDir.replace(os.homedir(), '~');
   console.log(`\n  Uninstalling learnship from ${cyan}${label}${reset} at ${cyan}${locationLabel}${reset}\n`);
@@ -1374,6 +1660,18 @@ function uninstall(platform, isGlobal) {
     if (n > 0) { removed++; console.log(`  ${green}✓${reset} Removed ${n} learnship agent files`); }
   }
 
+  // 4. Remove hooks and settings.json entries (Claude Code / Gemini)
+  if (platform === 'claude' || platform === 'gemini') {
+    uninstallClaudeHooks(targetDir);
+    removed++;
+  }
+
+  // 5. Remove file manifest and local patches
+  const manifestPath = path.join(targetDir, 'learnship-file-manifest.json');
+  if (fs.existsSync(manifestPath)) { fs.unlinkSync(manifestPath); removed++; console.log(`  ${green}✓${reset} Removed learnship-file-manifest.json`); }
+  const patchesDir = path.join(targetDir, 'learnship-local-patches');
+  if (fs.existsSync(patchesDir)) { fs.rmSync(patchesDir, { recursive: true }); removed++; console.log(`  ${green}✓${reset} Removed learnship-local-patches/`); }
+
   if (removed === 0) console.log(`  ${yellow}⚠${reset} No learnship files found.`);
   else console.log(`\n  ${green}Done!${reset} learnship uninstalled from ${label}. Your other files and settings were preserved.`);
 }
@@ -1455,6 +1753,10 @@ if (process.env.LEARNSHIP_TEST_MODE) {
     rewriteNewProject,
     rewriteAgentsMd,
     installClaudeSkills,
+    installClaudeHooks,
+    uninstallClaudeHooks,
+    generateManifest,
+    saveLocalPatches,
     toHomePrefix,
     LEARNSHIP_CODEX_MARKER,
     CODEX_AGENT_SANDBOX,

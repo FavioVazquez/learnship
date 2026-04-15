@@ -80,24 +80,51 @@ If no gaps (all COVERED): proceed directly to step 8 with `compliant: true`.
 
 ## Step 7: Present Gap Plan and Fill
 
-Show gap table:
+Show the gap table, then present a structured question:
+
 ```
-Phase [N] Validation Gaps
-
-| Requirement | Status | Suggested test |
-|-------------|--------|----------------|
-| REQ-AUTH-01 | MISSING | src/__tests__/auth.test.ts |
-| REQ-DASH-02 | PARTIAL | src/__tests__/dashboard.test.ts |
-
-Options:
-1. Fill all gaps — I'll write the missing tests
-2. Mark as manual-only — skip automation, verify manually
-3. Cancel
+AskUserQuestion([
+  {
+    header: "Validation Gaps",
+    question: "[N] gap(s) found. How do you want to handle them?",
+    multiSelect: false,
+    options: [
+      { label: "Fill all gaps", description: "I'll write the missing tests automatically" },
+      { label: "Manual-only", description: "Skip automation, verify these manually" },
+      { label: "Cancel", description: "Stop validation — no changes" }
+    ]
+  }
+])
 ```
 
-Wait for choice.
+**If "Fill all gaps":**
 
-**If "Fill all gaps":** Write the missing test files. Rules:
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
+**If `parallelization.enabled` is `true` (subagent mode):**
+```
+Task(
+  subagent_type="learnship-verifier",
+  prompt="
+    <objective>
+    Write missing test files for phase [N] validation gaps.
+    Read VALIDATION.md gaps and write tests that cover each MISSING or PARTIAL requirement.
+    Follow the verifier persona at @./agents/verifier.md.
+    Never modify implementation files — only write test files.
+    Run tests to verify they pass. Up to 3 debug attempts if tests fail.
+    </objective>
+
+    <files_to_read>
+    - [VALIDATION.md path]
+    - @./agents/verifier.md (persona)
+    </files_to_read>
+  "
+)
+```
+
+**If `parallelization.enabled` is `false` (sequential mode):**
+
+Write the missing test files. Rules:
 - Never touch implementation files
 - Match the existing test framework and style
 - Write tests that actually run (import real modules, not mocks of the implementation)

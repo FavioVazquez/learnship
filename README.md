@@ -14,94 +14,59 @@
 </p>
 
 <p align="center">
-  <strong>Agentic engineering done right.</strong><br>
-  <a href="https://faviovazquez.github.io/learnship/">📚 Full Docs</a> ·
-  <a href="#-get-started-in-30-seconds">Get Started</a> ·
-  <a href="#-how-it-works">How it works</a> ·
+  <strong>Agentic engineering done right. Learn as you build. Build with intent.</strong><br>
+  <strong>A context engineering and spec-driven development system for Claude Code, Windsurf, Cursor, OpenCode, Gemini CLI, and Codex CLI.</strong>
+</p>
+
+<p align="center">
+  <a href="#-install">Install</a> ·
+  <a href="#-the-5-commands">5 Commands</a> ·
   <a href="#-the-phase-loop">Phase Loop</a> ·
-  <a href="#-workflow-reference--advanced">All Workflows</a> ·
-  <a href="#-configuration">Configuration</a> ·
-  <a href="CONTRIBUTING.md">Contributing</a> ·
+  <a href="#-how-it-works">How It Works</a> ·
+  <a href="#-workflow-reference-advanced">All Workflows</a> ·
+  <a href="https://faviovazquez.github.io/learnship/">Full Docs</a> ·
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 ---
 
-## What is learnship?
-
-learnship is an **agent harness** for anyone who wants to build, learn, and ship real products using AI agents. It's the scaffolding that makes your AI coding agent actually reliable across real projects.
-
-Every serious AI coding tool (Claude Code, Cursor, Manus, Devin) converges on the same architecture: a simple execution loop wraps the model, and the **harness** decides what information reaches the model, when, and how. The model is interchangeable. The harness is the product.
-
-learnship gives you that harness as a portable, open-source layer that runs inside Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, or Codex CLI and adds three things your agent doesn't have by default:
-
-- **Persistent memory.** `/new-project` generates an `AGENTS.md` at your project root. Windsurf, Claude Code, and Cursor load it automatically every session; on other platforms the workflows reference it explicitly. No more repeating yourself.
-- **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify → Review → Ship → Compound) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
-- **Knowledge compounding (v2.0).** `/compound` captures solved problems as searchable documentation. `/review` runs multi-persona code review. `/challenge` stress-tests scope. `/ship` runs the full delivery pipeline. `/ideate` generates codebase-grounded ideas. `/guard` adds safety mode. `/sync-docs` detects stale documentation.
-- **Security, recovery, and session intelligence (v2.1).** `/secure-phase` runs per-phase STRIDE threat verification. `/forensics` investigates failed workflows. `/undo` safely reverts commits. `/note` captures ideas with zero friction. `/session-report` generates stakeholder summaries. `/docs-update` generates and verifies project documentation. `/extract-learnings` captures meta-knowledge from completed phases.
-- **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
-
----
-
-## What problem does it solve?
-
-If you've used AI coding assistants for more than a few sessions, you've hit this wall:
-
-> The agent forgets everything. Each session starts from scratch. Decisions get repeated. Code quality drifts. You ship fast but understand less. The more you rely on the AI, the less you own the outcome.
-
-This is a **harness problem**, not a model problem. Research shows the same model on the same benchmark scores 42% with one scaffold and 78% with another. Cursor's lazy context loading cuts token usage by 47%. Vercel deleted 80% of their agent's tools and watched it go from failing tasks to completing them. Same model. The only variable is the harness.
-
-learnship solves this with **progressive disclosure**, the pattern that separates working agents from impressive demos. Context is revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed, nothing more.
-
-| Without learnship | With learnship |
-|-------------------|----------------|
-| Context resets every session | `AGENTS.md` loaded automatically every conversation |
-| Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
-| Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
-| Everything dumped into context at once | Phase-scoped context: only what this step needs |
-| You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
-| UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
-
----
-
-## Who is it for?
-
-learnship is built for **anyone who wants to build and ship real products with AI agents**, not just developers. If you're a founder, designer, researcher, or maker who uses AI tools to build things, this is for you.
-
-It's the right tool if:
-
-- You're **building a real project** (not just experimenting) and want the AI to stay aligned across sessions
-- You're **learning while building** and want to actually understand what gets shipped
-- You care about **code quality and UI quality** beyond "it works"
-- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI to ship phases faster
-- You've felt the frustration of **context loss**: repeating yourself every session while the agent forgets past decisions
-
-It's probably overkill if you just need one-off scripts or quick fixes. Use `/quick` for that.
-
----
-
-## ⚡ Get Started in 30 Seconds
-
-### 1. Install
+## ⚡ Install
 
 ![Install learnship](assets/install.png)
-
-**Requirements:** Node.js ≥ 18, Git. [Details →](https://faviovazquez.github.io/learnship/getting-started/installation/#requirements)
-
-**Via npm (all platforms — recommended):**
 
 ```bash
 npx learnship
 ```
 
-The installer auto-detects your platform. Choose **global** (all projects) or **local** (current project only):
+**Works on Mac, Windows, and Linux.** Requires Node.js ≥ 18 and Git. The installer auto-detects your platform.
 
 ```bash
 npx learnship --global   # all projects
 npx learnship --local    # this project only
+npx learnship --all --global  # all 6 platforms at once
 ```
 
-**Via platform marketplace (no terminal required):**
+Then open your AI agent and type:
+
+```
+/ls
+```
+
+That's it. `/ls` tells you where you are, what to do next, and offers to run it.
+
+<details>
+<summary><strong>Platform-specific install + marketplace options</strong></summary>
+
+| Platform | Install command | Invoke commands as |
+|----------|----------------|-------------------|
+| **Windsurf** | `npx learnship --windsurf --global` | `/ls`, `/new-project` |
+| **Claude Code** | `npx learnship --claude --global` | `/learnship:ls`, `/learnship:new-project` |
+| **Cursor** | `/add-plugin learnship` *(marketplace)* | `@learnship` rules load automatically |
+| **OpenCode** | `npx learnship --opencode --global` | `/learnship-ls`, `/learnship-new-project` |
+| **Gemini CLI** | `npx learnship --gemini --global` | `/learnship:ls`, `/learnship:new-project` |
+| **Codex CLI** | `npx learnship --codex --global` | `$learnship-ls`, `$learnship-new-project` |
+
+**Via marketplace (no terminal required):**
 
 ```bash
 # Claude Code — community marketplace
@@ -115,77 +80,25 @@ npx learnship --local    # this project only
 gemini extensions install https://github.com/FavioVazquez/learnship
 ```
 
-Or specify your platform explicitly. See [Platform Support](#-platform-support) below.
-
-### Why `npx learnship`?
-
-learnship is published to npm — `npx learnship` pulls the latest release directly. No `github:` prefix, no clone needed, no version pinning. The same `bin/install.js` runs regardless of whether you install via npm, marketplace, or native extension.
-
-### 2. Start your AI agent and type
-
-```
-/ls
-```
-
-(or the platform equivalent; see the table below). `/ls` detects whether you have a project, walks you through starting one if not, or tells you exactly where you are and what to do next.
-
----
-
-## 📚 Documentation
-
-The full documentation site is at **[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)**, built with MkDocs Material and deployed automatically on every release.
-
-What's covered:
-
-- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install commands, first project walkthrough, the 5 commands you need to know
-- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: dedicated pages for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex CLI
-- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts, agentic vs vibe coding
-- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: all 11 `@agentic-learning` actions and all 21 `impeccable` design commands
-- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 57 workflows documented with when and why to use each
-- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full `.planning/config.json` schema, speed presets, parallelization
-
----
-
-## 🌐 Platform Support
-
-learnship works on **6 platforms**. Pick your tool:
-
-| Platform | Install command | Invoke commands as |
-|----------|----------------|-------------------|
-| **Windsurf** | `npx learnship --windsurf --global` | `/ls`, `/new-project` |
-| **Claude Code** | `npx learnship --claude --global` | `/learnship:ls`, `/learnship:new-project` |
-| **Cursor** | `/add-plugin learnship` *(after marketplace approval)* | `@learnship` rules load automatically |
-| **OpenCode** | `npx learnship --opencode --global` | `/learnship-ls`, `/learnship-new-project` |
-| **Gemini CLI** | `npx learnship --gemini --global` | `/learnship:ls`, `/learnship:new-project` |
-| **Codex CLI** | `npx learnship --codex --global` | `$learnship-ls`, `$learnship-new-project` |
+**Custom install directory:**
 
 ```bash
-# All platforms at once
-npx learnship --all --global
+npx learnship --claude --global --target /path/to/custom/dir
 ```
 
-### 🤖 Platform capabilities
+`--target` overrides the default platform directory. Works with install and uninstall on all 6 platforms.
 
-Each platform gets the best experience it supports:
+learnship is published to npm — `npx learnship` pulls the latest release directly. No `github:` prefix, no clone needed. The same `bin/install.js` runs regardless of install method.
 
-| Feature | Windsurf | Claude Code | OpenCode | Gemini CLI | Codex CLI |
-|---------|----------|-------------|----------|------------|-----------|
-| Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
-| Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
-| Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
-| Specialist agent pool | — | ✓ | ✓ | ✓ | ✓ |
-| Skills (native `@invoke`) | ✓ | — | — | — | — |
-| Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
-
-**What "parallel subagents" means:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor agent per plan within a wave, each with its own full 200k context budget. Plans in the same wave run in parallel. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json` (legacy flat `"parallelization": true` also honored). Up to 5 concurrent agents per wave by default — configurable via `max_concurrent_agents`. All platforms default to sequential (always safe).
+</details>
 
 ---
 
-## 🗺️ The 5 Commands You Actually Need
+## 🗺️ The 5 Commands
 
 ![5 commands diagram](assets/quick-start-flow.png)
 
-learnship has 57 workflows. You don't need to know them all. Start with these five and everything else surfaces naturally from `/ls`.
+learnship has 57 workflows. You need five. Everything else surfaces naturally from `/ls`.
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
@@ -195,7 +108,7 @@ learnship has 57 workflows. You don't need to know them all. Start with these fi
 | `/quick "..."` | One-off task with atomic commits, no planning ceremony | Small fixes, experiments |
 | `/help` | All 57 workflows organized by category | Discovering capabilities |
 
-> **Tip:** `/ls` works for both new and returning users. New user with no project? It explains learnship and offers to run `/new-project`. Returning user? It shows your progress and suggests exactly what to do next.
+> **Tip:** `/ls` works for both new and returning users. No project? It explains learnship and offers `/new-project`. Returning? It shows your progress and suggests exactly what to do next.
 
 ---
 
@@ -203,7 +116,7 @@ learnship has 57 workflows. You don't need to know them all. Start with these fi
 
 ![Phase loop](assets/phase-loop.png)
 
-Once you have a project, every feature ships through a 7-step phase loop:
+Every feature ships through a 7-step loop:
 
 ```mermaid
 flowchart LR
@@ -233,25 +146,6 @@ flowchart LR
 
 **Just starting?** `/ls` or `/next` will route you into the right step automatically.
 
-**Optional per-phase:** `/secure-phase N` (STRIDE security verification), `/extract-learnings N` (capture meta-knowledge).
-**Recovery:** `/forensics` (post-mortem), `/undo` (safe revert).
-
-### What's new in v2.1
-
-![v2.1 overview](assets/v21-overview.png)
-
-v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents — all with learning checkpoints and full 6-platform support:
-
-| Category | New workflows |
-|----------|--------------|
-| **Security** | `/secure-phase` — per-phase STRIDE threat verification |
-| **Documentation** | `/docs-update` — generate and verify project docs against codebase |
-| **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
-| **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
-| **Learning** | `/extract-learnings` — decisions, lessons, patterns, surprises · `/milestone-summary` — team onboarding |
-
-Enhanced: `/discuss-phase` (scope guardrails + domain probes), `/execute-phase` (`--wave` flag + context scaling), `/quick` (`--research --validate --full` composable flags), `/ideate` (`--explore` Socratic mode).
-
 ---
 
 ## 🏗️ How It Works
@@ -266,17 +160,138 @@ Three integrated layers that reinforce each other:
 | **Learning Partner** | Neuroscience-backed checkpoints at every phase transition: retrieval, reflection, spacing, struggle |
 | **Design System** | 21 impeccable steering commands for production-grade UI: `/audit`, `/critique`, `/polish`, and more |
 
-```mermaid
-graph LR
-    WE["Workflow Engine<br/>Spec-driven phases<br/>Context-engineered plans<br/>Atomic execution"] --> LP["Learning Partner<br/>Neuroscience-backed<br/>Woven into workflows<br/>Builds real understanding"]
-    WE --> DS["Design System<br/>Production-grade UI<br/>Impeccable aesthetics<br/>Anti-AI-slop standards"]
-    LP --> DS
-    DS --> LP
-```
+---
+
+## 🌐 Platform Support
+
+![Platform comparison](assets/platform-comparison.png)
+
+Each platform gets the best experience it supports:
+
+| Feature | Windsurf | Claude Code | OpenCode | Gemini CLI | Codex CLI |
+|---------|----------|-------------|----------|------------|-----------|
+| Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
+| Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
+| Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
+| Specialist agent pool | — | ✓ | ✓ | ✓ | ✓ |
+| Interactive questions | `ask_user_question` | `AskUserQuestion` | `question` | `ask_user` | `request_user_input` |
+| Session hooks | — | ✓ | — | ✓ | — |
+| Skills (native `@invoke`) | ✓ | — | — | — | — |
+| Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+**Parallel subagents:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor per plan within a wave, each with its own 200k context budget. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json`. Up to 5 concurrent agents per wave by default. All platforms default to sequential (always safe).
 
 ---
 
-## 🆚 Agentic Engineering vs Vibe Coding
+## What is learnship?
+
+learnship is an **agent harness** — the scaffolding that makes your AI coding agent actually reliable across real projects.
+
+Every serious AI coding tool converges on the same architecture: a simple execution loop wraps the model, and the **harness** decides what information reaches the model, when, and how. The model is interchangeable. The harness is the product.
+
+learnship gives you that harness as a portable, open-source layer that adds:
+
+- **Persistent memory.** `/new-project` generates an `AGENTS.md` loaded automatically every session. No more repeating yourself.
+- **Structured process.** A repeatable phase loop with spec-driven plans, wave-ordered execution, and UAT-driven verification.
+- **Knowledge compounding.** `/compound` captures solved problems. `/review` runs multi-persona code review. `/ship` runs the full delivery pipeline.
+- **Security & recovery.** `/secure-phase` for STRIDE verification. `/forensics` for post-mortem. `/undo` for safe revert.
+- **Session intelligence.** Hooks, context profiles, interactive questions, agent delegation. ([v2.2 details →](#whats-new-in-v22))
+- **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped.
+
+---
+
+## What problem does it solve?
+
+If you've used AI coding assistants for more than a few sessions, you've hit this wall:
+
+> The agent forgets everything. Each session starts from scratch. Decisions get repeated. Code quality drifts. You ship fast but understand less.
+
+This is a **harness problem**, not a model problem. The same model scores 42% with one scaffold and 78% with another. Same model. The only variable is the harness.
+
+learnship solves this with **progressive disclosure** — context revealed incrementally, not dumped upfront. The right files, decisions, and phase context reach the agent exactly when needed.
+
+| Without learnship | With learnship |
+|-------------------|----------------|
+| Context resets every session | `AGENTS.md` loaded automatically every conversation |
+| Ad-hoc prompts, unpredictable results | Spec-driven plans, verifiable deliverables |
+| Architectural decisions get forgotten | `DECISIONS.md` tracked and honored by the agent |
+| Everything dumped into context at once | Phase-scoped context: only what this step needs |
+| You ship code you don't fully understand | Learning checkpoints build real understanding at every step |
+| UI looks generic, AI-generated | `impeccable` design system prevents AI aesthetic slop |
+
+---
+
+## Who is it for?
+
+**Anyone who wants to build and ship real products with AI agents** — founders, designers, researchers, makers, not just developers.
+
+It's the right tool if:
+
+- You're **building a real project** and want the AI to stay aligned across sessions
+- You're **learning while building** and want to actually understand what gets shipped
+- You care about **code quality and UI quality** beyond "it works"
+- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI
+- You've felt the frustration of **context loss**: repeating yourself while the agent forgets
+
+It's probably overkill for one-off scripts. Use `/quick` for that.
+
+---
+
+## 📚 Documentation
+
+**[faviovazquez.github.io/learnship](https://faviovazquez.github.io/learnship/)**
+
+- **[Getting Started](https://faviovazquez.github.io/learnship/getting-started/installation/)**: install, first project, the 5 commands
+- **[Platform Guide](https://faviovazquez.github.io/learnship/platform-guide/windsurf/)**: Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, Codex CLI
+- **[Core Concepts](https://faviovazquez.github.io/learnship/core-concepts/phase-loop/)**: phase loop, context engineering, planning artifacts
+- **[Skills](https://faviovazquez.github.io/learnship/skills/agentic-learning/)**: 11 `@agentic-learning` actions + 21 `impeccable` design commands
+- **[Workflow Reference](https://faviovazquez.github.io/learnship/workflow-reference/core/)**: all 57 workflows
+- **[Configuration](https://faviovazquez.github.io/learnship/configuration/)**: full schema, speed presets, parallelization
+
+---
+
+## 🆕 What's New
+
+### What's new in v2.2
+
+![v2.2 overview](assets/v22-overview.png)
+
+v2.2 adds session intelligence, structured interactivity, and research templates:
+
+**Session hooks** (Claude Code + Gemini CLI): 4 hooks installed via `settings.json` — statusline showing context usage, context monitor that warns before context runs out, prompt guard that scans `.planning/` writes for injection patterns, and session state that injects project orientation at startup.
+
+**Context profiles**: Set `"context": "dev"` (default), `"research"`, or `"review"` in config.json to control agent output style. Switch with `/settings`.
+
+**Interactive questions**: 14 workflows present decisions via your platform's native structured question tool — clickable cards on Claude Code, dropdowns on Windsurf, etc. `install.js` rewrites the tool name per platform automatically.
+
+**Agent persona delegation**: 6 workflows spawn dedicated agents via `Task()` when parallelization is enabled, with `@./agents/` sequential fallback on all platforms.
+
+**Research templates**: 5 structured fill-in-the-blanks templates (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) that prevent the AI from skipping file writes.
+
+**Upgrade safety**: SHA-256 file manifest after every install. Locally modified files detected and backed up before overwriting. Run `/reapply-patches` to restore customizations.
+
+### What's new in v2.1
+
+![v2.1 overview](assets/v21-overview.png)
+
+v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
+
+| Category | New workflows |
+|----------|--------------|
+| **Security** | `/secure-phase` — per-phase STRIDE threat verification |
+| **Documentation** | `/docs-update` — generate and verify project docs against codebase |
+| **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
+| **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
+| **Learning** | `/extract-learnings` — decisions, lessons, patterns, surprises · `/milestone-summary` — team onboarding |
+
+Enhanced: `/discuss-phase` (scope guardrails + domain probes), `/execute-phase` (`--wave` flag + context scaling), `/quick` (`--research --validate --full` composable flags), `/ideate` (`--explore` Socratic mode).
+
+**Optional per-phase:** `/secure-phase N` (STRIDE security), `/extract-learnings N` (meta-knowledge).
+**Recovery:** `/forensics` (post-mortem), `/undo` (safe revert).
+
+---
+
+##  Agentic Engineering vs Vibe Coding
 
 ![Vibe coding vs Agentic engineering](assets/vibe-vs-agentic.png)
 
@@ -293,7 +308,7 @@ graph LR
 
 ![Context engineering](assets/context-engineering.png)
 
-Every agent invocation in learnship is loaded with structured context. Nothing is guessed:
+Every agent invocation is loaded with structured context. Nothing is guessed:
 
 ```mermaid
 flowchart LR
@@ -314,7 +329,7 @@ flowchart LR
 
 ![AGENTS.md](assets/agents-md.png)
 
-`/new-project` generates an `AGENTS.md` at your project root. On Windsurf, Claude Code, and Cursor it is loaded automatically every session as a project rule. On OpenCode, Gemini CLI, and Codex CLI the learnship workflows reference it explicitly. Either way, the agent always knows the project, current phase, tech stack, and past decisions without you repeating yourself.
+`/new-project` generates an `AGENTS.md` at your project root. On Windsurf, Claude Code, and Cursor it loads automatically every session. On other platforms, workflows reference it explicitly. Either way: the agent always knows the project, current phase, tech stack, and past decisions.
 
 ```
 AGENTS.md                   ← your AI agent reads this every conversation
@@ -435,6 +450,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
+  "context": "dev",
   "test_first": false,
   "planning": {
     "commit_docs": true,
@@ -499,6 +515,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `granularity` | `coarse`, `standard`, `fine` | `standard` | Phase size: 3-5 / 5-8 / 8-12 phases |
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
+| `context` | `dev`, `research`, `review` | `dev` | Output profile: `dev` (concise), `research` (detailed), `review` (audit-focused) |
 | `parallelization.enabled` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
 | `test_first` | `true`, `false` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
 | `planning.commit_mode` | `auto`, `manual` | `auto` | `auto` commits after each workflow step; `manual` skips all git commits |

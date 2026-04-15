@@ -245,6 +245,33 @@ All tests passed. ✓
 [N] issues found. Diagnosing root causes...
 ```
 
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
+**If `parallelization.enabled` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+
+Spawn a dedicated debugger agent for diagnosis:
+```
+Task(
+  subagent_type="learnship-debugger",
+  prompt="
+    <objective>
+    Diagnose all issues found in UAT for phase [N].
+    Read the UAT.md file with gaps, trace each issue to its root cause.
+    Do NOT fix anything — just diagnose and document root causes.
+    Follow the debugger persona at @./agents/debugger.md.
+    Write root_cause and affected_files for each gap back to UAT.md.
+    </objective>
+
+    <files_to_read>
+    - [UAT.md path]
+    - @./agents/debugger.md (persona)
+    </files_to_read>
+  "
+)
+```
+
+**If `parallelization.enabled` is `false` (sequential mode):**
+
 For each issue in the Gaps section, investigate using `@./agents/debugger.md` as your debug persona:
 - Read the relevant source files
 - Trace the issue to its root cause

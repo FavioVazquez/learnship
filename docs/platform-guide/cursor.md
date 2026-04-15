@@ -98,6 +98,7 @@ Or just work normally — the rule file activates skills at workflow checkpoints
 | Parallel subagents | ✅ Supported since Cursor 2.4 |
 | Wave execution | ✅ Parallel (Cursor 2.4+) |
 | Marketplace install | ✅ `/add-plugin learnship` |
+| Interactive questions | ✅ Text fallback (v2.2) |
 
 ## Manual rule install (before marketplace approval)
 

@@ -44,11 +44,32 @@ The following workflows are available as platform slash commands (Windsurf) or c
 | `/extract-learnings [N]` | After phase completion — structured learning extraction |
 | `/milestone-summary` | Generate comprehensive milestone summary for team onboarding |
 
+## Context Profiles
+
+Read `"context"` from `.planning/config.json` (default: `"dev"`). This controls your output style:
+
+- **`dev`** — Concise, action-oriented. Bullet points, short paragraphs. Focus on what to do next.
+- **`research`** — Verbose, exploratory. Trade-off analysis, alternatives considered, citations.
+- **`review`** — Critical, audit-focused. Severity-ranked findings, evidence-based, nothing assumed safe.
+
+The context profile files are at `@./contexts/dev.md`, `@./contexts/research.md`, `@./contexts/review.md`. Read the active one at the start of any workflow.
+
+## Session Hooks (Claude Code + Gemini CLI)
+
+On Claude Code and Gemini CLI, 4 hooks are installed via `settings.json`:
+
+- **statusLine** — Shows model, task/phase, context usage bar
+- **context-monitor** — Warns at 35% remaining (WARNING) and 25% remaining (CRITICAL)
+- **prompt-guard** — Scans `.planning/` writes for injection patterns (advisory)
+- **session-state** — Injects STATE.md orientation at session start
+
+These are automatic — no workflow action needed. If context warnings appear, respect them.
+
 ## Planning Artifacts
 
 All project state lives in `.planning/`. Key files:
 
-- `.planning/config.json` — Settings including `learning_mode` ("auto" or "manual")
+- `.planning/config.json` — Settings including `learning_mode` ("auto" or "manual"), `context` profile
 - `.planning/PROJECT.md` — Vision, requirements, key decisions
 - `.planning/ROADMAP.md` — Phase-by-phase delivery plan
 - `.planning/STATE.md` — Current position, decisions, blockers

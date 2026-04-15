@@ -17,6 +17,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
+  "context": "dev",
   "test_first": false,
   "planning": {
     "commit_docs": true,
@@ -126,6 +127,18 @@ Switch quickly: `/set-profile quality` · `/set-profile balanced` · `/set-profi
 |-------|----------|
 | `false` | Sequential execution. Always safe. Default. |
 | `true` | Parallel subagents on Claude Code, OpenCode, Gemini CLI, Codex CLI. Each plan gets its own 200k context. |
+
+### `context` (v2.2)
+
+Controls the agent's output style by loading a context profile from `learnship/contexts/`.
+
+| Value | Verbosity | Output style | Best for |
+|-------|-----------|-------------|----------|
+| `"dev"` | Low | Concise, action-oriented. Lead with code, skip preamble. | Day-to-day development. Default. |
+| `"research"` | High | Verbose, exploratory. Multiple approaches with pros/cons. | Domain research, architecture decisions. |
+| `"review"` | Medium | Critical, detail-focused. Findings by severity with file:line references. | Code review, audits, pre-ship checks. |
+
+Switch with `/settings` or edit `config.json` directly. Takes effect on the next workflow run.
 
 ### `test_first` (v2.0)
 
@@ -238,3 +251,46 @@ Apply a preset with `/settings` or edit `config.json` directly. The `/set-profil
 ```
 
 **Direct edit:** Open `.planning/config.json` in your editor: changes take effect immediately on the next workflow run.
+
+---
+
+## Session hooks (v2.2)
+
+On **Claude Code** and **Gemini CLI**, learnship installs 4 session hooks via `settings.json`:
+
+| Hook | Type | What it does |
+|------|------|--------------|
+| `learnship-statusline.js` | Notification | Status bar showing model, task/phase, directory, and context usage bar (green → yellow → orange → red) |
+| `learnship-context-monitor.js` | PostToolUse | Warns the AI at 35% remaining (WARNING) and 25% remaining (CRITICAL) context. Prevents new work when context is nearly exhausted. |
+| `learnship-prompt-guard.js` | PreToolUse | Scans `.planning/` file writes for prompt injection patterns. Advisory only — does not block. |
+| `learnship-session-state.js` | SessionStart | Injects STATE.md orientation and triggers background update checks. |
+
+Hooks are installed automatically during `npx learnship --claude` or `--gemini`. Other platforms (Windsurf, OpenCode, Codex, Cursor) do not support hooks and are unaffected.
+
+---
+
+## Interactive questions (v2.2)
+
+14 workflows now use structured interactive questions for user-facing decisions. Instead of plain numbered text lists, the agent presents choices using your platform's native question tool:
+
+| Platform | Tool name |
+|----------|-----------|
+| Claude Code | `AskUserQuestion` |
+| Windsurf | `ask_user_question` |
+| OpenCode | `question` |
+| Gemini CLI | `ask_user` |
+| Codex CLI | `request_user_input` |
+| Cursor | Text fallback (no native tool) |
+
+`install.js` automatically rewrites the tool name for each platform — you don't need to configure anything.
+
+---
+
+## Upgrade safety (v2.2)
+
+After every install, learnship generates `learnship-file-manifest.json` with SHA-256 hashes of all installed files. On the next upgrade:
+
+1. The installer compares current files against the manifest
+2. Files you modified locally are detected automatically
+3. Modified files are backed up to `learnship-local-patches/` before overwriting
+4. After upgrade, run `/reapply-patches` to restore your customizations

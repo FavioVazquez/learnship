@@ -74,6 +74,7 @@ Codex CLI supports real parallel subagents. Enable:
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
 | Specialist agent pool | ✅ |
+| Interactive questions | ✅ `request_user_input` (v2.2) |
 
 !!! tip
     Codex CLI uses `$learnship-` (dollar sign prefix) rather than `/learnship:` or `/learnship-`. This matches Codex CLI's native skill invocation convention.

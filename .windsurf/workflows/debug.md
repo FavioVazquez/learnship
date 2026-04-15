@@ -35,14 +35,38 @@ description: [description]
 
 ## Step 2: Triage
 
-Ask: **"What is the exact symptom?"**
+If no description was provided as an argument, ask: **"What is the exact symptom?"** and wait for response.
 
-If description was provided as an argument, use it as starting context. Then ask follow-up questions one at a time:
+If description was provided, use it as starting context. Then gather triage details using structured questions:
 
-1. "When does this happen? Always, sometimes, or only under specific conditions?"
-2. "What did you expect to happen?"
-3. "When did it start? Was it working before? What changed?"
-4. "What have you already tried?"
+```
+ask_user_question([
+  {
+    header: "Frequency",
+    question: "When does this happen?",
+    multiSelect: false,
+    options: [
+      { label: "Always", description: "Reproduces every time" },
+      { label: "Sometimes", description: "Intermittent, not always reproducible" },
+      { label: "Specific conditions", description: "Only under certain circumstances" }
+    ]
+  },
+  {
+    header: "Regression",
+    question: "When did it start?",
+    multiSelect: false,
+    options: [
+      { label: "Always been broken", description: "Never worked correctly" },
+      { label: "Recently broke", description: "Was working before, something changed" },
+      { label: "Not sure", description: "Don't know when it started" }
+    ]
+  }
+])
+```
+
+Then ask as follow-ups (one at a time):
+- "What did you expect to happen?"
+- "What have you already tried?"
 
 After gathering answers, write a triage summary to the session file:
 ```markdown

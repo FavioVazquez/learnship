@@ -56,13 +56,40 @@ Note any decisions that constrain or inform this phase's approach. Surface them 
 ls .planning/phases/*-CONTEXT.md 2>/dev/null
 ```
 
-If CONTEXT.md already exists for this phase:
-- Offer: **Update it** / **View it** / **Skip** (use as-is)
-- If "Skip" → exit workflow
+If CONTEXT.md already exists for this phase, present the choice:
+
+```
+ask_user_question([
+  {
+    header: "Existing Context",
+    question: "CONTEXT.md already exists for this phase. What do you want to do?",
+    multiSelect: false,
+    options: [
+      { label: "Update it", description: "Add to or revise existing decisions" },
+      { label: "View it", description: "Show current context, then decide" },
+      { label: "Skip", description: "Use existing context as-is" }
+    ]
+  }
+])
+```
+
+If "Skip" → exit workflow.
 
 If no CONTEXT.md exists but plans already exist for this phase:
-- Warn: "Phase [X] already has plans created without user context. Your decisions here won't affect existing plans unless you re-run plan-phase."
-- Ask: **Continue and replan after** / **Cancel**
+
+```
+ask_user_question([
+  {
+    header: "Plans Already Exist",
+    question: "Phase [X] already has plans created without user context. Your decisions here won't affect existing plans unless you re-run plan-phase.",
+    multiSelect: false,
+    options: [
+      { label: "Continue and replan after", description: "Capture decisions now, re-run plan-phase later" },
+      { label: "Cancel", description: "Keep existing plans unchanged" }
+    ]
+  }
+])
+```
 
 ## Step 3: Scout Codebase
 
@@ -119,20 +146,66 @@ Carrying forward from earlier phases:
 - [Decision from Phase N]
 ```
 
-Present 3-4 gray areas for selection (multi-select). Annotate with:
-- Prior decision context: "You chose X in Phase 5"
-- Code context: "You already have a Card component with shadow/rounded variants"
+Present gray areas using a structured multi-select question. Annotate with prior decisions and code context:
+
+```
+ask_user_question([
+  {
+    header: "Gray Areas",
+    question: "Which areas do you want to discuss? (select all that apply)",
+    multiSelect: true,
+    options: [
+      { label: "[Area 1]", description: "[Prior context or code context annotation]" },
+      { label: "[Area 2]", description: "[Prior context or code context annotation]" },
+      { label: "[Area 3]", description: "[Prior context or code context annotation]" },
+      { label: "All clear — skip discussion", description: "No gray areas need clarification" }
+    ]
+  }
+])
+```
+
+If "All clear" → skip to Step 6.
 
 **For each selected area, discuss:**
 
 1. Announce: "Let's talk about [Area]."
-2. Ask 4 focused questions with concrete options (not abstract). Include the recommended choice. Annotate options with existing code where relevant.
+2. Ask focused questions with concrete options using structured questions where possible:
+
+```
+ask_user_question([
+  {
+    header: "[Area]: [Decision Point]",
+    question: "[Specific implementation question]",
+    multiSelect: false,
+    options: [
+      { label: "[Option A] (Recommended)", description: "[Why, with code context if relevant]" },
+      { label: "[Option B]", description: "[Why]" },
+      { label: "[Option C]", description: "[Why]" }
+    ]
+  }
+])
+```
+
 3. After 4 questions, ask: "More questions about [area], or move to next?"
 4. If more → ask 4 more, then check again
 
 After all selected areas:
 - Summarize decisions captured
-- Ask: "Which gray areas remain unclear?" → "Explore more" or "I'm ready for context"
+- Present final check:
+
+```
+ask_user_question([
+  {
+    header: "Wrap Up",
+    question: "All gray areas discussed. Ready to generate CONTEXT.md?",
+    multiSelect: false,
+    options: [
+      { label: "Ready", description: "Generate CONTEXT.md with captured decisions" },
+      { label: "Explore more", description: "Discuss additional areas before writing context" }
+    ]
+  }
+])
+```
 
 <scope_guardrail>
 **No scope creep.** The phase boundary comes from ROADMAP.md and is FIXED. Discussion clarifies HOW to implement what's scoped, never WHETHER to add new capabilities.

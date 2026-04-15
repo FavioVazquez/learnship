@@ -9,6 +9,50 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.2.0] — 2026-04-15
+
+### Added
+
+- **Claude Code native hooks** — 4 hooks installed via `settings.json` for Claude Code and Gemini CLI:
+  - `learnship-statusline.js` — Status bar showing model, task/phase, directory, and context usage bar (green → yellow → orange → red+skull)
+  - `learnship-context-monitor.js` — PostToolUse hook that warns the AI at 35% remaining (WARNING) and 25% remaining (CRITICAL) context, preventing new work when context is nearly exhausted
+  - `learnship-prompt-guard.js` — PreToolUse hook that scans `.planning/` file writes for prompt injection patterns (advisory only, does not block)
+  - `learnship-session-state.js` — SessionStart hook that injects STATE.md orientation and triggers background update checks
+- **Research file templates** — 5 structured templates in `learnship/templates/research-project/` (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) with `<template>` and `<guidelines>` blocks. The AI reads these before writing research files, giving it a concrete fill-in-the-blanks target instead of just `##` header names.
+- **Context profiles** — 3 output mode profiles in `learnship/contexts/` (dev.md, research.md, review.md) that guide agent verbosity and focus. Configurable via `"context"` field in config.json.
+- **File manifest** — `learnship-file-manifest.json` generated after every install with SHA-256 hashes of all installed files. Enables upgrade safety: detects user-modified files and backs them up to `learnship-local-patches/` before overwriting.
+- **`package.json` for CJS hooks** — Writes `{"type":"commonjs"}` to the install directory so Node.js `require()` works in hook files.
+
+- **Structured interactive questions** — 14 workflows now use `AskUserQuestion()` blocks for user-facing decisions. install.js automatically maps to platform-native tools: `ask_user_question` (Windsurf), `question` (OpenCode), `ask_user` (Gemini), `request_user_input` (Codex). Text fallback for Cursor and platforms without interactive tools.
+  - Workflows: new-project, settings, discuss-phase, challenge, quick, debug, ideate, discuss-milestone, new-milestone, research-phase, secure-phase, validate-phase, list-phase-assumptions, diagnose-issues
+- **Agent persona delegation** — 5 additional workflows now spawn dedicated agent personas via `Task()` when parallelization is enabled, with `@./agents/` sequential fallback:
+  - `new-project.md` Step 5 — researcher agent for project research
+  - `research-phase.md` — researcher agent for phase research
+  - `verify-work.md` Step 7 — debugger agent for issue diagnosis
+  - `secure-phase.md` Step 5 — security auditor for threat verification
+  - `validate-phase.md` Step 7 — verifier agent for test gap filling
+  - `ideate.md` — researcher agent for mid-conversation research
+
+### Changed
+
+- **`/new-project` Step 2** — Configuration questions restructured into 3 rounds of structured questions (core settings, workflow agents, pipeline & git) instead of 7 plain-text groups.
+- **`/new-project` Step 5** — Research decision now uses structured question with banner.
+- **`/settings` Step 3** — Complete rewrite: 21 numbered text options replaced with 3 structured question rounds matching new-project format.
+- **`/new-project` Step 5b** — Each research file instruction now says "First, read the template at `@./templates/research-project/X.md`" before writing. Directly addresses the recurring research-file skip bug by giving the AI a structural guide.
+- **`install.js`** — New functions: `installClaudeHooks()`, `uninstallClaudeHooks()`, `generateManifest()`, `saveLocalPatches()`. Hook installation is Claude Code + Gemini only — Codex, OpenCode, Windsurf, Cursor paths are untouched.
+- **`uninstall()`** — Now cleans up hooks from `settings.json`, removes hook files, manifest, and local patches directory.
+- **`config.json` template** — Added `"context": "dev"` field for context profile selection.
+- **9 commands** — Added `AskUserQuestion` to `allowed-tools` for discuss-phase, quick, research-phase, validate-phase, secure-phase, verify-work, ideate, list-phase-assumptions, diagnose-issues. Added `Task` to validate-phase.
+- **`discuss-phase.md` command** — Fixed execution_context path (`@~/.claude/learnship/` → `@~/.claude/`).
+- **`install.js` `replacePaths`** — Now rewrites `AskUserQuestion` to platform-native tool names: `ask_user_question` (Windsurf), `ask_user` (Gemini), `request_user_input` (Codex). OpenCode already handled by `convertToOpencode`.
+- **Cursor `.mdc`** — Updated stale "Group D" reference to match Round-based config. Added "Structured Questions" section explaining text fallback.
+- **`install.js` `--target` flag** — New `--target <dir>` CLI option overrides the default platform directory for both install and uninstall. Works on all 6 platforms. Useful for CI, Docker, testing, or non-standard config locations.
+- **README restructure** — Install section moved to the top (line 33, was line 83). New order: Install → 5 Commands → Phase Loop → How It Works → Platform Support → Philosophy. Platform table collapsed into `<details>`. Inspired by get-shit-done's action-first structure.
+- **Image audit** — Regenerated 4 images (`install.png` v2.2.0, `config-schema.png` spacious card layout, `platform-comparison.png` 6 platforms + hooks/questions rows, new `v22-overview.png`). All 24 image references verified, 0 broken.
+- **Documentation** — Added v2.2 bullet to `docs/index.md`, context profiles + hooks sections to `docs/configuration.md`, interactive questions row to all 6 platform guide pages, Cursor tab + `--target` section to `docs/getting-started/installation.md`, `platform-comparison.png` to README + docs index.
+
+---
+
 ## [v2.1.2] — 2026-04-15
 
 ### Fixed

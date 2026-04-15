@@ -107,7 +107,20 @@ Files: [list]
 Effort: small | medium | large
 ```
 
-Ask: "Does this diagnosis look right? Proceed with creating fix plans?"
+```
+ask_user_question([
+  {
+    header: "Diagnosis Review",
+    question: "Does this diagnosis look right?",
+    multiSelect: false,
+    options: [
+      { label: "Proceed", description: "Diagnosis is correct — create fix plans" },
+      { label: "Revise", description: "Something is off — let me provide corrections" },
+      { label: "Cancel", description: "Stop here — I'll investigate manually" }
+    ]
+  }
+])
+```
 
 ## Step 6: Create Fix Plans
 

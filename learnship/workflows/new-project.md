@@ -6,6 +6,8 @@ description: Initialize a new project — questioning → research → requireme
 
 Initialize a new project with full context gathering, optional research, requirements scoping, and roadmap creation. This is the most leveraged moment in any project — deep questioning now means better plans, better execution, better outcomes.
 
+> **Platform note:** When this workflow shows structured question blocks, use your platform's interactive question tool to present them (the tool that lets users pick from predefined options). If no such tool is available, present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label.
+
 > **This workflow has 9 mandatory steps. You must complete every step in order. Do not skip, defer, or abbreviate any step. Check each one off as you complete it:**
 >
 > - [ ] Step 1 — Setup & codebase check
@@ -80,69 +82,150 @@ Note the tech stack, key directories, and any README content internally. Use thi
 
 ## Step 2: Configuration
 
-Ask the user the following questions to configure the project. Ask them in a conversational way — not all at once, but grouped naturally.
+Present configuration questions using structured question rounds. Use your platform's interactive question tool, or numbered text lists if unavailable.
 
-**Group A — Working style:**
+**Round 1 — Core settings (4 questions):**
 
-Ask: "How do you want to work?"
-- **YOLO** (recommended) — Auto-approve steps, just execute
-- **Interactive** — Confirm at each step
+```
+AskUserQuestion([
+  {
+    header: "Working Style",
+    question: "How do you want to work?",
+    multiSelect: false,
+    options: [
+      { label: "YOLO (Recommended)", description: "Auto-approve steps, just execute" },
+      { label: "Interactive", description: "Confirm at each step" }
+    ]
+  },
+  {
+    header: "Granularity",
+    question: "How finely should scope be sliced into phases?",
+    multiSelect: false,
+    options: [
+      { label: "Coarse (Recommended)", description: "Fewer, broader phases (3-5 phases, 1-3 plans each)" },
+      { label: "Standard", description: "Balanced phase size (5-8 phases, 3-5 plans each)" },
+      { label: "Fine", description: "Many focused phases (8-12 phases, 5-10 plans each)" }
+    ]
+  },
+  {
+    header: "Learning Partner",
+    question: "How should agentic-learning work during this project?",
+    multiSelect: false,
+    options: [
+      { label: "Auto (Recommended)", description: "Offer learning actions at natural checkpoints (after planning, execution, etc.)" },
+      { label: "Manual", description: "Only activate when you explicitly invoke @agentic-learning" }
+    ]
+  },
+  {
+    header: "AI Models",
+    question: "Which model quality tier for planning agents?",
+    multiSelect: false,
+    options: [
+      { label: "Balanced (Recommended)", description: "Large for planning, medium for execution — good quality/cost ratio" },
+      { label: "Quality", description: "Large-tier models for all agents (highest cost, best results)" },
+      { label: "Budget", description: "Medium for code, small for research/verification (lowest cost)" }
+    ]
+  }
+])
+```
 
-Ask: "How finely should scope be sliced into phases?"
-- **Coarse** (recommended) — Fewer, broader phases (3-5 phases, 1-3 plans each)
-- **Standard** — Balanced phase size (5-8 phases, 3-5 plans each)
-- **Fine** — Many focused phases (8-12 phases, 5-10 plans each)
+**Round 2 — Workflow agents (5 questions):**
 
-**Group B — Learning mode:**
+```
+AskUserQuestion([
+  {
+    header: "Research",
+    question: "Research domain before planning each phase? (adds tokens/time)",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Investigate domain, find patterns, surface gotchas" },
+      { label: "No", description: "Plan directly from requirements" }
+    ]
+  },
+  {
+    header: "Plan Check",
+    question: "Verify plans will achieve their goals? (adds tokens/time)",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Catch gaps before execution starts" },
+      { label: "No", description: "Execute plans without verification" }
+    ]
+  },
+  {
+    header: "Verifier",
+    question: "Verify work satisfies requirements after each phase? (adds tokens/time)",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Confirm deliverables match phase goals" },
+      { label: "No", description: "Trust execution, skip verification" }
+    ]
+  },
+  {
+    header: "Review",
+    question: "Multi-persona code review after verification?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Correctness, security, performance, maintainability review" },
+      { label: "No", description: "Skip code review" }
+    ]
+  },
+  {
+    header: "Solutions Search",
+    question: "Search prior solutions for reusable patterns during planning?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Check .planning/solutions/ for relevant past fixes" },
+      { label: "No", description: "Plan without searching prior solutions" }
+    ]
+  }
+])
+```
 
-Ask: "How should the learning partner (agentic-learning) work during this project?"
-- **Auto** (recommended) — I'll offer relevant learning actions at natural checkpoints (after planning, after execution, etc.)
-- **Manual** — I'll only activate when you explicitly invoke `@agentic-learning`
+**Round 3 — Pipeline & git (4 questions):**
 
-**Group C — Model profile:**
-
-Ask: "Which model quality tier do you want?"
-- **Quality** — Large-tier models for all decision-making agents (highest cost, best results)
-- **Balanced** (recommended) — Large for planning, medium for execution
-- **Budget** — Medium for code, small for research/verification (lowest cost)
-
-**Group D — Development style:**
-
-Ask: "Test-first (TDD) mode?"
-- **No** (recommended) — Write tests alongside implementation
-- **Yes** — Enforce red-green-refactor: write failing test first, verify red, implement, verify green
-
-**Group E — Workflow agents (these add quality but cost tokens/time):**
-
-Ask: "Which workflow agents and quality steps should be enabled?"
-- **Research** (recommended) — Investigate domain before planning each phase
-- **Plan Check** (recommended) — Verify plans achieve their goals before execution
-- **Verifier** (recommended) — Confirm deliverables match phase goals after execution
-- **Review** (recommended) — Multi-persona code review after verification
-- **Solutions Search** (recommended) — Search prior solutions for reusable patterns during planning
-
-Ask: "Auto-trigger review after verify-work passes?"
-- **No** (recommended) — Run `/review` manually when ready
-- **Yes** — Automatically start review after verification succeeds
-
-**Group F — Ship pipeline defaults:**
-
-Ask: "Ship pipeline preferences?"
-- **Auto-test before shipping** (recommended: yes) — Run tests before every ship
-- **Conventional commits** (recommended: yes) — Use `feat:`, `fix:`, `docs:` commit prefixes
-- **Auto-generate PR description** (recommended: yes) — Create PR body from commit messages
-
-**Group G — Parallel execution:**
+```
+AskUserQuestion([
+  {
+    header: "TDD",
+    question: "Test-first (TDD) mode?",
+    multiSelect: false,
+    options: [
+      { label: "No (Recommended)", description: "Write tests alongside implementation" },
+      { label: "Yes", description: "Red-green-refactor: write failing test first, implement, verify green" }
+    ]
+  },
+  {
+    header: "Ship Pipeline",
+    question: "Ship pipeline preferences?",
+    multiSelect: true,
+    options: [
+      { label: "Auto-test before shipping (Recommended)", description: "Run tests before every ship" },
+      { label: "Conventional commits (Recommended)", description: "Use feat:, fix:, docs: commit prefixes" },
+      { label: "Auto-generate PR description (Recommended)", description: "Create PR body from commit messages" }
+    ]
+  },
+  {
+    header: "Git Tracking",
+    question: "Commit planning docs to git?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Planning docs tracked in version control" },
+      { label: "No", description: "Keep .planning/ local-only (add to .gitignore)" }
+    ]
+  },
+  {
+    header: "Commit Mode",
+    question: "When should learnship commit files to git?",
+    multiSelect: false,
+    options: [
+      { label: "Automatically (Recommended)", description: "Commit after each workflow step completes" },
+      { label: "Manually", description: "You commit when ready; skip all git commit steps" }
+    ]
+  }
+])
+```
 
 <!-- LEARNSHIP_PARALLEL_BLOCK -->
-
-Ask: "Commit planning docs to git?"
-- **Yes** (recommended) — Planning docs tracked in version control
-- **No** — Keep `.planning/` local-only
-
-Ask: "When should learnship commit files to git?"
-- **Automatically** (recommended) — Commit after each workflow step completes (config, requirements, roadmap, AGENTS.md)
-- **Manually** — I'll commit when I say so; skip all git commit steps
 
 Create `.planning/config.json` with all settings:
 
@@ -311,24 +394,26 @@ git add .planning/PROJECT.md && git commit -m "docs: initialize project"
 
 > **🔴 MANDATORY USER CHOICE — You must ask this question and wait for a reply. You are NOT allowed to decide this yourself.**
 
-Display this question to the user exactly as written:
+Display the research decision banner, then present the choice using a structured question:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  learnship ► RESEARCH DECISION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
-Before I write the requirements — do you want me to
-research the domain ecosystem first?
-
- 1. Research first (recommended)
-    → Discover standard stacks, expected features,
-      architecture patterns, common pitfalls
-
- 2. Skip research
-    → Go straight to requirements
-
-Reply 1 or 2.
+```
+AskUserQuestion([
+  {
+    header: "Research",
+    question: "Before I write the requirements — do you want me to research the domain ecosystem first?",
+    multiSelect: false,
+    options: [
+      { label: "Research first (Recommended)", description: "Discover standard stacks, expected features, architecture patterns, common pitfalls — writes 5 research files" },
+      { label: "Skip research", description: "Go straight to requirements" }
+    ]
+  }
+])
 ```
 
 > � **HARD GATE — This is a user decision. You MUST wait for the user to reply.**
@@ -378,10 +463,52 @@ node -e "require('fs').mkdirSync('.planning/research',{recursive:true})"
 
 > 🛑 Did the mkdir command run? If not, run it now before continuing.
 
-**Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files.
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
+**If `parallelization.enabled` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+
+Spawn a dedicated researcher agent with the project context:
+```
+Task(
+  subagent_type="learnship-researcher",
+  prompt="
+    <objective>
+    Write 5 research files for a new project into .planning/research/.
+    Before writing each file, read the corresponding template from @./templates/research-project/ for the expected structure.
+
+    Files to write:
+    1. STACK.md — Must have: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
+    2. FEATURES.md — Must have: ## Table Stakes, ## Differentiators, ## Anti-Features
+    3. ARCHITECTURE.md — Must have: ## Component Boundaries, ## Data Flow, ## Build Order, ## Integration Points
+    4. PITFALLS.md — Must have: ## Common Mistakes, ## Warning Signs, ## Prevention Strategies
+    5. SUMMARY.md — Must have: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
+
+    After writing all 5 files, run the verification command to confirm all files exist with required sections.
+    Return: confirmation that all 5 files pass verification.
+    </objective>
+
+    <files_to_read>
+    - .planning/PROJECT.md (project description and goals)
+    - @./templates/research-project/STACK.md (template for STACK.md)
+    - @./templates/research-project/FEATURES.md (template for FEATURES.md)
+    - @./templates/research-project/ARCHITECTURE.md (template for ARCHITECTURE.md)
+    - @./templates/research-project/PITFALLS.md (template for PITFALLS.md)
+    - @./templates/research-project/SUMMARY.md (template for SUMMARY.md)
+    </files_to_read>
+  "
+)
+```
+
+Wait for the agent to complete, then proceed to Step 5c (verification) to confirm files were written correctly.
+
+**If `parallelization.enabled` is `false` (sequential mode):**
+
+Using `@./agents/researcher.md` as your research persona:
+
+**Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files. **Before writing each file, read the corresponding template** from `@./templates/research-project/` to understand the expected structure.
 
 **File 1 of 5 — Write `.planning/research/STACK.md` to disk now.**
-Research the standard tech stack for this domain and write the results to this file. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/STACK.md` for the expected structure. Then research the standard tech stack for this domain and write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Alternatives Considered`
 - `## What NOT to Use` (with reasons)
@@ -390,26 +517,26 @@ Research the standard tech stack for this domain and write the results to this f
 > 🛑 STOP. Confirm: did you write `.planning/research/STACK.md` to the filesystem? If you only thought about the stack but did not create the file, go back and create it now.
 
 **File 2 of 5 — Write `.planning/research/FEATURES.md` to disk now.**
-Research what features users expect in this domain. Write the results to this file. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/FEATURES.md` for the expected structure. Then research what features users expect in this domain. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
 - `## Table Stakes` (must-haves)
 - `## Differentiators` (nice-to-haves)
 - `## Anti-Features` (what to avoid)
 
 **File 3 of 5 — Write `.planning/research/ARCHITECTURE.md` to disk now.**
-Research how systems in this domain are typically structured. Write the results to this file. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/ARCHITECTURE.md` for the expected structure. Then research how systems in this domain are typically structured. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
 - `## Component Boundaries`
 - `## Data Flow`
 - `## Build Order` (suggested sequence)
 - `## Integration Points`
 
 **File 4 of 5 — Write `.planning/research/PITFALLS.md` to disk now.**
-Research common mistakes and prevention strategies. Write the results to this file. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/PITFALLS.md` for the expected structure. Then research common mistakes and prevention strategies. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
 - `## Common Mistakes`
 - `## Warning Signs`
 - `## Prevention Strategies`
 
 **File 5 of 5 — Write `.planning/research/SUMMARY.md` to disk now.**
-Synthesize the 4 files above into a summary. Write the results to this file. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/SUMMARY.md` for the expected structure. Then synthesize the 4 files above into a summary. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Table Stakes Features`
 - `## Key Architecture Decisions`

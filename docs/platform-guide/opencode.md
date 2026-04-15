@@ -76,6 +76,7 @@ When enabled, `execute-phase` dispatches each plan in a wave to its own dedicate
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
 | Specialist agent pool | ✅ |
+| Interactive questions | ✅ `question` (v2.2) |
 
 !!! tip
     Note the **hyphen** separator in OpenCode commands (`/learnship-ls`) vs the **colon** in Claude Code and Gemini CLI (`/learnship:ls`).
