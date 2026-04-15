@@ -8,6 +8,8 @@ allowed-tools:
   - Write
   - Task
   - AskUserQuestion
+  - WebSearch
+  - WebFetch
 ---
 
 <execution_context>

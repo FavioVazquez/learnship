@@ -7,6 +7,8 @@ allowed-tools:
   - Bash
   - Write
   - Task
+  - WebSearch
+  - WebFetch
 ---
 
 <execution_context>

@@ -9,6 +9,21 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.2.1] — 2026-04-15
+
+### Fixed
+
+- **Research skips online investigation** — `/new-project` Step 5, `/research-phase`, and `/plan-phase` all went straight to writing research files from training data without doing any web research first. The AI never ran `WebSearch` or `WebFetch` queries, producing stale research grounded in training data rather than current information.
+  - **Root cause:** `WebSearch`/`WebFetch` were not in `allowed-tools` for any research command, and the workflow text never explicitly told the AI to search the web before writing files.
+  - **Fix:** Added `WebSearch` + `WebFetch` to `allowed-tools` for `new-project`, `research-phase`, `plan-phase`, and `ideate` commands. Added explicit "Phase 1 — INVESTIGATE" (web search) before "Phase 2 — WRITE FILES" in all 3 research workflows (both Task and sequential paths). Updated forbidden behaviors to include "writing files without doing web research first."
+- **Researcher agent missing web research protocol** — `learnship/agents/researcher.md` had no mention of web tools, confidence levels, or the principle that training data is hypothesis. Updated with full tool strategy (WebSearch → WebFetch → codebase scan), confidence level table, and "Training Data = Hypothesis" philosophy (inspired by get-shit-done's `gsd-project-researcher`).
+- **`install.js` missing web tool rewriting** — `WebSearch`/`WebFetch` in workflow body text were not rewritten to platform-native names for Gemini (`google_web_search`/`web_fetch`) or OpenCode (`websearch`/`webfetch`). Added body-level rewrites in `replacePaths()` and `convertToOpencode()`.
+- **SKILL.md enforcement stale** — Research enforcement rule #2 said "WRITE 5 FILES TO DISK" but didn't mention web research. Updated to "WEB SEARCH then WRITE 5 FILES TO DISK" with explicit WebSearch + WebFetch requirement.
+- **Windsurf web tool names wrong** — Windsurf's actual web tools are `search_web` and `read_url_content`, not `WebSearch`/`WebFetch`. Added Windsurf-specific rewriting in `replacePaths()` so workflow body text uses the correct tool names.
+- **Cursor `.mdc` missing web research rule** — Cursor's rules file still said "Research = WRITE 5 FILES TO DISK" with no mention of online research. Updated to "WEB SEARCH then WRITE 5 FILES TO DISK" with `@web` tool reference and forbidden behavior for skipping web investigation.
+
+---
+
 ## [v2.2.0] — 2026-04-15
 
 ### Added

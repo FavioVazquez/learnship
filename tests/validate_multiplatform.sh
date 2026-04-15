@@ -1861,10 +1861,13 @@ const SYNCED_WORKFLOWS = [
   'verify-work', 'debug', 'quick', 'pause-work', 'resume-work',
 ];
 check('all modified workflow source and installed copies are identical', () => {
-  // Windsurf workflows use ask_user_question (platform-native) while source uses AskUserQuestion (Claude Code canonical).
-  // Normalize this expected difference before comparing.
+  // Windsurf workflows use platform-native tool names while source uses Claude Code canonical names.
+  // Normalize these expected differences before comparing.
   function normalize(content) {
-    return content.replace(/\bask_user_question\b/g, 'AskUserQuestion');
+    return content
+      .replace(/\bask_user_question\b/g, 'AskUserQuestion')
+      .replace(/\bsearch_web\b/g, 'WebSearch')
+      .replace(/\bread_url_content\b/g, 'WebFetch');
   }
   const diffs = [];
   for (const wf of SYNCED_WORKFLOWS) {

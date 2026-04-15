@@ -263,6 +263,8 @@ function convertToOpencode(content) {
     .replace(/~\/\.claude\//g, '~/.config/opencode/')
     .replace(/\$HOME\/\.claude\//g, '$HOME/.config/opencode/')
     .replace(/\bAskUserQuestion\b/g, 'question')
+    .replace(/\bWebSearch\b/g, 'websearch')
+    .replace(/\bWebFetch\b/g, 'webfetch')
     .replace(/\bSlashCommand\b/g, 'skill')
     .replace(/\bTodoWrite\b/g, 'todowrite')
     .replace(/subagent_type="general-purpose"/g, 'subagent_type="general"');
@@ -545,6 +547,15 @@ function replacePaths(content, pathPrefix, platform) {
     c = c.replace(/\bAskUserQuestion\b/g, 'ask_user');
   } else if (platform === 'codex') {
     c = c.replace(/\bAskUserQuestion\b/g, 'request_user_input');
+  }
+  // Rewrite WebSearch/WebFetch to platform-native tool names.
+  // Claude and Codex use WebSearch/WebFetch as-is. OpenCode handled in convertToOpencode().
+  if (platform === 'windsurf') {
+    c = c.replace(/\bWebSearch\b/g, 'search_web');
+    c = c.replace(/\bWebFetch\b/g, 'read_url_content');
+  } else if (platform === 'gemini') {
+    c = c.replace(/\bWebSearch\b/g, 'google_web_search');
+    c = c.replace(/\bWebFetch\b/g, 'web_fetch');
   }
   // Replace @mention skill syntax — @mention dispatch is Windsurf-native only
   if (platform === 'claude') {
