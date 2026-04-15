@@ -100,6 +100,64 @@ If a MILESTONE-CONTEXT.md was consumed, delete it:
 git rm .planning/MILESTONE-CONTEXT.md 2>/dev/null || true
 ```
 
+## Step 6a: Codebase Map Check
+
+Check if the codebase has changed significantly since the last map:
+
+```bash
+node -e "
+const fs=require('fs');
+const hasCbMap=fs.existsSync('.planning/codebase');
+if(!hasCbMap){console.log('NO_MAP');}
+else{
+  const mapFiles=fs.readdirSync('.planning/codebase').filter(f=>f.endsWith('.md'));
+  const mapAge=mapFiles.length>0?Math.max(...mapFiles.map(f=>fs.statSync('.planning/codebase/'+f).mtimeMs)):0;
+  const daysSinceMap=Math.floor((Date.now()-mapAge)/(1000*60*60*24));
+  console.log('HAS_MAP');console.log('map_files: '+mapFiles.length);console.log('days_since_update: '+daysSinceMap);
+}
+"
+```
+
+**If `NO_MAP`:** Offer codebase mapping:
+
+```
+AskUserQuestion([
+  {
+    header: "Codebase Map",
+    question: "No codebase map found. The codebase may have evolved since the last milestone. Want to map it before planning new features?",
+    multiSelect: false,
+    options: [
+      { label: "Map codebase (Recommended)", description: "Run /map-codebase to analyze current architecture, then return here" },
+      { label: "Skip", description: "Continue without mapping — I know the current state" }
+    ]
+  }
+])
+```
+
+- **Map codebase:** Tell the user: "Run `/map-codebase` first, then come back to `/new-milestone`." Then **STOP. Exit this workflow.**
+- **Skip:** Continue to Step 6b.
+
+**If `HAS_MAP` and `days_since_update` > 30:** Offer to refresh:
+
+```
+AskUserQuestion([
+  {
+    header: "Stale Codebase Map",
+    question: "Your codebase map is [N] days old. Want to refresh it before planning new features?",
+    multiSelect: false,
+    options: [
+      { label: "Refresh map", description: "Run /map-codebase to update, then return here" },
+      { label: "Use existing map", description: "Current map is close enough" }
+    ]
+  }
+])
+```
+
+- **Refresh map:** Tell the user: "Run `/map-codebase` first, then come back to `/new-milestone`." Then **STOP. Exit this workflow.**
+- **Use existing map:** Continue to Step 6b.
+
+**If `HAS_MAP` and `days_since_update` <= 30:** Continue silently to Step 6b.
+
 ## Step 6b: Config Review
 
 Check if the project config has all v2 keys:

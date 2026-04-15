@@ -223,7 +223,7 @@ node bin/install.js --all
 
 This ensures:
 - **Windsurf** — skills already live in `.windsurf/skills/` (updated in place above)
-- **Claude Code** — `~/.claude/skills/` rebuilt with updated skill content + rewritten `references/` paths
+- **Claude Code** — Claude skills directory rebuilt with updated skill content + rewritten `references/` paths
 - **OpenCode / Gemini CLI / Codex** — `learnship/skills/` context files updated
 
 ---
@@ -256,7 +256,7 @@ impeccable:
 
 All platforms updated (installer re-run):
   Windsurf       ✓ skills updated in place
-  Claude Code    ✓ ~/.claude/skills/ rebuilt
+  Claude Code    ✓ skills directory rebuilt
   Other platforms ✓ learnship/skills/ context files updated
 
 Backup saved at: .windsurf/skills/.upstream-backup-<timestamp>/

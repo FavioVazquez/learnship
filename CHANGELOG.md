@@ -9,6 +9,18 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.1] — 2026-04-15
+
+### Fixed
+
+- **Token waste on blank projects** — `new-project` Step 1 codebase detection walked ALL files including platform config dirs (`.windsurf/`, `.claude/`, `.cursor/`, etc.). On a blank project with learnship installed, this walked 57+ workflow files just to conclude "BLANK". Replaced with extension-based code detection that skips all 6 platform dirs, checks package manifests, and depth-limits to 3 levels — same pattern as GSD's `initNewProject`.
+- **No `/map-codebase` offer for brownfield projects** — `new-project` Step 1b did a quick `find` scan but never offered to run `/map-codebase` first. Now presents a 3-option question when existing code is detected without a codebase map: "Map codebase first (Recommended)" / "Quick scan only" / "Skip". Platform dirs excluded from `find` scan too.
+- **`new-milestone` had zero brownfield awareness** — Never checked for a codebase map. Added Step 6a: checks if `.planning/codebase/` exists and how old it is, offers to map (if none) or refresh (if >30 days old) before research/planning.
+- **`new-project` done banner missing `/ideate`** — Brownfield projects weren't told about `/ideate` for codebase-grounded idea generation. Added hint to done banner.
+- **`sync-upstream-skills.md` path rewriting** — `install.js` `replacePaths` rewrote `~/.claude/` to an absolute path in documentation text that was just describing Claude Code behavior. Replaced literal paths with platform-agnostic descriptions.
+
+---
+
 ## [v2.3.0] — 2026-04-15
 
 ### Added

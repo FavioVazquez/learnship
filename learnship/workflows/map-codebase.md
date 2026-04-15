@@ -6,7 +6,7 @@ description: Analyze an existing codebase and produce structured reference docs 
 
 Analyze an existing codebase through structured focused exploration. Produces 7 structured documents in `.planning/codebase/` that feed into `new-project` when adding features to existing code.
 
-**Use before:** `/new-project` on a brownfield (existing) codebase.
+**Use before:** `/new-project` on a brownfield (existing) codebase, or before `/new-milestone` when the codebase has changed significantly.
 
 **Philosophy:** Each agent gets fresh context, explores a specific domain, and writes documents directly. The orchestrator only confirms what was created — it never receives document contents.
 
