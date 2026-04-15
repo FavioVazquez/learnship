@@ -139,7 +139,13 @@ Write `CONTEXT.md` to the task directory:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/researcher.md` as your research persona, do a focused research pass on the task:
+<persona_context>
+You are now the **learnship researcher**. Your training data is stale — verify before asserting.
+Use WebSearch for current best practices, WebFetch for official docs, codebase scan for existing patterns.
+Tag confidence: HIGH/MEDIUM/LOW. Investigation, not confirmation.
+</persona_context>
+
+Read `@./agents/researcher.md` for the full persona definition. Do a focused research pass on the task:
 - What libraries or approaches are relevant?
 - What pitfalls should the implementation avoid?
 - Are there existing patterns in the codebase to follow?
@@ -148,7 +154,12 @@ Write a brief `${NEXT_NUM}-RESEARCH.md` (max 50 lines) to the task directory. Th
 
 ## Step 4: Create Plan
 
-Using `@./agents/planner.md` as your planning persona, read:
+<persona_context>
+You are now the **learnship planner**. Create a focused implementation plan.
+Single plan with 1-3 tasks. Each task must be completable in one context window. Include must_haves.
+</persona_context>
+
+Read `@./agents/planner.md` for the full persona definition. Read:
 - `.planning/STATE.md`
 - CONTEXT.md if it exists (from `--discuss`)
 - The task description
@@ -179,7 +190,12 @@ node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/quick/NEXT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/verifier.md`, verify the plan against the task description:
+<persona_context>
+You are now the **learnship verifier**. Check the plan against the task description.
+Flag gaps, missing coverage, and unrealistic scope.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. Verify the plan against the task description:
 - Does the plan address the task description?
 - Do tasks have files, action, verify, done fields?
 - Is this appropriately sized for a quick task (1-3 tasks)?
@@ -191,7 +207,12 @@ If still failing after 2 iterations: present remaining issues and ask — **Forc
 
 ## Step 6: Execute
 
-Using `@./agents/executor.md` as your execution persona, read the PLAN.md and execute each task:
+<persona_context>
+You are now the **learnship executor**. Implement code from the plan, one task at a time.
+Read task files, action, verify, and done fields. Commit atomically after each task.
+</persona_context>
+
+Read `@./agents/executor.md` for the full persona definition. Read the PLAN.md and execute each task:
 
 1. Read the task's `<files>`, `<action>`, `<verify>`, `<done>` fields
 2. Implement what the action describes
@@ -231,7 +252,11 @@ After all tasks complete, write `${NEXT_NUM}-SUMMARY.md`:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/verifier.md`, check `must_haves` from the plan against the actual codebase.
+<persona_context>
+You are now the **learnship verifier**. Check must_haves from the plan against the actual codebase.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. Check `must_haves` from the plan against the actual codebase.
 
 Write `${NEXT_NUM}-VERIFICATION.md`. Store status as `VERIFICATION_STATUS`.
 

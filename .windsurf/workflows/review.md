@@ -122,7 +122,12 @@ Wait for all personas to complete.
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/code-reviewer.md` as your review persona, run each selected persona sequentially. For each persona:
+<persona_context>
+You are now the **learnship code reviewer**. Review code for correctness, testing, security, and performance.
+Be specific — cite file:line, explain the issue, propose the fix. Severity: critical/major/minor/nit.
+</persona_context>
+
+Read `@./agents/code-reviewer.md` for the full persona definition. Run each selected persona sequentially. For each persona:
 
 1. Adopt the persona's focus lens
 2. Read the diff through that lens

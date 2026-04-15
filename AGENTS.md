@@ -141,7 +141,7 @@ learnship/
 - **Framework:** CLI tool — no web framework. Entry point is `bin/learnship.js` → `bin/install.js`
 - **Key libraries:** Node.js built-ins only (fs, path, child_process). Zero external dependencies.
 - **Dev server:** N/A — this is a CLI tool, not a web app
-- **Tests:** `bash tests/run_all.sh` — 5 test suites, 468 tests validating cross-platform correctness
+- **Tests:** `bash tests/run_all.sh` — 5 test suites, 511+ tests validating cross-platform correctness
 - **Docs:** MkDocs with Material theme — `cd docs && mkdocs serve`
 
 ---

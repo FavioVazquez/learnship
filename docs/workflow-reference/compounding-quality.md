@@ -271,13 +271,24 @@ In `--explore` mode, the agent asks one question at a time, offers mid-conversat
 
 ## Agent personas
 
-v2.0–v2.1 agent personas, each available as both inline (sequential) and dispatch (parallel subagent):
+17 agent personas, each available as inline (sequential with `<persona_context>` blocks), `@./agents/` file reference, and dispatch (parallel subagent via `Task()`). On Windsurf, personas are installed as `model_decision` rules for native conditional adoption.
 
 | Agent | Role | Sandbox mode (Codex) |
 |-------|------|---------------------|
+| `planner` | Creates executable implementation plans | workspace-write |
+| `executor` | Implements code from plans, one task at a time | workspace-write |
+| `verifier` | Checks plans/implementation against requirements | workspace-write |
+| `debugger` | Diagnoses root cause, not symptoms | workspace-write |
+| `researcher` | Domain investigation, web research, pattern discovery | workspace-write |
+| `project-researcher` | Domain ecosystem research for `/new-project` (v2.3) | workspace-write |
+| `research-synthesizer` | Synthesizes 4 research files into SUMMARY.md (v2.3) | workspace-write |
+| `phase-researcher` | Focused phase research for `/plan-phase` (v2.3) | workspace-write |
+| `roadmapper` | Creates phased roadmaps from requirements (v2.3) | workspace-write |
 | `solution-writer` | Writes structured solution documents | workspace-write |
 | `code-reviewer` | Reviews code through persona-specific lenses | read-only |
 | `challenger` | Stress-tests proposals through forcing questions | read-only |
 | `ideation-agent` | Generates codebase-grounded improvement ideas | read-only |
+| `plan-checker` | Validates plan quality, missing steps, estimates | read-only |
 | `security-auditor` | STRIDE threat verification (v2.1) | read-only |
 | `doc-writer` | Documentation generation and verification (v2.1) | workspace-write |
+| `doc-verifier` | Verifies docs match live codebase (v2.3) | read-only |

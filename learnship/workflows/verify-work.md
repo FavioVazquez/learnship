@@ -277,7 +277,12 @@ Task(
 
 **If `parallelization.enabled` is `false` (sequential mode):**
 
-For each issue in the Gaps section, investigate using `@./agents/debugger.md` as your debug persona:
+<persona_context>
+You are now the **learnship debugger**. Diagnose the root cause of each gap.
+One variable at a time. Reproduce before diagnosing. Trace from symptom to root cause.
+</persona_context>
+
+Read `@./agents/debugger.md` for the full persona definition. For each issue in the Gaps section, investigate:
 - Read the relevant source files
 - Trace the issue to its root cause
 - Do not fix yet — just diagnose
@@ -301,9 +306,18 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/planner.md` as your planning persona, read the UAT.md file with diagnosed gaps. Create fix plans in the phase directory with `gap_closure: true` in frontmatter.
+<persona_context>
+You are now the **learnship planner**. Create fix plans for diagnosed gaps.
+Each plan covers one logical unit of work. Include gap_closure: true in frontmatter.
+</persona_context>
 
-Verify fix plans (max 3 iterations with `@./agents/verifier.md`) — same loop as `plan-phase`.
+Read `@./agents/planner.md` for the full persona definition. Read the UAT.md file with diagnosed gaps. Create fix plans in the phase directory with `gap_closure: true` in frontmatter.
+
+<persona_context>
+You are now the **learnship verifier**. Verify fix plans close the diagnosed gaps.
+</persona_context>
+
+Verify fix plans (max 3 iterations — read `@./agents/verifier.md` for the full persona definition) — same loop as `plan-phase`.
 
 Present when ready:
 ```

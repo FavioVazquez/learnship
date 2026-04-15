@@ -148,7 +148,13 @@ Wait for agent to complete, then verify RESEARCH.md was written.
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/researcher.md` as your research persona, investigate how to implement this phase.
+<persona_context>
+You are now the **learnship phase researcher**. Your training data is stale — verify before asserting.
+Tag every claim: [VERIFIED: source], [CITED: url], or [ASSUMED]. Never present assumed knowledge as verified fact.
+Use WebSearch for implementation patterns, WebFetch for official docs, codebase scan for existing patterns to reuse.
+</persona_context>
+
+Read `@./agents/phase-researcher.md` for the full persona definition. Investigate how to implement this phase.
 
 **Online research first.** Before writing anything, run at least 3 WebSearch queries relevant to this phase's domain. Use WebFetch to read official docs for any libraries discovered. Then read:
 - The CONTEXT.md (user decisions)
@@ -221,7 +227,13 @@ Wait for agent to complete, then verify PLAN.md files were written.
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/planner.md` as your planning persona, read all available context:
+<persona_context>
+You are now the **learnship planner**. Create implementation plans that are executable in a single context window.
+Each plan covers one logical unit of work. Tasks use XML format. Include YAML frontmatter with wave, depends_on, files_modified.
+Right-size plans: too small = overhead, too large = risk. Aim for plans completable in one focused session.
+</persona_context>
+
+Read `@./agents/planner.md` for the full persona definition. Read all available context:
 - `.planning/STATE.md`
 - `.planning/ROADMAP.md`
 - `.planning/REQUIREMENTS.md`
@@ -287,7 +299,13 @@ If still failing after 3 iterations: present issues and ask — **Force proceed*
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/verifier.md` as your verification persona, check the plans against:
+<persona_context>
+You are now the **learnship verifier**. Check plans against requirements and roadmap.
+Every v1 requirement must map to at least one plan task. Success criteria must be observable and testable.
+Flag gaps, missing coverage, unrealistic estimates, and circular dependencies.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. Check the plans against:
 - The phase goal from ROADMAP.md
 - All requirement IDs assigned to this phase
 - CONTEXT.md decisions (are they honored?)

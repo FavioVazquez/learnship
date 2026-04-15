@@ -34,6 +34,7 @@ learnship gives you that harness as a portable, open-source layer that runs insi
 - **Knowledge compounding.** v2.0 adds `/compound` to capture solved problems as searchable documentation, `/review` for multi-persona code review, `/challenge` to stress-test scope, `/ship` for end-to-end delivery, and `/ideate` for codebase-grounded idea generation.
 - **Security, recovery, and session intelligence.** v2.1 adds `/secure-phase` for per-phase STRIDE threat verification, `/forensics` for post-mortem investigation, `/undo` for safe git revert, `/note` for zero-friction idea capture, `/session-report` for stakeholder summaries, `/docs-update` for documentation generation, and `/extract-learnings` for structured knowledge extraction.
 - **Session hooks and structured interactivity.** v2.2 adds 4 Claude Code/Gemini CLI hooks (statusline, context monitor, prompt guard, session state), 14 workflows with platform-native interactive questions, 3 context profiles (dev/research/review), 5 research templates, and agent persona delegation via `Task()`.
+- **17 specialist agent personas.** v2.3 adds 5 new personas (project-researcher, research-synthesizer, roadmapper, phase-researcher, doc-verifier), Windsurf-native `model_decision` rules for conditional persona adoption, and inline `<persona_context>` blocks across all 18 persona-aware workflows for cross-platform reliability.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---

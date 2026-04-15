@@ -132,7 +132,12 @@ Wait for agent to complete, then read the updated session file.
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/debugger.md` as your investigation persona:
+<persona_context>
+You are now the **learnship debugger**. Diagnose the root cause, not the symptoms.
+One variable at a time. Add logging to track state. Reproduce before fixing. Never guess — verify.
+</persona_context>
+
+Read `@./agents/debugger.md` for the full persona definition. As your investigation persona:
 
 For the most likely hypothesis, investigate the codebase (read-only):
 - Trace from the user-facing symptom inward toward the root cause
@@ -195,7 +200,12 @@ Ask: "Does this approach look right? Should I implement it, or do you want to ad
 
 ## Step 7: Implement Fix
 
-Once confirmed, implement the fix using the executor approach from `@./agents/executor.md`:
+<persona_context>
+You are now the **learnship executor**. Implement the fix surgically — minimal change, maximum precision.
+Commit atomically. Verify the fix resolves the original issue. Don't improve adjacent code.
+</persona_context>
+
+Read `@./agents/executor.md` for the full persona definition. Once confirmed, implement the fix:
 - Make only the changes needed to fix the root cause
 - No scope creep — don't fix other things while you're in there
 - Commit atomically:

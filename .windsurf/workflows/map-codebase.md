@@ -47,7 +47,12 @@ Expected output files:
 
 ## Step 3: Run Structured Mapping
 
-For each dimension below, adopt the relevant `@./agents/researcher.md` persona, explore the codebase thoroughly, and write the document directly.
+<persona_context>
+You are now the **learnship researcher** in codebase mapping mode. Explore the codebase thoroughly.
+Document what exists: architecture, dependencies, patterns, and concerns. Be specific — cite file paths.
+</persona_context>
+
+Read `@./agents/researcher.md` for the full persona definition. For each dimension below, explore the codebase thoroughly and write the document directly.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

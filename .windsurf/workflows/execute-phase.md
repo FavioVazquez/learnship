@@ -196,7 +196,13 @@ Spawn all plans in the wave before waiting. Wait for all agents to complete, the
 
 **If parallelization is disabled (sequential mode — Windsurf, Cursor, Gemini CLI, or user preference):**
 
-For each plan in the wave, using `@./agents/executor.md` as your execution persona:
+<persona_context>
+You are now the **learnship executor**. Implement code from plans, one task at a time.
+Read task files, action, verify, and done fields. Implement exactly what the action describes.
+Commit atomically after each task. Never skip verification. Never modify code outside the task scope.
+</persona_context>
+
+Read `@./agents/executor.md` for the full persona definition. For each plan in the wave:
 
 Read the full plan file. Execute each task in sequence:
 1. Read the task's `<files>`, `<action>`, `<verify>`, and `<done>` fields
@@ -305,7 +311,13 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/verifier.md` as your verification persona, check:
+<persona_context>
+You are now the **learnship verifier**. Check implementation against plan requirements.
+Every must_have from the plan must be met. Success criteria must be observable and testable.
+Flag gaps, missing coverage, and broken tests.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. Check:
 - Do the `must_haves` from each plan's frontmatter match reality in the codebase?
 - Are all requirement IDs for this phase accounted for?
 - Do files exist, have substance, and export what they claim?

@@ -22,7 +22,7 @@ Then install learnship:
 - **Persistent memory** — `AGENTS.md` and `DECISIONS.md` survive across sessions
 - **Learning partner** — neuroscience-backed `agentic-learning` skill
 - **Design system** — 21 `impeccable` commands for production-grade UI quality
-- **10 agent personas** — planner, executor, verifier, debugger, researcher, solution-writer, code-reviewer, challenger, ideation-agent, and more
+- **17 agent personas** — planner, executor, verifier, debugger, researcher, project-researcher, research-synthesizer, phase-researcher, roadmapper, solution-writer, code-reviewer, challenger, ideation-agent, security-auditor, doc-writer, doc-verifier, plan-checker
 
 ## Also available via
 

@@ -61,17 +61,59 @@ No prefix needed, no "use the skill" phrasing required. Just invoke.
 | Slash commands | ✅ Native |
 | `@agentic-learning` skill | ✅ Native `@invoke` |
 | `impeccable` skill suite | ✅ Native `/commands` |
-| Parallel subagents | ❌ Not supported |
+| Parallel subagents | ❌ Not supported (no `Task()`) |
 | Wave execution | Sequential only |
-| Specialist agent pool | ❌ Not supported |
-| Interactive questions | ✅ `ask_user_question` (v2.2) |
+| Agent personas | ✅ 17 `model_decision` rules |
+| Interactive questions | ✅ `ask_user_question` |
 
-!!! note "Parallelization"
-    Windsurf doesn't support real parallel subagents: `execute-phase` always runs plans sequentially. All context engineering, planning, verification, and learning features are fully available.
+## Agent personas via `model_decision` rules
+
+Windsurf doesn't support `Task()` subagent spawning, but it has its own native mechanism for persona adoption: **`model_decision` rules**.
+
+When learnship installs on Windsurf, `install.js` generates 17 rule files in `.windsurf/rules/`:
+
+```
+.windsurf/rules/
+├── learnship-researcher.md
+├── learnship-project-researcher.md
+├── learnship-planner.md
+├── learnship-executor.md
+├── learnship-verifier.md
+├── learnship-debugger.md
+├── learnship-roadmapper.md
+└── ... (17 total)
+```
+
+Each rule has `trigger: model_decision` frontmatter:
+
+```yaml
+---
+trigger: model_decision
+description: "Adopt this rule when acting as the learnship researcher persona — when investigating a domain..."
+---
+```
+
+**How it works:** Cascade always sees the rule descriptions in its system prompt. When a workflow says "You are now the **learnship researcher**", Cascade recognizes the match and reads the full rule automatically — adopting the persona's philosophy, tool strategy, confidence levels, and output format.
+
+This is reinforced by inline `<persona_context>` blocks in every workflow that uses a persona:
+
+```markdown
+<persona_context>
+You are now the **learnship researcher**. Your training data is stale — verify before asserting.
+Use search_web for ecosystem discovery, read_url_content for official docs.
+Tag confidence: HIGH/MEDIUM/LOW.
+</persona_context>
+```
+
+The combination of `model_decision` rules + inline persona instructions gives Windsurf the same persona adoption quality as Claude Code's `Task()` subagents — just through a different mechanism.
+
+!!! note "Sequential execution"
+    Windsurf always runs plans sequentially (no parallel waves). All context engineering, planning, verification, and learning features are fully available. The agent personas ensure the same quality of work whether running in parallel on Claude Code or sequentially on Windsurf.
 
 ## Tips for Cascade
 
 - **Fresh context windows matter.** learnship is designed around fresh context. Start each major workflow (plan-phase, execute-phase) in a new Cascade conversation for best results.
 - **`AGENTS.md` is auto-loaded.** Cascade reads `AGENTS.md` from your project root as a rule: you never need to paste context manually.
+- **Agent personas activate automatically.** When a workflow references a persona, Cascade reads the matching `model_decision` rule from `.windsurf/rules/` — no manual invocation needed.
 - **Skills activate at checkpoints.** When `learning_mode: "auto"`, Cascade will offer `@agentic-learning` actions at the end of each workflow step.
 - **Use `/ls` to orient.** If Cascade seems unsure what to do, run `/ls`: it reads all state files and gives a clear next step.

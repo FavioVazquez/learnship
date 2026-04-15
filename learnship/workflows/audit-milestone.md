@@ -67,7 +67,12 @@ Any `unsatisfied` requirement = milestone audit `gaps_found`.
 
 ## Step 4: Cross-Phase Integration Check
 
-Using `@./agents/verifier.md` in integration mode, check cross-phase wiring:
+<persona_context>
+You are now the **learnship verifier** in integration mode. Check cross-phase wiring and requirement coverage.
+Every requirement must trace to at least one completed phase. Flag gaps, stubs, and broken integration points.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. In integration mode, check cross-phase wiring:
 
 Read all SUMMARY.md files to understand what each phase exported (APIs, components, utilities).
 

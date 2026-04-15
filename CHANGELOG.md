@@ -9,6 +9,31 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.0] — 2026-04-15
+
+### Added
+
+- **5 new agent personas** — `project-researcher` (domain ecosystem research for `/new-project`), `research-synthesizer` (synthesizes 4 research files into SUMMARY.md), `roadmapper` (creates phased roadmaps from requirements), `phase-researcher` (focused research for `/plan-phase` and `/research-phase`), `doc-verifier` (verifies docs match live codebase). Total agent pool: 17 specialist personas.
+- **Windsurf `model_decision` rules** — Agent personas installed as `.windsurf/rules/learnship-{name}.md` with `trigger: model_decision` frontmatter. Cascade sees rule descriptions in system prompt and reads the full persona when context matches — the native equivalent of Claude Code's `Task()` subagent spawning.
+- **`installWindsurfAgentRules` function** in `install.js` — converts published agent `.md` files into Windsurf `model_decision` rules, stripping original frontmatter and adding Windsurf-specific frontmatter with descriptions from `WINDSURF_RULE_DESCRIPTIONS` map.
+- **Inline `<persona_context>` blocks** — All 18 workflows that reference agent personas now include inline persona instructions directly in the workflow text. Works on every platform without special tools. Belt-and-suspenders with `@./agents/` file references and platform-native mechanisms.
+- **Codex sandbox map** — All 17 agent personas have per-agent sandbox modes in `CODEX_AGENT_SANDBOX_MAP` (`read-only` for checkers/auditors, `workspace-write` for executors/planners).
+- **Published agents synced** — `agents/` directory contains all 17 agents with GSD-style frontmatter (`name:`, `description:`, `tools:`, `color:`) in sync with source `learnship/agents/`.
+
+### Changed
+
+- **Platform comparison table** — README and all 6 platform guide docs updated: "Specialist agent pool" → "Agent personas (17)" with mechanism per platform (`model_decision` rules for Windsurf, `Task()` subagents for Claude Code/OpenCode/Gemini/Codex, inline `<persona_context>` for Cursor).
+- **Regenerated images** — `install.png` (now shows "17 agent personas"), `platform-comparison.png` (now shows Agent personas row with per-platform mechanism). Removed `v21-overview.png` and `v22-overview.png` — no per-version overview images.
+- **`CONTRIBUTING.md` rewritten** — Updated repo structure, agent persona two-location format (source + published), 6-step checklist for adding new personas, automated testing section, cross-platform philosophy.
+- **`.npmignore` updated** — Added `.windsurf/`, `AGENTS.md`, `CODE_OF_CONDUCT.md`, `PRIVACY.md`, `CONTRIBUTING.md`, `requirements.txt` exclusions.
+- **`package.json`** — Removed `install.sh` from `files` array (legacy Windsurf-only wrapper, not needed in npm package). Updated description to mention 17 agent personas.
+- **Plugin manifest descriptions** — `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `gemini-extension.json` all updated to mention "17 specialist agent personas".
+- **`install.sh` annotated as legacy** — Header comment clarifies `bin/install.js` is the primary installer for all 6 platforms.
+- **Documentation audit** — All agent counts (12→17), test counts (various→511+), platform tables, and stale references updated across README, docs index, all 6 platform guides, contributing, marketplace, workflow-reference, and AGENTS.md.
+- **Test suite expanded** — 511+ checks across 5 suites covering new agents, Windsurf rules, persona_context blocks, Codex sandbox map, and platform transformations.
+
+---
+
 ## [v2.2.2] — 2026-04-15
 
 ### Fixed

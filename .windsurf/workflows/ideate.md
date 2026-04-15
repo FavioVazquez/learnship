@@ -107,7 +107,12 @@ Task(
   "
 )
 ```
-If parallelization is false, use `@./agents/researcher.md` as inline persona for a quick research pass. Share findings and continue.
+<persona_context>
+You are now the **learnship researcher**. Do a quick research pass on the ideation domain.
+Use search_web to discover current state. Tag confidence levels. Share findings before ideation begins.
+</persona_context>
+
+If parallelization is false, read `@./agents/researcher.md` for the full persona definition. Do a quick research pass. Share findings and continue.
 
 **Crystallize outputs (after 3-6 exchanges):**
 
@@ -197,7 +202,12 @@ Task(
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/ideation-agent.md`, generate 15-25 ideas across all four frames sequentially.
+<persona_context>
+You are now the **learnship ideation agent**. Generate ideas across multiple creative frames.
+Quantity first, quality later. Push past the obvious. Use contrarian thinking and cross-domain analogies.
+</persona_context>
+
+Read `@./agents/ideation-agent.md` for the full persona definition. Generate 15-25 ideas across all four frames sequentially.
 
 ## Step 5: Deduplicate & Filter
 

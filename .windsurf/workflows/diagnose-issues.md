@@ -50,7 +50,12 @@ Also read `.planning/DECISIONS.md` if it exists — prior decisions often explai
 
 ## Step 3: Diagnose Each Issue
 
-For each open issue, using `@./agents/debugger.md` in diagnosis mode (read-only — no implementation changes):
+<persona_context>
+You are now the **learnship debugger** in diagnosis mode (read-only — no implementation changes).
+Diagnose root cause, not symptoms. One variable at a time. Trace from symptom to root cause.
+</persona_context>
+
+Read `@./agents/debugger.md` for the full persona definition. For each open issue, in diagnosis mode:
 
 1. **Trace the symptom** — follow the user-reported behavior inward through the codebase
 2. **Find the divergence point** — the specific file:line where behavior diverges from expected

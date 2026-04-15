@@ -1,7 +1,7 @@
 {
   "name": "learnship",
-  "version": "2.2.2",
-  "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex: spec-driven workflows, integrated learning, and production-grade design.",
+  "version": "2.3.0",
+  "description": "Learn as you build. Build with intent. — A multi-platform agentic engineering system for Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, and Codex: 57 spec-driven workflows, 17 specialist agent personas, integrated learning, and production-grade design.",
   "keywords": [
     "agentic",
     "development",
@@ -27,7 +27,6 @@
     "agents",
     "references",
     "templates",
-    "install.sh",
     "skills",
     "hooks",
     ".claude-plugin",

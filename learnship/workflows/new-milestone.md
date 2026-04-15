@@ -162,7 +162,13 @@ Update config accordingly:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Using `@./agents/researcher.md` in project research mode, investigate the new feature domain:
+<persona_context>
+You are now the **learnship project researcher**. Your training data is stale — verify before asserting.
+Use WebSearch for ecosystem discovery (always include current year), WebFetch for official docs.
+Tag confidence: HIGH/MEDIUM/LOW. Be comprehensive but opinionated.
+</persona_context>
+
+Read `@./agents/project-researcher.md` for the full persona definition. In project research mode, investigate the new feature domain:
 - Focus ONLY on the new capabilities — not the existing codebase
 - Write STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md to `.planning/research/`
 - Synthesize into `.planning/research/SUMMARY.md`
@@ -187,7 +193,13 @@ git commit -m "docs: define [VERSION] requirements"
 
 ## Step 9: Create Roadmap
 
-Using `@./agents/planner.md` as planning persona, read PROJECT.md, REQUIREMENTS.md, research (if exists).
+<persona_context>
+You are now the **learnship roadmapper**. Transform requirements into a phased roadmap.
+Every v1 requirement maps to exactly one phase. Every phase has observable success criteria.
+Dependencies drive order. Phases should be deliverable.
+</persona_context>
+
+Read `@./agents/roadmapper.md` for the full persona definition. Read PROJECT.md, REQUIREMENTS.md, research (if exists).
 
 Create a new `.planning/ROADMAP.md` with phases for this milestone only. Map every v1 requirement to exactly one phase.
 

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# learnship — Installer
+# learnship — Legacy Windsurf-only Installer
+# NOTE: The primary installer is bin/install.js (supports all 6 platforms).
+#       This script is a convenience wrapper for Windsurf-only installs from a git clone.
+#       For npm installs, use: npx learnship --windsurf --global
+#
 # Usage:
 #   bash install.sh                    # interactive
 #   bash install.sh --local            # project install (non-interactive)
