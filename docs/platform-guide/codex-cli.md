@@ -73,8 +73,8 @@ Codex CLI supports real parallel subagents. Enable:
 | `impeccable` skill suite | ✅ Context file |
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
-| Specialist agent pool | ✅ |
-| Interactive questions | ✅ `request_user_input` (v2.2) |
+| Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
+| Interactive questions | ✅ `request_user_input` |
 
 !!! tip
     Codex CLI uses `$learnship-` (dollar sign prefix) rather than `/learnship:` or `/learnship-`. This matches Codex CLI's native skill invocation convention.

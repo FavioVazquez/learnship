@@ -78,13 +78,20 @@ Claude Code supports real parallel subagents. Enable in your project:
 ```
 
 When enabled:
-- `plan-phase` spawns three dedicated subagents (researcher, planner, plan-checker) each with a fresh 200k context budget
+- `new-project` spawns a project-researcher for domain research, then a roadmapper for phase planning
+- `plan-phase` spawns three dedicated subagents (phase-researcher, planner, plan-checker) each with a fresh 200k context budget
 - `execute-phase` dispatches each independent plan to its own executor agent: plans in the same wave run in parallel
 - `debug` spawns a dedicated debugger subagent for deep root-cause investigation
-- `review` spawns a code-reviewer subagent through 6 review lenses (v2.0)
-- `challenge` spawns a challenger subagent for scope stress-testing (v2.0)
-- `compound` spawns a solution-writer subagent to capture knowledge (v2.0)
-- `ideate` spawns an ideation-agent for codebase-grounded idea generation (v2.0)
+- `review` spawns a code-reviewer subagent through 6 review lenses
+- `challenge` spawns a challenger subagent for scope stress-testing
+- `compound` spawns a solution-writer subagent to capture knowledge
+- `ideate` spawns an ideation-agent for codebase-grounded idea generation
+- `secure-phase` spawns a security-auditor for STRIDE verification
+- `verify-work` spawns debugger, planner, and verifier subagents for UAT diagnosis
+- `validate-phase` spawns a verifier subagent for retroactive test coverage
+- `docs-update` spawns a doc-writer and doc-verifier for documentation generation
+
+All 17 agent personas have inline `<persona_context>` blocks as sequential fallback when parallelization is disabled.
 
 ## Session hooks (v2.2)
 
@@ -112,9 +119,9 @@ Hooks are installed to `~/.claude/settings.json` automatically. No configuration
 | `/impeccable` skill suite | ✅ Native skill, all 21 actions inlined |
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
-| Specialist agent pool | ✅ |
-| Session hooks | ✅ 4 hooks (v2.2) |
-| Interactive questions | ✅ `AskUserQuestion` (v2.2) |
+| Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
+| Session hooks | ✅ 4 hooks |
+| Interactive questions | ✅ `AskUserQuestion` |
 
 ## Tips
 

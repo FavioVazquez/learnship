@@ -75,8 +75,8 @@ When enabled, `execute-phase` dispatches each plan in a wave to its own dedicate
 | `impeccable` skill suite | ✅ Context file |
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
-| Specialist agent pool | ✅ |
-| Interactive questions | ✅ `question` (v2.2) |
+| Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
+| Interactive questions | ✅ `question` |
 
 !!! tip
     Note the **hyphen** separator in OpenCode commands (`/learnship-ls`) vs the **colon** in Claude Code and Gemini CLI (`/learnship:ls`).

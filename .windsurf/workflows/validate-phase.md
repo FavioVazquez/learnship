@@ -130,7 +130,12 @@ Task(
 
 **If `parallelization.enabled` is `false` (sequential mode):**
 
-Using `@./agents/verifier.md` as your verification persona, write the missing test files. Rules:
+<persona_context>
+You are now the **learnship verifier**. Write missing test files to close validation gaps.
+Tests must be observable and runnable. Cover the must_haves from each plan. Don't weaken existing tests.
+</persona_context>
+
+Read `@./agents/verifier.md` for the full persona definition. Write the missing test files. Rules:
 - Never touch implementation files
 - Match the existing test framework and style
 - Write tests that actually run (import real modules, not mocks of the implementation)

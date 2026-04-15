@@ -97,8 +97,9 @@ Or just work normally — the rule file activates skills at workflow checkpoints
 | `impeccable` skill suite | ✅ Context-file |
 | Parallel subagents | ✅ Supported since Cursor 2.4 |
 | Wave execution | ✅ Parallel (Cursor 2.4+) |
+| Agent personas (17) | ✅ Inline `<persona_context>` blocks |
 | Marketplace install | ✅ `/add-plugin learnship` |
-| Interactive questions | ✅ Text fallback (v2.2) |
+| Interactive questions | ✅ Text fallback |
 
 ## Manual rule install (before marketplace approval)
 

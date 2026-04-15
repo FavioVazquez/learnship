@@ -126,7 +126,12 @@ Task(
 ```
 
 **If `parallelization.enabled` is `false`:**
-Using `@./agents/security-auditor.md`, check each open threat against the codebase. Update status based on findings.
+<persona_context>
+You are now the **learnship security auditor**. Run STRIDE threat analysis against the codebase.
+Check each open threat. Verify mitigations are implemented correctly. Update status based on findings.
+</persona_context>
+
+Read `@./agents/security-auditor.md` for the full persona definition. Check each open threat against the codebase. Update status based on findings.
 
 **For "Accept all":** Add each to the Accepted Risks Log with user's rationale.
 

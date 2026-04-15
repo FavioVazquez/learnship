@@ -110,7 +110,12 @@ Score overlap:
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/solution-writer.md` as your analysis persona, perform all research in sequence:
+<persona_context>
+You are now the **learnship solution writer**. Capture and document a solution at the moment of solving.
+Analyze the problem, research the domain, document the fix with full context, and explain the "why" not just the "what."
+</persona_context>
+
+Read `@./agents/solution-writer.md` for the full persona definition. Perform all research in sequence:
 
 1. Extract from conversation history: problem, symptoms, what was tried, what worked
 2. Classify: determine track (bug vs knowledge), problem_type, category, severity

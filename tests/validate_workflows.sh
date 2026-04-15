@@ -31,7 +31,7 @@ if [ ! -d "$WORKFLOWS_DIR" ]; then
   exit 1
 fi
 
-WORKFLOW_COUNT=$(find "$WORKFLOWS_DIR" -name "*.md" | wc -l | tr -d ' ')
+WORKFLOW_COUNT=$(find "$WORKFLOWS_DIR" -maxdepth 1 -name "*.md" | wc -l | tr -d ' ')
 echo "  Found $WORKFLOW_COUNT workflow files"
 echo ""
 
@@ -55,7 +55,7 @@ while IFS= read -r -d '' file; do
     MISSING_DESCRIPTION=$((MISSING_DESCRIPTION+1))
   fi
 
-done < <(find "$WORKFLOWS_DIR" -name "*.md" -print0)
+done < <(find "$WORKFLOWS_DIR" -maxdepth 1 -name "*.md" -print0)
 
 check "All workflows have YAML frontmatter" "$MISSING_FRONTMATTER"
 check "All workflows have description field" "$MISSING_DESCRIPTION"

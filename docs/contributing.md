@@ -16,14 +16,14 @@ learnship/
 ├── .windsurf/workflows/    # 57 workflows as slash commands (source of truth)
 ├── learnship/workflows/    # installed payload: must stay in sync with .windsurf/
 ├── .windsurf/skills/       # agentic-learning + impeccable native skills
-├── agents/                 # 12 agent persona files (source of truth)
+├── agents/                 # 17 agent persona files (source of truth)
 ├── learnship/agents/       # installed agent payload: must stay in sync with agents/
 ├── learnship/skills/       # installed skills payload (agentic-learning + impeccable)
 ├── commands/               # Claude Code-style slash command wrappers
 ├── learnship/references/   # reference docs loaded by workflows
 ├── learnship/templates/    # document templates for .planning/ + AGENTS.md
 ├── tests/
-│   └── validate_multiplatform.sh  # full test suite (313+ checks)
+│   └── validate_multiplatform.sh  # full test suite (511+ checks, 5 suites)
 ├── docs/                   # this documentation site (MkDocs)
 ├── bin/install.js          # multi-platform installer
 └── install.sh              # shell installer wrapper
@@ -137,7 +137,7 @@ The suite has 5 sections covering:
 - Learning Checkpoint coverage
 - Documentation site integrity
 
-313+ checks. All must pass before merging.
+511+ checks across 5 suites. All must pass before merging.
 
 ---
 

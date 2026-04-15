@@ -173,7 +173,7 @@ Each platform gets the best experience it supports:
 | Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
 | Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
 | Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
-| Specialist agent pool | — | ✓ | ✓ | ✓ | ✓ |
+| Agent personas (17) | `model_decision` rules | `Task()` subagents | `Task()` subagents | `Task()` subagents | `Task()` subagents |
 | Interactive questions | `ask_user_question` | `AskUserQuestion` | `question` | `ask_user` | `request_user_input` |
 | Session hooks | — | ✓ | — | ✓ | — |
 | Skills (native `@invoke`) | ✓ | — | — | — | — |
@@ -252,9 +252,21 @@ It's probably overkill for one-off scripts. Use `/quick` for that.
 
 ## 🆕 What's New
 
-### What's new in v2.2
+### What's new in v2.3
 
-![v2.2 overview](assets/v22-overview.png)
+v2.3 adds 5 new agent personas, Windsurf-native persona adoption via `model_decision` rules, and inline `<persona_context>` blocks across all 18 persona-aware workflows:
+
+**5 new agent personas**: `project-researcher` (domain ecosystem research for `/new-project`), `research-synthesizer` (synthesizes 4 research files into SUMMARY.md), `roadmapper` (creates phased roadmaps from requirements), `phase-researcher` (focused research for `/plan-phase` and `/research-phase`), `doc-verifier` (verifies docs match live code). Total agent pool: 17 specialist personas.
+
+**Windsurf `model_decision` rules**: Agent personas are now installed as `.windsurf/rules/learnship-{name}.md` with `trigger: model_decision` frontmatter. Windsurf's Cascade sees the rule description in every system prompt and reads the full persona when context is relevant — the native equivalent of Claude Code's subagent spawning.
+
+**Inline `<persona_context>` blocks**: All 18 workflows that reference agent personas now include inline persona instructions directly in the workflow text. This works on every platform — no special tool needed. Belt-and-suspenders with `@./agents/` file references and platform-native mechanisms.
+
+**Codex sandbox map**: All 17 agent personas now have per-agent sandbox modes (`read-only` for checkers/auditors, `workspace-write` for executors/planners).
+
+**Published agents synced**: The `agents/` directory now contains all 17 agents with proper frontmatter (`name:`, `description:`, `tools:`, `color:`) — in sync with the source `learnship/agents/` directory.
+
+### What's new in v2.2
 
 v2.2 adds session intelligence, structured interactivity, and research templates:
 
@@ -264,15 +276,13 @@ v2.2 adds session intelligence, structured interactivity, and research templates
 
 **Interactive questions**: 14 workflows present decisions via your platform's native structured question tool — clickable cards on Claude Code, dropdowns on Windsurf, etc. `install.js` rewrites the tool name per platform automatically.
 
-**Agent persona delegation**: 6 workflows spawn dedicated agents via `Task()` when parallelization is enabled, with `@./agents/` sequential fallback on all platforms.
+**Agent persona delegation**: 18 workflows use inline `<persona_context>` blocks and `@./agents/` references for sequential persona adoption, with `Task()` subagent spawning when parallelization is enabled.
 
 **Research templates**: 5 structured fill-in-the-blanks templates (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) that prevent the AI from skipping file writes.
 
 **Upgrade safety**: SHA-256 file manifest after every install. Locally modified files detected and backed up before overwriting. Run `/reapply-patches` to restore customizations.
 
 ### What's new in v2.1
-
-![v2.1 overview](assets/v21-overview.png)
 
 v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
 
@@ -865,6 +875,7 @@ Run `/audit-milestone` to surface all gaps, then `/plan-milestone-gaps` to creat
 learnship/
 ├── .windsurf/
 │   ├── workflows/          # 57 workflows as slash commands
+│   ├── rules/              # 17 model_decision rules (agent personas for Windsurf)
 │   └── skills/
 │       ├── agentic-learning/   # Learning partner (SKILL.md + references), native on Windsurf + Claude Code
 │       └── impeccable/         # Design suite: 21 skills, native on Windsurf + Claude Code
@@ -880,12 +891,12 @@ learnship/
 │   ├── workflows/          # 57 workflow markdown files (the actual instructions)
 │   ├── references/         # Reference docs (questioning, verification, git, design, learning)
 │   └── templates/          # Document templates for .planning/ + AGENTS.md template
-├── agents/                 # 12 agent personas (planner, researcher, executor, verifier, debugger, plan-checker, solution-writer, code-reviewer, challenger, ideation-agent, security-auditor, doc-writer)
+├── agents/                 # 17 agent personas (planner, researcher, project-researcher, research-synthesizer, phase-researcher, roadmapper, executor, verifier, debugger, plan-checker, solution-writer, code-reviewer, challenger, ideation-agent, security-auditor, doc-writer, doc-verifier)
 ├── assets/                 # Brand images (banner, explainers, diagrams)
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
 ├── tests/
-│   └── validate_multiplatform.sh  # 94-check test suite
+│   └── validate_multiplatform.sh  # 511+ check test suite (5 suites, 6 platforms)
 ├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
 ├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)

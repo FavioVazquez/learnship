@@ -7,15 +7,24 @@ How to extend learnship — add new workflows, update agent personas, add templa
 ## Repository Structure
 
 ```
-.windsurf/
-├── workflows/          # slash commands — one file per workflow
-└── skills/
-    ├── agentic-learning/   # Learning partner skill
-    └── frontend-design/    # Design system skill
+learnship/
+├── workflows/          # 57 source workflow files (the actual instructions)
+├── agents/             # 17 source agent personas (inline format, no frontmatter)
+├── references/         # Reference docs loaded by workflows
+├── templates/          # Document templates for .planning/ artifacts
+└── skills/             # Skills payload (agentic-learning + impeccable)
 
-agents/                 # Agent persona files
-references/             # Reference documents
-templates/              # Document templates for .planning/ artifacts
+agents/                 # 17 published agent personas (with GSD-style frontmatter)
+.windsurf/
+├── workflows/          # Synced copy for Windsurf (with tool name conversions)
+├── rules/              # 17 model_decision rules (agent personas for Windsurf)
+└── skills/             # Native skills for Windsurf
+
+commands/               # 57 Claude Code slash command wrappers
+bin/install.js          # Multi-platform installer (6 platforms)
+cursor-rules/           # Cursor .mdc rules
+hooks/                  # Session hooks (Claude Code + Gemini CLI)
+tests/                  # 511+ checks across 5 test suites
 ```
 
 ---
@@ -86,18 +95,30 @@ Read `learning_mode` from `.planning/config.json`.
 
 - **No binary calls** — use bash and git commands directly, never external binaries.
 - **Relative paths only** — reference platform files as `@./agents/planner.md`, not absolute paths.
-- **No `AskUserQuestion` tool** — use plain prose to ask questions. The agent handles the conversation.
-- **No `Task()` spawning syntax** — describe parallel work as "run these agents in parallel" in prose.
+- **Platform-native tool names** — use `AskUserQuestion` for interactive questions (install.js rewrites per platform). Use `Task()` for parallel subagent spawning. Both require parallelization checks.
+- **Inline `<persona_context>` blocks** — every workflow that references an agent persona must include a `<persona_context>` block with core behavior instructions inline, so it works on all platforms.
 - **Learning checkpoints** — include at natural completion points where reflection adds value.
 
 ### 5. Agent persona reference
 
-Workflows that adopt a specific role should reference the relevant persona:
+Workflows that adopt a specific role use three layers:
 
 ```markdown
-Using `@./agents/planner.md` as your planning persona, create...
-Using `@./agents/researcher.md` in phase research mode, investigate...
+<!-- Layer 1: Inline persona context (works everywhere) -->
+<persona_context>
+You are now the **learnship researcher**. Your training data is stale — verify before asserting.
+Use WebSearch for ecosystem discovery, WebFetch for official docs.
+Tag confidence: HIGH/MEDIUM/LOW.
+</persona_context>
+
+<!-- Layer 2: File reference (Claude Code, OpenCode, etc.) -->
+Read `@./agents/researcher.md` for the full persona definition.
+
+<!-- Layer 3: Parallel path (platforms with Task() support) -->
+If parallelization enabled: spawn dedicated researcher subagent via Task().
 ```
+
+On Windsurf, `model_decision` rules in `.windsurf/rules/` provide native persona adoption — Cascade reads the matching rule when it encounters the persona name.
 
 ### 6. bash command style
 
@@ -118,9 +139,12 @@ git commit -m "docs: update state"
 
 ## Adding an Agent Persona
 
-Agent personas live in `agents/`. Each is a Markdown file that defines a role's responsibilities, inputs, outputs, and quality standards.
+Agent personas exist in **two locations** that must stay in sync:
 
-### Structure
+1. **`learnship/agents/[role].md`** — source inline persona (no frontmatter). Used as `@./agents/` references in workflows.
+2. **`agents/learnship-[role].md`** — published agent with GSD-style frontmatter (`name:`, `description:`, `tools:`, `color:`). Used by `install.js` for platform-specific installation.
+
+### Source persona structure (`learnship/agents/`)
 
 ```markdown
 # [Role] Agent
@@ -144,11 +168,38 @@ You are the [role]. Your job is to [core responsibility in one sentence].
 [What the output looks like, quality gates]
 ```
 
+### Published persona structure (`agents/`)
+
+```markdown
+---
+name: learnship-[role]
+description: [One sentence for platform dispatch and Windsurf rule descriptions]
+tools: Read, Bash, Glob, Grep
+color: [blue|green|purple|orange|red]
+---
+
+<role>
+[Full persona content — same as source but wrapped in <role> tags]
+</role>
+```
+
 ### Naming
 
-`agents/[role].md` — lowercase, single word or hyphenated.
+- Source: `learnship/agents/[role].md` — lowercase, hyphenated
+- Published: `agents/learnship-[role].md` — prefixed with `learnship-`
 
-Current personas: `planner.md`, `researcher.md`, `executor.md`, `verifier.md`, `debugger.md`.
+### After adding a new persona
+
+1. Create both source and published versions
+2. Add a `<persona_context>` block to every workflow that uses the persona
+3. Add the persona to `WINDSURF_RULE_DESCRIPTIONS` in `bin/install.js`
+4. Add a Codex sandbox entry in `CODEX_AGENT_SANDBOX_MAP` in `bin/install.js`
+5. Sync `.windsurf/rules/` and `.windsurf/workflows/` by running the install
+6. Update tests in `tests/validate_multiplatform.sh`
+
+### Current personas (17)
+
+`planner`, `researcher`, `project-researcher`, `research-synthesizer`, `phase-researcher`, `roadmapper`, `executor`, `verifier`, `debugger`, `plan-checker`, `solution-writer`, `code-reviewer`, `challenger`, `ideation-agent`, `security-auditor`, `doc-writer`, `doc-verifier`.
 
 ---
 
@@ -210,18 +261,29 @@ To update a skill:
 
 ---
 
-## Testing a Workflow
+## Testing
 
-To test a workflow:
+### Manual testing
 
-1. Install locally: `npx . --windsurf --local` (or `--claude`, `--opencode`, etc.)
+1. Install locally: `npx . --windsurf --local` (or `--claude`, `--opencode`, `--gemini`, `--codex`)
 2. Open a test project in your target platform
 3. Run `/your-workflow` (Windsurf) or the equivalent command
 4. Walk through all steps, including error paths
 5. Verify bash commands produce expected output
 6. Verify the learning checkpoint fires correctly when `learning_mode: "auto"`
 
----
+### Automated testing
+
+```bash
+bash tests/run_all.sh
+```
+
+511+ checks across 5 suites. All must pass before merging. The suite validates:
+- Workflow content integrity and frontmatter
+- Cross-platform install.js output for all 6 platforms
+- Cursor .mdc rules correctness
+- SKILL.md enforcement content
+- Session-start hooks and agent persona coverage
 
 ---
 
@@ -243,8 +305,10 @@ chore: update CHANGELOG for v[X.Y]
 
 Keep these principles when contributing:
 
-- **Platform-native** — workflows should feel natural in the target agent, not like ported scripts
+- **Platform-native** — workflows should feel natural in the target agent, not like ported scripts. install.js handles tool name rewriting per platform automatically.
+- **Cross-platform by default** — use inline `<persona_context>` blocks so persona adoption works on all 6 platforms, even those without `Task()` or `model_decision` rules.
 - **Learning-integrated** — any significant workflow should have a learning checkpoint
 - **Minimal prose** — workflow steps should be clear and scannable, not essays
 - **Goal-backward** — every step should serve the workflow's stated goal
 - **Atomic commits** — one logical change per commit
+- **Test before merge** — `bash tests/run_all.sh` must pass with 0 failures

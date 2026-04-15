@@ -34,7 +34,6 @@ const LEARNSHIP_CODEX_MARKER = '# learnship Agent Configuration — managed by l
 const CODEX_AGENT_SANDBOX = {
   'learnship-executor':          'workspace-write',
   'learnship-planner':           'workspace-write',
-  'learnship-phase-researcher':  'workspace-write',
   'learnship-verifier':          'workspace-write',
   'learnship-debugger':          'workspace-write',
   'learnship-plan-checker':      'read-only',
@@ -44,6 +43,11 @@ const CODEX_AGENT_SANDBOX = {
   'learnship-ideation-agent':    'read-only',
   'learnship-security-auditor':  'read-only',
   'learnship-doc-writer':        'workspace-write',
+  'learnship-project-researcher': 'workspace-write',
+  'learnship-research-synthesizer': 'workspace-write',
+  'learnship-roadmapper':         'workspace-write',
+  'learnship-phase-researcher':   'workspace-write',
+  'learnship-doc-verifier':       'read-only',
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────
@@ -1020,6 +1024,54 @@ function installAgents(agentsSrcDir, targetDir, pathPrefix, platform) {
   return count;
 }
 
+// Windsurf model_decision rule descriptions — maps agent name to activation description
+const WINDSURF_RULE_DESCRIPTIONS = {
+  'learnship-researcher':          'Adopt this rule when acting as the learnship researcher persona — when investigating a domain, doing web research, or writing research files.',
+  'learnship-project-researcher':  'Adopt this rule when acting as the learnship project researcher persona — when doing domain research for /new-project, writing the 5 research files (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md).',
+  'learnship-research-synthesizer':'Adopt this rule when acting as the learnship research synthesizer persona — when synthesizing 4 research files into SUMMARY.md after project research completes.',
+  'learnship-phase-researcher':    'Adopt this rule when acting as the learnship phase researcher persona — when researching how to implement a specific phase, writing RESEARCH.md for /plan-phase or /research-phase.',
+  'learnship-roadmapper':          'Adopt this rule when acting as the learnship roadmapper persona — when creating or updating a project roadmap, mapping requirements to phases.',
+  'learnship-planner':             'Adopt this rule when acting as the learnship planner persona — when creating implementation plans for a phase, writing PLAN.md files.',
+  'learnship-executor':            'Adopt this rule when acting as the learnship executor persona — when implementing code from a plan, executing tasks step by step.',
+  'learnship-verifier':            'Adopt this rule when acting as the learnship verifier persona — when verifying plans against requirements, checking test coverage, or validating phase completion.',
+  'learnship-debugger':            'Adopt this rule when acting as the learnship debugger persona — when diagnosing bugs, investigating root causes, or running debug workflows.',
+  'learnship-challenger':          'Adopt this rule when acting as the learnship challenger persona — when running /challenge to stress-test a project idea with forcing questions.',
+  'learnship-code-reviewer':       'Adopt this rule when acting as the learnship code reviewer persona — when reviewing code for correctness, testing, security, performance.',
+  'learnship-security-auditor':    'Adopt this rule when acting as the learnship security auditor persona — when running STRIDE threat analysis or security verification.',
+  'learnship-ideation-agent':      'Adopt this rule when acting as the learnship ideation agent persona — when generating ideas across multiple creative frames.',
+  'learnship-solution-writer':     'Adopt this rule when acting as the learnship solution writer persona — when capturing and documenting a solution at the moment of solving.',
+  'learnship-plan-checker':        'Adopt this rule when acting as the learnship plan checker persona — when validating plan quality, checking for missing steps or unrealistic estimates.',
+  'learnship-doc-writer':          'Adopt this rule when acting as the learnship doc writer persona — when generating or updating project documentation.',
+  'learnship-doc-verifier':        'Adopt this rule when acting as the learnship doc verifier persona — when verifying documentation matches live code, catching stale docs.',
+};
+
+/**
+ * Install agent personas as Windsurf model_decision rules.
+ * Converts agent .md files to .windsurf/rules/learnship-{name}.md with trigger: model_decision frontmatter.
+ * This is Windsurf's native mechanism for conditional persona adoption.
+ */
+function installWindsurfAgentRules(agentsSrcDir, targetDir, pathPrefix) {
+  const rulesDir = path.join(targetDir, 'rules');
+  fs.mkdirSync(rulesDir, { recursive: true });
+  // Remove stale learnship agent rule files before re-installing
+  for (const f of fs.readdirSync(rulesDir)) {
+    if (f.startsWith('learnship-') && f.endsWith('.md')) fs.unlinkSync(path.join(rulesDir, f));
+  }
+  let count = 0;
+  for (const f of fs.readdirSync(agentsSrcDir)) {
+    if (!f.startsWith('learnship-') || !f.endsWith('.md')) continue;
+    let content = fs.readFileSync(path.join(agentsSrcDir, f), 'utf8');
+    content = replacePaths(content, pathPrefix, 'windsurf');
+    const name = f.replace('.md', '');
+    const description = WINDSURF_RULE_DESCRIPTIONS[name] || `Adopt this rule when acting as the ${name} persona.`;
+    // Build model_decision rule with frontmatter
+    const rule = `---\ntrigger: model_decision\ndescription: "${description}"\n---\n\n${content}`;
+    fs.writeFileSync(path.join(rulesDir, f), rule);
+    count++;
+  }
+  return count;
+}
+
 /**
  * Parse JSONC (JSON with Comments) by stripping comments and trailing commas.
  * OpenCode supports JSONC so users may have // comments in opencode.json.
@@ -1466,6 +1518,12 @@ function install(platform, isGlobal) {
       }
     }
     console.log(`  ${green}✓${reset} Installed ${count} workflows to workflows/`);
+    // 3b. Install agent personas as Windsurf model_decision rules
+    // This is Windsurf's native mechanism for conditional persona adoption.
+    // The model sees rule descriptions in the system prompt and reads the full rule
+    // when context is relevant (e.g. a workflow says "adopt the researcher persona").
+    const ruleCount = installWindsurfAgentRules(agentsSrc, targetDir, pathPrefix);
+    if (ruleCount > 0) console.log(`  ${green}✓${reset} Installed ${ruleCount} agent persona rules to rules/`);
   } else if (platform === 'claude') {
     // Remove legacy workflows/ dir left by pre-1.9.0 installs — it shadows learnship/workflows/
     // and causes commands to read stale files (e.g. showing "Windsurf-native" text on Claude Code)

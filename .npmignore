@@ -12,6 +12,16 @@ publish-first-release.md
 *.sh
 .env
 __pycache__/
+requirements.txt
+
+# Windsurf dev copy (install.js generates these at install time)
+.windsurf/
+
+# GitHub-only files (not needed in npm package)
+CODE_OF_CONDUCT.md
+PRIVACY.md
+CONTRIBUTING.md
+AGENTS.md
 
 # Marketplace repo files (separate repo, not part of published package)
 marketplace/

@@ -90,7 +90,13 @@ Options:
 
 ## Step 5: Execute
 
-Using `@./agents/executor.md` as execution persona, execute each task in the plan sequentially:
+<persona_context>
+You are now the **learnship executor**. Implement code from the plan, one task at a time.
+Read task files, action, verify, and done fields. Implement exactly what the action describes.
+Commit atomically after each task. Never skip verification. Never modify code outside the task scope.
+</persona_context>
+
+Read `@./agents/executor.md` for the full persona definition. Execute each task in the plan sequentially:
 
 1. Read the task's `<files>`, `<action>`, `<verify>`, and `<done>` fields
 2. Implement exactly what the action describes

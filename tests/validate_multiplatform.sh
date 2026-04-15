@@ -303,7 +303,7 @@ else
   fail "learnship/agents/ directory missing — @./agents/ references in ceremony workflows will silently fail"
 fi
 
-for PERSONA in researcher planner executor verifier debugger solution-writer code-reviewer challenger ideation-agent; do
+for PERSONA in researcher planner executor verifier debugger solution-writer code-reviewer challenger ideation-agent project-researcher research-synthesizer roadmapper phase-researcher doc-verifier; do
   if [ -f "$AGENTS_DIR/$PERSONA.md" ]; then
     ok "learnship/agents/$PERSONA.md exists"
   else
@@ -512,6 +512,13 @@ REQUIRED_AGENTS=(
   "learnship-code-reviewer.md"
   "learnship-challenger.md"
   "learnship-ideation-agent.md"
+  "learnship-project-researcher.md"
+  "learnship-research-synthesizer.md"
+  "learnship-roadmapper.md"
+  "learnship-doc-verifier.md"
+  "learnship-doc-writer.md"
+  "learnship-researcher.md"
+  "learnship-security-auditor.md"
 )
 
 for agent in "${REQUIRED_AGENTS[@]}"; do
@@ -557,6 +564,129 @@ if grep -q "root cause" "$REPO/agents/learnship-debugger.md" 2>/dev/null; then
 else
   fail "learnship-debugger.md missing root cause investigation"
 fi
+
+# ── Windsurf model_decision rules ─────────────────────────────────────────
+
+# install.js must have installWindsurfAgentRules function
+if grep -q "function installWindsurfAgentRules" "$REPO/bin/install.js"; then
+  ok "install.js has installWindsurfAgentRules function"
+else
+  fail "install.js missing installWindsurfAgentRules function — Windsurf won't get model_decision rules"
+fi
+
+# install.js must have WINDSURF_RULE_DESCRIPTIONS map
+if grep -q "WINDSURF_RULE_DESCRIPTIONS" "$REPO/bin/install.js"; then
+  ok "install.js has WINDSURF_RULE_DESCRIPTIONS map"
+else
+  fail "install.js missing WINDSURF_RULE_DESCRIPTIONS — rules will use generic descriptions"
+fi
+
+# installWindsurfAgentRules must be called in Windsurf install block
+if grep -q "installWindsurfAgentRules" "$REPO/bin/install.js" | grep -v "function" >/dev/null 2>&1 || \
+   grep -c "installWindsurfAgentRules" "$REPO/bin/install.js" | grep -q "^[2-9]"; then
+  ok "installWindsurfAgentRules is called in Windsurf install block"
+else
+  fail "installWindsurfAgentRules defined but never called"
+fi
+
+# .windsurf/rules/ must exist with model_decision rules (dev repo mirror)
+WINDSURF_RULES_DIR="$REPO/.windsurf/rules"
+if [ -d "$WINDSURF_RULES_DIR" ]; then
+  RULE_COUNT=$(ls "$WINDSURF_RULES_DIR"/learnship-*.md 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$RULE_COUNT" -ge 17 ]; then
+    ok ".windsurf/rules/ has $RULE_COUNT model_decision rules (>= 17)"
+  else
+    fail ".windsurf/rules/ has only $RULE_COUNT rules, expected >= 17"
+  fi
+else
+  fail ".windsurf/rules/ directory missing — Windsurf won't have model_decision persona rules"
+fi
+
+# Each Windsurf rule must have trigger: model_decision frontmatter
+RULE_ISSUES=0
+for f in "$WINDSURF_RULES_DIR"/learnship-*.md; do
+  [ -f "$f" ] || continue
+  if ! grep -q "trigger: model_decision" "$f"; then
+    fail "$(basename $f) missing trigger: model_decision"
+    RULE_ISSUES=$((RULE_ISSUES+1))
+  fi
+  if ! grep -q "^description:" "$f"; then
+    fail "$(basename $f) missing description field"
+    RULE_ISSUES=$((RULE_ISSUES+1))
+  fi
+done
+if [ "$RULE_ISSUES" -eq 0 ]; then
+  ok "All Windsurf rules have model_decision trigger and description"
+fi
+
+# ── Inline persona_context blocks ─────────────────────────────────────────
+
+# All 18 workflows with @./agents/ refs must have persona_context blocks
+PERSONA_WORKFLOWS=(
+  "new-project.md"
+  "plan-phase.md"
+  "execute-phase.md"
+  "challenge.md"
+  "ideate.md"
+  "research-phase.md"
+  "review.md"
+  "secure-phase.md"
+  "validate-phase.md"
+  "verify-work.md"
+  "compound.md"
+  "debug.md"
+  "quick.md"
+  "new-milestone.md"
+  "execute-plan.md"
+  "audit-milestone.md"
+  "diagnose-issues.md"
+  "map-codebase.md"
+)
+
+MISSING_PERSONA=0
+for wf in "${PERSONA_WORKFLOWS[@]}"; do
+  WF_FILE="$REPO/learnship/workflows/$wf"
+  if grep -q "<persona_context>" "$WF_FILE" 2>/dev/null; then
+    ok "$wf has <persona_context> block"
+  else
+    fail "$wf missing <persona_context> block — persona adoption fails on Windsurf/Cursor/Gemini"
+    MISSING_PERSONA=$((MISSING_PERSONA+1))
+  fi
+done
+
+# New specialized personas must be referenced in their target workflows
+if grep -q "project-researcher" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project.md references project-researcher persona"
+else
+  fail "new-project.md missing project-researcher persona reference"
+fi
+
+if grep -q "roadmapper" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project.md references roadmapper persona"
+else
+  fail "new-project.md missing roadmapper persona reference"
+fi
+
+if grep -q "phase-researcher" "$REPO/learnship/workflows/plan-phase.md"; then
+  ok "plan-phase.md references phase-researcher persona"
+else
+  fail "plan-phase.md missing phase-researcher persona reference"
+fi
+
+if grep -q "phase-researcher" "$REPO/learnship/workflows/research-phase.md"; then
+  ok "research-phase.md references phase-researcher persona"
+else
+  fail "research-phase.md missing phase-researcher persona reference"
+fi
+
+# 5 new agent personas must also be in Codex sandbox map
+for AGENT in learnship-project-researcher learnship-research-synthesizer learnship-roadmapper learnship-doc-verifier; do
+  if grep -q "'$AGENT'" "$REPO/bin/install.js"; then
+    ok "Codex sandbox map includes $AGENT"
+  else
+    fail "Codex sandbox map missing $AGENT"
+  fi
+done
 
 # ──────────────────────────────────────────────────────────────────────────
 # 5. package.json
