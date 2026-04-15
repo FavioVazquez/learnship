@@ -410,18 +410,61 @@ node -e "const fs=require('fs'),path=require('path');const dir='.planning/resear
 
 > 🛑 **If the command prints `RESEARCH INCOMPLETE` or exits with code 1:** Go back and create or fix the missing files. Then run the verification again. You MUST see `RESEARCH VERIFIED OK` before continuing. Do NOT proceed to Step 6 without a passing verification.
 
-Display key findings:
+**Read all 5 research files now** and present their findings in full. Do NOT summarize into 3 bullets. Display this exact structure, populated from the actual file contents:
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  learnship ► RESEARCH COMPLETE ✓
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Stack:** [key recommendation]
-**Table Stakes:** [top 3 must-have features]
-**Watch Out For:** [top 2 pitfalls]
+## Recommended Stack
+[Full content from STACK.md ## Recommended Stack — include all items, versions, and rationale]
 
-Files: .planning/research/
+**Alternatives Considered:** [From STACK.md ## Alternatives Considered]
+**What NOT to Use:** [From STACK.md ## What NOT to Use — include reasons]
+
+## Features
+**Table Stakes (must have for v1):**
+[Full list from FEATURES.md ## Table Stakes]
+
+**Differentiators (v2 candidates):**
+[Full list from FEATURES.md ## Differentiators]
+
+**Anti-Features (avoid):**
+[From FEATURES.md ## Anti-Features]
+
+## Architecture
+**Component Boundaries:**
+[From ARCHITECTURE.md ## Component Boundaries]
+
+**Data Flow:**
+[From ARCHITECTURE.md ## Data Flow]
+
+**Recommended Build Order:**
+[From ARCHITECTURE.md ## Build Order]
+
+**Integration Points:**
+[From ARCHITECTURE.md ## Integration Points]
+
+## Top Pitfalls to Avoid
+[Full list from PITFALLS.md ## Common Mistakes]
+
+**Warning Signs:**
+[From PITFALLS.md ## Warning Signs]
+
+**Prevention Strategies:**
+[From PITFALLS.md ## Prevention Strategies]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Files written: .planning/research/STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+Then ask exactly this:
+
+"Research is complete. Does this align with what you had in mind, or are there stack/architecture decisions you want to override before I define requirements? Reply **continue** to proceed, or tell me what to change."
+
+> 🛑 **HARD GATE — Wait for the user's reply before proceeding to Step 6.** Do NOT automatically continue to requirements. Do NOT write REQUIREMENTS.md. The user must explicitly say "continue" or give a change request. If they request changes, update the relevant research file(s) and re-display the affected section, then re-ask this question.
 
 ## Step 6: Define Requirements
 
