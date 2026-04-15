@@ -253,18 +253,23 @@ Spawn a dedicated debugger agent for diagnosis:
 ```
 Task(
   subagent_type="learnship-debugger",
+  description="Diagnose UAT issues phase [N]",
   prompt="
+    <agent_definition>
+    You are a learnship debugger in diagnosis mode. Trace each issue to its root cause.
+    Read-first: understand the current design before proposing changes. Find specific files and lines.
+    Do NOT fix anything — just diagnose and document. One hypothesis at a time.
+    </agent_definition>
+
     <objective>
     Diagnose all issues found in UAT for phase [N].
     Read the UAT.md file with gaps, trace each issue to its root cause.
     Do NOT fix anything — just diagnose and document root causes.
-    Follow the debugger persona at @./agents/debugger.md.
     Write root_cause and affected_files for each gap back to UAT.md.
     </objective>
 
     <files_to_read>
     - [UAT.md path]
-    - @./agents/debugger.md (persona)
     </files_to_read>
   "
 )

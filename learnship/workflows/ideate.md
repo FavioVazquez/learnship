@@ -93,7 +93,13 @@ If yes: read `parallelization` from `.planning/config.json`. If `parallelization
 ```
 Task(
   subagent_type="learnship-researcher",
+  description="Quick research pass",
   prompt="
+    <agent_definition>
+    You are a learnship researcher doing a quick, focused research pass.
+    Your training data is stale — use WebSearch to verify current state. Be concise.
+    </agent_definition>
+
     <objective>
     Quick research pass on: [specific question].
     Search web, scan codebase for relevant patterns, and return a concise summary of findings.
@@ -159,7 +165,13 @@ Spawn 3-4 ideation agents in parallel, each with a different thinking frame:
 ```
 Task(
   subagent_type="learnship-ideation-agent",
+  description="Ideate: [FRAME] lens",
   prompt="
+    <agent_definition>
+    You are a learnship ideation agent. Generate improvement ideas grounded in the actual codebase — no abstract advice.
+    Every idea must cite specific files, patterns, or evidence. Be creative but practical.
+    </agent_definition>
+
     <objective>
     Generate 6-8 improvement ideas for this project using the [FRAME] lens.
     Ground every idea in the codebase scan results — no abstract advice.

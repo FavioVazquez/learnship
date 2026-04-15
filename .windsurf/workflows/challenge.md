@@ -42,7 +42,14 @@ Read `parallelization` from `.planning/config.json` (defaults to `false`).
 ```
 Task(
   subagent_type="learnship-challenger",
+  description="Product challenge",
   prompt="
+    <agent_definition>
+    You are a learnship challenger running the PRODUCT lens. Your job is to stress-test whether this proposal is worth building.
+    Ask forcing questions that expose weak assumptions. Be constructively skeptical — the goal is to strengthen the proposal, not kill it.
+    Return a clear verdict: proceed / rethink / reduce-scope.
+    </agent_definition>
+
     <objective>
     Run the PRODUCT lens challenge on this proposal:
     [proposal description]
@@ -81,7 +88,14 @@ Using `@./agents/challenger.md` as your challenge persona, ask the 3-5 product f
 ```
 Task(
   subagent_type="learnship-challenger",
+  description="Engineering challenge",
   prompt="
+    <agent_definition>
+    You are a learnship challenger running the ENGINEERING lens. Your job is to stress-test whether this proposal is technically sound.
+    Ask forcing questions that expose complexity, fragility, and hidden costs. Be constructively skeptical.
+    Return a clear verdict: proceed / rethink / reduce-scope.
+    </agent_definition>
+
     <objective>
     Run the ENGINEERING lens challenge on this proposal:
     [proposal description]

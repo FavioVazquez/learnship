@@ -41,7 +41,13 @@ Launch these tasks IN PARALLEL. Each returns text data to the orchestrator — s
 ```
 Task(
   subagent_type="learnship-solution-writer",
+  description="Classify and extract solution",
   prompt="
+    <agent_definition>
+    You are a learnship solution writer. Analyze conversation history to classify problems and extract structured solution metadata.
+    RESEARCH ONLY — do NOT write any files. Return text data to the orchestrator.
+    </agent_definition>
+
     <objective>
     RESEARCH ONLY — do NOT write any files.
     Analyze conversation history to extract:

@@ -78,30 +78,38 @@ Spawn a dedicated researcher agent:
 ```
 Task(
   subagent_type="learnship-researcher",
+  description="Phase [N] research",
   prompt="
+    <agent_definition>
+    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
+    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    </agent_definition>
+
     <objective>
-    Research how to implement phase [N] for this project.
-
-    IMPORTANT: You MUST do online research BEFORE writing the research file. Your training data is stale — verify everything.
-
-    Phase 1 — INVESTIGATE (do this first):
-    1. Read the phase goal from ROADMAP.md, requirements from REQUIREMENTS.md, and any CONTEXT.md decisions
-    2. Read the researcher persona at @./agents/researcher.md for research principles and tool strategy
-    3. Run at least 3 search_web queries to discover: standard approaches, recommended libraries, and common pitfalls for this phase's domain. Include the current year in queries.
-    4. Use read_url_content to read official documentation for any key libraries or frameworks discovered
-    5. Scan the codebase for existing patterns relevant to this phase
-
-    Phase 2 — WRITE FILE (only after investigating):
-    Write [padded_phase]-RESEARCH.md with Don't Hand-Roll, Common Pitfalls, Existing Patterns, and Recommended Approach sections. Include confidence levels (HIGH/MEDIUM/LOW) and cite sources.
+    Research how to implement phase [N] for this project. Write [padded_phase]-RESEARCH.md.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
+
+    <research_steps>
+    1. Read the phase goal from ROADMAP.md, requirements from REQUIREMENTS.md, and any CONTEXT.md decisions
+    2. Run at least 3 search_web queries: '[phase technology] best practices [current year]', '[phase technology] common mistakes', '[phase technology] recommended libraries'
+    3. read_url_content official docs for key libraries or frameworks discovered
+    4. Scan the codebase for existing patterns relevant to this phase
+    5. Write [padded_phase]-RESEARCH.md with confidence levels and source citations
+    </research_steps>
 
     <files_to_read>
     - .planning/ROADMAP.md
     - .planning/REQUIREMENTS.md
     - .planning/STATE.md
     - .planning/phases/[padded_phase]-[slug]/[padded_phase]-CONTEXT.md (if exists)
-    - @./agents/researcher.md (persona — read for research principles and tool strategy)
     </files_to_read>
+
+    <output>
+    Write to: .planning/phases/[padded_phase]-[slug]/[padded_phase]-RESEARCH.md
+    Required sections: ## Don't Hand-Roll, ## Common Pitfalls, ## Existing Patterns in This Codebase, ## Recommended Approach
+    </output>
   "
 )
 ```

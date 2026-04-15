@@ -105,18 +105,24 @@ Read `parallelization` from `.planning/config.json` (defaults to `false`).
 ```
 Task(
   subagent_type="learnship-verifier",
+  description="Fill validation gaps phase [N]",
   prompt="
+    <agent_definition>
+    You are a learnship verifier. Write test files that cover validation gaps — never modify implementation files.
+    Match existing test framework and style. Write tests that actually run (import real modules, not mocks).
+    If a test reveals an implementation bug, log it as an escalation — don't fix the implementation.
+    Up to 3 debug attempts if tests fail.
+    </agent_definition>
+
     <objective>
     Write missing test files for phase [N] validation gaps.
     Read VALIDATION.md gaps and write tests that cover each MISSING or PARTIAL requirement.
-    Follow the verifier persona at @./agents/verifier.md.
     Never modify implementation files — only write test files.
     Run tests to verify they pass. Up to 3 debug attempts if tests fail.
     </objective>
 
     <files_to_read>
     - [VALIDATION.md path]
-    - @./agents/verifier.md (persona)
     </files_to_read>
   "
 )
@@ -124,7 +130,7 @@ Task(
 
 **If `parallelization.enabled` is `false` (sequential mode):**
 
-Write the missing test files. Rules:
+Using `@./agents/verifier.md` as your verification persona, write the missing test files. Rules:
 - Never touch implementation files
 - Match the existing test framework and style
 - Write tests that actually run (import real modules, not mocks of the implementation)
