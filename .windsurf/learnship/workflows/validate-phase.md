@@ -83,7 +83,7 @@ If no gaps (all COVERED): proceed directly to step 8 with `compliant: true`.
 Show the gap table, then present a structured question:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Validation Gaps",
     question: "[N] gap(s) found. How do you want to handle them?",
@@ -96,6 +96,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 **If "Fill all gaps":**
 

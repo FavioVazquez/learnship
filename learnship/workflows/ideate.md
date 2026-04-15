@@ -89,6 +89,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If yes: read `parallelization` from `.planning/config.json`. If `parallelization.enabled` is true, spawn a researcher agent:
 ```
 Task(

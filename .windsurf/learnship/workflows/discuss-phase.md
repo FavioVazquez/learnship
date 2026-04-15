@@ -59,7 +59,7 @@ ls .planning/phases/*-CONTEXT.md 2>/dev/null
 If CONTEXT.md already exists for this phase, present the choice:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Existing Context",
     question: "CONTEXT.md already exists for this phase. What do you want to do?",
@@ -73,12 +73,14 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If "Skip" → exit workflow.
 
 If no CONTEXT.md exists but plans already exist for this phase:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Plans Already Exist",
     question: "Phase [X] already has plans created without user context. Your decisions here won't affect existing plans unless you re-run plan-phase.",
@@ -90,6 +92,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 3: Scout Codebase
 
@@ -149,7 +153,7 @@ Carrying forward from earlier phases:
 Present gray areas using a structured multi-select question. Annotate with prior decisions and code context:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Gray Areas",
     question: "Which areas do you want to discuss? (select all that apply)",
@@ -164,6 +168,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 If "All clear" → skip to Step 6.
 
 **For each selected area, discuss:**
@@ -172,7 +178,7 @@ If "All clear" → skip to Step 6.
 2. Ask focused questions with concrete options using structured questions where possible:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "[Area]: [Decision Point]",
     question: "[Specific implementation question]",
@@ -186,6 +192,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 3. After 4 questions, ask: "More questions about [area], or move to next?"
 4. If more → ask 4 more, then check again
 
@@ -194,7 +202,7 @@ After all selected areas:
 - Present final check:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Wrap Up",
     question: "All gray areas discussed. Ready to generate CONTEXT.md?",
@@ -206,6 +214,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 <scope_guardrail>
 **No scope creep.** The phase boundary comes from ROADMAP.md and is FIXED. Discussion clarifies HOW to implement what's scoped, never WHETHER to add new capabilities.

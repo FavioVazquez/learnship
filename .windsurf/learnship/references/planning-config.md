@@ -229,7 +229,7 @@ The `parallelization` field is now an object. Legacy flat `"parallelization": tr
 
 ### Gates Section
 
-Controls which confirmation prompts are shown during workflows. Set to `false` to skip specific confirmations (useful for experienced users in yolo mode).
+Controls which confirmation prompts are shown during workflows. Set to `false` to skip specific confirmations (useful for experienced users in auto mode).
 
 | Option | Default | Description |
 |--------|---------|-------------|

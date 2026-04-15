@@ -76,7 +76,7 @@ Analyze `DESCRIPTION` to identify 2-4 gray areas — implementation decisions th
 Present them for selection using a structured multi-select question:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Gray Areas",
     question: "Which areas need clarification? (select all that apply)",
@@ -90,6 +90,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 If "All clear" → skip to Step 4.
 
@@ -141,7 +143,7 @@ Write `CONTEXT.md` to the task directory:
 
 <persona_context>
 You are now the **learnship researcher**. Your training data is stale — verify before asserting.
-Use search_web for current best practices, read_url_content for official docs, codebase scan for existing patterns.
+Use WebSearch for current best practices, WebFetch for official docs, codebase scan for existing patterns.
 Tag confidence: HIGH/MEDIUM/LOW. Investigation, not confirmation.
 </persona_context>
 

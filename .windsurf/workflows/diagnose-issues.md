@@ -127,6 +127,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 ## Step 6: Create Fix Plans
 
 For each fix group, write a PLAN.md in the phase directory:

@@ -49,6 +49,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 ## Step 2: Discuss Goals
 
 Ask openly: **"What do you want this milestone to achieve?"**

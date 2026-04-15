@@ -80,7 +80,7 @@ If open threats exist, present them with a structured question:
 Display the threat table first, then:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Open Threats",
     question: "[N] open threat(s) found. How do you want to handle them?",
@@ -93,6 +93,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 5: Resolve Open Threats
 
@@ -138,7 +140,7 @@ Read `@./agents/security-auditor.md` for the full persona definition. Check each
 **For "Review individually":** Present each threat one at a time:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Threat [ID]",
     question: "[Category]: [Description] in [Component]",
@@ -151,6 +153,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 6: Write SECURITY.md
 

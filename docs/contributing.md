@@ -23,7 +23,7 @@ learnship/
 ├── learnship/references/   # reference docs loaded by workflows
 ├── learnship/templates/    # document templates for .planning/ + AGENTS.md
 ├── tests/
-│   └── validate_multiplatform.sh  # full test suite (511+ checks, 5 suites)
+│   └── run_all.sh               # full test suite (1200+ checks, 15 suites)
 ├── docs/                   # this documentation site (MkDocs)
 ├── bin/install.js          # multi-platform installer
 └── install.sh              # shell installer wrapper
@@ -127,17 +127,27 @@ Every PR must include:
 ## Running the tests
 
 ```bash
-bash tests/validate_multiplatform.sh
+bash tests/run_all.sh
 ```
 
-The suite has 5 sections covering:
-- Installer correctness across all 6 platforms
-- Workflow structure and sync
+The suite has 15 sections covering:
+- Package & installer correctness
+- Workflow files structure and sync
 - Skills installation
-- Learning Checkpoint coverage
-- Documentation site integrity
+- UX entry points
+- Multi-platform install (6 platforms)
+- new-project workflow gates
+- Cross-platform install content survival
+- Regressions (config validation, Cursor .mdc, ceremony sync)
+- All-workflows critical phrase survival
+- Deep integrity (template resolution, cross-refs)
+- Security (injection, secrets, exfiltration, Unicode, HTML, permissions)
+- Learnship features (skills, learning_mode, contexts, references)
+- Simulations (live node -e gate execution from 10 workflows)
+- Hooks & commands (hook JS, CLI flags, upgrade safety, prompt guard)
+- Platform-specific (Codex TOML, Gemini settings, tool rewrites, docs)
 
-511+ checks across 5 suites. All must pass before merging.
+1200+ checks across 15 suites. All must pass before merging.
 
 ---
 
@@ -146,7 +156,7 @@ The suite has 5 sections covering:
 ```bash
 git checkout -b feat/your-feature
 # make changes
-bash tests/validate_multiplatform.sh    # must pass
+bash tests/run_all.sh    # must pass
 git add -A
 git commit -m "feat: [description] (vX.Y.Z)"
 git push origin feat/your-feature

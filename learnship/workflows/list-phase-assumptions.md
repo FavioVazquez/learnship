@@ -119,6 +119,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 Note: Any corrections discussed here are not automatically captured. Run `discuss-phase [N]` to write them to a CONTEXT.md that planners will read.
 
 ---

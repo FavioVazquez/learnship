@@ -64,32 +64,42 @@ Suggest the appropriate workflow slash command when relevant:
 | Workflow | When to suggest |
 |----------|----------------|
 | `/new-project` | User wants to start a new project from scratch |
+| `/new-milestone` | Start a new milestone cycle on an existing project |
 | `/discuss-phase [N]` | Before planning a phase — capture user's implementation vision |
+| `/discuss-milestone` | Capture milestone-level goals before `/new-milestone` |
 | `/plan-phase [N]` | After discussing a phase — create executable plans |
 | `/execute-phase [N]` | Plans exist and are ready to run |
 | `/verify-work [N]` | Phase execution complete — user acceptance testing |
+| `/review` | Code ready for review — multi-persona quality check |
+| `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
+| `/complete-milestone` | All phases in the current milestone are done |
 | `/ls` | User asks "where are we?", "what's next?", or starts a new session |
 | `/next` | User wants to keep moving without deciding what to do |
-| `/quick [task]` | Small ad-hoc task that doesn't need full phase ceremony |
 | `/progress` | Status overview and routing |
+| `/quick [task]` | Small ad-hoc task that doesn't need full phase ceremony |
+| `/debug [symptom]` | Bug report — systematic hypothesis-driven debugging |
+| `/map-codebase` | Analyze existing codebase structure before planning (brownfield projects) |
+| `/ideate` | Codebase-grounded idea generation (`--explore` for Socratic mode) |
+| `/challenge` | Stress-test a proposal with product + engineering forcing questions |
+| `/settings` | Change project configuration after setup |
+| `/health` | Project health check — stale files, uncommitted changes, config drift |
+| `/compound` | Just solved a problem or learned a pattern — capture it while fresh |
 | `/pause-work` | User is stopping mid-phase |
 | `/resume-work` | User is returning to an in-progress project |
-| `/complete-milestone` | All phases in the current milestone are done |
-| `/compound` | Just solved a problem or learned a pattern — capture it while fresh |
-| `/review` | Code ready for review — multi-persona quality check |
-| `/challenge` | About to commit to a milestone or big feature — stress-test the scope |
-| `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
-| `/ideate` | Looking for what to build next — codebase-grounded idea generation (add `--explore` for Socratic mode) |
-| `/guard` | Working on sensitive files — enable safety mode with destructive command warnings |
-| `/sync-docs` | After code changes — detect stale documentation |
-| `/forensics` | Something went wrong — post-mortem investigation (read-only) |
-| `/undo` | Need to revert commits safely — preserves git history |
+| `/guard` | Working on sensitive files — enable safety mode |
 | `/note [text]` | Quick idea capture — zero friction, no questions |
 | `/session-report` | End of session — generate summary for stakeholders |
 | `/secure-phase [N]` | After execution — per-phase STRIDE security verification |
+| `/validate-phase [N]` | Retroactive test coverage audit for a completed phase |
+| `/diagnose-issues` | Batch-diagnose multiple UAT issues after `/verify-work` |
 | `/docs-update` | Generate or update project documentation |
+| `/sync-docs` | After code changes — detect stale documentation |
 | `/extract-learnings [N]` | After phase completion — structured learning extraction |
 | `/milestone-summary` | Generate comprehensive milestone summary for team onboarding |
+| `/forensics` | Something went wrong — post-mortem investigation (read-only) |
+| `/undo` | Need to revert commits safely — preserves git history |
+| `/knowledge-base` | Aggregate learnings across sessions into searchable KNOWLEDGE.md |
+| `/transition` | Hand off project context to a new session or collaborator |
 
 ## Planning Artifacts
 
@@ -150,14 +160,35 @@ Set `"parallelization": { "enabled": true|false }` in `.planning/config.json` ba
 
 ## Structured Questions
 
-When workflows include `AskUserQuestion()` blocks, **Cursor has no native structured question tool**. Present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label. Example:
+When workflows include `AskUserQuestion()` blocks, **Cursor has no native structured question tool**. Present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label. Present questions in rounds (Round 1: core settings, Round 2: workflow agents, Round 3: pipeline & git, Round 4: parallelization). **Wait for the user's reply after EACH round before showing the next.** Do NOT present all questions at once.
 
+Example:
 ```
 **Working Style**
 How do you want to work?
-1. YOLO (Recommended) — Auto-approve steps, just execute
+1. Auto (Recommended) — Auto-approve steps, just execute
 2. Interactive — Confirm at each step
 ```
+
+## Config Schema
+
+After all configuration rounds are answered, write `.planning/config.json` with this EXACT schema. Map user answers to these keys — do NOT invent keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases`:
+
+- Working Style → `"mode"`: `"auto"` or `"interactive"`
+- Granularity → `"granularity"`: `"coarse"`, `"standard"`, or `"fine"`
+- Learning Partner → `"learning_mode"`: `"auto"` or `"manual"`
+- AI Models → `"model_profile"`: `"balanced"`, `"quality"`, or `"budget"`
+- Research → `"workflow.research"`: `true` or `false`
+- Plan Check → `"workflow.plan_check"`: `true` or `false`
+- Verifier → `"workflow.verifier"`: `true` or `false`
+- Review → `"workflow.review"`: `true` or `false`
+- TDD → `"test_first"`: `true` or `false`
+- Ship Pipeline → `"ship.auto_test"`, `"ship.conventional_commits"`, `"ship.pr_template"`
+- Git Tracking → `"planning.commit_docs"`: `true` or `false`
+- Commit Mode → `"planning.commit_mode"`: `"auto"` or `"manual"`
+- Parallel Execution → `"parallelization.enabled"`: `true` or `false`
+
+Run the config verification gate after writing — it must print `CONFIG_VALID`.
 
 ## Learning Mode
 

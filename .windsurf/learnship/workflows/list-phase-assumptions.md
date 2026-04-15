@@ -105,7 +105,7 @@ Assumptions validated. Ready to plan.
 ## Step 5: Offer Next Steps
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Next Step",
     question: "What would you like to do with these assumptions?",
@@ -118,6 +118,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 Note: Any corrections discussed here are not automatically captured. Run `discuss-phase [N]` to write them to a CONTEXT.md that planners will read.
 

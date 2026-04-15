@@ -53,7 +53,7 @@ After the project questions, `/new-project` asks about your workflow preferences
 
 ```
 How should the agent behave?
-→ yolo (auto-approve steps, no confirmation needed)
+→ auto (auto-approve steps, no confirmation needed)
 
 How granular should phases be?
 → standard (5-8 phases per milestone)

@@ -97,6 +97,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 **If "Fill all gaps":**
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).

@@ -38,7 +38,7 @@
 npx learnship
 ```
 
-**Works on Mac, Windows, and Linux.** Requires Node.js ≥ 18 and Git. The installer auto-detects your platform.
+**Works on Mac, Windows, and Linux.** Requires Node.js ≥ 22 and Git. The installer auto-detects your platform.
 
 ```bash
 npx learnship --global   # all projects
@@ -521,7 +521,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 
 | Setting | Options | Default | What it controls |
 |---------|---------|---------|-----------------|
-| `mode` | `yolo`, `interactive` | `yolo` | `yolo` auto-approves steps; `interactive` confirms at each decision |
+| `mode` | `auto`, `interactive` | `auto` | `auto` auto-approves steps; `interactive` confirms at each decision |
 | `granularity` | `coarse`, `standard`, `fine` | `standard` | Phase size: 3-5 / 5-8 / 8-12 phases |
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
@@ -579,8 +579,8 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 
 | Scenario | `mode` | `granularity` | `model_profile` | Research | Plan Check | Verifier |
 |----------|--------|--------------|----------------|----------|------------|---------|
-| Prototyping | `yolo` | `coarse` | `budget` | off | off | off |
-| Normal dev | `yolo` | `standard` | `balanced` | on | on | on |
+| Prototyping | `auto` | `coarse` | `budget` | off | off | off |
+| Normal dev | `auto` | `standard` | `balanced` | on | on | on |
 | Production | `interactive` | `fine` | `quality` | on | on | on |
 
 ---
@@ -896,7 +896,7 @@ learnship/
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
 ├── tests/
-│   └── validate_multiplatform.sh  # 511+ check test suite (5 suites, 6 platforms)
+│   └── run_all.sh               # 15 test suites, 1200+ checks across 6 platforms
 ├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
 ├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)

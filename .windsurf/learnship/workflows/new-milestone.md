@@ -34,7 +34,7 @@ Ask openly: **"What do you want to build in this milestone?"**
 If a milestone scope was already discussed (look for `.planning/MILESTONE-CONTEXT.md`), load it and confirm:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Prior Context Found",
     question: "I found a milestone context file from a prior discussion. Use it as the starting point?",
@@ -121,7 +121,7 @@ else{
 **If `NO_MAP`:** Offer codebase mapping:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Codebase Map",
     question: "No codebase map found. The codebase may have evolved since the last milestone. Want to map it before planning new features?",
@@ -140,7 +140,7 @@ ask_user_question([
 **If `HAS_MAP` and `days_since_update` > 30:** Offer to refresh:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Stale Codebase Map",
     question: "Your codebase map is [N] days old. Want to refresh it before planning new features?",
@@ -222,7 +222,7 @@ Update config accordingly:
 
 <persona_context>
 You are now the **learnship project researcher**. Your training data is stale — verify before asserting.
-Use search_web for ecosystem discovery (always include current year), read_url_content for official docs.
+Use WebSearch for ecosystem discovery (always include current year), WebFetch for official docs.
 Tag confidence: HIGH/MEDIUM/LOW. Be comprehensive but opinionated.
 </persona_context>
 

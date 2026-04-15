@@ -64,6 +64,8 @@ AskUserQuestion([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 Then ask as follow-ups (one at a time):
 - "What did you expect to happen?"
 - "What have you already tried?"

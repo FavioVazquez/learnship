@@ -1,5 +1,5 @@
 {
-  "mode": "interactive",
+  "mode": "auto",
   "granularity": "standard",
   "context": "dev",
   "model_profile": "balanced",

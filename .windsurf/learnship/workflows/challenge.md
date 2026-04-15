@@ -167,7 +167,7 @@ Proposal: [description]
 Present the verdict using a structured question:
 
 ```
-ask_user_question([
+AskUserQuestion([
   {
     header: "Challenge Verdict",
     question: "Based on the product and engineering analysis — how do you want to proceed?",
@@ -180,6 +180,8 @@ ask_user_question([
   }
 ])
 ```
+
+> 🛑 STOP. Wait for the user's reply before continuing.
 
 ## Step 5: Record Decision
 

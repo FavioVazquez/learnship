@@ -181,6 +181,8 @@ ask_user_question([
 ])
 ```
 
+> 🛑 STOP. Wait for the user's reply before continuing.
+
 ## Step 5: Record Decision
 
 If the user makes a decision based on the challenge:

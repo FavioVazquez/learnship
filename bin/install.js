@@ -503,11 +503,18 @@ function verifyInstalled(dirPath, description) {
   return true;
 }
 
+// Internal-only workflows that should never be installed to user projects.
+// These are used to maintain the learnship repo itself.
+const INTERNAL_ONLY_WORKFLOWS = new Set([
+  'sync-upstream-skills.md',
+]);
+
 /** Recursively copy dir, replacing path references in .md files */
 function copyDir(srcDir, destDir, pathPrefix, platform) {
   if (fs.existsSync(destDir)) fs.rmSync(destDir, { recursive: true });
   fs.mkdirSync(destDir, { recursive: true });
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    if (INTERNAL_ONLY_WORKFLOWS.has(entry.name)) continue;
     const src = path.join(srcDir, entry.name);
     const dest = path.join(destDir, entry.name);
     if (entry.isDirectory()) {
@@ -1503,6 +1510,7 @@ function install(platform, isGlobal) {
     let count = 0;
     for (const f of fs.readdirSync(path.join(learnshipSrc, 'workflows'))) {
       if (!f.endsWith('.md')) continue;
+      if (INTERNAL_ONLY_WORKFLOWS.has(f)) continue;
       let c = fs.readFileSync(path.join(learnshipSrc, 'workflows', f), 'utf8');
       c = replacePaths(c, pathPrefix, platform);
       if (f === 'new-project.md') c = rewriteNewProject(c, platform);
