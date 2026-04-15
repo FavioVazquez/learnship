@@ -355,62 +355,79 @@ Reply 1 or 2.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- learnship ► RESEARCHING
+ learnship ► WRITING RESEARCH FILES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**You MUST create exactly 5 separate markdown files.** Do NOT write a single monolithic research file. Do NOT combine multiple files into one. Each file is a separate write operation.
+> 🔴 **CRITICAL — "Research" in this step means WRITING 5 FILES to disk. It does NOT mean thinking, browsing the web, or analyzing in your head. The deliverable is 5 markdown files on the filesystem. You are not done with research until all 5 files exist and pass verification.**
+>
+> **Forbidden behaviors (if you do any of these, the research step has FAILED):**
+> - Doing web searches or thinking about the domain and then saying "I have enough research data" WITHOUT writing the 5 files
+> - Writing research findings only in your response text instead of to files
+> - Writing fewer than 5 files (e.g., one combined file)
+> - Moving to Step 6 or writing REQUIREMENTS.md before the verification command below prints `RESEARCH VERIFIED OK`
+> - Saying "Let me proceed to requirements" or "Moving to requirements" before verification passes
+>
+> **The ONLY acceptable sequence is:** mkdir → write file 1 → write file 2 → write file 3 → write file 4 → write file 5 → run verification → see `RESEARCH VERIFIED OK` → present findings → get user confirmation.
 
-Create the research directory first:
+**Step 5a — Create the research directory.** Run this command now:
 
 ```bash
 node -e "require('fs').mkdirSync('.planning/research',{recursive:true})"
 ```
 
-Now create each file one at a time. After writing each file, move to the next.
+> 🛑 Did the mkdir command run? If not, run it now before continuing.
 
-**File 1 of 5 — Write `.planning/research/STACK.md` now:**
-Research the standard tech stack for this domain. The file MUST contain these exact `##` headers:
+**Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files.
+
+**File 1 of 5 — Write `.planning/research/STACK.md` to disk now.**
+Research the standard tech stack for this domain and write the results to this file. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Alternatives Considered`
 - `## What NOT to Use` (with reasons)
 - `## Versions`
 
-**File 2 of 5 — Write `.planning/research/FEATURES.md` now:**
-Research what features exist in this domain. The file MUST contain these exact `##` headers:
+> 🛑 STOP. Confirm: did you write `.planning/research/STACK.md` to the filesystem? If you only thought about the stack but did not create the file, go back and create it now.
+
+**File 2 of 5 — Write `.planning/research/FEATURES.md` to disk now.**
+Research what features users expect in this domain. Write the results to this file. The file MUST contain these exact `##` headers:
 - `## Table Stakes` (must-haves)
 - `## Differentiators` (nice-to-haves)
 - `## Anti-Features` (what to avoid)
 
-**File 3 of 5 — Write `.planning/research/ARCHITECTURE.md` now:**
-Research how systems in this domain are typically structured. The file MUST contain these exact `##` headers:
+**File 3 of 5 — Write `.planning/research/ARCHITECTURE.md` to disk now.**
+Research how systems in this domain are typically structured. Write the results to this file. The file MUST contain these exact `##` headers:
 - `## Component Boundaries`
 - `## Data Flow`
 - `## Build Order` (suggested sequence)
 - `## Integration Points`
 
-**File 4 of 5 — Write `.planning/research/PITFALLS.md` now:**
-Research common mistakes and prevention strategies. The file MUST contain these exact `##` headers:
+**File 4 of 5 — Write `.planning/research/PITFALLS.md` to disk now.**
+Research common mistakes and prevention strategies. Write the results to this file. The file MUST contain these exact `##` headers:
 - `## Common Mistakes`
 - `## Warning Signs`
 - `## Prevention Strategies`
 
-**File 5 of 5 — Write `.planning/research/SUMMARY.md` now:**
-Synthesize the 4 files above into a summary. The file MUST contain these exact `##` headers:
+**File 5 of 5 — Write `.planning/research/SUMMARY.md` to disk now.**
+Synthesize the 4 files above into a summary. Write the results to this file. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Table Stakes Features`
 - `## Key Architecture Decisions`
 - `## Top Pitfalls`
 
-> 🔴 **HARD GATE — Run this verification command now. Do not skip it. Do not proceed without running it.**
+**Step 5c — Verify all 5 files exist on disk.** Run this verification command now. Do not skip it.
+
+> 🔴 **HARD GATE — You MUST run this command. If you skip it and proceed to Step 6, the workflow has FAILED.**
 
 ```bash
-node -e "const fs=require('fs'),path=require('path');const dir='.planning/research/';const checks={'STACK.md':['Recommended Stack','What NOT to Use'],'FEATURES.md':['Table Stakes','Differentiators'],'ARCHITECTURE.md':['Component Boundaries','Data Flow'],'PITFALLS.md':['Common Mistakes','Prevention Strategies'],'SUMMARY.md':['Recommended Stack','Top Pitfalls']};const missing=[];for(const[file,sections]of Object.entries(checks)){const fp=path.join(dir,file);if(!fs.existsSync(fp)){missing.push(file+' MISSING');continue;}const c=fs.readFileSync(fp,'utf8');for(const s of sections){if(!c.includes('## '+s))missing.push(file+': missing ## '+s);}}if(missing.length){console.log('RESEARCH INCOMPLETE:\\n'+missing.join('\\n'));process.exit(1);}console.log('RESEARCH VERIFIED OK — all 5 files present with required sections');"
+node -e "const fs=require('fs'),path=require('path');const dir='.planning/research/';const checks={'STACK.md':['Recommended Stack','What NOT to Use'],'FEATURES.md':['Table Stakes','Differentiators'],'ARCHITECTURE.md':['Component Boundaries','Data Flow'],'PITFALLS.md':['Common Mistakes','Prevention Strategies'],'SUMMARY.md':['Recommended Stack','Top Pitfalls']};const missing=[];for(const[file,sections]of Object.entries(checks)){const fp=path.join(dir,file);if(!fs.existsSync(fp)){missing.push(file+' MISSING');continue;}const c=fs.readFileSync(fp,'utf8');for(const s of sections){if(!c.includes('## '+s))missing.push(file+': missing ## '+s);}}if(missing.length){console.log('RESEARCH FAILED — files missing or incomplete:\\n'+missing.join('\\n'));console.log('\\nGo back and create the missing files. Do NOT proceed to requirements.');process.exit(1);}console.log('RESEARCH VERIFIED OK — all 5 files present with required sections');"
 ```
 
-> 🛑 **If the command prints `RESEARCH INCOMPLETE` or exits with code 1:** Go back and create or fix the missing files. Then run the verification again. You MUST see `RESEARCH VERIFIED OK` before continuing. Do NOT proceed to Step 6 without a passing verification.
+> 🛑 **If the command prints `RESEARCH FAILED` or exits with code 1:** Go back and create or fix the missing files. Run the verification again. You MUST see `RESEARCH VERIFIED OK` before continuing.
+>
+> **If you did not run the command at all:** You have skipped verification. Go back and run it now. You cannot proceed to Step 5d without a passing verification.
 
-**Read all 5 research files now** and present their findings in full. Do NOT summarize into 3 bullets. Display this exact structure, populated from the actual file contents:
+**Step 5d — Present findings.** Read all 5 research files from disk now and present their findings in full. Do NOT summarize into 3 bullets — display the actual content from the files you wrote. Display this exact structure, populated from the actual file contents:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

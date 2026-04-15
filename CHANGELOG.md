@@ -9,6 +9,20 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.1.2] — 2026-04-15
+
+### Fixed
+
+- **`/new-project` research file-write enforcement** — After choosing "Research first," the AI was doing web searches and domain analysis in its head, then saying "I have enough research data" and jumping directly to requirements — without ever writing the 5 research files to disk. Root cause: the word "research" was interpreted as a cognitive action ("think about the domain") rather than a file-writing action ("create 5 files"). Fixed by:
+  - Changed banner from `RESEARCHING` → `WRITING RESEARCH FILES`
+  - Added forbidden-behaviors block listing the exact failure pattern
+  - Added mandatory sequence: mkdir → write 5 files → verify → present → confirm
+  - Added per-file stop-and-confirm after File 1
+  - Updated SKILL.md and cursor-rules to say "Research = WRITE 5 FILES TO DISK"
+  - Added regression entry to AGENTS.md documenting the lesson: "When the AI has a choice between 'think about X' and 'write X to a file,' it will always prefer thinking"
+
+---
+
 ## [v2.1.1] — 2026-04-15
 
 ### Fixed

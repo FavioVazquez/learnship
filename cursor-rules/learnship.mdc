@@ -47,7 +47,7 @@ When the user runs `/new-project`, execute these **9 mandatory steps in order**.
 
 2. **Research decision = always ask the user.** After PROJECT.md is confirmed, ask: "Do you want me to research the domain ecosystem first?" and WAIT for the user's reply. You are FORBIDDEN from deciding this yourself — even if the tech stack is defined in PROJECT.md, the domain seems trivial, or the user gave detailed answers. Never say "no research needed" or "skipping research" on your own.
 
-3. **Research = 5 separate files.** If the user chooses research, create exactly 5 files in `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT write a single monolithic research file. Run the `node -e` verification command from the workflow — it must print `RESEARCH VERIFIED OK` before proceeding.
+3. **Research = WRITE 5 FILES TO DISK.** "Research" means creating files on the filesystem, not thinking or browsing. If the user chooses research, write exactly 5 files to `.planning/research/`: `STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md`, `SUMMARY.md`. Do NOT do web searches or domain analysis and then say "I have enough research data" without writing the files — that is a workflow failure. Run the `node -e` verification command — it must print `RESEARCH VERIFIED OK` before proceeding to requirements.
 
 4. **After Step 7 (roadmap approved):** Do NOT display the done banner or suggest next steps. Generate AGENTS.md (Step 8) first.
 
