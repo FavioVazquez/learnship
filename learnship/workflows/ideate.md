@@ -74,14 +74,34 @@ a problem you're trying to solve, or something you're not sure about yet.
 **Mid-conversation research offer (after 2-3 exchanges):**
 
 If the conversation surfaces factual questions, technology comparisons, or unknowns:
-```
-This touches on [specific question]. Want me to do a quick research pass before we continue?
-This would take ~30 seconds and might surface useful context.
 
-[Yes, research this] / [No, let's keep exploring]
+```
+AskUserQuestion([
+  {
+    header: "Research Opportunity",
+    question: "This touches on [specific question]. Want me to do a quick research pass before we continue?",
+    multiSelect: false,
+    options: [
+      { label: "Yes, research this", description: "~30 seconds — may surface useful context" },
+      { label: "No, keep exploring", description: "Continue the conversation without research" }
+    ]
+  }
+])
 ```
 
-If yes and parallelization is enabled, spawn a research agent. Otherwise do an inline research pass. Share findings and continue.
+If yes: read `parallelization` from `.planning/config.json`. If `parallelization.enabled` is true, spawn a researcher agent:
+```
+Task(
+  subagent_type="learnship-researcher",
+  prompt="
+    <objective>
+    Quick research pass on: [specific question].
+    Search web, scan codebase for relevant patterns, and return a concise summary of findings.
+    </objective>
+  "
+)
+```
+If parallelization is false, use `@./agents/researcher.md` as inline persona for a quick research pass. Share findings and continue.
 
 **Crystallize outputs (after 3-6 exchanges):**
 

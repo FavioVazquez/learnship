@@ -32,14 +32,20 @@ Pending todos carried forward:
 Ask openly: **"What do you want to build in this milestone?"**
 
 If a milestone scope was already discussed (look for `.planning/MILESTONE-CONTEXT.md`), load it and confirm:
-```
-I found a milestone context file from a prior discussion:
-[summary of scope]
 
-Use this as the starting point?
 ```
-- **Yes** → proceed with it
-- **No / Start fresh** → ask from scratch
+AskUserQuestion([
+  {
+    header: "Prior Context Found",
+    question: "I found a milestone context file from a prior discussion. Use it as the starting point?",
+    multiSelect: false,
+    options: [
+      { label: "Yes", description: "Proceed with the scope from the prior discussion" },
+      { label: "Start fresh", description: "Discard prior context and ask from scratch" }
+    ]
+  }
+])
+```
 
 Follow the thread. When you have enough to write clear goals, ask for confirmation before continuing.
 

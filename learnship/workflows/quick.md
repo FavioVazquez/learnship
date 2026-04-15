@@ -73,13 +73,27 @@ Report: "Creating quick task ${NEXT_NUM}: ${DESCRIPTION}"
 
 Analyze `DESCRIPTION` to identify 2-4 gray areas — implementation decisions that would change the outcome.
 
-Present them for selection (multi-select):
-- Each area is a concrete decision point (not generic)
-- Include an "All clear — skip discussion" option
+Present them for selection using a structured multi-select question:
+
+```
+AskUserQuestion([
+  {
+    header: "Gray Areas",
+    question: "Which areas need clarification? (select all that apply)",
+    multiSelect: true,
+    options: [
+      { label: "[Area 1]", description: "[Concrete decision point]" },
+      { label: "[Area 2]", description: "[Concrete decision point]" },
+      { label: "[Area 3]", description: "[Concrete decision point]" },
+      { label: "All clear — skip discussion", description: "No gray areas need clarification" }
+    ]
+  }
+])
+```
 
 If "All clear" → skip to Step 4.
 
-For each selected area, ask 1-2 focused questions with concrete options. Max 2 questions per area — keep it lightweight.
+For each selected area, ask 1-2 focused questions with concrete options using structured questions. Max 2 questions per area — keep it lightweight.
 
 Write `CONTEXT.md` to the task directory:
 

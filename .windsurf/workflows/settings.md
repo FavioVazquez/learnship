@@ -87,166 +87,166 @@ cat .planning/config.json
 
 Parse current values to use as defaults in the prompts.
 
-## Step 3: Present Settings Menu
+## Step 3: Present Settings
 
-Display current settings and ask what to change:
+Display the settings banner, then present settings using structured question rounds. Use your platform's interactive question tool, or numbered text lists if unavailable. Pre-select current values where the tool supports it.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  learnship ► SETTINGS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Current configuration:
-
-[1] Mode:              [current] (yolo | interactive)
-[2] Granularity:       [current] (coarse | standard | fine)
-[3] Model profile:     [current] (quality | balanced | budget)
-[4] Learning mode:     [current] (auto | manual)
-[5] Test-first (TDD):  [on/off]
-[6] Research agent:    [on/off]
-[7] Plan check agent:  [on/off]
-[8] Verifier agent:    [on/off]
-[9] Test validation:   [on/off]
-[10] Review workflow:   [on/off]
-[11] Solutions search:  [on/off]
-[12] Security enforcement: [on/off]
-[13] Auto-review after verify: [on/off]
-[14] Ship: auto-test:   [on/off]
-[15] Ship: conventional commits: [on/off]
-[16] Ship: PR template: [on/off]
-[17] Parallelization:   [on/off] (max agents: [N])
-[18] Git branching:     [current] (none | phase | milestone)
-[19] Commit docs:       [on/off]
-[20] Safety: confirm destructive: [on/off]
-[21] Context warnings:  [on/off]
-
-Enter a number to change a setting, or 'done' to save.
 ```
 
-Wait for selection. Repeat until user types "done".
+**Round 1 — Core settings (4 questions):**
 
-## Step 4: Change Selected Setting
-
-For each selected setting, explain the options and ask for the new value:
-
-**[1] Mode:**
 ```
-Mode controls how much Cascade auto-approves vs. asks you:
-- yolo: auto-approves decisions, fastest flow
-- interactive: confirms at each step, more control
-
-Current: [current]. New value?
-```
-
-**[2] Granularity:**
-```
-Granularity controls phase size:
-- coarse: 3-5 phases (broad strokes)
-- standard: 5-8 phases (default)
-- fine: 8-12 phases (more granular, better for complex projects)
-
-Current: [current]. New value?
-```
-
-**[3] Model profile:**
-```
-Model profile controls which model tier each agent uses:
-- quality: large-tier for all decision-making agents (highest cost, best results)
-- balanced: large for planning, medium for execution (default — good balance)
-- budget: medium for writing code, small for research/verification (lowest cost)
-
-Current: [current]. New value?
-```
-
-**[4] Learning mode:**
-```
-Learning mode controls when learning actions are offered:
-- auto: offered automatically at workflow checkpoints (default)
-- manual: only when you explicitly invoke @agentic-learning
-
-Current: [current]. New value?
-```
-
-**[5] Test-first (TDD):**
-```
-Test-first mode enforces red-green-refactor during execute-phase:
-- on: write failing test → verify red → implement → verify green
-- off: write tests alongside implementation (default)
-
-Current: [current]. New value? (on/off)
+ask_user_question([
+  {
+    header: "Model Profile",
+    question: "Which model quality tier for agents?",
+    multiSelect: false,
+    options: [
+      { label: "Balanced (Recommended)", description: "Large for planning, medium for execution" },
+      { label: "Quality", description: "Large-tier for all agents (highest cost)" },
+      { label: "Budget", description: "Medium for code, small for research (lowest cost)" },
+      { label: "Inherit", description: "Use current session model for all agents" }
+    ]
+  },
+  {
+    header: "Mode",
+    question: "Working style?",
+    multiSelect: false,
+    options: [
+      { label: "YOLO", description: "Auto-approve steps, just execute" },
+      { label: "Interactive", description: "Confirm at each step, more control" }
+    ]
+  },
+  {
+    header: "Granularity",
+    question: "Phase size?",
+    multiSelect: false,
+    options: [
+      { label: "Coarse", description: "3-5 phases, broad strokes" },
+      { label: "Standard", description: "5-8 phases, balanced (default)" },
+      { label: "Fine", description: "8-12 phases, granular for complex projects" }
+    ]
+  },
+  {
+    header: "Learning",
+    question: "When should learning partner activate?",
+    multiSelect: false,
+    options: [
+      { label: "Auto", description: "Offer at natural checkpoints (default)" },
+      { label: "Manual", description: "Only when you invoke @agentic-learning" }
+    ]
+  }
+])
 ```
 
-**[6-8] Agent toggles (research / plan_check / verifier):**
-```
-[Research / Plan check / Verifier] agent:
-- on: agent runs (recommended for production work)
-- off: skip this agent (faster, for familiar domains or prototyping)
+**Round 2 — Workflow agents (6 questions):**
 
-Current: [current]. New value? (on/off)
 ```
-
-**[9] Test validation:**
-```
-Test validation maps automated test coverage to requirements during plan-phase.
-- on: plans include automated verify commands per task (recommended)
-- off: skip validation research (good for rapid prototyping)
-
-Current: [current]. New value? (on/off)
-```
-
-**[10] Review workflow:**
-```
-Multi-persona code review after verification:
-- on: /review is available and can be auto-triggered (recommended)
-- off: skip review workflow
-
-Current: [current]. New value? (on/off)
-```
-
-**[11] Solutions search:**
-```
-Search .planning/solutions/ for prior art during plan-phase:
-- on: reuse patterns from solved problems (recommended)
-- off: skip solutions search
-
-Current: [current]. New value? (on/off)
-```
-
-**[12] Auto-review after verify:**
-```
-Automatically trigger /review after verify-work passes:
-- on: review starts immediately after successful verification
-- off: run /review manually when ready (default)
-
-Current: [current]. New value? (on/off)
-```
-
-**[13-15] Ship pipeline (auto_test / conventional_commits / pr_template):**
-```
-[Auto-test / Conventional commits / PR template]:
-- on: enabled (recommended)
-- off: disabled
-
-Current: [current]. New value? (on/off)
-```
-
-**[16] Git branching:**
-```
-Branching strategy:
-- none: no automatic branches (good for solo work)
-- phase: create a branch at each execute-phase (good for code review per phase)
-- milestone: one branch for all phases in a milestone (good for release branches)
-
-Current: [current]. New value?
+ask_user_question([
+  {
+    header: "Research",
+    question: "Spawn researcher agent before planning?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Research domain before planning each phase" },
+      { label: "No", description: "Skip research, plan directly" }
+    ]
+  },
+  {
+    header: "Plan Check",
+    question: "Verify plans before execution?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Catch gaps before execution starts" },
+      { label: "No", description: "Execute without plan verification" }
+    ]
+  },
+  {
+    header: "Verifier",
+    question: "Verify phase completion?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Confirm deliverables after execution" },
+      { label: "No", description: "Skip post-execution verification" }
+    ]
+  },
+  {
+    header: "Review",
+    question: "Multi-persona code review?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Correctness, security, performance review" },
+      { label: "No", description: "Skip review" }
+    ]
+  },
+  {
+    header: "Solutions",
+    question: "Search prior solutions during planning?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Check .planning/solutions/ for reusable patterns" },
+      { label: "No", description: "Plan without searching prior solutions" }
+    ]
+  },
+  {
+    header: "TDD",
+    question: "Test-first mode?",
+    multiSelect: false,
+    options: [
+      { label: "No (Recommended)", description: "Write tests alongside implementation" },
+      { label: "Yes", description: "Red-green-refactor: failing test first, then implement" }
+    ]
+  }
+])
 ```
 
-**[17] Commit docs:**
-```
-Whether .planning/ files are committed to git:
-- on: planning artifacts tracked in git (default)
-- off: keep .planning/ local only (add to .gitignore for privacy)
+**Round 3 — Pipeline & git (4 questions):**
 
-Current: [current]. New value? (on/off)
+```
+ask_user_question([
+  {
+    header: "Ship Pipeline",
+    question: "Ship pipeline preferences?",
+    multiSelect: true,
+    options: [
+      { label: "Auto-test before shipping (Recommended)", description: "Run tests before every ship" },
+      { label: "Conventional commits (Recommended)", description: "Use feat:, fix:, docs: prefixes" },
+      { label: "Auto-generate PR description (Recommended)", description: "Create PR body from commits" }
+    ]
+  },
+  {
+    header: "Git Tracking",
+    question: "Commit planning docs to git?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Planning docs tracked in version control" },
+      { label: "No", description: "Keep .planning/ local-only" }
+    ]
+  },
+  {
+    header: "Branching",
+    question: "Git branching strategy?",
+    multiSelect: false,
+    options: [
+      { label: "None (Recommended)", description: "Commit directly to current branch" },
+      { label: "Per Phase", description: "Create branch for each phase" },
+      { label: "Per Milestone", description: "One branch for entire milestone" }
+    ]
+  },
+  {
+    header: "Context Warnings",
+    question: "Context window warnings?",
+    multiSelect: false,
+    options: [
+      { label: "Yes (Recommended)", description: "Warn when context usage is high" },
+      { label: "No", description: "Disable warnings, allow natural auto-compact" }
+    ]
+  }
+])
 ```
 
 ## Step 5: Save Config

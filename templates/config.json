@@ -1,6 +1,7 @@
 {
   "mode": "interactive",
   "granularity": "standard",
+  "context": "dev",
   "model_profile": "balanced",
   "learning_mode": "auto",
   "test_first": false,

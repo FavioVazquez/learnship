@@ -6,6 +6,8 @@ allowed-tools:
   - Read
   - Bash
   - Write
+  - Task
+  - AskUserQuestion
 ---
 
 <execution_context>

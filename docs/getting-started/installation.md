@@ -68,13 +68,31 @@ The installer auto-detects which platforms are configured on your machine and as
 
     Installs to `~/.codex/`: invoke as `$learnship-ls`, `$learnship-new-project`, etc.
 
+=== "Cursor"
+
+    ```
+    /add-plugin learnship
+    ```
+
+    Cursor installs via the plugin marketplace, not the CLI. The `.mdc` rule file activates all learnship workflows automatically.
+
 === "All platforms"
 
     ```bash
     npx learnship --all --global
     ```
 
-    Installs to every detected platform at once. Recommended if you switch between tools.
+    Installs to all 6 platforms at once. Recommended if you switch between tools.
+
+## Custom install directory
+
+Use `--target` to override the default platform directory:
+
+```bash
+npx learnship --claude --global --target /path/to/custom/dir
+```
+
+This works with both install and uninstall (`--uninstall`) on all 6 platforms. Useful for CI, Docker, testing, or non-standard config locations.
 
 ## Global vs local
 
@@ -94,7 +112,7 @@ The installer auto-detects which platforms are configured on your machine and as
 │   ├── ls.md
 │   ├── new-project.md
 │   ├── execute-phase.md
-│   └── … 39 more
+│   └── … 54 more
 └── skills/
     ├── agentic-learning/ ← Learning partner skill (native @invoke on Windsurf)
     └── impeccable/       ← Design system skill (21 sub-skills)

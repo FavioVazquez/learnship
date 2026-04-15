@@ -33,6 +33,7 @@ learnship gives you that harness as a portable, open-source layer that runs insi
 - **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify → Review → Ship → Compound) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
 - **Knowledge compounding.** v2.0 adds `/compound` to capture solved problems as searchable documentation, `/review` for multi-persona code review, `/challenge` to stress-test scope, `/ship` for end-to-end delivery, and `/ideate` for codebase-grounded idea generation.
 - **Security, recovery, and session intelligence.** v2.1 adds `/secure-phase` for per-phase STRIDE threat verification, `/forensics` for post-mortem investigation, `/undo` for safe git revert, `/note` for zero-friction idea capture, `/session-report` for stakeholder summaries, `/docs-update` for documentation generation, and `/extract-learnings` for structured knowledge extraction.
+- **Session hooks and structured interactivity.** v2.2 adds 4 Claude Code/Gemini CLI hooks (statusline, context monitor, prompt guard, session state), 14 workflows with platform-native interactive questions, 3 context profiles (dev/research/review), 5 research templates, and agent persona delegation via `Task()`.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
@@ -113,6 +114,8 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
 ---
 
 ## Works on 6 platforms
+
+![Platform comparison](assets/platform-comparison.png)
 
 <div class="ls-platform-row">
   <a href="platform-guide/windsurf/" class="ls-platform-badge native">Windsurf</a>

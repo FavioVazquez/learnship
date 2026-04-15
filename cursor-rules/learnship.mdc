@@ -141,13 +141,23 @@ Available actions: `adapt`, `animate`, `arrange`, `audit`, `bolder`, `clarify`, 
 
 ## Parallel Execution
 
-Cursor supports real parallel subagents. During `/new-project` setup (Group D), ask:
+Cursor supports real parallel subagents. During `/new-project` Step 2 configuration, one of the questions asks about parallel execution:
 
-"Do you want to enable parallel subagent execution?"
 - **No** (recommended default) — Plans execute sequentially, one at a time. Safer, easier to follow.
 - **Yes** — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Faster, but uses more tokens.
 
-Set `"parallelization": true|false` in `.planning/config.json` based on the user's choice.
+Set `"parallelization": { "enabled": true|false }` in `.planning/config.json` based on the user's choice.
+
+## Structured Questions
+
+When workflows include `AskUserQuestion()` blocks, **Cursor has no native structured question tool**. Present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label. Example:
+
+```
+**Working Style**
+How do you want to work?
+1. YOLO (Recommended) — Auto-approve steps, just execute
+2. Interactive — Confirm at each step
+```
 
 ## Learning Mode
 

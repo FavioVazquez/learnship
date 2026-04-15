@@ -105,11 +105,18 @@ Assumptions validated. Ready to plan.
 ## Step 5: Offer Next Steps
 
 ```
-What's next?
-
-1. discuss-phase [N] — you answer my questions to build CONTEXT.md
-2. plan-phase [N] — create plans now (assumptions noted above apply)
-3. Re-examine — I'll analyze again with your corrections
+AskUserQuestion([
+  {
+    header: "Next Step",
+    question: "What would you like to do with these assumptions?",
+    multiSelect: false,
+    options: [
+      { label: "Discuss Phase", description: "Run discuss-phase [N] — you answer my questions to build CONTEXT.md" },
+      { label: "Plan Now", description: "Run plan-phase [N] — create plans now (assumptions noted above apply)" },
+      { label: "Re-examine", description: "Analyze again with your corrections" }
+    ]
+  }
+])
 ```
 
 Note: Any corrections discussed here are not automatically captured. Run `discuss-phase [N]` to write them to a CONTEXT.md that planners will read.

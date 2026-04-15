@@ -5,6 +5,7 @@ argument-hint: "[N]"
 allowed-tools:
   - Read
   - Bash
+  - AskUserQuestion
 ---
 
 <execution_context>

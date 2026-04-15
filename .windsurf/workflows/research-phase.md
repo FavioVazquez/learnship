@@ -30,16 +30,21 @@ ls ".planning/phases/"*"/"*"-RESEARCH.md" 2>/dev/null | grep "^[N]-\|/[N][^0-9]"
 ```
 
 If RESEARCH.md already exists for this phase:
-```
-Research already exists: .planning/phases/[phase-dir]/[N]-RESEARCH.md
 
-Options:
-1. View existing research
-2. Re-run and overwrite
-3. Skip — use existing
 ```
-
-Wait for choice.
+ask_user_question([
+  {
+    header: "Existing Research",
+    question: "Research already exists for this phase. What do you want to do?",
+    multiSelect: false,
+    options: [
+      { label: "View existing", description: "Show current research, then decide" },
+      { label: "Re-run and overwrite", description: "Discard existing research and re-run" },
+      { label: "Skip", description: "Use existing research as-is" }
+    ]
+  }
+])
+```
 
 ## Step 3: Load Context
 
@@ -64,6 +69,36 @@ If CONTEXT.md exists, read it — user decisions shape what to research.
  learnship ► RESEARCHING PHASE [N]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
+
+**If `parallelization.enabled` is `true` (subagent mode — Claude Code, OpenCode, Codex):**
+
+Spawn a dedicated researcher agent:
+```
+Task(
+  subagent_type="learnship-researcher",
+  prompt="
+    <objective>
+    Research phase [N] for this project. Read the phase goal from ROADMAP.md,
+    requirements from REQUIREMENTS.md, and any CONTEXT.md decisions.
+    Write [padded_phase]-RESEARCH.md with Don't Hand-Roll, Common Pitfalls,
+    Existing Patterns, and Recommended Approach sections.
+    Follow the researcher persona at @./agents/researcher.md.
+    </objective>
+
+    <files_to_read>
+    - .planning/ROADMAP.md
+    - .planning/REQUIREMENTS.md
+    - .planning/STATE.md
+    - .planning/phases/[padded_phase]-[slug]/[padded_phase]-CONTEXT.md (if exists)
+    - @./agents/researcher.md (persona)
+    </files_to_read>
+  "
+)
+```
+
+**If `parallelization.enabled` is `false` (sequential mode):**
 
 Using `@./agents/researcher.md` as your research persona in **phase research mode**:
 

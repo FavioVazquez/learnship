@@ -64,6 +64,7 @@ No prefix needed, no "use the skill" phrasing required. Just invoke.
 | Parallel subagents | ❌ Not supported |
 | Wave execution | Sequential only |
 | Specialist agent pool | ❌ Not supported |
+| Interactive questions | ✅ `ask_user_question` (v2.2) |
 
 !!! note "Parallelization"
     Windsurf doesn't support real parallel subagents: `execute-phase` always runs plans sequentially. All context engineering, planning, verification, and learning features are fully available.

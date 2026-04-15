@@ -33,7 +33,21 @@ Check if a MILESTONE-CONTEXT.md already exists:
 node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/MILESTONE-CONTEXT.md') ? 'EXISTS' : 'MISSING')"
 ```
 
-If exists: ask "A milestone context file already exists from a prior discussion. Update it or start fresh?"
+If exists:
+
+```
+ask_user_question([
+  {
+    header: "Existing Context",
+    question: "A milestone context file already exists from a prior discussion.",
+    multiSelect: false,
+    options: [
+      { label: "Update it", description: "Add to or revise existing milestone context" },
+      { label: "Start fresh", description: "Discard prior context and start over" }
+    ]
+  }
+])
+```
 
 ## Step 2: Discuss Goals
 

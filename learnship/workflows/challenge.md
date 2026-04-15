@@ -138,10 +138,22 @@ Proposal: [description]
 [If PROCEED: key risks to monitor]
 ```
 
-Present the verdict using the platform's blocking question tool:
-- **Proceed as planned** → continue to planning
-- **Adjust scope** → describe adjustments, then re-challenge or proceed
-- **Rethink** → go back to ideation or discussion
+Present the verdict using a structured question:
+
+```
+AskUserQuestion([
+  {
+    header: "Challenge Verdict",
+    question: "Based on the product and engineering analysis — how do you want to proceed?",
+    multiSelect: false,
+    options: [
+      { label: "Proceed as planned", description: "Continue to planning with identified risks monitored" },
+      { label: "Adjust scope", description: "Narrow the scope based on challenge findings, then proceed" },
+      { label: "Rethink", description: "Go back to ideation or discussion — too many concerns" }
+    ]
+  }
+])
+```
 
 ## Step 5: Record Decision
 

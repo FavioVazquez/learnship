@@ -75,30 +75,72 @@ Classify each threat:
 
 If all threats are CLOSED: skip to Step 6.
 
-If open threats exist, present them:
+If open threats exist, present them with a structured question:
+
+Display the threat table first, then:
 
 ```
-Open Threats ([N]):
-
-| ID | Category | Component | Description |
-|----|----------|-----------|-------------|
-| T-03-01 | Info Disclosure | api/auth.ts | JWT secret in environment without validation |
-
-Options:
-1. Verify all open threats — investigate and resolve
-2. Accept all open — document as accepted risks
-3. Review individually — decide per threat
+AskUserQuestion([
+  {
+    header: "Open Threats",
+    question: "[N] open threat(s) found. How do you want to handle them?",
+    multiSelect: false,
+    options: [
+      { label: "Verify all", description: "Investigate and resolve each open threat against the codebase" },
+      { label: "Accept all", description: "Document all as accepted risks with rationale" },
+      { label: "Review individually", description: "Decide per threat: verify, accept, or skip" }
+    ]
+  }
+])
 ```
-
-Wait for user response.
 
 ## Step 5: Resolve Open Threats
 
-For option 1 (verify all): Using `@./agents/verifier.md`, check each open threat against the codebase. Update status based on findings.
+Read `parallelization` from `.planning/config.json` (defaults to `false`).
 
-For option 2 (accept all): Add each to the Accepted Risks Log with user's rationale.
+**For "Verify all":**
 
-For option 3 (individual): Present each threat one at a time with options: Verify / Accept / Skip.
+**If `parallelization.enabled` is `true`:**
+```
+Task(
+  subagent_type="learnship-security-auditor",
+  prompt="
+    <objective>
+    Verify all open threats in the threat register for phase [N].
+    Check each threat against the actual codebase. Update status to
+    CLOSED if mitigation found, or document what's missing.
+    Follow the security auditor persona at @./agents/security-auditor.md.
+    </objective>
+
+    <files_to_read>
+    - [phase SECURITY.md or threat register]
+    - @./agents/security-auditor.md (persona)
+    </files_to_read>
+  "
+)
+```
+
+**If `parallelization.enabled` is `false`:**
+Using `@./agents/security-auditor.md`, check each open threat against the codebase. Update status based on findings.
+
+**For "Accept all":** Add each to the Accepted Risks Log with user's rationale.
+
+**For "Review individually":** Present each threat one at a time:
+
+```
+AskUserQuestion([
+  {
+    header: "Threat [ID]",
+    question: "[Category]: [Description] in [Component]",
+    multiSelect: false,
+    options: [
+      { label: "Verify", description: "Investigate this threat against the codebase" },
+      { label: "Accept", description: "Document as accepted risk" },
+      { label: "Skip", description: "Leave open for now" }
+    ]
+  }
+])
+```
 
 ## Step 6: Write SECURITY.md
 

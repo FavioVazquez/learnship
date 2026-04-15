@@ -86,6 +86,23 @@ When enabled:
 - `compound` spawns a solution-writer subagent to capture knowledge (v2.0)
 - `ideate` spawns an ideation-agent for codebase-grounded idea generation (v2.0)
 
+## Session hooks (v2.2)
+
+Claude Code gets 4 session hooks installed automatically:
+
+| Hook | What it does |
+|------|--------------|
+| **Statusline** | Shows model, task/phase, directory, and a context usage bar (green → yellow → orange → red) |
+| **Context monitor** | Warns the AI at 35% remaining (WARNING) and 25% remaining (CRITICAL) context to prevent unfinished work |
+| **Prompt guard** | Scans `.planning/` file writes for prompt injection patterns (advisory, does not block) |
+| **Session state** | Injects STATE.md orientation at session start and triggers background update checks |
+
+Hooks are installed to `~/.claude/settings.json` automatically. No configuration needed.
+
+## Interactive questions (v2.2)
+
+14 workflows now present user decisions via `AskUserQuestion` — Claude Code's native structured question tool. You'll see clickable option cards instead of plain text lists during `/new-project`, `/settings`, `/discuss-phase`, and other interactive workflows.
+
 ## Capabilities
 
 | Feature | Status |
@@ -96,6 +113,8 @@ When enabled:
 | Parallel subagents | ✅ opt-in |
 | Wave execution | ✅ opt-in |
 | Specialist agent pool | ✅ |
+| Session hooks | ✅ 4 hooks (v2.2) |
+| Interactive questions | ✅ `AskUserQuestion` (v2.2) |
 
 ## Tips
 

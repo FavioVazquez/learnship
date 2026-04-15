@@ -1861,9 +1861,14 @@ const SYNCED_WORKFLOWS = [
   'verify-work', 'debug', 'quick', 'pause-work', 'resume-work',
 ];
 check('all modified workflow source and installed copies are identical', () => {
+  // Windsurf workflows use ask_user_question (platform-native) while source uses AskUserQuestion (Claude Code canonical).
+  // Normalize this expected difference before comparing.
+  function normalize(content) {
+    return content.replace(/\bask_user_question\b/g, 'AskUserQuestion');
+  }
   const diffs = [];
   for (const wf of SYNCED_WORKFLOWS) {
-    const src  = readWF(wf);
+    const src  = normalize(readWF(wf));
     const inst = readInstalled(wf);
     if (src !== inst) {
       diffs.push(wf);
@@ -3090,6 +3095,261 @@ if [ -f "$REPO/AGENTS.md" ]; then
     fail "learnship AGENTS.md uses old principle names — not synced with template"
   fi
 fi
+
+# ──────────────────────────────────────────────────────────────────────────
+# 12. Hook system, research templates, context profiles
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [12] Hook system, research templates, context profiles"
+echo "  ──────────────────────────────────────────────────────"
+
+# --- Research templates ---
+for tmpl in STACK.md FEATURES.md ARCHITECTURE.md PITFALLS.md SUMMARY.md; do
+  if [ -f "$REPO/learnship/templates/research-project/$tmpl" ]; then
+    ok "research template exists: $tmpl"
+  else
+    fail "research template missing: $tmpl"
+  fi
+done
+
+# Each research template has <template> and <guidelines> blocks
+for tmpl in STACK.md FEATURES.md ARCHITECTURE.md PITFALLS.md SUMMARY.md; do
+  FILE="$REPO/learnship/templates/research-project/$tmpl"
+  if [ -f "$FILE" ]; then
+    if grep -q '<template>' "$FILE" && grep -q '<guidelines>' "$FILE"; then
+      ok "research template $tmpl has <template> and <guidelines> blocks"
+    else
+      fail "research template $tmpl missing <template> or <guidelines> block"
+    fi
+  fi
+done
+
+# new-project.md references research templates
+if grep -q '@./templates/research-project/STACK.md' "$REPO/learnship/workflows/new-project.md" && \
+   grep -q '@./templates/research-project/FEATURES.md' "$REPO/learnship/workflows/new-project.md" && \
+   grep -q '@./templates/research-project/ARCHITECTURE.md' "$REPO/learnship/workflows/new-project.md" && \
+   grep -q '@./templates/research-project/PITFALLS.md' "$REPO/learnship/workflows/new-project.md" && \
+   grep -q '@./templates/research-project/SUMMARY.md' "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project.md references all 5 research templates"
+else
+  fail "new-project.md missing research template references — AI has no structural guide"
+fi
+
+# --- Context profiles ---
+for ctx in dev.md research.md review.md; do
+  if [ -f "$REPO/learnship/contexts/$ctx" ]; then
+    ok "context profile exists: $ctx"
+  else
+    fail "context profile missing: $ctx"
+  fi
+done
+
+# Each context profile has Output Style, Focus Areas, Verbosity
+for ctx in dev.md research.md review.md; do
+  FILE="$REPO/learnship/contexts/$ctx"
+  if [ -f "$FILE" ]; then
+    if grep -q '## Output Style' "$FILE" && grep -q '## Focus Areas' "$FILE" && grep -q '## Verbosity' "$FILE"; then
+      ok "context profile $ctx has Output Style, Focus Areas, Verbosity sections"
+    else
+      fail "context profile $ctx missing required sections"
+    fi
+  fi
+done
+
+# config.json template has context field
+if grep -q '"context"' "$REPO/templates/config.json"; then
+  ok "config.json template has context field"
+else
+  fail "config.json template missing context field"
+fi
+
+# --- Hook files ---
+for hook in learnship-statusline.js learnship-context-monitor.js learnship-prompt-guard.js learnship-session-state.js; do
+  if [ -f "$REPO/hooks/$hook" ]; then
+    ok "hook file exists: $hook"
+  else
+    fail "hook file missing: $hook"
+  fi
+done
+
+# Hook files pass node --check syntax validation
+for hook in learnship-statusline.js learnship-context-monitor.js learnship-prompt-guard.js learnship-session-state.js; do
+  if [ -f "$REPO/hooks/$hook" ]; then
+    if node --check "$REPO/hooks/$hook" 2>/dev/null; then
+      ok "hook $hook passes syntax check"
+    else
+      fail "hook $hook has syntax errors"
+    fi
+  fi
+done
+
+# Hook files have version headers
+for hook in learnship-statusline.js learnship-context-monitor.js learnship-prompt-guard.js learnship-session-state.js; do
+  if [ -f "$REPO/hooks/$hook" ]; then
+    if grep -q 'learnship-hook-version:' "$REPO/hooks/$hook"; then
+      ok "hook $hook has version header"
+    else
+      fail "hook $hook missing version header"
+    fi
+  fi
+done
+
+# install.js has new hook/manifest functions
+for fn in installClaudeHooks uninstallClaudeHooks generateManifest saveLocalPatches; do
+  if grep -q "function $fn" "$REPO/bin/install.js"; then
+    ok "installer has function: $fn"
+  else
+    fail "installer missing function: $fn"
+  fi
+done
+
+# install.js exports new functions in test mode
+for fn in installClaudeHooks uninstallClaudeHooks generateManifest saveLocalPatches; do
+  if grep -q "$fn," "$REPO/bin/install.js" | head -1 && grep -q "module.exports" "$REPO/bin/install.js"; then
+    ok "installer exports: $fn"
+  else
+    # Softer check — just verify the function name appears after module.exports
+    if sed -n '/module.exports/,/};/p' "$REPO/bin/install.js" | grep -q "$fn"; then
+      ok "installer exports: $fn"
+    else
+      fail "installer missing export: $fn"
+    fi
+  fi
+done
+
+# LEARNSHIP_MANAGED_HOOKS constant exists
+if grep -q "LEARNSHIP_MANAGED_HOOKS" "$REPO/bin/install.js"; then
+  ok "installer has LEARNSHIP_MANAGED_HOOKS constant"
+else
+  fail "installer missing LEARNSHIP_MANAGED_HOOKS constant"
+fi
+
+# Hook wiring: Claude Code install path calls installClaudeHooks
+if grep -q "installClaudeHooks.*'claude'" "$REPO/bin/install.js"; then
+  ok "Claude Code install path wires hooks"
+else
+  fail "Claude Code install path missing hook wiring"
+fi
+
+# Hook wiring: Gemini install path calls installClaudeHooks
+if grep -q "installClaudeHooks.*'gemini'" "$REPO/bin/install.js"; then
+  ok "Gemini install path wires hooks"
+else
+  fail "Gemini install path missing hook wiring"
+fi
+
+# Uninstall calls uninstallClaudeHooks
+if grep -q "uninstallClaudeHooks" "$REPO/bin/install.js"; then
+  ok "uninstall function calls uninstallClaudeHooks"
+else
+  fail "uninstall function missing hook cleanup"
+fi
+
+# Hooks do NOT break other platforms (Codex, OpenCode, Windsurf have no hook calls)
+# Verify that installClaudeHooks is only called with 'claude' or 'gemini' args
+HOOK_CALLS=$(grep "installClaudeHooks(" "$REPO/bin/install.js" | grep -v "^function\|^//\|^ \*")
+for platform_check in codex opencode windsurf; do
+  if ! echo "$HOOK_CALLS" | grep -q "'$platform_check'"; then
+    ok "$platform_check install path does NOT call installClaudeHooks (correct)"
+  else
+    fail "$platform_check install path incorrectly calls installClaudeHooks"
+  fi
+done
+
+# ──────────────────────────────────────────────────────────────────────────
+# 13. Structured questions (AskUserQuestion) & agent persona delegation
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "  [13] Structured questions & agent persona delegation"
+echo "  ────────────────────────────────────────────────────"
+
+# --- AskUserQuestion blocks in key workflows ---
+for wf in new-project.md settings.md discuss-phase.md challenge.md quick.md debug.md ideate.md discuss-milestone.md new-milestone.md research-phase.md secure-phase.md validate-phase.md list-phase-assumptions.md diagnose-issues.md; do
+  if grep -q "AskUserQuestion" "$REPO/learnship/workflows/$wf"; then
+    ok "workflow $wf has AskUserQuestion blocks"
+  else
+    fail "workflow $wf missing AskUserQuestion blocks"
+  fi
+done
+
+# Platform note in new-project.md (cross-platform fallback instruction)
+if grep -q "Platform note.*interactive question tool.*numbered text list" "$REPO/learnship/workflows/new-project.md"; then
+  ok "new-project.md has platform note for structured question fallback"
+else
+  fail "new-project.md missing platform note for cross-platform question fallback"
+fi
+
+# --- install.js rewrites AskUserQuestion to platform-native tool names ---
+# Verify replacePaths has the 3 platform-specific AskUserQuestion rewrites
+if grep -q "platform === 'windsurf'" "$REPO/bin/install.js" && grep -q "ask_user_question" "$REPO/bin/install.js"; then
+  ok "install.js rewrites AskUserQuestion → ask_user_question for Windsurf"
+else
+  fail "install.js missing AskUserQuestion → ask_user_question rewrite for Windsurf"
+fi
+if grep -q "'gemini'" "$REPO/bin/install.js" && grep -q "AskUserQuestion.*ask_user" "$REPO/bin/install.js"; then
+  ok "install.js rewrites AskUserQuestion → ask_user for Gemini"
+else
+  fail "install.js missing AskUserQuestion → ask_user rewrite for Gemini"
+fi
+if grep -q "'codex'" "$REPO/bin/install.js" && grep -q "request_user_input" "$REPO/bin/install.js"; then
+  ok "install.js rewrites AskUserQuestion → request_user_input for Codex"
+else
+  fail "install.js missing AskUserQuestion → request_user_input rewrite for Codex"
+fi
+
+# --- .windsurf/workflows/ uses ask_user_question (not raw AskUserQuestion) ---
+WS_ASK_COUNT=$(grep -rl "ask_user_question" "$REPO/.windsurf/workflows/"*.md 2>/dev/null | wc -l)
+WS_RAW_COUNT=$(grep -rl "AskUserQuestion" "$REPO/.windsurf/workflows/"*.md 2>/dev/null | wc -l)
+if [ "$WS_ASK_COUNT" -ge 12 ] && [ "$WS_RAW_COUNT" -eq 0 ]; then
+  ok ".windsurf/workflows/ uses ask_user_question ($WS_ASK_COUNT files), no raw AskUserQuestion"
+else
+  fail ".windsurf/workflows/ has $WS_ASK_COUNT ask_user_question files and $WS_RAW_COUNT raw AskUserQuestion files (expected ≥12 and 0)"
+fi
+
+# --- Task() persona delegation in key workflows ---
+for wf in new-project.md challenge.md debug.md execute-phase.md plan-phase.md review.md ideate.md research-phase.md secure-phase.md verify-work.md validate-phase.md; do
+  if grep -q "Task(" "$REPO/learnship/workflows/$wf"; then
+    ok "workflow $wf has Task() delegation"
+  else
+    fail "workflow $wf missing Task() delegation"
+  fi
+done
+
+# --- Agent persona references (@./agents/) in workflows with Task() ---
+for wf in challenge.md debug.md research-phase.md verify-work.md secure-phase.md validate-phase.md; do
+  if grep -q '@./agents/' "$REPO/learnship/workflows/$wf"; then
+    ok "workflow $wf has @./agents/ persona reference (sequential fallback)"
+  else
+    fail "workflow $wf missing @./agents/ persona reference for sequential mode"
+  fi
+done
+
+# --- Commands have AskUserQuestion in allowed-tools ---
+for cmd in new-project settings discuss-phase challenge debug ideate quick research-phase secure-phase validate-phase verify-work discuss-milestone new-milestone list-phase-assumptions diagnose-issues; do
+  if grep -q "AskUserQuestion" "$REPO/commands/learnship/$cmd.md"; then
+    ok "command $cmd has AskUserQuestion in allowed-tools"
+  else
+    fail "command $cmd missing AskUserQuestion in allowed-tools"
+  fi
+done
+
+# --- Commands that use Task() have it in allowed-tools ---
+for cmd in discuss-phase quick research-phase secure-phase validate-phase verify-work ideate debug execute-phase plan-phase review; do
+  if grep -q "Task" "$REPO/commands/learnship/$cmd.md"; then
+    ok "command $cmd has Task in allowed-tools"
+  else
+    fail "command $cmd missing Task in allowed-tools"
+  fi
+done
+
+# --- Parallelization branching pattern: workflows with Task() also have sequential fallback ---
+for wf in research-phase.md secure-phase.md verify-work.md validate-phase.md new-project.md; do
+  if grep -q "parallelization" "$REPO/learnship/workflows/$wf" && grep -q '@./agents/' "$REPO/learnship/workflows/$wf"; then
+    ok "workflow $wf has both parallelization check and sequential agent fallback"
+  else
+    fail "workflow $wf missing parallelization/sequential branching pattern"
+  fi
+done
 
 # ──────────────────────────────────────────────────────────────────────────
 # Summary
