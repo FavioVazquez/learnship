@@ -4,10 +4,11 @@ description: Codebase-grounded divergent thinking — discover what is worth wor
 
 # Ideate
 
-Codebase-grounded divergent ideation. Scans the actual codebase for hotspots, TODOs, test gaps, and friction points, then generates 15-25 improvement ideas across multiple thinking frames. Adversarial filter eliminates weak ideas. Presents top 5-7 ranked survivors.
+Codebase-grounded divergent ideation with Socratic exploration. Two modes: **scan mode** (default) scans the actual codebase for hotspots and generates ranked improvement ideas. **Explore mode** (`--explore`) uses Socratic questioning to help you think through an idea before committing to artifacts.
 
-**Usage:** `ideate` — open-ended ideation on the current project
+**Usage:** `ideate` — open-ended scan-based ideation on the current project
 **Usage:** `ideate [focus]` — focused ideation on a specific area, concept, or constraint
+**Usage:** `ideate --explore [topic]` — Socratic exploration of an idea with mid-conversation research
 
 **Sequencing:** Run between milestones — after `/complete-milestone`, before `/discuss-milestone` or `/new-milestone`. Requires an existing project with `AGENTS.md` and `.planning/`.
 
@@ -26,7 +27,14 @@ ls AGENTS.md 2>/dev/null && ls .planning/PROJECT.md 2>/dev/null
 
 **If project exists:** Continue.
 
-## Step 2: Scope
+## Step 2: Mode Selection
+
+Parse arguments for `--explore` flag.
+
+**If `--explore` is present:** Jump to Step 2b (Socratic Exploration).
+**Otherwise:** Continue to Step 2a (Scan Mode).
+
+## Step 2a: Scope (Scan Mode)
 
 If a focus argument was provided, use it as the ideation lens.
 If no argument, proceed with open-ended ideation.
@@ -38,7 +46,57 @@ find .planning/ -name "*-ideation-*.md" -mtime -30 2>/dev/null
 
 If recent ideation exists, ask: "Found recent ideation work. Resume from it, or start fresh?"
 
-## Step 3: Codebase Scan
+## Step 2b: Socratic Exploration (only with `--explore`)
+
+If a topic was provided, acknowledge it and begin exploring:
+```
+## Explore: {topic}
+
+Let's think through this together. I'll ask questions to help clarify the idea
+before we commit to any artifacts.
+```
+
+If no topic, ask:
+```
+## Explore
+
+What's on your mind? This could be a feature idea, an architectural question,
+a problem you're trying to solve, or something you're not sure about yet.
+```
+
+**Conversation rules (2-5 exchanges):**
+- Ask **one question at a time** (never a list of questions)
+- Questions should probe: constraints, tradeoffs, users, scope, dependencies, risks
+- Listen for signals: "or" / "versus" / "tradeoff" indicate competing priorities worth exploring
+- Reflect back what you hear to confirm understanding before moving forward
+- **Follow the user's energy** — if they're excited about one aspect, go deeper there
+
+**Mid-conversation research offer (after 2-3 exchanges):**
+
+If the conversation surfaces factual questions, technology comparisons, or unknowns:
+```
+This touches on [specific question]. Want me to do a quick research pass before we continue?
+This would take ~30 seconds and might surface useful context.
+
+[Yes, research this] / [No, let's keep exploring]
+```
+
+If yes and parallelization is enabled, spawn a research agent. Otherwise do an inline research pass. Share findings and continue.
+
+**Crystallize outputs (after 3-6 exchanges):**
+
+When the conversation reaches natural conclusions, propose **up to 4 outputs**:
+
+| Type | Destination | When to suggest |
+|------|-------------|----------------|
+| Note | `.planning/notes/{slug}.md` | Observations, context, decisions worth remembering |
+| Todo | via `/add-todo` | Concrete actionable tasks identified |
+| Decision | via `/decision-log` | Architectural or scope decisions made |
+| Phase proposal | via `/add-phase` | Idea crystallized into a deliverable phase |
+
+Write selected outputs, then jump to Step 7 (Present Results) with a tailored summary.
+
+## Step 3: Codebase Scan (Scan Mode)
 
 Gather grounding context before generating ideas:
 
@@ -175,6 +233,7 @@ git commit -m "docs: ideation — [focus or 'open-ended'] ([N] survivors)"
 Present the "What's next?" options using the platform's blocking question tool:
 
 - **Deep-dive an idea** → expand on the selected idea with more detail
+- **Explore an idea** → run `ideate --explore [idea]` for Socratic deep-dive
 - **Add to current milestone** → feed into `/add-phase`
 - **Start a new milestone** → feed into `/discuss-milestone` then `/new-milestone`
 - **Challenge an idea** → run `/challenge [idea]` to stress-test it

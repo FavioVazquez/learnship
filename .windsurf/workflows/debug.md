@@ -231,6 +231,8 @@ Debug session closed.
 Session: .planning/debug/resolved/[session-file]
 
 ▶ If more issues remain: debug [new description]
+▶ Stuck or need deeper investigation? /forensics — post-mortem analysis
+▶ Need to revert the fix? /undo --last 1
 ```
 
 ---

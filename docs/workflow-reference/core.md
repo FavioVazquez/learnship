@@ -32,9 +32,10 @@ Initializes a new project with full spec-driven scaffolding.
 Captures implementation decisions for phase N before any planning begins.
 
 **What it does:**
-1. Reads your roadmap and prior `DECISIONS.md`
-2. Asks targeted questions about your preferences for this phase
-3. Writes `.planning/phases/N-*/N-CONTEXT.md`: the planner's primary input
+1. Reads your roadmap, prior `DECISIONS.md`, and domain-aware probes
+2. Identifies gray areas and asks targeted questions with scope guardrails (v2.1)
+3. Writes `CONTEXT.md` with domain, decisions, specifics, canonical refs, and deferred ideas
+4. Writes `DISCUSSION-LOG.md` as an audit trail of all options considered (v2.1)
 
 **When to use:** Before every `/plan-phase`. Skipping this is the #1 source of misaligned plans.
 
@@ -70,9 +71,11 @@ Executes all plans for phase N in wave order with atomic commits.
 3. Executes each task with an atomic git commit
 4. Writes `SUMMARY.md` for each plan
 
+**Flags:** `--wave N` to execute only wave N (v2.1). Context window scaling adapts read depth automatically.
+
 **When to use:** After `/plan-phase N` is complete.
 
-**Parallel option:** Set `"parallelization": true` to dispatch each plan to its own subagent (Claude Code, OpenCode, Gemini CLI, Codex CLI).
+**Parallel option:** Set `"parallelization": { "enabled": true }` to dispatch each plan to its own subagent (Claude Code, OpenCode, Gemini CLI, Codex CLI). Up to 5 concurrent agents per wave.
 
 **Learning checkpoint:** `reflect` · `quiz` · `interleave`
 
@@ -80,7 +83,7 @@ Executes all plans for phase N in wave order with atomic commits.
 
 ## `/verify-work [N]`
 
-Manual UAT for phase N with agent-assisted diagnosis and fix planning.
+Manual UAT for phase N with goal-backward verification, agent-assisted diagnosis, and fix planning.
 
 **What it does:**
 1. Shows what was built and the acceptance criteria

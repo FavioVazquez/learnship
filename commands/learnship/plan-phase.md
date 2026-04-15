@@ -7,7 +7,6 @@ allowed-tools:
   - Bash
   - Write
   - Task
-  - AskUserQuestion
 ---
 
 <execution_context>

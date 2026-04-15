@@ -90,7 +90,7 @@ The installer auto-detects which platforms are configured on your machine and as
 
 ```
 ~/.windsurf/              (Windsurf example)
-├── workflows/            ← 49 workflow markdown files
+├── workflows/            ← 57 workflow markdown files
 │   ├── ls.md
 │   ├── new-project.md
 │   ├── execute-phase.md
@@ -103,7 +103,7 @@ The installer auto-detects which platforms are configured on your machine and as
 For non-Windsurf platforms, skills are installed as context files:
 ```
 ~/.claude/learnship/
-├── workflows/            ← same 49 workflows
+├── workflows/            ← same 57 workflows
 └── skills/
     ├── agentic-learning/ ← loaded as AI context
     └── impeccable/       ← loaded as AI context

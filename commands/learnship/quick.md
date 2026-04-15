@@ -1,16 +1,12 @@
 ---
 name: learnship:quick
 description: Execute an ad-hoc task with full agentic guarantees — atomic commits, state tracking, no full planning ceremony
-argument-hint: ""<task description>""
+argument-hint: "[description]"
 allowed-tools:
   - Read
   - Bash
   - Write
-  - Edit
-  - Glob
-  - Grep
   - Task
-  - AskUserQuestion
 ---
 
 <execution_context>

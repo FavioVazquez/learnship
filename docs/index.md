@@ -12,7 +12,7 @@ hide:
     <a href="https://github.com/FavioVazquez/learnship/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/FavioVazquez/learnship/ci.yml?branch=main&style=for-the-badge&label=CI&color=22c55e&labelColor=555555" alt="CI"></a>
     <a href="https://github.com/FavioVazquez/learnship/releases/latest"><img src="https://img.shields.io/github/v/release/FavioVazquez/learnship?style=for-the-badge&color=3b82f6&label=release&labelColor=555555" alt="Latest release"></a>
     <a href="platform-guide/windsurf/"><img src="https://img.shields.io/badge/platforms-6-0ea5e9?style=for-the-badge&labelColor=555555" alt="6 platforms"></a>
-    <a href="workflow-reference/core/"><img src="https://img.shields.io/badge/workflows-49-3b82f6?style=for-the-badge&labelColor=555555" alt="49 workflows"></a>
+    <a href="workflow-reference/core/"><img src="https://img.shields.io/badge/workflows-57-3b82f6?style=for-the-badge&labelColor=555555" alt="57 workflows"></a>
     <a href="https://github.com/FavioVazquez/learnship/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge&labelColor=555555" alt="MIT License"></a>
   </div>
 </div>
@@ -32,6 +32,7 @@ learnship gives you that harness as a portable, open-source layer that runs insi
 - **Persistent memory.** An `AGENTS.md` file is loaded into every session so the agent always knows the project, current phase, tech stack, and past decisions. No more repeating yourself.
 - **Structured process.** A repeatable phase loop (Discuss → Plan → Execute → Verify → Review → Ship → Compound) with spec-driven plans, wave-ordered execution, and UAT-driven verification. The harness controls what context reaches the agent at each step.
 - **Knowledge compounding.** v2.0 adds `/compound` to capture solved problems as searchable documentation, `/review` for multi-persona code review, `/challenge` to stress-test scope, `/ship` for end-to-end delivery, and `/ideate` for codebase-grounded idea generation.
+- **Security, recovery, and session intelligence.** v2.1 adds `/secure-phase` for per-phase STRIDE threat verification, `/forensics` for post-mortem investigation, `/undo` for safe git revert, `/note` for zero-friction idea capture, `/session-report` for stakeholder summaries, `/docs-update` for documentation generation, and `/extract-learnings` for structured knowledge extraction.
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped, not just that you shipped it.
 
 ---
@@ -94,7 +95,7 @@ That's it. `/ls` tells you where you are, what to do next, and offers to run it.
 <div class="ls-card-grid">
   <div class="ls-card">
     <div class="ls-card-title">⚙️ Workflow Engine</div>
-    <p class="ls-card-desc">49 slash commands that take a project from idea to shipped. Spec-driven phases, context-engineered plans, wave-ordered execution, automated verification.</p>
+    <p class="ls-card-desc">57 slash commands that take a project from idea to shipped. Spec-driven phases, context-engineered plans, wave-ordered execution, automated verification.</p>
     <span class="ls-card-command">/discuss → /plan → /execute → /verify → /review → /ship → /compound</span>
   </div>
   <div class="ls-card">

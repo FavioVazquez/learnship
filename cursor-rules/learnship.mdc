@@ -79,9 +79,17 @@ Suggest the appropriate workflow slash command when relevant:
 | `/review` | Code ready for review — multi-persona quality check |
 | `/challenge` | About to commit to a milestone or big feature — stress-test the scope |
 | `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
-| `/ideate` | Looking for what to build next — codebase-grounded idea generation |
+| `/ideate` | Looking for what to build next — codebase-grounded idea generation (add `--explore` for Socratic mode) |
 | `/guard` | Working on sensitive files — enable safety mode with destructive command warnings |
 | `/sync-docs` | After code changes — detect stale documentation |
+| `/forensics` | Something went wrong — post-mortem investigation (read-only) |
+| `/undo` | Need to revert commits safely — preserves git history |
+| `/note [text]` | Quick idea capture — zero friction, no questions |
+| `/session-report` | End of session — generate summary for stakeholders |
+| `/secure-phase [N]` | After execution — per-phase STRIDE security verification |
+| `/docs-update` | Generate or update project documentation |
+| `/extract-learnings [N]` | After phase completion — structured learning extraction |
+| `/milestone-summary` | Generate comprehensive milestone summary for team onboarding |
 
 ## Planning Artifacts
 
@@ -91,7 +99,9 @@ All project state lives in `.planning/`. Key files:
 - `.planning/PROJECT.md` — Vision, requirements, key decisions
 - `.planning/ROADMAP.md` — Phase-by-phase delivery plan
 - `.planning/STATE.md` — Current position, decisions, blockers
-- `.planning/phases/[N]-[slug]/` — Per-phase artifacts
+- `.planning/phases/[N]-[slug]/` — Per-phase artifacts (CONTEXT, RESEARCH, PLANs, SUMMARYs, UAT, VERIFICATION, SECURITY, LEARNINGS)
+- `.planning/notes/` — Quick notes captured via `/note`
+- `.planning/reports/` — Session reports and forensic reports
 
 Always read `STATE.md` and `ROADMAP.md` before any planning or execution operation.
 

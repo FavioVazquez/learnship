@@ -152,9 +152,12 @@ This project uses **learnship**. Key facts:
 
 - All planning artifacts live in `.planning/` — read STATE.md and ROADMAP.md first when unsure where we are
 - The phase loop: `discuss-phase` → `plan-phase` → `execute-phase` → `verify-work` → `/review` → `/ship` → `/compound`
+- Optional per-phase: `/secure-phase` (security verification), `/extract-learnings` (capture meta-knowledge)
+- Recovery: `/forensics` (post-mortem), `/undo` (safe revert)
 - Current status is always in `.planning/STATE.md`
 - Decisions are tracked in `.planning/DECISIONS.md` — read it before proposing approaches that may conflict
 - Compounded solutions live in `.planning/solutions/` — organized by category with YAML frontmatter (module, problem_type, severity, tags). Search these before planning to avoid reinventing known solutions
+- Quick ideas: `/note [text]` for zero-friction capture, `/session-report` for end-of-session summaries
 - Run `/ls` if context is unclear about what phase we're on or what to do next — it shows status and offers to run the next step
 
 ---

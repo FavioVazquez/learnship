@@ -10,6 +10,20 @@ Validate built features through conversational testing. Walk through each delive
 
 **Philosophy:** Show expected, ask if reality matches. No pass/fail buttons. No severity questions. Just: "Here's what should happen. Does it?"
 
+<core_principle>
+**Task completion ≠ Goal achievement**
+
+A task "create chat component" can be marked complete when the component is a placeholder. The task was done — but the goal "working chat interface" was not achieved.
+
+Goal-backward verification:
+1. What must be TRUE for the goal to be achieved?
+2. What must EXIST for those truths to hold?
+3. What must be WIRED for those artifacts to function?
+4. What must TESTS PROVE for those truths to be evidenced?
+
+Then verify each level against the actual codebase.
+</core_principle>
+
 ## Step 1: Initialize
 
 Check for existing UAT sessions:
@@ -41,7 +55,21 @@ No active UAT sessions.
 Provide a phase number to start testing (e.g., verify-work 4)
 ```
 
-## Step 2: Find Deliverables
+## Step 2: Extract Must-Haves
+
+First, extract must-haves from plan frontmatter:
+```bash
+for plan in .planning/phases/[padded_phase]-[phase_slug]/*-PLAN.md; do
+  echo "=== $plan ==="
+  head -30 "$plan"
+done
+```
+
+Look for `must_haves` in each plan's frontmatter — these are the primary verification targets. If plans have must_haves, use them as the backbone of the test list.
+
+Also check ROADMAP.md for Success Criteria for this phase — these override plan-level must_haves when both exist.
+
+## Step 2b: Find Deliverables
 
 Read all SUMMARY.md files for the phase:
 ```bash
@@ -54,6 +82,8 @@ Extract testable deliverables from each SUMMARY.md — focus on **user-observabl
 - What workflows can a user now do?
 
 Skip internal changes (refactors, type changes, test additions).
+
+**Stub detection:** Before presenting tests, do a quick scan for placeholder code using patterns from `@./references/verification-patterns.md` (if it exists). Flag any files that look like stubs — these should be tested more carefully.
 
 **Cold-start smoke test:** If any SUMMARY.md mentions server entry points, database files, migrations, or docker files — prepend a "Cold Start Smoke Test" as the first test:
 ```
@@ -198,9 +228,11 @@ Immediately run the `review` workflow for this phase's changes.
 All tests passed. ✓
 
 ▶ Recommended next steps:
-  `/review`   — multi-persona code review (6 lenses: correctness, testing, security, performance, maintainability, adversarial)
-  `/ship`     — test → lint → commit → push → PR
-  `/compound` — capture notable solutions or patterns while context is fresh
+  `/review`            — multi-persona code review (6 lenses)
+  `/secure-phase [X]`  — STRIDE security verification for this phase
+  `/ship`              — test → lint → commit → push → PR
+  `/compound`          — capture notable solutions or patterns while context is fresh
+  `/extract-learnings [X]` — capture decisions, lessons, patterns, surprises
 
 ▶ Or continue: discuss-phase [X+1]
 ```

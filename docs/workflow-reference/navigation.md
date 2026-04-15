@@ -84,7 +84,9 @@ Executes a small, self-contained task with full guarantees. No phase planning ce
 |------|-------------|
 | *(none)* | Minimal: plan → execute → atomic commit |
 | `--discuss` | Brief decision conversation before executing |
-| `--full` | Full plan + execute + verification pass |
+| `--research` | Focused research pass before planning (v2.1) |
+| `--validate` | Plan-checking + post-execution verification (v2.1) |
+| `--full` | All of the above: discuss + research + validate |
 
 **Learning checkpoint:** `struggle` · `learn` · `either-or`: matched to what happened during the task.
 
@@ -92,7 +94,7 @@ Executes a small, self-contained task with full guarantees. No phase planning ce
 
 ## `/help`
 
-Lists all 49 workflows organized by category with one-line descriptions.
+Lists all 57 workflows organized by category with one-line descriptions.
 
 ```
 /help

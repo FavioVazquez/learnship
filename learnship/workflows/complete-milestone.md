@@ -185,11 +185,10 @@ Ask: "Ready to start the next milestone?"
 - **Not yet** → stop here
 
 ```
-💡 Not sure what to build next? Run `/ideate` for codebase-grounded idea generation —
-it scans TODOs, test gaps, and hotspots to surface high-impact improvements.
-
-💡 For ambitious next milestones, consider `/challenge` to stress-test the scope
-before committing.
+💡 Team onboarding? `/milestone-summary` — generate a comprehensive summary a new contributor can read
+💡 Capture learnings? `/extract-learnings [N]` for each completed phase — decisions, lessons, patterns
+💡 Not sure what to build next? `/ideate` — codebase-grounded idea generation
+💡 For ambitious next milestones, `/challenge` to stress-test the scope before committing
 ```
 
 ---

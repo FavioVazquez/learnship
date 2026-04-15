@@ -43,7 +43,9 @@ A structured conversation that happens **before any code is written**. The agent
 - What should be off-limits (things to avoid)?
 - Any constraints from previous phases?
 
-Your answers get written to `.planning/phases/N-*/N-CONTEXT.md`. The planner reads this file before creating any plans: so your preferences are honored, not guessed.
+Your answers get written to `.planning/phases/N-*/N-CONTEXT.md` with structured sections: domain boundary, decisions, specifics, canonical references, and deferred ideas. The planner and researcher both read this file — your preferences are honored, not guessed.
+
+v2.1 adds **scope guardrails** (prevents scope creep during discussion), **domain-aware probes** (smarter follow-ups for auth, API, database, etc.), and a **discussion log** as an audit trail.
 
 !!! tip "Why this step matters"
     Skipping discuss and going straight to plan is the most common source of misaligned plans. 10 minutes of discussion prevents hours of rework.
@@ -77,11 +79,13 @@ Plans are written in a structured format that specifies exact tasks, expected ou
 
 Plans run in **wave order**: independent plans in the same wave execute before dependent ones. Each task produces an atomic git commit.
 
-By default execution is sequential (safe for all platforms). On Claude Code, OpenCode, Gemini CLI, and Codex CLI, you can enable parallel subagents:
+By default execution is sequential (safe for all platforms). On Claude Code, OpenCode, and Codex CLI, you can enable parallel subagents:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": true } }
 ```
+
+v2.1 adds `--wave N` to execute a single wave, and context window scaling that adapts read depth automatically.
 
 See [Context Engineering → Parallel Execution](context-engineering.md) for details.
 
@@ -105,6 +109,8 @@ You do the testing. The agent is your diagnostic partner:
 6. Re-verify until clean
 
 When all criteria pass, the phase is marked complete and `STATE.md` advances.
+
+v2.1 adds **goal-backward verification** (checks what must be TRUE for the goal to be achieved, not just that tasks ran) and **must-haves extraction** from plan frontmatter.
 
 ---
 

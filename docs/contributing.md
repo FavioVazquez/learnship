@@ -13,10 +13,10 @@ learnship is built in the open. Contributions: new workflows, skill improvements
 
 ```
 learnship/
-├── .windsurf/workflows/    # 49 workflows as slash commands (source of truth)
+├── .windsurf/workflows/    # 57 workflows as slash commands (source of truth)
 ├── learnship/workflows/    # installed payload: must stay in sync with .windsurf/
 ├── .windsurf/skills/       # agentic-learning + impeccable native skills
-├── agents/                 # 10 agent persona files (source of truth)
+├── agents/                 # 12 agent persona files (source of truth)
 ├── learnship/agents/       # installed agent payload: must stay in sync with agents/
 ├── learnship/skills/       # installed skills payload (agentic-learning + impeccable)
 ├── commands/               # Claude Code-style slash command wrappers

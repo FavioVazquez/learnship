@@ -10,9 +10,11 @@ Execute small, ad-hoc tasks with full agentic guarantees: atomic commits, STATE.
 
 **Flags:**
 - `--discuss` — lightweight discussion phase before planning (surfaces gray areas)
-- `--full` — adds plan-checking and post-execution verification
+- `--research` — spawns a focused research agent before planning (investigates approaches, libraries, pitfalls)
+- `--validate` — enables plan-checking (max 2 iterations) and post-execution verification
+- `--full` — enables all of the above: discussion + research + plan-checking + verification
 
-**Composable:** `quick --discuss --full "add dark mode toggle"` gives discussion + plan-checking + verification.
+**Composable:** Granular flags compose freely. `quick --discuss --research --validate` = `--full`.
 
 ## Step 1: Get Task Description
 
@@ -113,6 +115,23 @@ Write `CONTEXT.md` to the task directory:
 </specifics>
 ```
 
+## Step 3b: Research Phase (only with `--research` or `--full`)
+
+**Skip if neither `--research` nor `--full` flag is present.**
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► RESEARCHING: [DESCRIPTION]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+Using `@./agents/researcher.md` as your research persona, do a focused research pass on the task:
+- What libraries or approaches are relevant?
+- What pitfalls should the implementation avoid?
+- Are there existing patterns in the codebase to follow?
+
+Write a brief `${NEXT_NUM}-RESEARCH.md` (max 50 lines) to the task directory. This feeds into the planner.
+
 ## Step 4: Create Plan
 
 Using `@./agents/planner.md` as your planning persona, read:
@@ -128,16 +147,17 @@ Each task needs:
 - `<verify>` — how to confirm it worked
 - `<done>` — observable completion criteria
 
-If `--full`: also include `must_haves` in plan frontmatter (truths, artifacts, key_links).
+If `--validate` or `--full`: also include `must_haves` in plan frontmatter (truths, artifacts, key_links).
+If `--research` or `--full`: also read the RESEARCH.md from step 3b.
 
 Verify plan was created (substitute actual NEXT_NUM and SLUG values):
 ```bash
 node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/quick/NEXT_NUM-SLUG/NEXT_NUM-PLAN.md') ? 'OK' : 'MISSING')"
 ```
 
-## Step 5: Plan Check (only with `--full`)
+## Step 5: Plan Check (only with `--validate` or `--full`)
 
-**Skip if `--full` flag is not present.**
+**Skip if neither `--validate` nor `--full` flag is present.**
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -187,9 +207,9 @@ After all tasks complete, write `${NEXT_NUM}-SUMMARY.md`:
 [commit hash]
 ```
 
-## Step 7: Verify Results (only with `--full`)
+## Step 7: Verify Results (only with `--validate` or `--full`)
 
-**Skip if `--full` flag is not present.**
+**Skip if neither `--validate` nor `--full` flag is present.**
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -235,7 +255,7 @@ Display completion:
 Quick Task [NEXT_NUM]: [DESCRIPTION]
 
 Summary: .planning/quick/[NEXT_NUM]-[SLUG]/[NEXT_NUM]-SUMMARY.md
-[If --full: Verification: [status]]
+[If --validate/--full: Verification: [status]]
 Commit: [hash]
 
 💡 Solved something notable? `/compound` — capture the solution while context is fresh

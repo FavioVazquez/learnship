@@ -148,4 +148,4 @@ If the user says yes (or "go", "do it", "run it", "proceed") — immediately inv
 
 - `/ls` is an alias for the status + routing logic in `progress`. Use either.
 - For full auto-pilot (no prompt), use `/next` instead.
-- To see all 49 available commands: `/help`
+- To see all 57 available commands: `/help`

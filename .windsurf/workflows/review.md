@@ -198,6 +198,7 @@ git commit -m "fix([scope]): [description from finding]"
 
 ```
 ▶ Next steps:
+- /secure-phase [N] — STRIDE security verification before shipping
 - /ship — run the ship pipeline (test → lint → commit → push → PR)
 - /compound — capture any notable patterns from the review
 ```

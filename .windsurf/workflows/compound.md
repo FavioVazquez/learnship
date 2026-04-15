@@ -271,6 +271,8 @@ File created:
 
 Note: This was created in lightweight mode. For richer documentation
 (cross-references, overlap detection), re-run /compound in a fresh session.
+
+💡 Also consider: /extract-learnings [N] — captures decisions, lessons, patterns, surprises from the entire phase
 ```
 
 **No subagents are launched. No parallel tasks. One file written.**

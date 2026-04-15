@@ -16,7 +16,7 @@ You only need to remember **5 commands** to use learnship effectively:
 | `/next` | Auto-pilot — reads state and runs the right workflow for you |
 | `/new-project` | Starting a brand new project |
 | `/quick "..."` | One-off task with atomic commit, no ceremony |
-| `/help` | This screen — see all 49 commands |
+| `/help` | This screen — see all 57 commands |
 
 Everything else below is discoverable from `/ls` as you go.
 
@@ -87,9 +87,11 @@ Everything else below is discoverable from `/ls` as you go.
 | `/review [mode]` | Multi-persona code review (correctness, testing, security, performance, maintainability) |
 | `/challenge [description]` | Product + engineering challenge gate — is this worth building? |
 | `/ship` | Ship pipeline: test → lint → commit → push → PR |
-| `/ideate [focus]` | Codebase-grounded divergent thinking — discover what to work on |
+| `/ideate [focus]` | Codebase-grounded divergent thinking — discover what to work on (`--explore` for Socratic mode) |
 | `/guard [scope\|off]` | Safety mode — warn on destructive commands, lock file scope |
 | `/sync-docs` | Detect stale documentation after code changes |
+| `/docs-update` | Generate, update, and verify project documentation |
+| `/secure-phase [N]` | Per-phase STRIDE security verification |
 
 ### Decision Intelligence — institutional memory
 
@@ -98,6 +100,22 @@ Everything else below is discoverable from `/ls` as you go.
 | `/decision-log [description]` | Capture a decision with context, alternatives, and rationale |
 | `/knowledge-base` | Aggregate all decisions + lessons into searchable KNOWLEDGE.md |
 | `/knowledge-base search [query]` | Search the project knowledge base |
+
+### Recovery — when things go wrong
+
+| Workflow | What it does |
+|----------|-------------|
+| `/forensics [problem]` | Post-mortem investigation for failed/stuck workflows (read-only) |
+| `/undo --last N\|--phase NN\|--plan NN-MM` | Safe git revert — preserves history, checks dependencies |
+
+### Session — capture and report
+
+| Workflow | What it does |
+|----------|-------------|
+| `/note [text]` | Zero-friction idea capture — no questions, just write |
+| `/session-report` | Post-session summary for stakeholder sharing |
+| `/extract-learnings [N]` | Structured learning extraction from phase artifacts |
+| `/milestone-summary [version]` | Comprehensive milestone summary for team onboarding |
 
 ### Milestone Intelligence — reflect and hand off
 

@@ -18,11 +18,10 @@ If missing, create from template:
 ```bash
 cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/config.json << 'EOF'
 {
-  "mode": "yolo",
+  "mode": "interactive",
   "granularity": "standard",
   "model_profile": "balanced",
   "learning_mode": "auto",
-  "parallelization": false,
   "test_first": false,
   "planning": {
     "commit_docs": true,
@@ -35,7 +34,30 @@ cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/co
     "verifier": true,
     "validation": true,
     "review": true,
-    "solutions_search": true
+    "solutions_search": true,
+    "security_enforcement": true,
+    "discuss_mode": "discuss",
+    "tdd_mode": false
+  },
+  "parallelization": {
+    "enabled": false,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
   },
   "review": {
     "auto_after_verify": false
@@ -44,6 +66,9 @@ cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/co
     "auto_test": true,
     "conventional_commits": true,
     "pr_template": true
+  },
+  "hooks": {
+    "context_warnings": true
   },
   "git": {
     "branching_strategy": "none",
@@ -84,12 +109,16 @@ Current configuration:
 [9] Test validation:   [on/off]
 [10] Review workflow:   [on/off]
 [11] Solutions search:  [on/off]
-[12] Auto-review after verify: [on/off]
-[13] Ship: auto-test:   [on/off]
-[14] Ship: conventional commits: [on/off]
-[15] Ship: PR template: [on/off]
-[16] Git branching:     [current] (none | phase | milestone)
-[17] Commit docs:       [on/off]
+[12] Security enforcement: [on/off]
+[13] Auto-review after verify: [on/off]
+[14] Ship: auto-test:   [on/off]
+[15] Ship: conventional commits: [on/off]
+[16] Ship: PR template: [on/off]
+[17] Parallelization:   [on/off] (max agents: [N])
+[18] Git branching:     [current] (none | phase | milestone)
+[19] Commit docs:       [on/off]
+[20] Safety: confirm destructive: [on/off]
+[21] Context warnings:  [on/off]
 
 Enter a number to change a setting, or 'done' to save.
 ```
@@ -222,45 +251,10 @@ Current: [current]. New value? (on/off)
 
 ## Step 5: Save Config
 
-After user types "done", write the updated config:
+After user types "done", read the current config, apply all changes, and write the complete updated JSON. Preserve any fields not shown in the menu (gates, hooks, etc.) — never drop fields the user didn't modify.
 
 ```bash
-cat > .planning/config.json << EOF
-{
-  "mode": "[value]",
-  "granularity": "[value]",
-  "model_profile": "[value]",
-  "learning_mode": "[value]",
-  "parallelization": [true/false],
-  "test_first": [true/false],
-  "planning": {
-    "commit_docs": [true/false],
-    "commit_mode": "[auto/manual]",
-    "search_gitignored": false
-  },
-  "workflow": {
-    "research": [true/false],
-    "plan_check": [true/false],
-    "verifier": [true/false],
-    "validation": [true/false],
-    "review": [true/false],
-    "solutions_search": [true/false]
-  },
-  "review": {
-    "auto_after_verify": [true/false]
-  },
-  "ship": {
-    "auto_test": [true/false],
-    "conventional_commits": [true/false],
-    "pr_template": [true/false]
-  },
-  "git": {
-    "branching_strategy": "[value]",
-    "phase_branch_template": "phase-{phase}-{slug}",
-    "milestone_branch_template": "{milestone}-{slug}"
-  }
-}
-EOF
+node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('.planning/config.json','utf8'));/* apply changes to c */;fs.writeFileSync('.planning/config.json',JSON.stringify(c,null,2)+'\n');"
 ```
 
 ## Step 6: Commit

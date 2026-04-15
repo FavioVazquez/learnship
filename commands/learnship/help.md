@@ -1,8 +1,9 @@
 ---
 name: learnship:help
-description: Show all available learnship workflows with descriptions and when to use them
+description: Show all available workflows with descriptions and when to use them
 allowed-tools:
   - Read
+  - Bash
 ---
 
 <execution_context>

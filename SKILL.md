@@ -32,9 +32,17 @@ The following workflows are available as platform slash commands (Windsurf) or c
 | `/review` | Code ready for review — multi-persona quality check |
 | `/challenge` | About to commit to a milestone or big feature — stress-test the scope |
 | `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
-| `/ideate` | Looking for what to build next — codebase-grounded idea generation |
+| `/ideate` | Looking for what to build next — codebase-grounded idea generation (add `--explore` for Socratic mode) |
 | `/guard` | Working on sensitive files — enable safety mode |
 | `/sync-docs` | After code changes — detect stale documentation |
+| `/forensics` | Something went wrong — post-mortem investigation (read-only) |
+| `/undo` | Need to revert commits safely — preserves git history |
+| `/note [text]` | Quick idea capture — zero friction, no questions |
+| `/session-report` | End of session — generate summary for stakeholders |
+| `/secure-phase [N]` | After execution — per-phase STRIDE security verification |
+| `/docs-update` | Generate or update project documentation |
+| `/extract-learnings [N]` | After phase completion — structured learning extraction |
+| `/milestone-summary` | Generate comprehensive milestone summary for team onboarding |
 
 ## Planning Artifacts
 
@@ -44,7 +52,9 @@ All project state lives in `.planning/`. Key files:
 - `.planning/PROJECT.md` — Vision, requirements, key decisions
 - `.planning/ROADMAP.md` — Phase-by-phase delivery plan
 - `.planning/STATE.md` — Current position, decisions, blockers
-- `.planning/phases/[N]-[slug]/` — Per-phase artifacts (CONTEXT, RESEARCH, PLANs, SUMMARYs, UAT, VERIFICATION)
+- `.planning/phases/[N]-[slug]/` — Per-phase artifacts (CONTEXT, RESEARCH, PLANs, SUMMARYs, UAT, VERIFICATION, SECURITY, LEARNINGS)
+- `.planning/notes/` — Quick notes captured via `/note`
+- `.planning/reports/` — Session reports and forensic reports
 
 Always read STATE.md and ROADMAP.md before any planning or execution operation to understand current project position.
 
@@ -62,6 +72,8 @@ Reference these files when adopting a specific role:
 - `@./agents/challenger.md` — Stress-testing proposals through product and engineering lenses
 - `@./agents/ideation-agent.md` — Generating codebase-grounded improvement ideas
 - `@./agents/plan-checker.md` — Verifying PLAN.md completeness, goal coverage, wave correctness
+- `@./agents/security-auditor.md` — Per-phase STRIDE threat verification (read-only)
+- `@./agents/doc-writer.md` — Writing and updating project documentation
 
 ## Learning Mode
 
@@ -81,6 +93,10 @@ Learning checkpoints:
 - After `/ship` → `@agentic-learning reflect` (what went well in this cycle?)
 - After `/ideate` → `@agentic-learning brainstorm` (explore top idea collaboratively)
 - During complex quick tasks → `@agentic-learning struggle`
+- After `/forensics` → `@agentic-learning reflect` (what caused the failure?)
+- After `/extract-learnings` → `@agentic-learning space` (schedule learnings for review)
+- After `/secure-phase` → `@agentic-learning learn` (security patterns)
+- After `/session-report` → `@agentic-learning reflect` (session-level reflection)
 
 ## Design Skill
 
@@ -129,7 +145,13 @@ When running `/new-project`, these are non-negotiable hard gates. Violating any 
 ## Reference Files
 
 - `@./references/questioning.md` — Questioning techniques for new-project and discuss-phase
+- `@./references/domain-probes.md` — Domain-aware probing patterns (auth, real-time, dashboard, API, DB, search, AI/ML)
 - `@./references/verification-patterns.md` — How to verify implementation quality
 - `@./references/git-integration.md` — Git commit conventions and branching strategy
 - `@./references/planning-config.md` — Config.json schema and options
 - `@./references/solution-schema.md` — YAML frontmatter schema for `.planning/solutions/`
+- `@./references/thinking-models.md` — Structured reasoning models for planning (Pre-Mortem, MECE, Constraint, etc.)
+- `@./references/universal-anti-patterns.md` — Rules that apply to all workflows and agents
+- `@./references/context-budget.md` — Context window management and degradation tiers
+- `@./references/gates.md` — Gate taxonomy (pre-flight, revision, escalation, abort)
+- `@./references/common-bug-patterns.md` — Stub detection, wiring gaps, state drift patterns

@@ -8,7 +8,23 @@ Extract implementation decisions that downstream planning needs. Analyze the pha
 
 **Usage:** Run `discuss-phase [N]` before `plan-phase [N]`.
 
-**You are a thinking partner, not an interviewer.** The user is the visionary — you are the builder. Capture decisions that will guide research and planning.
+**You are a thinking partner, not an interviewer.** The user is the visionary — you are the builder. Your job is to capture decisions that will guide research and planning, not to figure out implementation yourself.
+
+<downstream_awareness>
+**CONTEXT.md feeds into:**
+
+1. **Researcher** — Reads CONTEXT.md to know WHAT to research
+   - "User wants card-based layout" → researcher investigates card component patterns
+   - "Infinite scroll decided" → researcher looks into virtualization libraries
+
+2. **Planner** — Reads CONTEXT.md to know WHAT decisions are locked
+   - "Pull-to-refresh on mobile" → planner includes that in task specs
+   - "Claude's Discretion: loading skeleton" → planner can decide approach
+
+**Your job:** Capture decisions clearly enough that downstream agents can act on them without asking the user again.
+
+**Not your job:** Figure out HOW to implement. That's what research and planning do with the decisions you capture.
+</downstream_awareness>
 
 ## Step 1: Load Phase
 
@@ -72,6 +88,8 @@ Analyze the phase goal from ROADMAP.md. A gray area is an **implementation decis
 - Something users **READ** → structure, tone, depth, flow
 - Something being **ORGANIZED** → grouping criteria, naming, duplicates
 
+**Use domain-aware probes** from `@./references/domain-probes.md` when the phase touches a known domain (auth, real-time, dashboard, API, database, search, file upload, caching, testing, deployment, AI/ML). Pick 2-3 most relevant probes, not all of them.
+
 **Check prior decisions first** — don't re-ask what's already locked from earlier phases.
 
 Generate 3-4 **phase-specific** gray areas. Not generic categories ("UI", "UX") — concrete decisions:
@@ -116,15 +134,31 @@ After all selected areas:
 - Summarize decisions captured
 - Ask: "Which gray areas remain unclear?" → "Explore more" or "I'm ready for context"
 
-**Scope guardrail:** If the user suggests a new capability, say:
+<scope_guardrail>
+**No scope creep.** The phase boundary comes from ROADMAP.md and is FIXED. Discussion clarifies HOW to implement what's scoped, never WHETHER to add new capabilities.
+
+**Allowed (clarifying ambiguity):**
+- "How should posts be displayed?" (layout, density, info shown)
+- "What happens on empty state?" (within the feature)
+- "Pull to refresh or manual?" (behavior choice)
+
+**Not allowed (scope creep):**
+- "Should we also add comments?" (new capability)
+- "What about search/filtering?" (new capability)
+- "Maybe include bookmarking?" (new capability)
+
+**The heuristic:** Does this clarify how we implement what's already in the phase, or does it add a new capability that could be its own phase?
+
+**When user suggests scope creep:**
 ```
-"[Feature X] sounds like a new capability — that's its own phase.
+"[Feature X] would be a new capability — that's its own phase.
 Want me to note it for the roadmap backlog?
 
-Back to [current area]..."
+For now, let's focus on [phase domain]."
 ```
 
-Track deferred ideas internally.
+Capture the idea in the "Deferred Ideas" section. Don't lose it, don't act on it.
+</scope_guardrail>
 
 ## Step 6: Write CONTEXT.md
 
@@ -159,6 +193,26 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 
 </decisions>
 
+<specifics>
+## Specific Ideas
+
+[Any "I want it like X" moments or specific references]
+
+[If none: "No specific requirements — open to standard approaches"]
+
+</specifics>
+
+<canonical_refs>
+## Canonical References
+
+**Downstream agents MUST read these before planning or implementing.**
+
+[List specs, ADRs, or design docs relevant to this phase with full relative paths.]
+
+[If no external specs: "No external specs — requirements are fully captured in decisions above"]
+
+</canonical_refs>
+
 <code_context>
 ## Existing Code Insights
 
@@ -172,15 +226,6 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 - [Where new code connects to existing system]
 
 </code_context>
-
-<specifics>
-## Specific Ideas
-
-[Any "I want it like X" moments or specific references]
-
-[If none: "No specific requirements — open to standard approaches"]
-
-</specifics>
 
 <deferred>
 ## Deferred Ideas
@@ -196,10 +241,23 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 *Context gathered: [date]*
 ```
 
-## Step 7: Commit and Confirm
+## Step 7: Write Discussion Log
+
+Also write a discussion log for audit purposes using `@./templates/discussion-log.md`:
+
+Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-DISCUSSION-LOG.md` with:
+- All options considered for each area (not just the selected one)
+- The user's verbatim choice and rationale
+- Areas delegated to Claude's discretion
+- Deferred ideas
+
+This file is for human audit trails only — it is NOT referenced by downstream agents.
+
+## Step 8: Commit and Confirm
 
 ```bash
 git add ".planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md"
+git add ".planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-DISCUSSION-LOG.md"
 git commit -m "docs([padded_phase]): capture phase context"
 ```
 
