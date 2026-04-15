@@ -112,13 +112,25 @@ Task(
     <objective>
     Research how to implement Phase [phase_number]: [phase_name].
     Answer: 'What do I need to know to PLAN this phase well?'
-    Write RESEARCH.md to [phase_dir]/[padded_phase]-RESEARCH.md.
+
+    IMPORTANT: You MUST do online research BEFORE writing the research file. Your training data is stale — verify everything.
+
+    Phase 1 — INVESTIGATE (do this first):
+    1. Read user decisions from CONTEXT.md (if exists), requirements from REQUIREMENTS.md, and project state from STATE.md
+    2. Read the researcher persona at @./agents/researcher.md for research principles and tool strategy
+    3. Run at least 3 WebSearch queries to discover: standard approaches, recommended libraries, and common pitfalls for this phase's domain. Include the current year in queries.
+    4. Use WebFetch to read official documentation for any key libraries or frameworks discovered
+    5. Scan the codebase for existing patterns relevant to this phase
+
+    Phase 2 — WRITE FILE (only after investigating):
+    Write RESEARCH.md to [phase_dir]/[padded_phase]-RESEARCH.md with Don't Hand-Roll, Common Pitfalls, Existing Patterns, and Recommended Approach sections. Include confidence levels (HIGH/MEDIUM/LOW) and cite sources.
     </objective>
 
     <files_to_read>
     - [context_path] (user decisions, if exists)
     - .planning/REQUIREMENTS.md
     - .planning/STATE.md
+    - @./agents/researcher.md (persona — read for research principles and tool strategy)
     </files_to_read>
   "
 )
@@ -128,13 +140,15 @@ Wait for agent to complete, then verify RESEARCH.md was written.
 
 **If `parallelization` is `false` (sequential mode):**
 
-Using `@./agents/researcher.md` as your research persona, investigate how to implement this phase. Read:
+Using `@./agents/researcher.md` as your research persona, investigate how to implement this phase.
+
+**Online research first.** Before writing anything, run at least 3 WebSearch queries relevant to this phase's domain. Use WebFetch to read official docs for any libraries discovered. Then read:
 - The CONTEXT.md (user decisions)
 - `.planning/REQUIREMENTS.md` (which requirements this phase covers)
 - `.planning/STATE.md` (project history and decisions)
 - Existing codebase for relevant patterns
 
-Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md` with two key sections:
+Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md` based on your web research findings. Include confidence levels and cite sources. The file must have two key sections:
 - **Don't Hand-Roll** — problems with good existing solutions ("Don't build your own JWT — use jose")
 - **Common Pitfalls** — what goes wrong, why, how to avoid it
 

@@ -444,16 +444,17 @@ AskUserQuestion([
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-> 🔴 **CRITICAL — "Research" in this step means WRITING 5 FILES to disk. It does NOT mean thinking, browsing the web, or analyzing in your head. The deliverable is 5 markdown files on the filesystem. You are not done with research until all 5 files exist and pass verification.**
+> 🔴 **CRITICAL — "Research" in this step means TWO things: (1) SEARCHING THE WEB for current information, then (2) WRITING 5 FILES to disk based on what you found. The deliverable is 5 markdown files grounded in real online research, not training data. You are not done with research until all 5 files exist and pass verification.**
 >
 > **Forbidden behaviors (if you do any of these, the research step has FAILED):**
+> - **Writing files without doing web research first** — reading templates and writing from training data is NOT research. You must run WebSearch queries and WebFetch official docs BEFORE writing any file.
 > - Doing web searches or thinking about the domain and then saying "I have enough research data" WITHOUT writing the 5 files
 > - Writing research findings only in your response text instead of to files
 > - Writing fewer than 5 files (e.g., one combined file)
 > - Moving to Step 6 or writing REQUIREMENTS.md before the verification command below prints `RESEARCH VERIFIED OK`
 > - Saying "Let me proceed to requirements" or "Moving to requirements" before verification passes
 >
-> **The ONLY acceptable sequence is:** mkdir → write file 1 → write file 2 → write file 3 → write file 4 → write file 5 → run verification → see `RESEARCH VERIFIED OK` → present findings → get user confirmation.
+> **The ONLY acceptable sequence is:** mkdir → **web research (WebSearch + WebFetch)** → write file 1 → write file 2 → write file 3 → write file 4 → write file 5 → run verification → see `RESEARCH VERIFIED OK` → present findings → get user confirmation.
 
 **Step 5a — Create the research directory.** Run this command now:
 
@@ -473,8 +474,18 @@ Task(
   subagent_type="learnship-researcher",
   prompt="
     <objective>
-    Write 5 research files for a new project into .planning/research/.
-    Before writing each file, read the corresponding template from @./templates/research-project/ for the expected structure.
+    Research the domain ecosystem for a new project, then write 5 research files into .planning/research/.
+
+    IMPORTANT: You MUST do online research BEFORE writing any files. Your training data is stale — verify everything.
+
+    Phase 1 — INVESTIGATE (do this first):
+    1. Read .planning/PROJECT.md to understand the project domain and goals
+    2. Run at least 5 WebSearch queries to discover: standard tech stacks, recommended libraries, architecture patterns, common pitfalls, and best practices for this domain. Include the current year in queries.
+    3. Use WebFetch to read official documentation for any key libraries or frameworks discovered
+    4. Read the research persona at @./agents/researcher.md for research principles
+
+    Phase 2 — WRITE FILES (only after investigating):
+    Read each template from @./templates/research-project/ for the expected structure, then write each file based on your actual research findings (not just training data). Include confidence levels (HIGH/MEDIUM/LOW) and cite sources.
 
     Files to write:
     1. STACK.md — Must have: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
@@ -484,11 +495,12 @@ Task(
     5. SUMMARY.md — Must have: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
 
     After writing all 5 files, run the verification command to confirm all files exist with required sections.
-    Return: confirmation that all 5 files pass verification.
+    Return: confirmation that all 5 files pass verification, plus a summary of what you found.
     </objective>
 
     <files_to_read>
     - .planning/PROJECT.md (project description and goals)
+    - @./agents/researcher.md (research persona — read for research principles and tool strategy)
     - @./templates/research-project/STACK.md (template for STACK.md)
     - @./templates/research-project/FEATURES.md (template for FEATURES.md)
     - @./templates/research-project/ARCHITECTURE.md (template for ARCHITECTURE.md)
@@ -505,10 +517,28 @@ Wait for the agent to complete, then proceed to Step 5c (verification) to confir
 
 Using `@./agents/researcher.md` as your research persona:
 
-**Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files. **Before writing each file, read the corresponding template** from `@./templates/research-project/` to understand the expected structure.
+**Step 5b-pre — Online research (BEFORE writing any files).**
+
+> 🔴 **You MUST do web research before writing files.** Your training data is stale. Do not write research files from memory alone — investigate first, write second.
+
+Run at least 5 WebSearch queries to discover the current state of this project's domain. Include the current year in all queries. Example queries (adapt to the actual project domain):
+
+1. `"[project domain] recommended tech stack 2026"` — discover what's standard
+2. `"[project domain] best libraries 2026"` — find specific tools
+3. `"[project domain] architecture patterns"` — how systems in this domain are structured
+4. `"[project domain] common mistakes gotchas"` — what goes wrong
+5. `"[key technology from PROJECT.md] best practices"` — specific tech guidance
+
+For any libraries or frameworks discovered, use WebFetch to read their official documentation pages.
+
+Record your findings internally. You will use them to write the 5 files below. Every recommendation in the files should be grounded in what you found online — include confidence levels (HIGH/MEDIUM/LOW) and cite sources where possible.
+
+> 🛑 STOP. Confirm: did you run at least 5 WebSearch queries? If you skipped straight to writing files, go back and search now. Files written purely from training data without web verification are low-quality research.
+
+**Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files. **Before writing each file, read the corresponding template** from `@./templates/research-project/` to understand the expected structure. Base your content on the web research findings from Step 5b-pre.
 
 **File 1 of 5 — Write `.planning/research/STACK.md` to disk now.**
-First, read the template at `@./templates/research-project/STACK.md` for the expected structure. Then research the standard tech stack for this domain and write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/STACK.md` for the expected structure. Then write the stack research based on your web search findings. Include confidence levels and cite sources. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Alternatives Considered`
 - `## What NOT to Use` (with reasons)
@@ -517,26 +547,26 @@ First, read the template at `@./templates/research-project/STACK.md` for the exp
 > 🛑 STOP. Confirm: did you write `.planning/research/STACK.md` to the filesystem? If you only thought about the stack but did not create the file, go back and create it now.
 
 **File 2 of 5 — Write `.planning/research/FEATURES.md` to disk now.**
-First, read the template at `@./templates/research-project/FEATURES.md` for the expected structure. Then research what features users expect in this domain. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/FEATURES.md` for the expected structure. Then write the features research based on your web search findings. The file MUST contain these exact `##` headers:
 - `## Table Stakes` (must-haves)
 - `## Differentiators` (nice-to-haves)
 - `## Anti-Features` (what to avoid)
 
 **File 3 of 5 — Write `.planning/research/ARCHITECTURE.md` to disk now.**
-First, read the template at `@./templates/research-project/ARCHITECTURE.md` for the expected structure. Then research how systems in this domain are typically structured. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/ARCHITECTURE.md` for the expected structure. Then write the architecture research based on your web search findings. The file MUST contain these exact `##` headers:
 - `## Component Boundaries`
 - `## Data Flow`
 - `## Build Order` (suggested sequence)
 - `## Integration Points`
 
 **File 4 of 5 — Write `.planning/research/PITFALLS.md` to disk now.**
-First, read the template at `@./templates/research-project/PITFALLS.md` for the expected structure. Then research common mistakes and prevention strategies. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/PITFALLS.md` for the expected structure. Then write the pitfalls research based on your web search findings. The file MUST contain these exact `##` headers:
 - `## Common Mistakes`
 - `## Warning Signs`
 - `## Prevention Strategies`
 
 **File 5 of 5 — Write `.planning/research/SUMMARY.md` to disk now.**
-First, read the template at `@./templates/research-project/SUMMARY.md` for the expected structure. Then synthesize the 4 files above into a summary. Write the results to this file. Use the template as your structural guide. The file MUST contain these exact `##` headers:
+First, read the template at `@./templates/research-project/SUMMARY.md` for the expected structure. Then synthesize the 4 files above into a summary. The file MUST contain these exact `##` headers:
 - `## Recommended Stack`
 - `## Table Stakes Features`
 - `## Key Architecture Decisions`
