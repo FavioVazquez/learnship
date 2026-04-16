@@ -59,7 +59,7 @@ ls .planning/phases/*-CONTEXT.md 2>/dev/null
 If CONTEXT.md already exists for this phase, present the choice:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Existing Context",
     question: "CONTEXT.md already exists for this phase. What do you want to do?",
@@ -80,7 +80,7 @@ If "Skip" → exit workflow.
 If no CONTEXT.md exists but plans already exist for this phase:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Plans Already Exist",
     question: "Phase [X] already has plans created without user context. Your decisions here won't affect existing plans unless you re-run plan-phase.",
@@ -153,7 +153,7 @@ Carrying forward from earlier phases:
 Present gray areas using a structured multi-select question. Annotate with prior decisions and code context:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Gray Areas",
     question: "Which areas do you want to discuss? (select all that apply)",
@@ -178,7 +178,7 @@ If "All clear" → skip to Step 6.
 2. Ask focused questions with concrete options using structured questions where possible:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "[Area]: [Decision Point]",
     question: "[Specific implementation question]",
@@ -202,7 +202,7 @@ After all selected areas:
 - Present final check:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Wrap Up",
     question: "All gray areas discussed. Ready to generate CONTEXT.md?",

@@ -456,6 +456,159 @@ check "Cursor .mdc: CONFIG_VALID reference" grep -q 'CONFIG_VALID' "$MDC"
 check "Cursor .mdc: round-by-round instruction" grep -q 'EACH round\|each round' "$MDC"
 
 echo ""
+echo "─── 9. Correct Subagent Types in Task() Calls ──────────────────"
+
+# Verify specialized personas are used (not generic learnship-researcher) where they should be
+check "new-project: 4 research Task() use learnship-project-researcher" \
+  test "$(grep -c 'subagent_type="learnship-project-researcher"' "$SRC_WF/new-project.md")" -eq 4
+
+check "new-project: synthesizer Task() uses learnship-research-synthesizer" \
+  grep -q 'subagent_type="learnship-research-synthesizer"' "$SRC_WF/new-project.md"
+
+check "plan-phase: research Task() uses learnship-phase-researcher" \
+  grep -q 'subagent_type="learnship-phase-researcher"' "$SRC_WF/plan-phase.md"
+
+check "research-phase: Task() uses learnship-phase-researcher" \
+  grep -q 'subagent_type="learnship-phase-researcher"' "$SRC_WF/research-phase.md"
+
+check "plan-phase: planner Task() uses learnship-planner" \
+  grep -q 'subagent_type="learnship-planner"' "$SRC_WF/plan-phase.md"
+
+check "plan-phase: checker Task() uses learnship-plan-checker" \
+  grep -q 'subagent_type="learnship-plan-checker"' "$SRC_WF/plan-phase.md"
+
+check "execute-phase: Task() uses learnship-executor" \
+  grep -q 'subagent_type="learnship-executor"' "$SRC_WF/execute-phase.md"
+
+check "docs-update: Task() uses learnship-doc-writer" \
+  grep -q 'subagent_type="learnship-doc-writer"' "$SRC_WF/docs-update.md"
+
+check "docs-update: Task() uses learnship-doc-verifier" \
+  grep -q 'subagent_type="learnship-doc-verifier"' "$SRC_WF/docs-update.md"
+
+# Regression guard: no generic learnship-researcher in workflows that should use specialized personas
+check "new-project: no generic learnship-researcher in Task() calls" \
+  test "$(grep 'subagent_type="learnship-researcher"' "$SRC_WF/new-project.md" | wc -l)" -eq 0
+
+check "plan-phase: no generic learnship-researcher in Task() calls" \
+  test "$(grep 'subagent_type="learnship-researcher"' "$SRC_WF/plan-phase.md" | wc -l)" -eq 0
+
+check "research-phase: no generic learnship-researcher in Task() calls" \
+  test "$(grep 'subagent_type="learnship-researcher"' "$SRC_WF/research-phase.md" | wc -l)" -eq 0
+
+echo ""
+echo "─── 10. Every Task() Has <agent_definition> ────────────────────"
+
+# Every real Task() call (inside code blocks, not description text) must have an <agent_definition>
+node -e "
+const fs=require('fs'),path=require('path');
+const wfDir='$SRC_WF';
+const errs=[];
+const wfs=fs.readdirSync(wfDir).filter(f=>f.endsWith('.md'));
+
+for(const wf of wfs){
+  const c=fs.readFileSync(path.join(wfDir,wf),'utf8');
+  const codeBlocks=[...c.matchAll(/\`\`\`[^\`]*?\`\`\`/gs)];
+  for(const block of codeBlocks){
+    const b=block[0];
+    const taskCount=(b.match(/Task\(/g)||[]).length;
+    const defCount=(b.match(/<agent_definition>/g)||[]).length;
+    if(taskCount>0 && defCount<taskCount){
+      errs.push(wf+': '+taskCount+' Task() but only '+defCount+' <agent_definition> blocks');
+    }
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK');
+" && { echo "  ✓ Every Task() call has a matching <agent_definition> block"; PASS=$((PASS+1)); } || { echo "  ✗ Some Task() calls missing <agent_definition>"; FAIL=$((FAIL+1)); ERRORS+=("Task() calls missing agent_definition"); }
+
+echo ""
+echo "─── 11. Persona Announcements ──────────────────────────────────"
+
+# Every <persona_context> block must have a matching "Announce persona" instruction
+node -e "
+const fs=require('fs'),path=require('path');
+const wfDir='$SRC_WF';
+const errs=[];
+const wfs=fs.readdirSync(wfDir).filter(f=>f.endsWith('.md'));
+
+for(const wf of wfs){
+  const c=fs.readFileSync(path.join(wfDir,wf),'utf8');
+  const pcCount=(c.match(/<persona_context>/g)||[]).length;
+  const annCount=(c.match(/Announce persona/g)||[]).length;
+  if(pcCount!==annCount){
+    errs.push(wf+': '+pcCount+' persona_context blocks but '+annCount+' announcements');
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK — all persona_context blocks have announcements');
+" && { echo "  ✓ Every <persona_context> has a matching 'Announce persona' instruction"; PASS=$((PASS+1)); } || { echo "  ✗ Some persona_context blocks missing announcements"; FAIL=$((FAIL+1)); ERRORS+=("persona_context blocks missing announcements"); }
+
+# Persona announcements must contain ANSI color codes
+check "Persona announcements have ANSI color escapes" \
+  grep -q '033\[' "$SRC_WF/new-project.md"
+
+# Persona announcements must use correct agent names
+check "new-project: roadmapper announcement uses learnship-roadmapper" \
+  grep -q 'learnship-roadmapper(' "$SRC_WF/new-project.md"
+
+check "new-project: project-researcher announcement uses learnship-project-researcher" \
+  grep -q 'learnship-project-researcher(' "$SRC_WF/new-project.md"
+
+check "plan-phase: announcements for phase-researcher, planner, plan-checker" \
+  test "$(grep -c 'learnship-phase-researcher\|learnship-planner\|learnship-plan-checker' "$SRC_WF/plan-phase.md")" -ge 3
+
+echo ""
+echo "─── 12. Persona Announcements Survive Install ──────────────────"
+
+# Announcements must survive install.js across all 5 platforms
+node -e "
+const fs=require('fs'),path=require('path');
+const srcDir='$SRC_WF';
+const platforms='$PLATFORMS'.split(' ');
+const tmpBase='$TMPBASE';
+const errs=[];
+
+const srcFiles=fs.readdirSync(srcDir).filter(f=>f.endsWith('.md'));
+for(const wf of srcFiles){
+  const srcContent=fs.readFileSync(path.join(srcDir,wf),'utf8');
+  const srcAnn=(srcContent.match(/Announce persona/g)||[]).length;
+  if(srcAnn===0)continue;
+
+  for(const p of platforms){
+    const installed=path.join(tmpBase,p,'learnship','workflows',wf);
+    if(!fs.existsSync(installed))continue;
+    const instContent=fs.readFileSync(installed,'utf8');
+    const instAnn=(instContent.match(/Announce persona/g)||[]).length;
+    if(instAnn<srcAnn){
+      errs.push(p+'/'+wf+': source has '+srcAnn+' announcements, installed has '+instAnn);
+    }
+  }
+}
+
+if(errs.length){errs.forEach(e=>console.error('  - '+e));process.exit(1);}
+console.log('OK');
+" && { echo "  ✓ Persona announcement counts preserved across all 5 platforms"; PASS=$((PASS+1)); } || { echo "  ✗ Persona announcements lost during install"; FAIL=$((FAIL+1)); ERRORS+=("Persona announcements lost during install"); }
+
+echo ""
+echo "─── 13. Sequential Fallback Uses Correct Persona ───────────────"
+
+# The sequential (inline) path must reference the same persona as the Task() path
+check "plan-phase: sequential fallback uses plan-checker (not verifier)" \
+  grep -q 'learnship plan checker' "$SRC_WF/plan-phase.md"
+
+check "plan-phase: sequential fallback references @./agents/plan-checker.md" \
+  grep -q '@./agents/plan-checker.md' "$SRC_WF/plan-phase.md"
+
+check "docs-update: sequential fallback uses doc-writer" \
+  grep -q 'learnship doc writer' "$SRC_WF/docs-update.md"
+
+check "docs-update: sequential fallback uses doc-verifier" \
+  grep -q 'learnship doc verifier' "$SRC_WF/docs-update.md"
+
+echo ""
 echo "─── Results ──────────────────────────────────────────────────────"
 echo "  Passed: $PASS"
 echo "  Failed: $FAIL"

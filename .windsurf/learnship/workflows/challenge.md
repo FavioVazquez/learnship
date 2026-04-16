@@ -85,6 +85,11 @@ Product lens: Is this worth building? Who needs it? What happens if we don't bui
 Be adversarial but constructive — the goal is to find fatal flaws before investing effort.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[38;5;208m  learnship-challenger(Stress-test this idea with forcing questions)\033[0m\n\n"
+> ```
+
 Read `@./agents/challenger.md` for the full persona definition. Ask the 3-5 product forcing questions and answer them based on available context.
 
 ## Step 3: Engineering Challenge
@@ -136,6 +141,11 @@ Engineering lens: Can we actually build this? What's the hardest part? What will
 Be adversarial but constructive — find technical risks before they become production incidents.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[38;5;208m  learnship-challenger(In engineering mode)\033[0m\n\n"
+> ```
+
 Read `@./agents/challenger.md` for the full persona definition. Switch to the engineering lens and ask the 3-5 engineering forcing questions.
 
 ## Step 4: Synthesize Verdict
@@ -167,7 +177,7 @@ Proposal: [description]
 Present the verdict using a structured question:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Challenge Verdict",
     question: "Based on the product and engineering analysis — how do you want to proceed?",

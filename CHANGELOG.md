@@ -9,6 +9,29 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.3] — 2026-04-16
+
+### Fixed
+
+- **Agent persona spawn audit** — 8 Task() calls across 4 workflows used the wrong `subagent_type`:
+  - `new-project.md`: 4 research Task() calls used generic `learnship-researcher` → now `learnship-project-researcher`
+  - `new-project.md`: synthesizer Task() used `learnship-researcher` with no `<agent_definition>` → now `learnship-research-synthesizer` with full agent definition, downstream consumer, and quality gate
+  - `plan-phase.md`: research Task() used `learnship-researcher` → now `learnship-phase-researcher`
+  - `research-phase.md`: research Task() used `learnship-researcher` → now `learnship-phase-researcher`
+- **Sequential fallback persona mismatch** — `plan-phase.md` plan-checking step used `learnship verifier` + `@./agents/verifier.md` in sequential mode, but the Task() path correctly used `learnship-plan-checker`. Now both paths use `plan-checker`.
+- **Unwired agent personas** — `doc-writer` and `doc-verifier` personas existed as agent files but were never referenced in `docs-update.md`. Now wired with both Task() (subagent) and `<persona_context>` (sequential) paths.
+
+### Added
+
+- **Visible persona announcements** — All 34 `<persona_context>` blocks across 19 workflows now include a colored `printf` announcement that the AI executes when adopting a persona in sequential mode. Colors match each agent's `color:` field. Works on all 6 platforms — matches the visual style of Task() subagent spawns on Claude Code.
+- **25 new tests** in `validate_all_workflows.sh`:
+  - Correct `subagent_type` values in all Task() calls (12 checks)
+  - Regression guards: no generic `learnship-researcher` where specialized personas exist
+  - Every Task() has a matching `<agent_definition>` block
+  - Every `<persona_context>` has a matching `Announce persona` instruction with ANSI colors
+  - Persona announcements survive `install.js` across all 5 installable platforms
+  - Sequential fallback uses the correct persona (plan-checker, doc-writer, doc-verifier)
+
 ## [v2.3.2] — 2026-04-15
 
 ### Added

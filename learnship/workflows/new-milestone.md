@@ -226,6 +226,11 @@ Use WebSearch for ecosystem discovery (always include current year), WebFetch fo
 Tag confidence: HIGH/MEDIUM/LOW. Be comprehensive but opinionated.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-project-researcher(Your training data is stale — verify before asserting)\033[0m\n\n"
+> ```
+
 Read `@./agents/project-researcher.md` for the full persona definition. In project research mode, investigate the new feature domain:
 - Focus ONLY on the new capabilities — not the existing codebase
 - Write STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md to `.planning/research/`
@@ -256,6 +261,11 @@ You are now the **learnship roadmapper**. Transform requirements into a phased r
 Every v1 requirement maps to exactly one phase. Every phase has observable success criteria.
 Dependencies drive order. Phases should be deliverable.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-roadmapper(Transform requirements into a phased roadmap)\033[0m\n\n"
+> ```
 
 Read `@./agents/roadmapper.md` for the full persona definition. Read PROJECT.md, REQUIREMENTS.md, research (if exists).
 

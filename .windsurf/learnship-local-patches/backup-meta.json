@@ -1,0 +1,25 @@
+{
+  "backed_up_at": "2026-04-16T00:21:50.106Z",
+  "from_version": "2.3.1",
+  "files": [
+    "learnship/references/planning-config.md",
+    "learnship/references/questioning.md",
+    "learnship/workflows/challenge.md",
+    "learnship/workflows/compound.md",
+    "learnship/workflows/debug.md",
+    "learnship/workflows/diagnose-issues.md",
+    "learnship/workflows/discuss-milestone.md",
+    "learnship/workflows/discuss-phase.md",
+    "learnship/workflows/help.md",
+    "learnship/workflows/ideate.md",
+    "learnship/workflows/list-phase-assumptions.md",
+    "learnship/workflows/new-milestone.md",
+    "learnship/workflows/new-project.md",
+    "learnship/workflows/plan-phase.md",
+    "learnship/workflows/quick.md",
+    "learnship/workflows/research-phase.md",
+    "learnship/workflows/secure-phase.md",
+    "learnship/workflows/settings.md",
+    "learnship/workflows/validate-phase.md"
+  ]
+}

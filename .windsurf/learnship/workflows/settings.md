@@ -100,7 +100,7 @@ Display the settings banner, then present settings using structured question rou
 **Round 1 — Core settings (4 questions):**
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Model Profile",
     question: "Which model quality tier for agents?",
@@ -148,7 +148,7 @@ AskUserQuestion([
 **Round 2 — Workflow agents (6 questions):**
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Research",
     question: "Spawn researcher agent before planning?",
@@ -211,7 +211,7 @@ AskUserQuestion([
 **Round 3 — Pipeline & git (4 questions):**
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Ship Pipeline",
     question: "Ship pipeline preferences?",

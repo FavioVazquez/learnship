@@ -80,7 +80,7 @@ If open threats exist, present them with a structured question:
 Display the threat table first, then:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Open Threats",
     question: "[N] open threat(s) found. How do you want to handle them?",
@@ -133,6 +133,11 @@ You are now the **learnship security auditor**. Run STRIDE threat analysis again
 Check each open threat. Verify mitigations are implemented correctly. Update status based on findings.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[31m  learnship-security-auditor(Run STRIDE threat analysis against the codebase)\033[0m\n\n"
+> ```
+
 Read `@./agents/security-auditor.md` for the full persona definition. Check each open threat against the codebase. Update status based on findings.
 
 **For "Accept all":** Add each to the Accepted Risks Log with user's rationale.
@@ -140,7 +145,7 @@ Read `@./agents/security-auditor.md` for the full persona definition. Check each
 **For "Review individually":** Present each threat one at a time:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Threat [ID]",
     question: "[Category]: [Description] in [Component]",

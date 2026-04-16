@@ -114,6 +114,11 @@ You are now the **learnship researcher**. Do a quick research pass on the ideati
 Use search_web to discover current state. Tag confidence levels. Share findings before ideation begins.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-researcher(Do a quick research pass on the ideation domain)\033[0m\n\n"
+> ```
+
 If parallelization is false, read `@./agents/researcher.md` for the full persona definition. Do a quick research pass. Share findings and continue.
 
 **Crystallize outputs (after 3-6 exchanges):**
@@ -208,6 +213,11 @@ Task(
 You are now the **learnship ideation agent**. Generate ideas across multiple creative frames.
 Quantity first, quality later. Push past the obvious. Use contrarian thinking and cross-domain analogies.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-ideation-agent(Generate ideas across multiple creative frames)\033[0m\n\n"
+> ```
 
 Read `@./agents/ideation-agent.md` for the full persona definition. Generate 15-25 ideas across all four frames sequentially.
 

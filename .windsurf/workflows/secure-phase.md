@@ -133,6 +133,11 @@ You are now the **learnship security auditor**. Run STRIDE threat analysis again
 Check each open threat. Verify mitigations are implemented correctly. Update status based on findings.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[31m  learnship-security-auditor(Run STRIDE threat analysis against the codebase)\033[0m\n\n"
+> ```
+
 Read `@./agents/security-auditor.md` for the full persona definition. Check each open threat against the codebase. Update status based on findings.
 
 **For "Accept all":** Add each to the Accepted Risks Log with user's rationale.

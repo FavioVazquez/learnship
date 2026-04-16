@@ -23,7 +23,7 @@ Initialize a new project with full context gathering, optional research, require
 
 ## Step 1: Setup
 
-<!-- LEARNSHIP_PLATFORM_LABEL -->
+You are running on **Windsurf**. Platform config directory: `.windsurf/`
 
 > **Routing protocol suspended.** While this workflow is running, every user message is an answer to a workflow question — not a task to route. Do NOT apply the request routing protocol until `/new-project` is fully complete and `.planning/PROJECT.md` exists.
 
@@ -66,7 +66,7 @@ git init
 
 Add the platform config directory to `.gitignore` so AI platform files are not tracked in the project repo:
 ```bash
-<!-- LEARNSHIP_GITIGNORE_CMD -->
+grep -q '.windsurf/' .gitignore 2>/dev/null || echo '.windsurf/' >> .gitignore
 ```
 
 Create the planning directory:
@@ -81,7 +81,7 @@ If `EXISTING_CODEBASE = true`, first check whether a codebase map is needed.
 **If `needs_map` is true** (existing code detected but no `.planning/codebase/`):
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Existing Codebase Detected",
     question: "I detected existing code in this directory. Would you like to map the codebase first? This produces structured reference docs that make the questioning phase sharper.",
@@ -106,7 +106,7 @@ AskUserQuestion([
 **Quick structural scan** (for "Quick scan only" or when map already exists):
 
 ```bash
-find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' -not -path './.windsurf/*' -not -path './.claude/*' -not -path './.cursor/*' -not -path './.codex/*' -not -path './.gemini/*' -not -path './.opencode/*' | sort | head -40
+find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' -not -path './.windsurf/*' -not -path './.windsurf/*' -not -path './.cursor/*' -not -path './.codex/*' -not -path './.gemini/*' -not -path './.opencode/*' | sort | head -40
 # PowerShell: Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning|__pycache__|\.venv|\.windsurf|\.claude|\.cursor|\.codex|\.gemini|\.opencode' } | Select-Object -First 40
 ```
 
@@ -121,16 +121,16 @@ Note the tech stack, key directories, and any README content internally. Use thi
 
 ## Step 2: Configuration
 
-> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each round as a blocking question using `AskUserQuestion` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Each round is a SEPARATE blocking call. Do NOT combine all rounds into one. Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply after EACH round before showing the next round.**
+> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each round as a blocking question using `ask_user_question` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Each round is a SEPARATE blocking call. Do NOT combine all rounds into one. Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply after EACH round before showing the next round.**
 >
 > **🛑 FORBIDDEN:** Do NOT present all questions at once as a text wall. Do NOT skip any question. Do NOT invent answers. Do NOT proceed to the config.json write step until ALL 4 rounds have been answered by the user.
 
 **Round 1 — Core settings (4 questions):**
 
-> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
+> Present these 4 questions as a SINGLE blocking `ask_user_question` call. STOP and wait for the user's reply before proceeding to Round 2.
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Working Style",
     question: "How do you want to work?",
@@ -176,10 +176,10 @@ AskUserQuestion([
 
 **Round 2 — Workflow agents (5 questions):**
 
-> Present these 5 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 3.
+> Present these 5 questions as a SINGLE blocking `ask_user_question` call. STOP and wait for the user's reply before proceeding to Round 3.
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Research",
     question: "Research domain before planning each phase? (adds tokens/time)",
@@ -232,10 +232,10 @@ AskUserQuestion([
 
 **Round 3 — Pipeline & git (4 questions):**
 
-> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 4.
+> Present these 4 questions as a SINGLE blocking `ask_user_question` call. STOP and wait for the user's reply before proceeding to Round 4.
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "TDD",
     question: "Test-first (TDD) mode?",
@@ -278,7 +278,9 @@ AskUserQuestion([
 
 > 🛑 STOP. Wait for the user's Round 3 reply before continuing.
 
-<!-- LEARNSHIP_PARALLEL_BLOCK -->
+**Group D — Parallel execution:**
+
+Windsurf does not support real subagents. Parallelization is automatically set to `false`.
 
 > 🛑 STOP. Wait for the user's Round 4 reply (parallelization) before continuing.
 
@@ -508,7 +510,7 @@ Display the research decision banner, then present the choice using a structured
 ```
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Research",
     question: "Before I write the requirements — do you want me to research the domain ecosystem first?",
@@ -552,14 +554,14 @@ AskUserQuestion([
 > 🔴 **CRITICAL — "Research" in this step means TWO things: (1) SEARCHING THE WEB for current information, then (2) WRITING 5 FILES to disk based on what you found. The deliverable is 5 markdown files grounded in real online research, not training data. You are not done with research until all 5 files exist and pass verification.**
 >
 > **Forbidden behaviors (if you do any of these, the research step has FAILED):**
-> - **Writing files without doing web research first** — reading templates and writing from training data is NOT research. You must run WebSearch queries and WebFetch official docs BEFORE writing any file.
+> - **Writing files without doing web research first** — reading templates and writing from training data is NOT research. You must run search_web queries and read_url_content official docs BEFORE writing any file.
 > - Doing web searches or thinking about the domain and then saying "I have enough research data" WITHOUT writing the 5 files
 > - Writing research findings only in your response text instead of to files
 > - Writing fewer than 5 files (e.g., one combined file)
 > - Moving to Step 6 or writing REQUIREMENTS.md before the verification command below prints `RESEARCH VERIFIED OK`
 > - Saying "Let me proceed to requirements" or "Moving to requirements" before verification passes
 >
-> **The ONLY acceptable sequence is:** mkdir → **web research (WebSearch + WebFetch)** → write file 1 → write file 2 → write file 3 → write file 4 → write file 5 → run verification → see `RESEARCH VERIFIED OK` → present findings → get user confirmation.
+> **The ONLY acceptable sequence is:** mkdir → **web research (search_web + read_url_content)** → write file 1 → write file 2 → write file 3 → write file 4 → write file 5 → run verification → see `RESEARCH VERIFIED OK` → present findings → get user confirmation.
 
 **Step 5a — Create the research directory.** Run this command now:
 
@@ -586,24 +588,26 @@ Spawn 4 parallel researcher agents — one per research dimension. Each agent wr
 
 ```
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Stack research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
     Research the standard tech stack for [project domain]. Write .planning/research/STACK.md.
-    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read .planning/PROJECT.md to understand the project domain and goals
-    2. Run 2-3 WebSearch queries: '[domain] recommended tech stack [current year]', '[domain] best libraries [current year]'
-    3. WebFetch official docs for any key libraries discovered
+    2. Run 2-3 search_web queries: '[domain] recommended tech stack [current year]', '[domain] best libraries [current year]'
+    3. read_url_content official docs for any key libraries discovered
     4. Write .planning/research/STACK.md with confidence levels and source citations
     </research_steps>
 
@@ -619,7 +623,7 @@ Task(
     </downstream_consumer>
 
     <quality_gate>
-    - [ ] Versions are current (verified via WebSearch/WebFetch, not training data)
+    - [ ] Versions are current (verified via search_web/read_url_content, not training data)
     - [ ] Rationale explains WHY, not just WHAT
     - [ ] Confidence levels assigned to each recommendation
     </quality_gate>
@@ -632,24 +636,26 @@ Task(
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Features research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
     Research what features [project domain] products typically have. Write .planning/research/FEATURES.md.
-    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read .planning/PROJECT.md to understand the project domain and goals
-    2. Run 2-3 WebSearch queries: '[domain] features table stakes [current year]', '[domain] product features comparison'
-    3. WebFetch any relevant product comparison pages or feature lists
+    2. Run 2-3 search_web queries: '[domain] features table stakes [current year]', '[domain] product features comparison'
+    3. read_url_content any relevant product comparison pages or feature lists
     4. Write .planning/research/FEATURES.md with confidence levels and source citations
     </research_steps>
 
@@ -678,24 +684,26 @@ Task(
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Architecture research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
     Research how [project domain] systems are typically structured. Write .planning/research/ARCHITECTURE.md.
-    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read .planning/PROJECT.md to understand the project domain and goals
-    2. Run 2-3 WebSearch queries: '[domain] architecture patterns', '[domain] system design components'
-    3. WebFetch architectural guides or documentation for the chosen stack
+    2. Run 2-3 search_web queries: '[domain] architecture patterns', '[domain] system design components'
+    3. read_url_content architectural guides or documentation for the chosen stack
     4. Write .planning/research/ARCHITECTURE.md with confidence levels and source citations
     </research_steps>
 
@@ -724,24 +732,26 @@ Task(
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Pitfalls research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    Tool priority: 1. search_web (ecosystem discovery — always include current year), 2. read_url_content (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
     Research what [project domain] projects commonly get wrong. Write .planning/research/PITFALLS.md.
-    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read .planning/PROJECT.md to understand the project domain and goals
-    2. Run 2-3 WebSearch queries: '[domain] common mistakes gotchas', '[domain] pitfalls beginners'
-    3. WebFetch any detailed postmortems or lessons-learned articles
+    2. Run 2-3 search_web queries: '[domain] common mistakes gotchas', '[domain] pitfalls beginners'
+    3. read_url_content any detailed postmortems or lessons-learned articles
     4. Write .planning/research/PITFALLS.md with confidence levels and source citations
     </research_steps>
 
@@ -774,12 +784,19 @@ After all 4 agents complete, spawn a synthesizer to create SUMMARY.md from the o
 
 ```
 Task(
-  subagent_type="learnship-researcher",
-  description="Synthesize research",
+  subagent_type="learnship-research-synthesizer",
+  description="Synthesize research into SUMMARY.md",
   prompt="
+    <agent_definition>
+    You are a learnship research synthesizer. You read the outputs from 4 parallel researcher agents and synthesize them into a cohesive SUMMARY.md.
+    Synthesize, don't concatenate — integrate findings across all 4 files into a unified narrative.
+    Be opinionated: the roadmapper needs clear recommendations, not wishy-washy summaries.
+    Derive roadmap implications from combined research. Identify confidence levels and gaps.
+    </agent_definition>
+
     <objective>
     Synthesize the 4 research files into a single SUMMARY.md.
-    Read all 4 files, extract the key findings, and write a cohesive summary.
+    Read all 4 files, extract the key findings, and write a cohesive summary that informs roadmap creation.
     </objective>
 
     <files_to_read>
@@ -789,10 +806,23 @@ Task(
     - .planning/research/PITFALLS.md
     </files_to_read>
 
+    <downstream_consumer>
+    Your SUMMARY.md is consumed by the roadmapper which uses it to structure phases.
+    Executive Summary → quick understanding. Key Findings → tech decisions. Implications → phase structure.
+    Research Flags → which phases need deeper research. Gaps → what to flag for validation.
+    </downstream_consumer>
+
     <output>
     Write to: .planning/research/SUMMARY.md
-    Required sections: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
+    Required sections: ## Executive Summary, ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls, ## Implications for Roadmap, ## Confidence Assessment, ## Gaps
     </output>
+
+    <quality_gate>
+    - [ ] Synthesized, not concatenated — findings are integrated
+    - [ ] Opinionated — clear recommendations emerge
+    - [ ] Actionable — roadmapper can structure phases from implications
+    - [ ] Honest — confidence levels reflect actual source quality
+    </quality_gate>
   "
 )
 ```
@@ -803,12 +833,17 @@ Wait for the synthesizer to complete, then proceed to Step 5c (verification) to 
 
 <persona_context>
 You are now the **learnship project researcher**. Your training data is 6–18 months stale — verify before asserting.
-Use WebSearch for ecosystem discovery (always include current year), WebFetch for official docs, codebase scan for existing patterns.
+Use search_web for ecosystem discovery (always include current year), read_url_content for official docs, codebase scan for existing patterns.
 Tag confidence: HIGH (multi-source verified), MEDIUM (single official source), LOW (unverified).
 Be comprehensive but opinionated — "Use X because Y" not "Options are X, Y, Z."
 Investigation, not confirmation — gather evidence first, recommend second.
 Your research feeds the roadmapper: STACK.md → tech decisions, FEATURES.md → what to build, ARCHITECTURE.md → system structure, PITFALLS.md → risk flags.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-project-researcher(Your training data is 6–18 months stale — verify before asserting)\033[0m\n\n"
+> ```
 
 Read `@./agents/project-researcher.md` for the full persona definition.
 
@@ -816,7 +851,7 @@ Read `@./agents/project-researcher.md` for the full persona definition.
 
 > 🔴 **You MUST do web research before writing files.** Your training data is stale. Do not write research files from memory alone — investigate first, write second.
 
-Run at least 5 WebSearch queries to discover the current state of this project's domain. Include the current year in all queries. Example queries (adapt to the actual project domain):
+Run at least 5 search_web queries to discover the current state of this project's domain. Include the current year in all queries. Example queries (adapt to the actual project domain):
 
 1. `"[project domain] recommended tech stack 2026"` — discover what's standard
 2. `"[project domain] best libraries 2026"` — find specific tools
@@ -824,11 +859,11 @@ Run at least 5 WebSearch queries to discover the current state of this project's
 4. `"[project domain] common mistakes gotchas"` — what goes wrong
 5. `"[key technology from PROJECT.md] best practices"` — specific tech guidance
 
-For any libraries or frameworks discovered, use WebFetch to read their official documentation pages.
+For any libraries or frameworks discovered, use read_url_content to read their official documentation pages.
 
 Record your findings internally. You will use them to write the 5 files below. Every recommendation in the files should be grounded in what you found online — include confidence levels (HIGH/MEDIUM/LOW) and cite sources where possible.
 
-> 🛑 STOP. Confirm: did you run at least 5 WebSearch queries? If you skipped straight to writing files, go back and search now. Files written purely from training data without web verification are low-quality research.
+> 🛑 STOP. Confirm: did you run at least 5 search_web queries? If you skipped straight to writing files, go back and search now. Files written purely from training data without web verification are low-quality research.
 
 **Step 5b — Write all 5 files.** Create each file one at a time using your file write tool. Each file is a separate write operation. Do NOT combine files. Do NOT skip files. **Before writing each file, read the corresponding template** from `@./templates/research-project/` to understand the expected structure. Base your content on the web research findings from Step 5b-pre.
 
@@ -985,6 +1020,11 @@ Goal-backward: start from what the user needs, work backward to what must be bui
 Dependencies drive order. Phases should be deliverable — each produces something testable.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-roadmapper(Transform requirements into a phased roadmap)\033[0m\n\n"
+> ```
+
 Read `@./agents/roadmapper.md` for the full persona definition.
 
 1. Derive phases from requirements (don't impose structure — let requirements drive phases)
@@ -1111,7 +1151,7 @@ node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGE
 git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 ```
 
-<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->
+
 
 ## Step 9: Done
 
