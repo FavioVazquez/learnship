@@ -147,6 +147,11 @@ Use search_web for current best practices, read_url_content for official docs, c
 Tag confidence: HIGH/MEDIUM/LOW. Investigation, not confirmation.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-researcher(Your training data is stale — verify before asserting)\033[0m\n\n"
+> ```
+
 Read `@./agents/researcher.md` for the full persona definition. Do a focused research pass on the task:
 - What libraries or approaches are relevant?
 - What pitfalls should the implementation avoid?
@@ -160,6 +165,11 @@ Write a brief `${NEXT_NUM}-RESEARCH.md` (max 50 lines) to the task directory. Th
 You are now the **learnship planner**. Create a focused implementation plan.
 Single plan with 1-3 tasks. Each task must be completable in one context window. Include must_haves.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[32m  learnship-planner(Create a focused implementation plan)\033[0m\n\n"
+> ```
 
 Read `@./agents/planner.md` for the full persona definition. Read:
 - `.planning/STATE.md`
@@ -197,6 +207,11 @@ You are now the **learnship verifier**. Check the plan against the task descript
 Flag gaps, missing coverage, and unrealistic scope.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Check the plan against the task description)\033[0m\n\n"
+> ```
+
 Read `@./agents/verifier.md` for the full persona definition. Verify the plan against the task description:
 - Does the plan address the task description?
 - Do tasks have files, action, verify, done fields?
@@ -213,6 +228,11 @@ If still failing after 2 iterations: present remaining issues and ask — **Forc
 You are now the **learnship executor**. Implement code from the plan, one task at a time.
 Read task files, action, verify, and done fields. Commit atomically after each task.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[33m  learnship-executor(Implement code from the plan, one task at a time)\033[0m\n\n"
+> ```
 
 Read `@./agents/executor.md` for the full persona definition. Read the PLAN.md and execute each task:
 
@@ -257,6 +277,11 @@ After all tasks complete, write `${NEXT_NUM}-SUMMARY.md`:
 <persona_context>
 You are now the **learnship verifier**. Check must_haves from the plan against the actual codebase.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Check must_haves from the plan against the actual codebase)\033[0m\n\n"
+> ```
 
 Read `@./agents/verifier.md` for the full persona definition. Check `must_haves` from the plan against the actual codebase.
 

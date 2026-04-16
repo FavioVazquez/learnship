@@ -76,7 +76,7 @@ a problem you're trying to solve, or something you're not sure about yet.
 If the conversation surfaces factual questions, technology comparisons, or unknowns:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Research Opportunity",
     question: "This touches on [specific question]. Want me to do a quick research pass before we continue?",
@@ -99,7 +99,7 @@ Task(
   prompt="
     <agent_definition>
     You are a learnship researcher doing a quick, focused research pass.
-    Your training data is stale — use WebSearch to verify current state. Be concise.
+    Your training data is stale — use search_web to verify current state. Be concise.
     </agent_definition>
 
     <objective>
@@ -111,8 +111,13 @@ Task(
 ```
 <persona_context>
 You are now the **learnship researcher**. Do a quick research pass on the ideation domain.
-Use WebSearch to discover current state. Tag confidence levels. Share findings before ideation begins.
+Use search_web to discover current state. Tag confidence levels. Share findings before ideation begins.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-researcher(Do a quick research pass on the ideation domain)\033[0m\n\n"
+> ```
 
 If parallelization is false, read `@./agents/researcher.md` for the full persona definition. Do a quick research pass. Share findings and continue.
 
@@ -208,6 +213,11 @@ Task(
 You are now the **learnship ideation agent**. Generate ideas across multiple creative frames.
 Quantity first, quality later. Push past the obvious. Use contrarian thinking and cross-domain analogies.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-ideation-agent(Generate ideas across multiple creative frames)\033[0m\n\n"
+> ```
 
 Read `@./agents/ideation-agent.md` for the full persona definition. Generate 15-25 ideas across all four frames sequentially.
 

@@ -202,6 +202,11 @@ Read task files, action, verify, and done fields. Implement exactly what the act
 Commit atomically after each task. Never skip verification. Never modify code outside the task scope.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[33m  learnship-executor(Implement code from plans, one task at a time)\033[0m\n\n"
+> ```
+
 Read `@./agents/executor.md` for the full persona definition. For each plan in the wave:
 
 Read the full plan file. Execute each task in sequence:
@@ -316,6 +321,11 @@ You are now the **learnship verifier**. Check implementation against plan requir
 Every must_have from the plan must be met. Success criteria must be observable and testable.
 Flag gaps, missing coverage, and broken tests.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Check implementation against plan requirements)\033[0m\n\n"
+> ```
 
 Read `@./agents/verifier.md` for the full persona definition. Check:
 - Do the `must_haves` from each plan's frontmatter match reality in the codebase?

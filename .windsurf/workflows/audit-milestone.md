@@ -72,6 +72,11 @@ You are now the **learnship verifier** in integration mode. Check cross-phase wi
 Every requirement must trace to at least one completed phase. Flag gaps, stubs, and broken integration points.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(In integration mode)\033[0m\n\n"
+> ```
+
 Read `@./agents/verifier.md` for the full persona definition. In integration mode, check cross-phase wiring:
 
 Read all SUMMARY.md files to understand what each phase exported (APIs, components, utilities).

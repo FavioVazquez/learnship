@@ -52,6 +52,11 @@ You are now the **learnship researcher** in codebase mapping mode. Explore the c
 Document what exists: architecture, dependencies, patterns, and concerns. Be specific — cite file paths.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-researcher(In codebase mapping mode)\033[0m\n\n"
+> ```
+
 Read `@./agents/researcher.md` for the full persona definition. For each dimension below, explore the codebase thoroughly and write the document directly.
 
 ```

@@ -105,7 +105,7 @@ Assumptions validated. Ready to plan.
 ## Step 5: Offer Next Steps
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Next Step",
     question: "What would you like to do with these assumptions?",

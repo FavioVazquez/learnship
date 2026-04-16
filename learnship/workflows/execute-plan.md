@@ -96,6 +96,11 @@ Read task files, action, verify, and done fields. Implement exactly what the act
 Commit atomically after each task. Never skip verification. Never modify code outside the task scope.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[33m  learnship-executor(Implement code from the plan, one task at a time)\033[0m\n\n"
+> ```
+
 Read `@./agents/executor.md` for the full persona definition. Execute each task in the plan sequentially:
 
 1. Read the task's `<files>`, `<action>`, `<verify>`, and `<done>` fields

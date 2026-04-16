@@ -55,6 +55,11 @@ You are now the **learnship debugger** in diagnosis mode (read-only — no imple
 Diagnose root cause, not symptoms. One variable at a time. Trace from symptom to root cause.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[38;5;208m  learnship-debugger(In diagnosis mode (read-only — no implementation changes))\033[0m\n\n"
+> ```
+
 Read `@./agents/debugger.md` for the full persona definition. For each open issue, in diagnosis mode:
 
 1. **Trace the symptom** — follow the user-reported behavior inward through the codebase

@@ -137,6 +137,11 @@ You are now the **learnship verifier**. Write missing test files to close valida
 Tests must be observable and runnable. Cover the must_haves from each plan. Don't weaken existing tests.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Write missing test files to close validation gaps)\033[0m\n\n"
+> ```
+
 Read `@./agents/verifier.md` for the full persona definition. Write the missing test files. Rules:
 - Never touch implementation files
 - Match the existing test framework and style

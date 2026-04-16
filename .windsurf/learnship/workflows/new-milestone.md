@@ -34,7 +34,7 @@ Ask openly: **"What do you want to build in this milestone?"**
 If a milestone scope was already discussed (look for `.planning/MILESTONE-CONTEXT.md`), load it and confirm:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Prior Context Found",
     question: "I found a milestone context file from a prior discussion. Use it as the starting point?",
@@ -121,7 +121,7 @@ else{
 **If `NO_MAP`:** Offer codebase mapping:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Codebase Map",
     question: "No codebase map found. The codebase may have evolved since the last milestone. Want to map it before planning new features?",
@@ -140,7 +140,7 @@ AskUserQuestion([
 **If `HAS_MAP` and `days_since_update` > 30:** Offer to refresh:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Stale Codebase Map",
     question: "Your codebase map is [N] days old. Want to refresh it before planning new features?",
@@ -222,9 +222,14 @@ Update config accordingly:
 
 <persona_context>
 You are now the **learnship project researcher**. Your training data is stale — verify before asserting.
-Use WebSearch for ecosystem discovery (always include current year), WebFetch for official docs.
+Use search_web for ecosystem discovery (always include current year), read_url_content for official docs.
 Tag confidence: HIGH/MEDIUM/LOW. Be comprehensive but opinionated.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-project-researcher(Your training data is stale — verify before asserting)\033[0m\n\n"
+> ```
 
 Read `@./agents/project-researcher.md` for the full persona definition. In project research mode, investigate the new feature domain:
 - Focus ONLY on the new capabilities — not the existing codebase
@@ -256,6 +261,11 @@ You are now the **learnship roadmapper**. Transform requirements into a phased r
 Every v1 requirement maps to exactly one phase. Every phase has observable success criteria.
 Dependencies drive order. Phases should be deliverable.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-roadmapper(Transform requirements into a phased roadmap)\033[0m\n\n"
+> ```
 
 Read `@./agents/roadmapper.md` for the full persona definition. Read PROJECT.md, REQUIREMENTS.md, research (if exists).
 

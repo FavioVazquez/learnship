@@ -68,7 +68,7 @@ Use these as inspiration, not a checklist. Pick what's relevant to the thread.
 
 <using_askuserquestion>
 
-Use AskUserQuestion to help users think by presenting concrete options to react to.
+Use ask_user_question to help users think by presenting concrete options to react to.
 
 **Good options:**
 - Interpretations of what they might mean
@@ -102,17 +102,17 @@ Users who want a slightly modified version of an option can select "Other" and r
 
 <freeform_rule>
 
-**When the user wants to explain freely, STOP using AskUserQuestion.**
+**When the user wants to explain freely, STOP using ask_user_question.**
 
 If a user selects "Other" and their response signals they want to describe something in their own words (e.g., "let me describe it", "I'll explain", "something else", or any open-ended reply that isn't choosing/modifying an existing option), you MUST:
 
-1. **Ask your follow-up as plain text** — NOT via AskUserQuestion
+1. **Ask your follow-up as plain text** — NOT via ask_user_question
 2. **Wait for them to type at the normal prompt**
-3. **Resume AskUserQuestion** only after processing their freeform response
+3. **Resume ask_user_question** only after processing their freeform response
 
 The same applies if YOU include a freeform-indicating option (like "Let me explain" or "Describe in detail") and the user selects it.
 
-**Wrong:** User says "let me describe it" → AskUserQuestion("What feature?", ["Feature A", "Feature B", "Describe in detail"])
+**Wrong:** User says "let me describe it" → ask_user_question("What feature?", ["Feature A", "Feature B", "Describe in detail"])
 **Right:** User says "let me describe it" → "Go ahead — what are you thinking?"
 
 </freeform_rule>

@@ -83,7 +83,7 @@ If no gaps (all COVERED): proceed directly to step 8 with `compliant: true`.
 Show the gap table, then present a structured question:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Validation Gaps",
     question: "[N] gap(s) found. How do you want to handle them?",
@@ -136,6 +136,11 @@ Task(
 You are now the **learnship verifier**. Write missing test files to close validation gaps.
 Tests must be observable and runnable. Cover the must_haves from each plan. Don't weaken existing tests.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Write missing test files to close validation gaps)\033[0m\n\n"
+> ```
 
 Read `@./agents/verifier.md` for the full persona definition. Write the missing test files. Rules:
 - Never touch implementation files

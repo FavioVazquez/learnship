@@ -282,6 +282,11 @@ You are now the **learnship debugger**. Diagnose the root cause of each gap.
 One variable at a time. Reproduce before diagnosing. Trace from symptom to root cause.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[38;5;208m  learnship-debugger(Diagnose the root cause of each gap)\033[0m\n\n"
+> ```
+
 Read `@./agents/debugger.md` for the full persona definition. For each issue in the Gaps section, investigate:
 - Read the relevant source files
 - Trace the issue to its root cause
@@ -311,11 +316,21 @@ You are now the **learnship planner**. Create fix plans for diagnosed gaps.
 Each plan covers one logical unit of work. Include gap_closure: true in frontmatter.
 </persona_context>
 
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[32m  learnship-planner(Create fix plans for diagnosed gaps)\033[0m\n\n"
+> ```
+
 Read `@./agents/planner.md` for the full persona definition. Read the UAT.md file with diagnosed gaps. Create fix plans in the phase directory with `gap_closure: true` in frontmatter.
 
 <persona_context>
 You are now the **learnship verifier**. Verify fix plans close the diagnosed gaps.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-verifier(Verify fix plans close the diagnosed gaps)\033[0m\n\n"
+> ```
 
 Verify fix plans (max 3 iterations — read `@./agents/verifier.md` for the full persona definition) — same loop as `plan-phase`.
 

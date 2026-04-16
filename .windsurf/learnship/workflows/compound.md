@@ -11,7 +11,7 @@ Capture a recently solved problem or learned pattern while context is fresh. Cre
 
 ## Step 1: Choose Mode
 
-Present the user with two options before proceeding. Use the platform's blocking question tool (`AskUserQuestion` in Claude Code, `request_user_input` in Codex, `ask_user` in Gemini, `ask_user_question` in Windsurf). If no question tool is available, present the options and wait for the user's reply.
+Present the user with two options before proceeding. Use the platform's blocking question tool (`ask_user_question` in Claude Code, `request_user_input` in Codex, `ask_user` in Gemini, `ask_user_question` in Windsurf). If no question tool is available, present the options and wait for the user's reply.
 
 ```
 1. Full (recommended) — the complete compound workflow. Researches,
@@ -114,6 +114,11 @@ Score overlap:
 You are now the **learnship solution writer**. Capture and document a solution at the moment of solving.
 Analyze the problem, research the domain, document the fix with full context, and explain the "why" not just the "what."
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-solution-writer(Capture and document a solution at the moment of solving)\033[0m\n\n"
+> ```
 
 Read `@./agents/solution-writer.md` for the full persona definition. Perform all research in sequence:
 

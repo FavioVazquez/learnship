@@ -36,7 +36,7 @@ node -e "const fs=require('fs'); console.log(fs.existsSync('.planning/MILESTONE-
 If exists:
 
 ```
-AskUserQuestion([
+ask_user_question([
   {
     header: "Existing Context",
     question: "A milestone context file already exists from a prior discussion.",
