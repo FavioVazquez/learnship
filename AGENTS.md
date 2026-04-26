@@ -251,3 +251,13 @@ Never push to main directly. Never merge without explicit user approval.
 **Fix:** (1) Injected `<agent_definition>` blocks directly into every Task() prompt with the key persona instructions (no file path references). (2) Added `description=` to all Task() calls so platforms show meaningful agent names. (3) Replaced monolithic new-project research with 4+1 pattern: 4 parallel researchers (Stack, Features, Architecture, Pitfalls) + 1 synthesizer (SUMMARY). (4) Removed all `@./agents/*.md` from `<files_to_read>` inside Task() blocks — sequential fallback paths still reference them correctly. (v2.2.2)
 
 **Lesson:** Subagents are fresh context windows — they can't resolve relative paths from the orchestrator's filesystem. Persona definitions must be injected directly into the Task prompt, not referenced by path. One focused Task per file is better than one monolithic Task for multiple files — the AI is more likely to actually spawn the subagent when the task is small and clear.
+
+### 2026-04-26: Synthesizer subagent generates SUMMARY.md content but doesn't write it to disk
+
+**What broke:** During `/new-project` with research enabled, the `learnship-research-synthesizer` Task() completed successfully (5 tool uses, 30k tokens), the orchestrator said "synthesis complete," and the Step 5c verification immediately failed with `SUMMARY.md MISSING`. The AI then caught itself and wrote the file manually from its context.
+
+**Root cause:** The synthesizer Task() prompt used a passive `<output>` block: `Write to: .planning/research/SUMMARY.md`. Subagents interpret declarative instructions as descriptions, not commands — especially when there's no explicit "use your write tool now" instruction and no inline verification inside the Task prompt itself. The subagent generated the content in its context window, reported done, and exited without ever calling a write tool.
+
+**Fix:** Replaced the passive `<output>` block with an explicit `**WRITE ACTION REQUIRED**` instruction ("You MUST use your file-write tool... Do NOT output content to the conversation... Do NOT treat this as done until the file physically exists on disk") followed by an inline `node -e` verification gate inside the Task prompt. The gate checks for file existence and required sections and loops until `SUMMARY_OK`. (v2.3.5)
+
+**Lesson:** "Write to X" in a Task prompt is a description, not a command. Subagents need: (1) an imperative "use your write tool NOW," (2) an explicit "do NOT just output to conversation," and (3) an inline verification gate they must pass before reporting done. The outer orchestrator verification (Step 5c) is a safety net — not the primary enforcement. The Task itself must be self-verifying.

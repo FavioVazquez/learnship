@@ -139,9 +139,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: .planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md
     Required sections: ## Don't Hand-Roll, ## Common Pitfalls, ## Existing Patterns in This Codebase, ## Recommended Approach
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write [padded_phase]-RESEARCH.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const files=fs.readdirSync('.planning/phases/').flatMap(d=>fs.readdirSync('.planning/phases/'+d).filter(f=>f.endsWith('-RESEARCH.md')).map(f=>'.planning/phases/'+d+'/'+f));if(!files.length){console.log('RESEARCH_MISSING');process.exit(1);}console.log('RESEARCH_OK — '+files[files.length-1]);"
+    ```
+
+    If `RESEARCH_MISSING`: write the file and re-run until `RESEARCH_OK`.
   "
 )
 ```
@@ -225,9 +235,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: [phase_dir]/[padded_phase]-01-PLAN.md, [padded_phase]-02-PLAN.md, etc.
     Each plan must have: YAML frontmatter (wave, depends_on, files_modified) + tasks in XML + must_haves section
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write each PLAN.md to disk. Do NOT output plans to the conversation. Do NOT treat this as done until files physically exist on disk.**
+
+    Write each plan to `[phase_dir]/[padded_phase]-NN-PLAN.md` using your write tool now. Write all plans before reporting done.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const plans=fs.readdirSync('.').filter(f=>f.endsWith('-PLAN.md'));if(!plans.length){console.log('PLANS_MISSING');process.exit(1);}console.log('PLANS_OK — '+plans.length+' plan(s): '+plans.join(', '));"
+    ```
+
+    Run that command from inside [phase_dir]. If `PLANS_MISSING`: write the files and re-run until `PLANS_OK`.
   "
 )
 ```

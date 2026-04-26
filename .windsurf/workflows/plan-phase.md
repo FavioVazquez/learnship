@@ -114,20 +114,20 @@ Task(
     You are a learnship phase researcher. You answer 'What do I need to know to PLAN this phase well?' and produce a single RESEARCH.md that the planner consumes.
     Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
     Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
-    Tool priority: 1. WebSearch (implementation patterns — always include current year), 2. WebFetch (official docs), 3. Codebase scan (existing patterns to reuse).
+    Tool priority: 1. search_web (implementation patterns — always include current year), 2. read_url_content (official docs), 3. Codebase scan (existing patterns to reuse).
     Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
     Research how to implement Phase [phase_number]: [phase_name].
     Answer: 'What do I need to know to PLAN this phase well?'
-    You MUST run WebSearch queries BEFORE writing the file. Do NOT write from training data alone.
+    You MUST run search_web queries BEFORE writing the file. Do NOT write from training data alone.
     </objective>
 
     <research_steps>
     1. Read user decisions from CONTEXT.md (if exists), requirements from REQUIREMENTS.md, and project state from STATE.md
-    2. Run at least 3 WebSearch queries: '[phase technology] best practices [current year]', '[phase technology] common mistakes', '[phase technology] recommended libraries'
-    3. WebFetch official docs for key libraries or frameworks discovered
+    2. Run at least 3 search_web queries: '[phase technology] best practices [current year]', '[phase technology] common mistakes', '[phase technology] recommended libraries'
+    3. read_url_content official docs for key libraries or frameworks discovered
     4. Scan the codebase for existing patterns relevant to this phase
     5. Write [padded_phase]-RESEARCH.md with confidence levels and source citations
     </research_steps>
@@ -139,9 +139,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: .planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md
     Required sections: ## Don't Hand-Roll, ## Common Pitfalls, ## Existing Patterns in This Codebase, ## Recommended Approach
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write [padded_phase]-RESEARCH.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const files=fs.readdirSync('.planning/phases/').flatMap(d=>fs.readdirSync('.planning/phases/'+d).filter(f=>f.endsWith('-RESEARCH.md')).map(f=>'.planning/phases/'+d+'/'+f));if(!files.length){console.log('RESEARCH_MISSING');process.exit(1);}console.log('RESEARCH_OK — '+files[files.length-1]);"
+    ```
+
+    If `RESEARCH_MISSING`: write the file and re-run until `RESEARCH_OK`.
   "
 )
 ```
@@ -153,7 +163,7 @@ Wait for agent to complete, then verify RESEARCH.md was written.
 <persona_context>
 You are now the **learnship phase researcher**. Your training data is stale — verify before asserting.
 Tag every claim: [VERIFIED: source], [CITED: url], or [ASSUMED]. Never present assumed knowledge as verified fact.
-Use WebSearch for implementation patterns, WebFetch for official docs, codebase scan for existing patterns to reuse.
+Use search_web for implementation patterns, read_url_content for official docs, codebase scan for existing patterns to reuse.
 </persona_context>
 
 > **Announce persona** — print this before proceeding:
@@ -163,7 +173,7 @@ Use WebSearch for implementation patterns, WebFetch for official docs, codebase 
 
 Read `@./agents/phase-researcher.md` for the full persona definition. Investigate how to implement this phase.
 
-**Online research first.** Before writing anything, run at least 3 WebSearch queries relevant to this phase's domain. Use WebFetch to read official docs for any libraries discovered. Then read:
+**Online research first.** Before writing anything, run at least 3 search_web queries relevant to this phase's domain. Use read_url_content to read official docs for any libraries discovered. Then read:
 - The CONTEXT.md (user decisions)
 - `.planning/REQUIREMENTS.md` (which requirements this phase covers)
 - `.planning/STATE.md` (project history and decisions)
@@ -225,9 +235,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: [phase_dir]/[padded_phase]-01-PLAN.md, [padded_phase]-02-PLAN.md, etc.
     Each plan must have: YAML frontmatter (wave, depends_on, files_modified) + tasks in XML + must_haves section
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write each PLAN.md to disk. Do NOT output plans to the conversation. Do NOT treat this as done until files physically exist on disk.**
+
+    Write each plan to `[phase_dir]/[padded_phase]-NN-PLAN.md` using your write tool now. Write all plans before reporting done.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const plans=fs.readdirSync('.').filter(f=>f.endsWith('-PLAN.md'));if(!plans.length){console.log('PLANS_MISSING');process.exit(1);}console.log('PLANS_OK — '+plans.length+' plan(s): '+plans.join(', '));"
+    ```
+
+    Run that command from inside [phase_dir]. If `PLANS_MISSING`: write the files and re-run until `PLANS_OK`.
   "
 )
 ```
