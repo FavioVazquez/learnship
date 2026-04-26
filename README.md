@@ -121,7 +121,7 @@ Every feature ships through a 7-step loop:
 ```mermaid
 flowchart LR
     DP["/discuss-phase N<br/>Capture decisions"]
-    PP["/plan-phase N<br/>Research + plans"]
+    PP["/plan-phase N<br/>Vertical slice plans"]
     EP["/execute-phase N<br/>Build + commit"]
     VW["/verify-work N<br/>UAT + diagnose"]
     RV["/review<br/>Multi-persona review"]
@@ -251,6 +251,14 @@ It's probably overkill for one-off scripts. Use `/quick` for that.
 ---
 
 ## 🆕 What's New
+
+### What's new in v2.3.4
+
+v2.3.4 adds two planning quality features:
+
+**Deep questioning mode** (`--deep` flag or `workflow.discuss_mode: "deep"` in config): Both `/discuss-phase` and `/new-project` now support extended questioning that walks every decision branch until shared understanding is reached. Each question includes a recommended answer. Standard mode (4 focused exchanges) remains the default.
+
+**Vertical slice planning** (enforced in `plan-phase`): Plans are now required to be tracer bullets — thin vertical slices through all integration layers (data → logic → API → UI → test) for one demoable user-facing behavior. The plan-checker flags any plan that covers only one architectural layer across all features. Single-layer phases (migrations, style passes) use `single_layer_justified: true` in the plan frontmatter.
 
 ### What's new in v2.3
 
@@ -533,13 +541,16 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 ### Workflow Toggles
 
 | Setting | Default | What it controls |
-|---------|---------|-----------------|
+|---------|---------|------------------|
 | `workflow.research` | `true` | Domain research before planning each phase |
-| `workflow.plan_check` | `true` | Plan verification loop (up to 3 iterations) |
+| `workflow.plan_check` | `true` | Plan verification loop (up to 3 iterations), including vertical slice integrity check |
 | `workflow.verifier` | `true` | Post-execution verification against phase goals |
 | `workflow.validation` | `true` | Test coverage mapping during plan-phase |
 | `workflow.review` | `true` | Enable `/review` suggestions after `/verify-work` (v2.0) |
 | `workflow.solutions_search` | `true` | Search `.planning/solutions/` during `/plan-phase` (v2.0) |
+| `workflow.security_enforcement` | `true` | Per-phase STRIDE security verification via `/secure-phase` |
+| `workflow.discuss_mode` | `"discuss"` | Questioning depth: `"discuss"` (4 exchanges) or `"deep"` (extended, walks every branch) (v2.3.4) |
+| `workflow.tdd_mode` | `false` | Instruct planner to apply TDD task ordering to eligible tasks |
 
 ### Review & Ship Settings
 
