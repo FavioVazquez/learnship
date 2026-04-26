@@ -696,9 +696,19 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/STACK.md
     Required sections: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write STACK.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/STACK.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/STACK.md';if(!fs.existsSync(f)){console.log('STACK_MISSING');process.exit(1);}console.log('STACK_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `STACK_MISSING`: write the file and re-run until `STACK_OK`.
   "
 )
 
@@ -744,9 +754,19 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/FEATURES.md
     Required sections: ## Table Stakes, ## Differentiators, ## Anti-Features
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write FEATURES.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/FEATURES.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/FEATURES.md';if(!fs.existsSync(f)){console.log('FEATURES_MISSING');process.exit(1);}console.log('FEATURES_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `FEATURES_MISSING`: write the file and re-run until `FEATURES_OK`.
   "
 )
 
@@ -792,9 +812,19 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/ARCHITECTURE.md
     Required sections: ## Component Boundaries, ## Data Flow, ## Build Order, ## Integration Points
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write ARCHITECTURE.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/ARCHITECTURE.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/ARCHITECTURE.md';if(!fs.existsSync(f)){console.log('ARCH_MISSING');process.exit(1);}console.log('ARCH_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `ARCH_MISSING`: write the file and re-run until `ARCH_OK`.
   "
 )
 
@@ -840,9 +870,19 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/PITFALLS.md
     Required sections: ## Common Mistakes, ## Warning Signs, ## Prevention Strategies
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write PITFALLS.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/PITFALLS.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/PITFALLS.md';if(!fs.existsSync(f)){console.log('PITFALLS_MISSING');process.exit(1);}console.log('PITFALLS_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `PITFALLS_MISSING`: write the file and re-run until `PITFALLS_OK`.
   "
 )
 ```
@@ -880,11 +920,22 @@ Task(
     </downstream_consumer>
 
     <output>
-    Write to: .planning/research/SUMMARY.md
     Required sections: ## Executive Summary, ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls, ## Implications for Roadmap, ## Confidence Assessment, ## Gaps
     </output>
 
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write SUMMARY.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the synthesized content to `.planning/research/SUMMARY.md` using your write tool now.
+
+    Then verify it was written:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/SUMMARY.md';if(!fs.existsSync(f)){console.log('SUMMARY_MISSING');process.exit(1);}const c=fs.readFileSync(f,'utf8');const secs=['Executive Summary','Recommended Stack','Top Pitfalls','Implications for Roadmap'];const missing=secs.filter(s=>!c.includes(s));if(missing.length){console.log('SUMMARY_INCOMPLETE — missing: '+missing.join(', '));process.exit(1);}console.log('SUMMARY_OK — '+c.length+' chars');"
+    ```
+
+    If `SUMMARY_MISSING` or `SUMMARY_INCOMPLETE`: write the file and re-run until `SUMMARY_OK`.
+
     <quality_gate>
+    - [ ] File physically written to .planning/research/SUMMARY.md (verified by node -e above)
     - [ ] Synthesized, not concatenated — findings are integrated
     - [ ] Opinionated — clear recommendations emerge
     - [ ] Actionable — roadmapper can structure phases from implications

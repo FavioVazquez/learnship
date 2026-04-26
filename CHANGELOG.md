@@ -9,6 +9,15 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.5] — 2026-04-26
+
+### Fixed
+
+- **Task() subagents generating content but not writing to disk** — All 7 Task() blocks across `new-project.md`, `plan-phase.md`, and `research-phase.md` used a passive `Write to: <path>` instruction in their `<output>` block. Subagents interpreted this as a description, not a command: they generated the file content in-context, reported done, and exited without ever calling a write tool. The failure was caught by the outer verification gate but required manual self-correction. Fixed by replacing passive `<output>` descriptions with an explicit `**WRITE ACTION REQUIRED**` imperative ("You MUST use your file-write tool... Do NOT output to conversation... Do NOT treat as done until file physically exists on disk") plus an inline `node -e` verification gate inside each Task prompt. The Task now self-verifies before reporting completion. Affected blocks: STACK, FEATURES, ARCHITECTURE, PITFALLS, SUMMARY researchers/synthesizer in `new-project.md`; RESEARCH and PLAN writers in `plan-phase.md`; RESEARCH writer in `research-phase.md`. All 6 platforms verified.
+- **AGENTS.md regression #7** — Documented the root cause, fix, and lesson for future sessions.
+
+---
+
 ## [v2.3.4] — 2026-04-26
 
 ### Added

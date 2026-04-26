@@ -109,9 +109,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: .planning/phases/[padded_phase]-[slug]/[padded_phase]-RESEARCH.md
     Required sections: ## Don't Hand-Roll, ## Common Pitfalls, ## Existing Patterns in This Codebase, ## Recommended Approach
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write [padded_phase]-RESEARCH.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/phases/[padded_phase]-[slug]/[padded_phase]-RESEARCH.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const files=fs.readdirSync('.planning/phases/').flatMap(d=>fs.readdirSync('.planning/phases/'+d).filter(f=>f.endsWith('-RESEARCH.md')).map(f=>'.planning/phases/'+d+'/'+f));if(!files.length){console.log('RESEARCH_MISSING');process.exit(1);}console.log('RESEARCH_OK — '+files[files.length-1]);"
+    ```
+
+    If `RESEARCH_MISSING`: write the file and re-run until `RESEARCH_OK`.
   "
 )
 ```
