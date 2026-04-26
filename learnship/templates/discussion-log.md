@@ -35,9 +35,9 @@ created: [date]
 
 ---
 
-## Claude's Discretion
+## Agent's Discretion
 
-[Areas delegated to Claude's judgment — list what was deferred and why]
+[Areas delegated to agent's judgment — list what was deferred and why]
 
 ## Deferred Ideas
 

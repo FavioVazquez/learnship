@@ -20,7 +20,7 @@ Extract implementation decisions that downstream planning needs. Analyze the pha
 
 2. **Planner** — Reads CONTEXT.md to know WHAT decisions are locked
    - "Pull-to-refresh on mobile" → planner includes that in task specs
-   - "Claude's Discretion: loading skeleton" → planner can decide approach
+   - "Agent's Discretion: loading skeleton" → planner can decide approach
 
 **Your job:** Capture decisions clearly enough that downstream agents can act on them without asking the user again.
 
@@ -305,7 +305,7 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 ### [Category discussed]
 - [Decision captured]
 
-### Claude's Discretion
+### Agent's Discretion
 [Areas where user said "you decide"]
 
 </decisions>
@@ -365,7 +365,7 @@ Also write a discussion log for audit purposes using `@./templates/discussion-lo
 Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-DISCUSSION-LOG.md` with:
 - All options considered for each area (not just the selected one)
 - The user's verbatim choice and rationale
-- Areas delegated to Claude's discretion
+- Areas delegated to agent's discretion
 - Deferred ideas
 
 This file is for human audit trails only — it is NOT referenced by downstream agents.

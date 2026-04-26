@@ -9,6 +9,15 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.6] — 2026-04-26
+
+### Fixed
+
+- **Platform-neutral terminology — "Claude's Discretion" → "Agent's Discretion"** — Workflows, templates, and references used "Claude's Discretion", "Claude's judgment", and generic "Claude" as an agent noun throughout. learnship runs on 6 platforms (Windsurf, Claude Code, Cursor, OpenCode, Gemini CLI, Codex) with different underlying LLMs. All platform-specific agent language replaced with neutral equivalents: "Agent's Discretion", "agent's judgment", "the agent", "agent sessions". Affected files: `discuss-phase.md`, `quick.md`, `templates/context.md`, `templates/discussion-log.md`, `references/git-integration.md`, `references/questioning.md`, `references/verification-patterns.md` + all `.windsurf/` copies. Note: "Claude Code" as a platform name and Claude Opus/Sonnet/Haiku model names are intentionally untouched — those are proper nouns.
+- **9 new regression checks (REG-058–066)** added to `validate_regressions.sh` (§15: Platform-neutral terminology) to prevent future recurrence across workflows, templates, references, and Windsurf copies.
+
+---
+
 ## [v2.3.5] — 2026-04-26
 
 ### Fixed
