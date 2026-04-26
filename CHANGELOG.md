@@ -29,6 +29,9 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 - **Published agent copies synced** — `agents/learnship-planner.md`, `agents/learnship-plan-checker.md`, `.windsurf/rules/learnship-planner.md`, `.windsurf/rules/learnship-plan-checker.md`, `.windsurf/learnship/agents/planner.md`, `.windsurf/learnship/agents/plan-checker.md` all updated to match source.
 - **`plan-phase.md` Step 5** — Sequential planning instructions now include a vertical slice self-check question before writing each plan draft.
 - **New test section (§14)** in `validate_all_workflows.sh` — 18 checks covering deep questioning and vertical slice across all modified files.
+- **`new-project` config Round 1 expanded to 6 questions** — Added "Questioning Depth" (maps to `workflow.discuss_mode: "discuss" | "deep"`) and "Output Profile" (maps to `context: "dev" | "research" | "review"`). Both keys are now set during project initialization rather than defaulted silently. Config validation gate updated to check both keys. Cursor `.mdc` schema and structured-questions description updated to match.
+- **Stale workflow count fixed in Cursor install message** — `bin/install.js` Cursor manual install instructions said "42 workflows"; corrected to 57.
+- **Documentation staleness audit** — `README.md` now includes a "What's new in v2.3.4" section, complete Workflow Toggles table (added `security_enforcement`, `discuss_mode`, `tdd_mode` rows), and updated Mermaid flowchart label. `docs/index.md`, `docs/getting-started/first-project.md`, and `docs/getting-started/five-commands.md` updated with `--deep` flag and vertical slice descriptions.
 
 ---
 
