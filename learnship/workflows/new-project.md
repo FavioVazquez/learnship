@@ -125,9 +125,9 @@ Note the tech stack, key directories, and any README content internally. Use thi
 >
 > **🛑 FORBIDDEN:** Do NOT present all questions at once as a text wall. Do NOT skip any question. Do NOT invent answers. Do NOT proceed to the config.json write step until ALL 4 rounds have been answered by the user.
 
-**Round 1 — Core settings (4 questions):**
+**Round 1 — Core settings (6 questions):**
 
-> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
+> Present these 6 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
 
 ```
 AskUserQuestion([
@@ -167,6 +167,25 @@ AskUserQuestion([
       { label: "Balanced (Recommended)", description: "Large for planning, medium for execution — good quality/cost ratio" },
       { label: "Quality", description: "Large-tier models for all agents (highest cost, best results)" },
       { label: "Budget", description: "Medium for code, small for research/verification (lowest cost)" }
+    ]
+  },
+  {
+    header: "Questioning Depth",
+    question: "How deep should discuss-phase and new-project question you?",
+    multiSelect: false,
+    options: [
+      { label: "Standard (Recommended)", description: "4 focused exchanges per area — fast and sufficient for most projects" },
+      { label: "Deep", description: "Extended questioning: walks every decision branch until shared understanding is reached. Produces richer CONTEXT.md and PROJECT.md. Good for complex or unfamiliar domains." }
+    ]
+  },
+  {
+    header: "Output Profile",
+    question: "How verbose should agent responses be?",
+    multiSelect: false,
+    options: [
+      { label: "Dev (Recommended)", description: "Concise, action-oriented — code first, brief rationale. Low verbosity." },
+      { label: "Research", description: "Detailed explanations, alternatives, and context. High verbosity." },
+      { label: "Review", description: "Audit-focused — findings, severity, recommendations. Medium verbosity." }
     ]
   }
 ])
@@ -289,6 +308,8 @@ AskUserQuestion([
 - Granularity → `"granularity"`: `"coarse"`, `"standard"`, or `"fine"`
 - Learning Partner → `"learning_mode"`: `"auto"` or `"manual"`
 - AI Models → `"model_profile"`: `"balanced"`, `"quality"`, or `"budget"`
+- Questioning Depth → `"workflow.discuss_mode"`: `"discuss"` (Standard) or `"deep"` (Deep)
+- Output Profile → `"context"`: `"dev"` (Dev), `"research"` (Research), or `"review"` (Review)
 - Research → `"workflow.research"`: `true` or `false`
 - Plan Check → `"workflow.plan_check"`: `true` or `false`
 - Verifier → `"workflow.verifier"`: `true` or `false`
@@ -308,6 +329,7 @@ Create `.planning/config.json` with all settings:
   "granularity": "coarse|standard|fine",
   "model_profile": "quality|balanced|budget",
   "learning_mode": "auto|manual",
+  "context": "dev|research|review",
   "test_first": false|true,
   "planning": {
     "commit_docs": true|false,
@@ -322,7 +344,7 @@ Create `.planning/config.json` with all settings:
     "review": true|false,
     "solutions_search": true|false,
     "security_enforcement": true|false,
-    "discuss_mode": "discuss",
+    "discuss_mode": "discuss|deep",
     "tdd_mode": false|true
   },
   "parallelization": {
@@ -380,6 +402,8 @@ try{
   if(!['auto','manual'].includes(c.learning_mode)) errs.push('learning_mode must be auto|manual');
   if(typeof c.test_first!=='boolean') errs.push('test_first must be boolean');
   if(!c.planning||!['auto','manual'].includes(c.planning.commit_mode)) errs.push('planning.commit_mode must be auto|manual');
+  if(c.context&&!['dev','research','review'].includes(c.context)) errs.push('context must be dev|research|review');
+  if(c.workflow&&c.workflow.discuss_mode&&!['discuss','deep'].includes(c.workflow.discuss_mode)) errs.push('workflow.discuss_mode must be discuss|deep');
   if(!c.workflow||typeof c.workflow.research!=='boolean') errs.push('workflow.research must be boolean');
   if(!c.workflow||typeof c.workflow.plan_check!=='boolean') errs.push('workflow.plan_check must be boolean');
   if(!c.workflow||typeof c.workflow.verifier!=='boolean') errs.push('workflow.verifier must be boolean');

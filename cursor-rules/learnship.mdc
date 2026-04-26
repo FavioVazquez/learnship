@@ -160,7 +160,7 @@ Set `"parallelization": { "enabled": true|false }` in `.planning/config.json` ba
 
 ## Structured Questions
 
-When workflows include `AskUserQuestion()` blocks, **Cursor has no native structured question tool**. Present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label. Present questions in rounds (Round 1: core settings, Round 2: workflow agents, Round 3: pipeline & git, Round 4: parallelization). **Wait for the user's reply after EACH round before showing the next.** Do NOT present all questions at once.
+When workflows include `AskUserQuestion()` blocks, **Cursor has no native structured question tool**. Present each question as a numbered text list with descriptions and ask the user to reply with their choice number or label. Present questions in rounds (Round 1: core settings — working style, granularity, learning partner, AI models, questioning depth, output profile; Round 2: workflow agents; Round 3: pipeline & git; Round 4: parallelization). **Wait for the user's reply after EACH round before showing the next.** Do NOT present all questions at once.
 
 Example:
 ```
@@ -178,6 +178,8 @@ After all configuration rounds are answered, write `.planning/config.json` with 
 - Granularity → `"granularity"`: `"coarse"`, `"standard"`, or `"fine"`
 - Learning Partner → `"learning_mode"`: `"auto"` or `"manual"`
 - AI Models → `"model_profile"`: `"balanced"`, `"quality"`, or `"budget"`
+- Questioning Depth → `"workflow.discuss_mode"`: `"discuss"` (Standard) or `"deep"` (Deep)
+- Output Profile → `"context"`: `"dev"` (Dev), `"research"` (Research), or `"review"` (Review)
 - Research → `"workflow.research"`: `true` or `false`
 - Plan Check → `"workflow.plan_check"`: `true` or `false`
 - Verifier → `"workflow.verifier"`: `true` or `false`
