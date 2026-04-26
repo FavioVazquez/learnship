@@ -261,3 +261,13 @@ Never push to main directly. Never merge without explicit user approval.
 **Fix:** Replaced the passive `<output>` block with an explicit `**WRITE ACTION REQUIRED**` instruction ("You MUST use your file-write tool... Do NOT output content to the conversation... Do NOT treat this as done until the file physically exists on disk") followed by an inline `node -e` verification gate inside the Task prompt. The gate checks for file existence and required sections and loops until `SUMMARY_OK`. (v2.3.5)
 
 **Lesson:** "Write to X" in a Task prompt is a description, not a command. Subagents need: (1) an imperative "use your write tool NOW," (2) an explicit "do NOT just output to conversation," and (3) an inline verification gate they must pass before reporting done. The outer orchestrator verification (Step 5c) is a safety net — not the primary enforcement. The Task itself must be self-verifying.
+
+### 2026-04-26: "Claude's Discretion" used throughout — not platform-neutral
+
+**What broke:** Workflows, templates, and references used "Claude's Discretion", "Claude's judgment", and generic "Claude" as an agent noun (e.g. "Claude builds", "future Claude sessions", "consumer is Claude"). learnship runs on 6 platforms with different underlying LLMs — Windsurf uses whatever model the user has configured, Gemini CLI uses Gemini, Codex uses OpenAI models. Claude-specific language was confusing and incorrect on non-Claude platforms.
+
+**Root cause:** The platform was originally developed primarily on Claude Code. Platform-neutral language was not enforced as a convention, and no tests caught it.
+
+**Fix:** Replaced all generic "Claude's Discretion/judgment" with "Agent's Discretion/judgment" and generic "Claude" agent references with "the agent/agent sessions" across 7 source files + their `.windsurf/` copies. Added 9 regression checks (REG-058–066) in `validate_regressions.sh` §15 to prevent recurrence. (v2.3.6)
+
+**Lesson:** Establish a platform-neutral language convention from the start. Any time a new workflow or reference is written, "Claude" should only appear as a platform name ("Claude Code") or model name ("Claude Opus") — never as a generic noun for "the AI agent." The regression tests now enforce this automatically.

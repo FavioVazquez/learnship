@@ -401,6 +401,39 @@ const count=(c.match(/^### \d+\./gm)||[]).length;
 if(count<10){console.error('Only '+count+' principles, expected ≥10');process.exit(1);}
 "
 
+# ── §15: Platform-neutral terminology (v2.3.6) ──────────────────────────────
+# Regression: workflows used "Claude's Discretion" — learnship runs on 6 platforms
+# with different LLMs. All terminology must be platform/model-neutral.
+# Fixed by replacing "Claude's Discretion/judgment" with "Agent's Discretion/judgment"
+# and generic "Claude" agent references with "agent/the agent".
+
+check "REG-058: no 'Claude's Discretion' in workflows" \
+  bash -c "! grep -rl \"Claude's Discretion\" \"$REPO_DIR/learnship/workflows/\" 2>/dev/null | grep -q ."
+
+check "REG-059: no 'Claude's Discretion' in templates" \
+  bash -c "! grep -rl \"Claude's Discretion\" \"$REPO_DIR/learnship/templates/\" 2>/dev/null | grep -q ."
+
+check "REG-060: no 'Claude's Discretion' in references" \
+  bash -c "! grep -rl \"Claude's Discretion\" \"$REPO_DIR/learnship/references/\" 2>/dev/null | grep -q ."
+
+check "REG-061: no 'Claude's judgment' in templates" \
+  bash -c "! grep -rl \"Claude's judgment\" \"$REPO_DIR/learnship/templates/\" 2>/dev/null | grep -q ."
+
+check "REG-062: no 'Claude's Discretion' in .windsurf workflows" \
+  bash -c "! grep -rl \"Claude's Discretion\" \"$REPO_DIR/.windsurf/workflows/\" 2>/dev/null | grep -q ."
+
+check "REG-063: discuss-phase uses 'Agent's Discretion'" \
+  grep -q "Agent's Discretion" "$REPO_DIR/learnship/workflows/discuss-phase.md"
+
+check "REG-064: quick.md uses 'Agent's Discretion'" \
+  grep -q "Agent's Discretion" "$REPO_DIR/learnship/workflows/quick.md"
+
+check "REG-065: context.md template uses 'Agent's Discretion'" \
+  grep -q "Agent's Discretion" "$REPO_DIR/learnship/templates/context.md"
+
+check "REG-066: discussion-log.md template uses 'Agent's Discretion'" \
+  grep -q "Agent's Discretion" "$REPO_DIR/learnship/templates/discussion-log.md"
+
 echo ""
 echo "─── Results ──────────────────────────────────────────────────────"
 echo "  Passed: $PASS"

@@ -599,7 +599,7 @@ Some things can't be verified programmatically. Flag these for human testing:
 ## Pre-Checkpoint Automation
 
 Key principles for automation-first verification:
-- Claude sets up verification environment BEFORE presenting checkpoints
+- The agent sets up verification environment BEFORE presenting checkpoints
 - Users never run CLI commands (visit URLs only)
 - Server lifecycle: start before checkpoint, handle port conflicts, keep running for duration
 - CLI installation: auto-install where safe, checkpoint for user choice otherwise
