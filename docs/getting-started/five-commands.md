@@ -52,11 +52,12 @@ Reads your state and immediately runs the correct next workflow without asking. 
 
 ```
 /new-project
+/new-project --deep   # extended questioning: walks every decision branch until shared understanding
 ```
 
 Walks you through:
 
-1. Structured questions about what you're building
+1. Structured questions about what you're building (standard: 4 focused exchanges; `--deep`: extended questioning until full shared understanding)
 2. Domain research (stack, architecture, pitfalls, ecosystem)
 3. Writing `AGENTS.md`, `PROJECT.md`, `REQUIREMENTS.md`
 4. Proposing a phase-by-phase roadmap for your approval

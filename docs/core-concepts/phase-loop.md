@@ -47,6 +47,8 @@ Your answers get written to `.planning/phases/N-*/N-CONTEXT.md` with structured 
 
 v2.1 adds **scope guardrails** (prevents scope creep during discussion), **domain-aware probes** (smarter follow-ups for auth, API, database, etc.), and a **discussion log** as an audit trail.
 
+v2.3.4 adds **`--deep` mode**: pass `discuss-phase N --deep` or set `workflow.discuss_mode: "deep"` in config to activate extended deep questioning that walks every decision branch until shared understanding is reached. Each question includes a recommended answer. Produces a richer `CONTEXT.md`.
+
 !!! tip "Why this step matters"
     Skipping discuss and going straight to plan is the most common source of misaligned plans. 10 minutes of discussion prevents hours of rework.
 
@@ -62,10 +64,12 @@ The planner agent:
 
 1. Reads `CONTEXT.md`, `DECISIONS.md`, and `AGENTS.md`
 2. Researches the domain (ecosystem, patterns, pitfalls) if `workflow.research: true`
-3. Creates 2–4 executable `PLAN.md` files, each scoped to one coherent area
-4. Runs a verification loop (up to 3 passes) checking plans for gaps and contradictions
+3. Creates 2–4 executable `PLAN.md` files as **vertical slices** — each plan is a tracer bullet delivering one demoable user-facing behavior through all integration layers (data → logic → API → UI → test)
+4. Runs a verification loop (up to 3 passes) checking plans for gaps, contradictions, and horizontal slice violations
 
 Plans are written in a structured format that specifies exact tasks, expected outcomes, and acceptance criteria. Nothing is left to the executor's interpretation.
+
+v2.3.4 enforces **vertical slice planning**: the plan-checker flags any plan that covers only one architectural layer across all features. Single-layer phases (migrations, style passes) use `single_layer_justified: true` in the plan frontmatter to suppress the check.
 
 **Output:** `.planning/phases/N-*/N-01-PLAN.md`, `N-02-PLAN.md`, etc.
 

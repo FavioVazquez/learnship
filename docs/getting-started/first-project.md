@@ -170,6 +170,7 @@ Now the phase loop begins. Every phase follows the same 7 steps:
 
 ```
 /discuss-phase 1
+/discuss-phase 1 --deep   # extended questioning: walks every branch until shared understanding
 ```
 
 This is a conversation, not a form. The agent reads `AGENTS.md` and your roadmap, then asks targeted questions about implementation preferences for this phase:
@@ -193,10 +194,10 @@ The planner:
 1. Reads your `CONTEXT.md` and all prior decisions
 2. Searches `.planning/solutions/` for relevant prior art (if any exists from previous phases)
 3. Researches the specific technical domain for this phase
-4. Creates 2–4 executable `PLAN.md` files, each scoped to one area
-5. Runs a verification loop (up to 3 passes) to check plans are coherent
+4. Creates 2–4 executable `PLAN.md` files as **vertical slices** — each plan is a tracer bullet delivering one demoable user-facing behavior end-to-end (data → logic → API → UI → test)
+5. Runs a verification loop (up to 3 passes) to check plans are coherent and not horizontally layered
 
-Each plan describes concrete tasks with enough detail that an executor agent can implement them without guessing.
+Each plan describes concrete tasks with enough detail that an executor agent can implement them without guessing. Single-layer phases (migrations, style passes) set `single_layer_justified: true` in the plan frontmatter.
 
 !!! tip "Before you execute"
     `@agentic-learning explain-first [phase topic]`: explain the planned approach back in your own words before touching code. Gaps in the explanation are gaps in the plan.

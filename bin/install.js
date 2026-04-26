@@ -1438,7 +1438,7 @@ function install(platform, isGlobal) {
     console.log(`  ${yellow}Option 2 (manual):${reset} Copy the rule file into your project:`);
     console.log(`    ${dim}mkdir -p .cursor/rules${reset}`);
     console.log(`    ${dim}cp node_modules/learnship/cursor-rules/learnship.mdc .cursor/rules/${reset}\n`);
-    console.log(`  ${dim}The .mdc rule activates all 42 learnship workflows automatically in every Cursor session.${reset}\n`);
+    console.log(`  ${dim}The .mdc rule activates all 57 learnship workflows automatically in every Cursor session.${reset}\n`);
     return;
   }
 
