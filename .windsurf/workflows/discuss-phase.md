@@ -7,7 +7,7 @@ description: Capture implementation decisions for a phase before planning starts
 Extract implementation decisions that downstream planning needs. Analyze the phase to identify gray areas, let the user choose what to discuss, then deep-dive each selected area until satisfied.
 
 **Usage:** Run `discuss-phase [N]` before `plan-phase [N]`.
-**Usage:** Run `discuss-phase [N] --deep` for grill-me mode — relentless questioning that walks every decision branch until shared understanding is reached, with a recommended answer for each question.
+**Usage:** Run `discuss-phase [N] --deep` for extended deep questioning — walks every decision branch until shared understanding is reached, with a recommended answer for each question.
 
 **You are a thinking partner, not an interviewer.** The user is the visionary — you are the builder. Your job is to capture decisions that will guide research and planning, not to figure out implementation yourself.
 

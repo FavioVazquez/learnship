@@ -194,11 +194,11 @@ Controls the depth of questioning in `/discuss-phase` and `/new-project` Step 3.
 | Value | Behavior |
 |-------|----------|
 | `"discuss"` | Standard mode: 4 focused exchanges per area, then move on. Default. |
-| `"deep"` | Grill-me style: walks every decision branch until shared understanding is reached. Provides a recommended answer with each question. Produces a richer `CONTEXT.md`. |
+| `"deep"` | Extended deep questioning: walks every decision branch until shared understanding is reached. Provides a recommended answer with each question. Produces a richer `CONTEXT.md`. |
 
 Equivalent to passing `--deep` flag: `discuss-phase N --deep` or `new-project --deep`.
 
-**When to use `"deep"`:** Complex phases with many implementation choices, new domains, or when past phases showed the planner guessing at ambiguous decisions.
+**When to use `"deep"`:** Complex phases with many implementation choices, new domains, or when past phases revealed too many ambiguous decisions.
 
 ---
 

@@ -494,7 +494,7 @@ Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4
 
 **If `QUESTIONING_MODE = deep`:**
 
-After Exchange 4, continue with the grill-me loop:
+After Exchange 4, continue with the extended deep questioning loop:
 - Identify the single biggest remaining unknown that would change the direction, scope, or architecture of PROJECT.md. Ask it. Provide your recommended answer with each question.
 - If an answer opens a new branch (a sub-decision), follow that branch before moving on.
 - If you can explore the codebase to resolve a question yourself, do so instead of asking.

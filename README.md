@@ -136,7 +136,7 @@ flowchart LR
 
 | Step | Command | What happens |
 |------|---------|-------------|
-| **1. Discuss** | `/discuss-phase N` | You and the agent align on implementation decisions before any code. Add `--deep` for grill-me style branch-walking (v2.3.4) |
+| **1. Discuss** | `/discuss-phase N` | You and the agent align on implementation decisions before any code. Add `--deep` for extended deep questioning that walks every branch (v2.3.4) |
 | **2. Plan** | `/plan-phase N` | Agent researches the domain, creates vertical slice plans (tracer bullets), verifies them — including horizontal slice detection (v2.3.4) |
 | **3. Execute** | `/execute-phase N` | Plans run in dependency order, one atomic commit per task |
 | **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
@@ -294,7 +294,7 @@ v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
 | **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
 | **Learning** | `/extract-learnings` — decisions, lessons, patterns, surprises · `/milestone-summary` — team onboarding |
 
-Enhanced: `/discuss-phase` (scope guardrails + domain probes + `--deep` grill-me mode v2.3.4), `/new-project` (`--deep` questioning depth v2.3.4), `/plan-phase` (vertical slice tracer bullets + horizontal slice detection v2.3.4), `/execute-phase` (`--wave` flag + context scaling), `/quick` (`--research --validate --full` composable flags), `/ideate` (`--explore` Socratic mode).
+Enhanced: `/discuss-phase` (scope guardrails + domain probes + `--deep` extended questioning v2.3.4), `/new-project` (`--deep` extended questioning v2.3.4), `/plan-phase` (vertical slice tracer bullets + horizontal slice detection v2.3.4), `/execute-phase` (`--wave` flag + context scaling), `/quick` (`--research --validate --full` composable flags), `/ideate` (`--explore` Socratic mode).
 
 **Optional per-phase:** `/secure-phase N` (STRIDE security), `/extract-learnings N` (meta-knowledge).
 **Recovery:** `/forensics` (post-mortem), `/undo` (safe revert).

@@ -16,13 +16,13 @@ These 8 workflows form the backbone of every learnship project. They take you fr
 Initializes a new project with full spec-driven scaffolding.
 
 **What it does:**
-1. Structured questioning about what you're building, why, and for whom (standard: 4 exchanges; `--deep`: grill-me style until full shared understanding)
+1. Structured questioning about what you're building, why, and for whom (standard: 4 exchanges; `--deep`: extended questioning until full shared understanding)
 2. Domain research: stack recommendations, architecture patterns, pitfalls
 3. Writes `AGENTS.md`, `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`
 4. Proposes a phase-by-phase `ROADMAP.md` for your approval
 
 **Flags:**
-- `--deep` — activates grill-me questioning for Step 3: walks every open branch until shared understanding is reached, producing a richer `PROJECT.md`. (v2.3.4)
+- `--deep` — activates extended deep questioning for Step 3: walks every open branch until shared understanding is reached, producing a richer `PROJECT.md`. (v2.3.4)
 
 **When to use:** Start of any new project, greenfield or brownfield (after `/map-codebase`).
 
@@ -41,7 +41,7 @@ Captures implementation decisions for phase N before any planning begins.
 4. Writes `DISCUSSION-LOG.md` as an audit trail of all options considered (v2.1)
 
 **Flags:**
-- `--deep` — grill-me style questioning: walks every decision branch until shared understanding is reached, with a recommended answer per question. Produces a richer `CONTEXT.md`. (v2.3.4)
+- `--deep` — extended deep questioning: walks every decision branch until shared understanding is reached, with a recommended answer per question. Produces a richer `CONTEXT.md`. (v2.3.4)
 
 **Config:** Set `workflow.discuss_mode: "deep"` in `config.json` to make deep mode the default without passing the flag.
 

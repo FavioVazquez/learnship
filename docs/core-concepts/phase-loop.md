@@ -47,7 +47,7 @@ Your answers get written to `.planning/phases/N-*/N-CONTEXT.md` with structured 
 
 v2.1 adds **scope guardrails** (prevents scope creep during discussion), **domain-aware probes** (smarter follow-ups for auth, API, database, etc.), and a **discussion log** as an audit trail.
 
-v2.3.4 adds **`--deep` mode**: pass `discuss-phase N --deep` or set `workflow.discuss_mode: "deep"` in config to activate grill-me style questioning that walks every decision branch until shared understanding is reached. Each question includes a recommended answer. Produces a richer `CONTEXT.md`.
+v2.3.4 adds **`--deep` mode**: pass `discuss-phase N --deep` or set `workflow.discuss_mode: "deep"` in config to activate extended deep questioning that walks every decision branch until shared understanding is reached. Each question includes a recommended answer. Produces a richer `CONTEXT.md`.
 
 !!! tip "Why this step matters"
     Skipping discuss and going straight to plan is the most common source of misaligned plans. 10 minutes of discussion prevents hours of rework.
