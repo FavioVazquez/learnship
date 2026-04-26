@@ -232,6 +232,16 @@ Never push to main directly. Never merge without explicit user approval.
 
 **Lesson:** Giving the AI a tool is necessary but not sufficient — you must also tell it to USE the tool, and the tool must be in `allowed-tools`. Templates make the skip-research path even more attractive because the AI has a ready-made structure to fill from memory. The three-layer fix: (1) tool available, (2) tool required in workflow text, (3) skipping the tool listed as forbidden behavior.
 
+### 2026-04-26: Planner creates horizontal layer plans instead of vertical slices
+
+**What broke:** During `/plan-phase`, the planner created 3 plans: "Plan 01 — Database schema", "Plan 02 — API layer", "Plan 03 — UI components". Each plan was a complete horizontal layer across the entire feature. None of the plans were independently demoable — you needed all three before any user-visible behavior existed.
+
+**Root cause:** The planner's default decomposition heuristic was "separate concerns by layer." This is a natural engineering instinct but produces plans that can't be verified in isolation. The previous `planner.md` and `plan-checker.md` had no explicit guidance against this pattern.
+
+**Fix:** (1) Added "Vertical slices, not horizontal layers" as Rule 1 in `planner.md` with a WRONG/RIGHT example. (2) Added `single_layer_justified: true` escape hatch to PLAN.md frontmatter for legitimately single-layer phases (DB migrations, style passes). (3) Added vertical slice integrity as Check #7 in `plan-checker.md` — flags horizontal slices unless the escape hatch is set. (4) Updated `plan-phase.md` Task() agent definitions and sequential `<persona_context>` with same guidance. (5) Updated all published copies in `agents/` and `.windsurf/rules/`. (v2.3.4)
+
+**Lesson:** "Decompose into independent units" gets interpreted as "separate by architectural layer." To override this, you need an explicit WRONG/RIGHT example in the prompt — abstract principles are not enough. The escape hatch matters: without `single_layer_justified`, legitimate single-layer phases (migrations) would incorrectly fail plan-check.
+
 ### 2026-04-15: Agent personas not spawned — Task() runs inline without adopting persona
 
 **What broke:** During `/new-project` with `parallelization.enabled: true`, the AI never spawned subagents via `Task()`. Instead it ran everything inline — web searches worked (v2.2.1 fix) but the researcher persona was never adopted and no parallel agents were spawned. The same structural bug affected all 17 `Task()` calls across 11 workflows.

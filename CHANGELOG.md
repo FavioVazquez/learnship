@@ -9,6 +9,29 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [v2.3.4] — 2026-04-26
+
+### Added
+
+- **Deep questioning mode for `discuss-phase`** — `--deep` flag (or `workflow.discuss_mode: "deep"` in config) activates grill-me style questioning: walks every decision branch until shared understanding is reached, provides a recommended answer with each question, and only advances when no unresolved branches remain. `CONTEXT.md` now records `Mode: standard | deep`.
+- **Deep questioning mode for `new-project`** — Step 3 now offers a "Questioning Depth" choice (Standard vs. Deep) or respects `--deep` flag. Deep mode continues with grill-me loop after the 4 standard exchanges until shared understanding is confirmed.
+- **Vertical slice planning (tracer bullets) in `plan-phase`** — Each PLAN.md is now required to be a tracer bullet: a thin vertical slice through all integration layers (data → logic → API → UI → test) for one user-facing behavior. Horizontal-only plans (all-schema, all-API, all-UI) are flagged during plan-check. Single-layer phases (migrations, style passes) set `single_layer_justified: true` in frontmatter to suppress the check.
+- **Vertical slice check in `plan-checker` agent** — New Check #7: flags horizontal slices unless `single_layer_justified: true` is present. Both the Task() subagent and sequential `<persona_context>` paths enforce this.
+- **`single_layer_justified` frontmatter field** — Documented in `planner.md`, `plan-checker.md`, `plan-phase.md`, `templates/plan.md`, and `learnship/agents/` published copies.
+- **`discuss_mode` config key documented** — `settings.md` inline comment and `planning-config.md` reference table updated to explain `"discuss"` (default) vs. `"deep"` values.
+- **AGENTS.md regression entry** — Documented the horizontal slicing failure pattern, root cause, and fix so future sessions don't repeat it.
+- **Documentation** — `docs/configuration.md`, `docs/workflow-reference/core.md`, and `README.md` updated with `--deep` flag usage and vertical slice planning description.
+
+### Changed
+
+- **`planner.md` Core Rule #1** — "Vertical slices, not horizontal layers" is now the first and most prominent planning principle, with a WRONG/RIGHT code example.
+- **`plan-checker.md` description** — Updated to mention vertical slice integrity check.
+- **Published agent copies synced** — `agents/learnship-planner.md`, `agents/learnship-plan-checker.md`, `.windsurf/rules/learnship-planner.md`, `.windsurf/rules/learnship-plan-checker.md`, `.windsurf/learnship/agents/planner.md`, `.windsurf/learnship/agents/plan-checker.md` all updated to match source.
+- **`plan-phase.md` Step 5** — Sequential planning instructions now include a vertical slice self-check question before writing each plan draft.
+- **New test section (§14)** in `validate_all_workflows.sh` — 18 checks covering deep questioning and vertical slice across all modified files.
+
+---
+
 ## [v2.3.3] — 2026-04-16
 
 ### Fixed

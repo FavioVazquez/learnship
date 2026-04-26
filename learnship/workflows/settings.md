@@ -36,7 +36,7 @@ cp templates/config.json .planning/config.json 2>/dev/null || cat > .planning/co
     "review": true,
     "solutions_search": true,
     "security_enforcement": true,
-    "discuss_mode": "discuss",
+    "discuss_mode": "discuss",    // "discuss" (standard 4-exchange) or "deep" (grill-me style, walks every branch until shared understanding)
     "tdd_mode": false
   },
   "parallelization": {

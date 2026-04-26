@@ -179,11 +179,26 @@ Switch with `/settings` or edit `config.json` directly. Takes effect on the next
 | Toggle | Default | What it controls |
 |--------|---------|-----------------|
 | `workflow.research` | `true` | Domain research before planning each phase. Turn off for familiar domains to save tokens. |
-| `workflow.plan_check` | `true` | Verification loop (up to 3 passes) after plans are created. Turn off for quick iterations. |
+| `workflow.plan_check` | `true` | Verification loop (up to 3 passes) after plans are created. Includes vertical slice integrity check. Turn off for quick iterations. |
 | `workflow.verifier` | `true` | Post-execution verification against phase goals. |
 | `workflow.validation` | `true` | Test coverage mapping during plan-phase. Ensures testable acceptance criteria. |
 | `workflow.review` | `true` | Enable `/review` suggestions after `/verify-work`. (v2.0) |
 | `workflow.solutions_search` | `true` | Search `.planning/solutions/` for prior art during `/plan-phase`. (v2.0) |
+| `workflow.discuss_mode` | `"discuss"` | Questioning depth for `/discuss-phase` and `/new-project`. See below. (v2.3.4) |
+| `workflow.tdd_mode` | `false` | Instruct planner to apply TDD task ordering to eligible tasks. |
+
+### `workflow.discuss_mode` (v2.3.4)
+
+Controls the depth of questioning in `/discuss-phase` and `/new-project` Step 3.
+
+| Value | Behavior |
+|-------|----------|
+| `"discuss"` | Standard mode: 4 focused exchanges per area, then move on. Default. |
+| `"deep"` | Grill-me style: walks every decision branch until shared understanding is reached. Provides a recommended answer with each question. Produces a richer `CONTEXT.md`. |
+
+Equivalent to passing `--deep` flag: `discuss-phase N --deep` or `new-project --deep`.
+
+**When to use `"deep"`:** Complex phases with many implementation choices, new domains, or when past phases showed the planner guessing at ambiguous decisions.
 
 ---
 

@@ -424,7 +424,25 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-This step is **strictly sequential**. You must complete each numbered exchange fully before moving to the next. Do not batch questions. Do not skip exchanges. Do not proceed to Step 4 until Exchange 4 is complete.
+**Detect questioning mode:** Check for `--deep` flag in the `/new-project` command. If not present, ask the user:
+
+```
+AskUserQuestion([
+  {
+    header: "Questioning Depth",
+    question: "How deep do you want me to go with questions before writing PROJECT.md?",
+    multiSelect: false,
+    options: [
+      { label: "Standard (Recommended)", description: "4 focused exchanges — enough for a sharp PROJECT.md" },
+      { label: "Deep", description: "Grill-me style — I walk every open branch until we reach shared understanding. Takes longer, produces a richer PROJECT.md" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for the user's reply. Record mode as `QUESTIONING_MODE = standard | deep`.
+
+This step is **strictly sequential**. You must complete each numbered exchange fully before moving to the next. Do not batch questions. Do not skip exchanges. Do not proceed to Step 4 until the gate check passes.
 
 **Exchange 1 — Opening question:**
 
@@ -465,12 +483,39 @@ Based on all previous answers, ask a third follow-up that clarifies scope, edge 
 >
 > If any count is wrong, go back and complete the missing exchanges. Do NOT proceed with fewer than 4 exchanges under any circumstances — even if the user's first answer was extremely detailed.
 
+**If `QUESTIONING_MODE = standard`:**
+
 Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4` recorded? If any is missing, go back and ask it. Only after all four answers are in hand may you ask:
 
 "I think I have a solid picture of what you're building. Ready for me to write PROJECT.md, or is there more you want to cover first?"
 
 - **Write PROJECT.md** → proceed to Step 4
 - **More to cover** → continue asking follow-ups, then re-ask this gate question
+
+**If `QUESTIONING_MODE = deep`:**
+
+After Exchange 4, continue with the grill-me loop:
+- Identify the single biggest remaining unknown that would change the direction, scope, or architecture of PROJECT.md. Ask it. Provide your recommended answer with each question.
+- If an answer opens a new branch (a sub-decision), follow that branch before moving on.
+- If you can explore the codebase to resolve a question yourself, do so instead of asking.
+- Continue until you judge that all major branches are resolved. Then ask:
+
+```
+AskUserQuestion([
+  {
+    header: "Shared Understanding Check",
+    question: "I've walked through every major open question I can identify. Do you feel we have a complete shared picture of what you want to build?",
+    multiSelect: false,
+    options: [
+      { label: "Yes — write PROJECT.md", description: "All key decisions and scope are clear" },
+      { label: "There's still something open", description: "Keep going on a specific area" },
+      { label: "Let me add context", description: "I have something to add before you write" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for user reply. If "Yes" → proceed to Step 4. Otherwise continue drilling.
 
 Use the questioning techniques from `@./references/questioning.md` and domain-aware probes from `@./references/domain-probes.md` to shape the follow-up questions. When the user mentions a known domain (auth, real-time, dashboard, API, database, search, file uploads, caching, testing, deployment, AI/ML), use the relevant probes to ask sharper questions.
 

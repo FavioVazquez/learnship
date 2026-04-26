@@ -16,10 +16,13 @@ These 8 workflows form the backbone of every learnship project. They take you fr
 Initializes a new project with full spec-driven scaffolding.
 
 **What it does:**
-1. Structured questioning about what you're building, why, and for whom
+1. Structured questioning about what you're building, why, and for whom (standard: 4 exchanges; `--deep`: grill-me style until full shared understanding)
 2. Domain research: stack recommendations, architecture patterns, pitfalls
 3. Writes `AGENTS.md`, `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`
 4. Proposes a phase-by-phase `ROADMAP.md` for your approval
+
+**Flags:**
+- `--deep` — activates grill-me questioning for Step 3: walks every open branch until shared understanding is reached, producing a richer `PROJECT.md`. (v2.3.4)
 
 **When to use:** Start of any new project, greenfield or brownfield (after `/map-codebase`).
 
@@ -37,6 +40,11 @@ Captures implementation decisions for phase N before any planning begins.
 3. Writes `CONTEXT.md` with domain, decisions, specifics, canonical refs, and deferred ideas
 4. Writes `DISCUSSION-LOG.md` as an audit trail of all options considered (v2.1)
 
+**Flags:**
+- `--deep` — grill-me style questioning: walks every decision branch until shared understanding is reached, with a recommended answer per question. Produces a richer `CONTEXT.md`. (v2.3.4)
+
+**Config:** Set `workflow.discuss_mode: "deep"` in `config.json` to make deep mode the default without passing the flag.
+
 **When to use:** Before every `/plan-phase`. Skipping this is the #1 source of misaligned plans.
 
 **Learning checkpoint:** `either-or` · `brainstorm` · `explain-first`
@@ -50,8 +58,10 @@ Researches the domain and creates executable plans for phase N.
 **What it does:**
 1. Reads `CONTEXT.md`, `DECISIONS.md`, and `AGENTS.md`
 2. Runs domain research if `workflow.research: true`
-3. Creates 2–4 `PLAN.md` files, each scoped to one coherent area
-4. Runs a verification loop (up to 3 passes) checking for gaps
+3. Creates 2–4 `PLAN.md` files as **vertical slices** — each plan delivers one demoable user-facing behavior end-to-end (data → logic → API → UI → test) (v2.3.4)
+4. Runs a verification loop (up to 3 passes) checking for gaps, including horizontal slice detection
+
+**Vertical slice planning:** Each plan is a tracer bullet — completable and demoable independently. Horizontal plans (all-schema, all-API, all-UI) are flagged by the plan-checker and require revision. Single-layer phases (migration, style pass) set `single_layer_justified: true` in the plan's frontmatter.
 
 **Output:** `.planning/phases/N-*/N-01-PLAN.md`, `N-02-PLAN.md`, etc.
 

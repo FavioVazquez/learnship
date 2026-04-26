@@ -609,6 +609,84 @@ check "docs-update: sequential fallback uses doc-verifier" \
   grep -q 'learnship doc verifier' "$SRC_WF/docs-update.md"
 
 echo ""
+echo "─── 14. v2.3.4: Deep Questioning & Vertical Slices ───────────────"
+
+# discuss-phase --deep flag documented
+check "discuss-phase: --deep flag documented in usage" \
+  grep -q '\-\-deep' "$SRC_WF/discuss-phase.md"
+
+# discuss-phase has DEEP_MODE detection
+check "discuss-phase: DEEP_MODE detection logic present" \
+  grep -q 'DEEP_MODE' "$SRC_WF/discuss-phase.md"
+
+# discuss-phase deep mode wrap-up question
+check "discuss-phase: deep mode shared understanding check present" \
+  grep -q 'Shared Understanding Check' "$SRC_WF/discuss-phase.md"
+
+# discuss-phase CONTEXT.md Mode field
+check "discuss-phase: CONTEXT.md frontmatter includes Mode field" \
+  grep -q '\*\*Mode:\*\*' "$SRC_WF/discuss-phase.md"
+
+# new-project Step 3 questioning depth AskUserQuestion
+check "new-project: Questioning Depth AskUserQuestion present" \
+  grep -q 'Questioning Depth' "$SRC_WF/new-project.md"
+
+# new-project QUESTIONING_MODE variable
+check "new-project: QUESTIONING_MODE variable present" \
+  grep -q 'QUESTIONING_MODE' "$SRC_WF/new-project.md"
+
+# new-project deep mode shared understanding check
+check "new-project: deep mode Shared Understanding Check present" \
+  grep -q 'Shared Understanding Check' "$SRC_WF/new-project.md"
+
+# settings.md discuss_mode deep documented
+check "settings.md: discuss_mode deep option documented" \
+  grep -q '"deep"' "$SRC_WF/settings.md"
+
+# planner agent: vertical slice principle
+check "planner agent: vertical slice principle present" \
+  grep -q 'Vertical slices, not horizontal layers' "$SRC_AG/planner.md"
+
+# planner agent: single_layer_justified field
+check "planner agent: single_layer_justified field in PLAN.md format" \
+  grep -q 'single_layer_justified' "$SRC_AG/planner.md"
+
+# plan-checker agent: vertical slice check (#7)
+check "plan-checker agent: vertical slice check (section 7) present" \
+  grep -q 'Vertical Slice (tracer bullet)' "$SRC_AG/plan-checker.md"
+
+# plan-checker agent: single_layer_justified escape hatch
+check "plan-checker agent: single_layer_justified escape hatch" \
+  grep -q 'single_layer_justified' "$SRC_AG/plan-checker.md"
+
+# plan-phase workflow: vertical slice guidance in planner Task()
+check "plan-phase: vertical slice guidance in Task() agent_definition" \
+  grep -q 'VERTICAL SLICE' "$SRC_WF/plan-phase.md"
+
+# plan-phase workflow: anti-pattern warning in sequential path
+check "plan-phase: vertical slice check before writing instruction" \
+  grep -q 'Vertical slice check before writing' "$SRC_WF/plan-phase.md"
+
+# plan-phase workflow: plan-checker Task() includes vertical slice
+check "plan-phase: plan-checker Task() includes vertical slice integrity" \
+  grep -q 'vertical slice integrity' "$SRC_WF/plan-phase.md"
+
+# plan.md template: vertical slice planning section
+check "plan.md template: vertical slice planning guidelines present" \
+  grep -q 'Vertical slice planning' "$REPO_DIR/templates/plan.md"
+
+# Published agents synced
+check "published learnship-planner: vertical slice in description" \
+  grep -q 'vertical slice' "$REPO_DIR/agents/learnship-planner.md"
+
+check "published learnship-plan-checker: vertical slice in description" \
+  grep -q 'vertical slice integrity' "$REPO_DIR/agents/learnship-plan-checker.md"
+
+# planning-config.md: discuss_mode deep documented
+check "planning-config.md: discuss_mode deep option documented" \
+  grep -q '"deep"' "$REPO_DIR/learnship/references/planning-config.md"
+
+echo ""
 echo "─── Results ──────────────────────────────────────────────────────"
 echo "  Passed: $PASS"
 echo "  Failed: $FAIL"

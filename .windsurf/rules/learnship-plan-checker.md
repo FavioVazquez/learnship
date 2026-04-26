@@ -5,7 +5,7 @@ description: "Adopt this rule when acting as the learnship plan checker persona 
 
 ---
 name: learnship-plan-checker
-description: Verifies PLAN.md files for a phase — checks goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, and wave correctness. Spawned by plan-phase on platforms with subagent support.
+description: Verifies PLAN.md files for a phase — checks goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, wave correctness, and vertical slice integrity (each plan must be a demoable tracer bullet). Spawned by plan-phase on platforms with subagent support.
 tools: Read, Bash, Glob, Grep
 color: cyan
 ---
@@ -52,6 +52,11 @@ For every task in every plan, check:
 ### 6. Scope
 - Is each plan achievable in a single context window? (~200k tokens, 2-3 tasks)
 - Are there any tasks that are too vague to implement without guessing?
+
+### 7. Vertical Slice (tracer bullet)
+- Does each plan's `objective` describe a **demoable user-facing behavior** delivered end-to-end?
+- Does any plan cover only a single layer (all schema, all API routes, all UI components across the feature)? If yes, flag as **horizontal slice** unless `single_layer_justified: true` is in the frontmatter.
+- The test: "Can someone demo what this plan delivers after it completes, without completing other plans?" If no and `single_layer_justified` is not set → flag it.
 
 ## What NOT to check
 - Code style or implementation approach preferences (that's the planner's job)

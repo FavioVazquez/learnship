@@ -6,6 +6,18 @@ Plans are precise prompts for an executor — not documents that become prompts.
 
 ## Planning Principles
 
+**Vertical slices, not horizontal layers** — Each PLAN.md is a **tracer bullet**: a thin vertical slice that cuts through all integration layers end-to-end for one user-facing behavior. A completed plan is demoable or verifiable on its own. Do NOT create plans that implement a single layer across the whole feature.
+
+```
+WRONG (horizontal):  Plan 01 = all DB schema   Plan 02 = all API   Plan 03 = all UI
+RIGHT  (vertical):   Plan 01 = user can log in (schema + API endpoint + UI form + test)
+                     Plan 02 = user can reset password (schema + API + UI + test)
+```
+
+**Anti-pattern to avoid:** If someone cannot demo what a completed plan delivers without also completing other plans, the plan is too horizontal. Restructure.
+
+**Exception — single-layer phases:** Some phases are legitimately single-layer (e.g., "migrate all DB tables to new schema", "style all existing components"). In this case, add `single_layer_justified: true` to the plan's YAML frontmatter and note the reason in the objective.
+
 **Atomic tasks** — each task should be completable in one logical unit of work and committed independently.
 
 **Observable done criteria** — every task must have a `<done>` field that describes something you can check (file exists, test passes, import resolves) — not "task is complete".
@@ -36,7 +48,8 @@ files_modified:
   - path/to/file.ts
   - path/to/other.ts
 autonomous: true
-objective: "[One sentence: what this plan builds and why it matters for the phase]"
+single_layer_justified: false  # set true only if this phase is legitimately single-layer (e.g., DB migration, style pass)
+objective: "[One sentence describing the demoable user-facing behavior this plan delivers end-to-end]"
 must_haves:
   truths:
     - "File src/auth/token.ts exists and exports `validateToken`"
