@@ -101,8 +101,13 @@ function runStatusline() {
         const usableRemaining = Math.max(0, ((remaining - AUTO_COMPACT_BUFFER_PCT) / (100 - AUTO_COMPACT_BUFFER_PCT)) * 100);
         const used = Math.max(0, Math.min(100, Math.round(100 - usableRemaining)));
 
-        // Write bridge file for context-monitor hook
-        const sessionSafe = session && !/[/\\]|\.\./.test(session);
+        // Write bridge file for context-monitor hook.
+        // Session IDs from the host platform should be opaque tokens — refuse
+        // anything that could escape the temp-file naming scheme.
+        const sessionSafe = typeof session === 'string'
+          && session.length > 0
+          && session.length <= 128
+          && /^[A-Za-z0-9._-]+$/.test(session);
         if (sessionSafe) {
           try {
             const bridgePath = path.join(os.tmpdir(), `learnship-ctx-${session}.json`);

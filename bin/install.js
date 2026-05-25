@@ -72,7 +72,40 @@ const hasLocal     = args.includes('--local')  || args.includes('-l');
 const hasUninstall = args.includes('--uninstall') || args.includes('-u');
 const hasHelp      = args.includes('--help') || args.includes('-h');
 const targetIdx    = args.indexOf('--target');
-const targetOverride = targetIdx !== -1 && args[targetIdx + 1] ? path.resolve(args[targetIdx + 1]) : null;
+
+// Refuse high-risk --target paths. We never want a typo or malicious arg
+// to make the installer rmSync / overwrite something like /, /etc, or $HOME.
+// Allowed: anywhere under $HOME, anywhere under /tmp (test installs), anywhere
+// under the current working directory (project-local installs). Reject the rest.
+function validateTargetPath(raw) {
+  if (!raw) return null;
+  const resolved = path.resolve(raw);
+  const home = os.homedir();
+  const cwd  = process.cwd();
+  const tmp  = os.tmpdir();
+  // Forbid the literal root and common system dirs outright
+  const forbidden = ['/', '/etc', '/usr', '/var', '/bin', '/sbin', '/lib', '/lib64', '/boot', '/dev', '/proc', '/sys', '/root'];
+  if (forbidden.includes(resolved)) {
+    console.error(`  Error: refusing to install to system path: ${resolved}`);
+    process.exit(1);
+  }
+  // Refuse if it equals $HOME exactly (installing directly into ~ would clobber dotfiles)
+  if (resolved === home) {
+    console.error(`  Error: refusing to install directly to $HOME (${resolved}). Use a subdirectory like $HOME/.claude or pass --global.`);
+    process.exit(1);
+  }
+  // Otherwise must be inside one of the allowed roots
+  const insideHome = resolved === home || resolved.startsWith(home + path.sep);
+  const insideTmp  = resolved === tmp  || resolved.startsWith(tmp + path.sep);
+  const insideCwd  = resolved === cwd  || resolved.startsWith(cwd + path.sep);
+  if (!insideHome && !insideTmp && !insideCwd) {
+    console.error(`  Error: --target must be inside $HOME, /tmp, or the current directory. Got: ${resolved}`);
+    process.exit(1);
+  }
+  return resolved;
+}
+
+const targetOverride = targetIdx !== -1 && args[targetIdx + 1] ? validateTargetPath(args[targetIdx + 1]) : null;
 
 let selectedPlatforms = [];
 if (hasAll) {
@@ -299,13 +332,17 @@ function convertToOpencode(content) {
       }
       continue;
     }
-    // Convert color names to hex
+    // Convert color names to hex (OpenCode requires hex)
     if (t.startsWith('color:')) {
-      const colorVal = t.substring(6).trim().toLowerCase();
+      const colorVal = t.substring(6).trim().toLowerCase().replace(/^['"]|['"]$/g, '');
       const hex = colorNameToHex[colorVal];
       if (hex) { newLines.push(`color: "${hex}"`); }
       else if (colorVal.startsWith('#')) { newLines.push(line); }
-      // skip unknown color names entirely
+      else {
+        // Unknown color: warn rather than silently drop, so installs are debuggable.
+        console.warn(`  ${yellow}⚠${reset} Unknown OpenCode color "${colorVal}" — defaulting to #808080 (gray). Add it to colorNameToHex in bin/install.js to fix.`);
+        newLines.push(`color: "#808080"`);
+      }
       continue;
     }
     if (inTools) {
@@ -1401,12 +1438,27 @@ function saveLocalPatches(targetDir) {
   const patchesDir = path.join(targetDir, 'learnship-local-patches');
   const modified = [];
 
+  // Reject any manifest entry whose relative path escapes the install root.
+  // A malicious or corrupted manifest could otherwise read/copy arbitrary files
+  // via "../" segments before they're caught by fs operations.
+  const targetResolved = path.resolve(targetDir);
+  const patchesResolved = path.resolve(patchesDir);
+
   for (const [relPath, originalHash] of Object.entries(manifest.files || {})) {
-    const fullPath = path.join(targetDir, relPath);
+    if (typeof relPath !== 'string' || typeof originalHash !== 'string') continue;
+    // Block absolute paths, parent-dir traversal, and null bytes.
+    if (path.isAbsolute(relPath) || relPath.includes('\0') || /(^|[\\/])\.\.([\\/]|$)/.test(relPath)) {
+      console.warn(`  ${yellow}⚠${reset} Skipping unsafe manifest path: ${relPath}`);
+      continue;
+    }
+    const fullPath = path.resolve(targetResolved, relPath);
+    const backupPath = path.resolve(patchesResolved, relPath);
+    // Belt-and-braces: confirm both resolved paths land inside their roots.
+    if (!fullPath.startsWith(targetResolved + path.sep) && fullPath !== targetResolved) continue;
+    if (!backupPath.startsWith(patchesResolved + path.sep) && backupPath !== patchesResolved) continue;
     if (!fs.existsSync(fullPath)) continue;
     const currentHash = fileHash(fullPath);
     if (currentHash !== originalHash) {
-      const backupPath = path.join(patchesDir, relPath);
       fs.mkdirSync(path.dirname(backupPath), { recursive: true });
       fs.copyFileSync(fullPath, backupPath);
       modified.push(relPath);

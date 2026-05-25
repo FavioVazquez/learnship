@@ -126,10 +126,12 @@ Load everything before writing a single plan:
 ## Step 2: Decompose Phase Goal
 
 From the phase goal and requirements:
-1. List all deliverables (what must exist after this phase)
-2. Map each deliverable to a logical implementation unit
-3. Find dependencies between units
-4. Group into 2-4 plans, assign waves
+1. List all user-facing behaviors the phase must deliver (not layers — behaviors)
+2. Each behavior becomes one plan: data schema + logic + API + UI + test
+3. Find dependencies between plans
+4. Group into 2-4 vertical slice plans, assign waves
+
+**Self-check before writing:** For each draft plan, ask: "Can someone demo this plan's deliverable after it completes, without completing other plans?" If no → restructure.
 
 ## Step 3: Write Plans
 

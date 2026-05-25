@@ -28,7 +28,7 @@ Implementation decisions captured during `discuss-phase [N]`. This file is the p
 ### [Area 3 that was discussed]
 - **D-04:** [Specific decision made]
 
-### Claude's Discretion
+### Agent's Discretion
 [Areas where user explicitly said "you decide" — the agent has flexibility here during planning/implementation]
 
 </decisions>
@@ -122,7 +122,7 @@ Display posts from followed users in a scrollable feed. Users can view posts and
 - Friendly illustration + "Follow people to see posts here"
 - Suggest 3-5 accounts to follow based on interests
 
-### Claude's Discretion
+### Agent's Discretion
 - Loading skeleton design
 - Exact spacing and typography
 - Error state handling
@@ -185,7 +185,7 @@ CLI command to backup database to local file or S3. Supports full and incrementa
 - --no-retry flag to fail fast
 - Partial backups are deleted on failure (no corrupt files)
 
-### Claude's Discretion
+### Agent's Discretion
 - Exact progress bar implementation
 - Compression algorithm choice
 - Temp file handling

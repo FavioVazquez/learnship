@@ -9,6 +9,31 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Quick Setup mode in `/new-project`** — `/new-project` now opens Step 2 with a single setup-mode question: pick **Quick — use recommended defaults** to write `.planning/config.json` immediately, or pick **Customize** to walk through the four-round, 15-question wizard. Saves users ~14 questions on the happy path while leaving full customization one click away. Implemented as Steps 2a (setup mode) → 2b (custom rounds, skipped in quick mode) → 2c (write config, runs in both modes). Documented in `docs/getting-started/first-project.md`.
+- **Model accuracy fix in `learnship/references/model-profiles.md`** — Claude Opus 4.6 → 4.7 (Opus 4.7 has been current since April 16, 2026). Other model names (Gemini 3.1 Pro/Flash/Flash-Lite, GPT-5.4/mini/nano) were already correct and left unchanged.
+- **Accurate Gemini parallel-execution doc** — `docs/platform-guide/gemini-cli.md` previously claimed parallel was on by default; this contradicted both `bin/install.js` (which sets `parallelization=false` for Gemini) and `learnship/workflows/execute-phase.md` (which routes Gemini through sequential execution). The doc now accurately describes Gemini CLI as supporting parallel subagents since April 2026 (experimental), with learnship defaulting to sequential for stability and opt-in via `parallelization: true`.
+- **`.env.example`** — New reference documenting every environment variable that affects the installer or hooks (`CLAUDE_CONFIG_DIR`, `GEMINI_CONFIG_DIR`, `OPENCODE_CONFIG_DIR`, `XDG_CONFIG_HOME`, `CODEX_HOME`, `GEMINI_API_KEY`, `LEARNSHIP_TEST_MODE`). learnship does not load `.env` itself — the file is a reference for contributors and users.
+
+### Security
+
+- **`--target` path-boundary enforcement** — `bin/install.js` now rejects `--target` paths that resolve to `/`, common system dirs (`/etc`, `/usr`, `/var`, `/bin`, `/sbin`, `/lib`, `/lib64`, `/boot`, `/dev`, `/proc`, `/sys`, `/root`), or bare `$HOME`. Valid `--target` paths must resolve inside `$HOME`, `/tmp`, or the current working directory. Prevents a typo or hostile argument from triggering `fs.rmSync` on something important. Covered by 5 new tests in `validate_security.sh`.
+- **Manifest path-traversal protection** — `saveLocalPatches` (which backs up locally-modified files before reinstall) now rejects manifest entries with `../` segments, absolute paths, or null bytes — so a corrupted or malicious `learnship-file-manifest.json` cannot exfiltrate files outside the install root. Covered by a new test in `validate_security.sh`.
+- **Strict session-ID validation in hooks** — `learnship-context-monitor.js` and `learnship-statusline.js` now require the host-provided session ID to be ≤128 chars and match `^[A-Za-z0-9._-]+$`. Replaces the prior allow-list-by-blocklist approach that allowed null bytes and high-bit characters through.
+
+### Fixed
+
+- **Silent color drop in OpenCode conversion** — `convertToOpencode` previously dropped frontmatter lines like `color: pink` entirely if the color name wasn't in the hex map, leaving the agent file with no color set. Now logs a warning and falls back to `#808080` (gray), so installs are debuggable and the field stays present.
+
+### Documentation
+
+- `docs/getting-started/first-project.md` Step 2 rewritten to introduce Quick vs. Customize and link to the full configuration reference.
+
+---
+
 ## [v2.3.6] — 2026-04-26
 
 ### Fixed

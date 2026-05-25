@@ -34,6 +34,11 @@ For every task in every plan, check:
 - Is each plan achievable in a single context window? (~200k tokens, 2-3 tasks)
 - Are there any tasks that are too vague to implement without guessing?
 
+### 7. Vertical Slice (tracer bullet)
+- Does each plan's `objective` describe a **demoable user-facing behavior** delivered end-to-end?
+- Does any plan cover only a single layer across the whole feature (all schema, all API endpoints, all UI components)? If yes, flag it as a **horizontal slice** unless `single_layer_justified: true` is set in the frontmatter.
+- The test: "Can someone demo what this plan delivers after it completes, without completing other plans?" If no and `single_layer_justified` is not set → flag it.
+
 ## What NOT to check
 - Code style or implementation approach preferences (that's the planner's job)
 - Research quality (that's already done)
