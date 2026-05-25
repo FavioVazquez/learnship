@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// learnship-hook-version: 2.2.0
+// learnship-hook-version: 2.4.0
 // Session State — SessionStart hook
 // Injects project state reminder on every session start for orientation.
 // Also checks for learnship updates in the background.

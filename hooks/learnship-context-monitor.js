@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// learnship-hook-version: 2.2.0
+// learnship-hook-version: 2.4.0
 // Context Monitor — PostToolUse hook
 // Reads context metrics from the statusline bridge file and injects
 // warnings when context usage is high. Makes the AGENT aware of

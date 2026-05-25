@@ -9,29 +9,16 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
-## [Unreleased]
-
-### Fixed (audit pass — workflows, agents, skills, docs)
-
-- **`verifier` agent was missing the `Write` tool** — Its spec required it to produce `VERIFICATION.md`, but its declared tools (`Read, Bash, Glob, Grep`) made that impossible on platforms that enforce the tool list. Now declares `Read, Write, Bash, Glob, Grep` in both source (`learnship/agents/verifier.md`) and wrapper (`agents/learnship-verifier.md`).
-- **`learnship-researcher` was missing from `CODEX_AGENT_SANDBOX`** — Silently fell back to whatever Codex's default was. All 17 agents are now explicitly listed in the sandbox map.
-- **Double-`learnship/` path in security-auditor wrapper** — `agents/learnship-security-auditor.md` referenced `~/.claude/learnship/templates/security.md`. After install.js rewrote `~/.claude/` → `<targetDir>/learnship/`, the path became `<targetDir>/learnship/learnship/templates/security.md` — pointing to a non-existent file. Fixed by changing the source to `~/.claude/templates/security.md`. Added a regression test in `validate_cross_platform.sh` that scans every installed wrapper for double-`learnship/` paths across Claude/OpenCode/Gemini.
-- **Root `SKILL.md` listed only 17 of 21 impeccable commands** — Missing `arrange`, `typeset`, `overdrive`, `frontend-design`. Now lists all 21, grouped by purpose (review/critique, refine/elevate, specific concerns, engineering attributes, foundations) so the agent can find the right action faster.
-- **`marketplace/README.md` claimed "49 structured workflows"** — Stale. Now correctly says 57.
-
-### Added (audit pass)
-
-- **All 17 agents now in `model-profiles.md` tier table** — Previously only 10 of 17 were listed, leaving researcher / project-researcher / research-synthesizer / roadmapper / doc-writer / doc-verifier / security-auditor without tier assignment. Each agent now has a row across `quality` / `balanced` / `budget` plus a "Notes" column explaining why that tier is appropriate for the role.
-- **Design-quality gate in `/review` and `/ship` workflows** — `/review` now suggests `@impeccable critique` / `polish` / `audit` when the review touched any UI files; `/ship` runs the same check on staged UI changes before opening the PR. Catches design regressions that code review and tests don't.
-- **4 additional agentic-learning checkpoints surfaced in root `SKILL.md`** — Previously the checkpoint list referenced only 7 of 11 actions. Added contextual triggers for `quiz` (after research/review), `explain-first` (when studying unfamiliar code), `explain` (after map-codebase / discovery-phase), and `interleave` (when stuck across multiple domains in one session). All 11 actions are now discoverable through the checkpoint list, not just through manual invocation.
-- **Explicit "Boundaries — what this persona does NOT do" sections** on 7 agents that lacked them — `challenger`, `executor`, `ideation-agent`, `research-synthesizer`, `roadmapper`, `security-auditor`, `solution-writer`. Each agent now spells out the 3–4 things it must NOT do, mirroring the explicit "do NOT" patterns already present in `planner.md` and `code-reviewer.md`. Synced to both source `learnship/agents/*.md` and wrappers `agents/learnship-*.md`.
+## [v2.4.0] — 2026-05-25
 
 ### Added
 
-- **Quick Setup mode in `/new-project`** — `/new-project` now opens Step 2 with a single setup-mode question: pick **Quick — use recommended defaults** to write `.planning/config.json` immediately, or pick **Customize** to walk through the four-round, 15-question wizard. Saves users ~14 questions on the happy path while leaving full customization one click away. Implemented as Steps 2a (setup mode) → 2b (custom rounds, skipped in quick mode) → 2c (write config, runs in both modes). Documented in `docs/getting-started/first-project.md`.
-- **Model accuracy fix in `learnship/references/model-profiles.md`** — Claude Opus 4.6 → 4.7 (Opus 4.7 has been current since April 16, 2026). Other model names (Gemini 3.1 Pro/Flash/Flash-Lite, GPT-5.4/mini/nano) were already correct and left unchanged.
-- **Accurate Gemini parallel-execution doc** — `docs/platform-guide/gemini-cli.md` previously claimed parallel was on by default; this contradicted both `bin/install.js` (which sets `parallelization=false` for Gemini) and `learnship/workflows/execute-phase.md` (which routes Gemini through sequential execution). The doc now accurately describes Gemini CLI as supporting parallel subagents since April 2026 (experimental), with learnship defaulting to sequential for stability and opt-in via `parallelization: true`.
-- **`.env.example`** — New reference documenting every environment variable that affects the installer or hooks (`CLAUDE_CONFIG_DIR`, `GEMINI_CONFIG_DIR`, `OPENCODE_CONFIG_DIR`, `XDG_CONFIG_HOME`, `CODEX_HOME`, `GEMINI_API_KEY`, `LEARNSHIP_TEST_MODE`). learnship does not load `.env` itself — the file is a reference for contributors and users.
+- **Quick Setup mode in `/new-project`** — `/new-project` Step 2 now opens with a single setup-mode question: pick **Quick — use recommended defaults** to write `.planning/config.json` immediately, or pick **Customize** to walk through the 4-round, ~15-question wizard. Saves users ~14 questions on the happy path while leaving full customization one click away. Implemented as Steps 2a (setup mode) → 2b (custom rounds, skipped in quick mode) → 2c (write config, runs in both modes). Verified preserved through install transforms on all 5 installable platforms.
+- **Design-quality gate in `/review` and `/ship`** — both workflows now surface `@impeccable critique` / `polish` / `audit` / `harden` when staged or changed files include UI extensions. Catches design regressions that code review and tests miss.
+- **All 11 agentic-learning actions now surfaced in `SKILL.md` checkpoint list** — previously only 7 were referenced. Added contextual triggers for `quiz` (after research / review), `explain-first` (studying unfamiliar code), `explain` (after map-codebase / discovery-phase), and `interleave` (stuck across multiple domains in one session). All 11 actions are now discoverable through automatic checkpoints, not only through manual invocation.
+- **All 17 agents now in the `model-profiles.md` tier table** — previously only 10 were listed. Researcher, project-researcher, research-synthesizer, roadmapper, doc-writer, doc-verifier, and security-auditor each now have a row across `quality` / `balanced` / `budget` plus a Notes column explaining why that tier is appropriate.
+- **Explicit "Boundaries — what this persona does NOT do" sections** on 7 agents that lacked them: `challenger`, `executor`, `ideation-agent`, `research-synthesizer`, `roadmapper`, `security-auditor`, `solution-writer`. Synced to both source (`learnship/agents/*.md`) and wrappers (`agents/learnship-*.md`).
+- **`.env.example`** — reference documenting every environment variable that affects the installer or hooks (`CLAUDE_CONFIG_DIR`, `GEMINI_CONFIG_DIR`, `OPENCODE_CONFIG_DIR`, `XDG_CONFIG_HOME`, `CODEX_HOME`, `GEMINI_API_KEY`, `LEARNSHIP_TEST_MODE`). learnship does not load `.env` itself — the file is a reference for contributors and users.
 
 ### Security
 
@@ -41,7 +28,14 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ### Fixed
 
-- **Silent color drop in OpenCode conversion** — `convertToOpencode` previously dropped frontmatter lines like `color: pink` entirely if the color name wasn't in the hex map, leaving the agent file with no color set. Now logs a warning and falls back to `#808080` (gray), so installs are debuggable and the field stays present.
+- **`verifier` agent was missing the `Write` tool** — its spec required it to produce `VERIFICATION.md`, but its declared tools (`Read, Bash, Glob, Grep`) made that impossible on platforms that enforce the tool list. Now declares `Read, Write, Bash, Glob, Grep` in both source and wrapper.
+- **`learnship-researcher` was missing from `CODEX_AGENT_SANDBOX`** — silently fell back to whatever Codex's default was. All 17 agents are now explicitly listed in the sandbox map.
+- **Double-`learnship/` path in security-auditor wrapper** — `agents/learnship-security-auditor.md` referenced `~/.claude/learnship/templates/security.md`. After `install.js` rewrote `~/.claude/` → `<targetDir>/learnship/`, the path became `<targetDir>/learnship/learnship/templates/security.md` — pointing to a non-existent file. Fixed by changing the source to `~/.claude/templates/security.md`. Added a regression test in `validate_cross_platform.sh` that scans every installed wrapper for double-`learnship/` paths across Claude / OpenCode / Gemini.
+- **Root `SKILL.md` listed only 17 of 21 impeccable commands** — missing `arrange`, `typeset`, `overdrive`, `frontend-design`. Now lists all 21, grouped by purpose (review/critique, refine/elevate, specific concerns, engineering attributes, foundations).
+- **`marketplace/README.md` claimed "49 structured workflows"** — stale. Now correctly says 57.
+- **Silent color drop in OpenCode conversion** — `convertToOpencode` previously dropped frontmatter lines like `color: pink` entirely if the color name wasn't in the hex map. Now logs a warning and falls back to `#808080` (gray).
+- **Claude Opus version in `model-profiles.md`** — was `Claude Opus 4.6`; Opus 4.7 has been current since April 16, 2026. Other model names (Gemini 3.1 Pro/Flash/Flash-Lite, GPT-5.4/mini/nano) were already correct and left unchanged.
+- **Misleading parallel-execution doc** for Gemini CLI — `docs/platform-guide/gemini-cli.md` previously claimed parallel was on by default; this contradicted `bin/install.js` and `learnship/workflows/execute-phase.md`. Doc now accurately states Gemini CLI supports parallel subagents since April 2026 (experimental), with learnship defaulting to sequential for stability and opt-in via `parallelization: true`.
 
 ### Documentation
 

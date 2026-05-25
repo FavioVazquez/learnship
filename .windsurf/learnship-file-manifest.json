@@ -1,8 +1,8 @@
 {
-  "version": "2.3.6",
-  "timestamp": "2026-05-25T07:10:19.597Z",
+  "version": "2.4.0",
+  "timestamp": "2026-05-25T07:17:14.964Z",
   "files": {
-    "learnship/VERSION": "85add8af088206c7dc01ad186ac59ec7e57d29e465be7d871a6af7d4e60bf96f",
+    "learnship/VERSION": "07b7164b80b10ee59f56ad6465e3b6c2cf127bfec26fc2b71638020b19d7f5c8",
     "learnship/agents/challenger.md": "765d15997aeeb0c79008b53ff387d865510572600d8c6450bd97e090a8fc464d",
     "learnship/agents/code-reviewer.md": "91a1c7afca10bd2f16bd20c30a9c5dc892f1515c487a28577b1368059e8f7550",
     "learnship/agents/debugger.md": "a77c44c6f0f865d38ac7eb50f68cf5fe26685307a290337530d4a673e78b7a1b",
