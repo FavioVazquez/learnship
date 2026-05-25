@@ -83,10 +83,8 @@ for platform in windsurf claude opencode gemini codex; do
   node "$REPO_DIR/bin/install.js" "--$platform" --target "$TMPREV/$platform" > /dev/null 2>&1
 done
 
-for platform in windsurf; do
-  check "installed review.md ($platform): has spec compliance pass" \
-    grep -q "Spec Compliance" "$TMPREV/$platform/workflows/review.md"
-done
+check "installed review.md (windsurf): has spec compliance pass" \
+  grep -q "Spec Compliance" "$TMPREV/windsurf/workflows/review.md"
 for platform in claude opencode gemini codex; do
   check "installed review.md ($platform): has spec compliance pass" \
     grep -rq "Spec Compliance" "$TMPREV/$platform/learnship/workflows/review.md" 2>/dev/null
@@ -143,10 +141,8 @@ for platform in windsurf claude opencode gemini codex; do
   node "$REPO_DIR/bin/install.js" "--$platform" --target "$TMPSEC/$platform" > /dev/null 2>&1
 done
 
-for platform in windsurf; do
-  check "installed security-auditor ($platform): has OWASP" \
-    grep -rq "OWASP" "$TMPSEC/$platform/learnship/agents/security-auditor.md" 2>/dev/null
-done
+check "installed security-auditor (windsurf): has OWASP" \
+  grep -rq "OWASP" "$TMPSEC/windsurf/learnship/agents/security-auditor.md" 2>/dev/null
 for platform in claude opencode gemini codex; do
   check "installed security-auditor ($platform): has OWASP" \
     grep -rq "OWASP" "$TMPSEC/$platform/learnship/agents/security-auditor.md" 2>/dev/null
@@ -207,10 +203,8 @@ for platform in windsurf claude opencode gemini codex; do
   node "$REPO_DIR/bin/install.js" "--$platform" --target "$TMPHEALTH/$platform" > /dev/null 2>&1
 done
 
-for platform in windsurf; do
-  check "installed health.md ($platform): has numeric score" \
-    grep -q "Score:" "$TMPHEALTH/$platform/workflows/health.md"
-done
+check "installed health.md (windsurf): has numeric score" \
+  grep -q "Score:" "$TMPHEALTH/windsurf/workflows/health.md"
 for platform in claude opencode gemini codex; do
   check "installed health.md ($platform): has numeric score" \
     grep -rq "Score:" "$TMPHEALTH/$platform/learnship/workflows/health.md" 2>/dev/null
@@ -265,12 +259,10 @@ for platform in windsurf claude opencode gemini codex; do
   node "$REPO_DIR/bin/install.js" "--$platform" --target "$TMPPLAY/$platform" > /dev/null 2>&1
 done
 
-for platform in windsurf; do
-  check "installed verify-work.md ($platform): has Playwright guidance" \
-    grep -q "Playwright" "$TMPPLAY/$platform/workflows/verify-work.md"
-  check "installed ship.md ($platform): has smoke test guidance" \
-    grep -q "Smoke Test\|smoke test" "$TMPPLAY/$platform/workflows/ship.md"
-done
+check "installed verify-work.md (windsurf): has Playwright guidance" \
+  grep -q "Playwright" "$TMPPLAY/windsurf/workflows/verify-work.md"
+check "installed ship.md (windsurf): has smoke test guidance" \
+  grep -q "Smoke Test\|smoke test" "$TMPPLAY/windsurf/workflows/ship.md"
 for platform in claude opencode gemini codex; do
   check "installed verify-work.md ($platform): has Playwright guidance" \
     grep -rq "Playwright" "$TMPPLAY/$platform/learnship/workflows/verify-work.md" 2>/dev/null

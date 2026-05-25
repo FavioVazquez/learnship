@@ -210,7 +210,7 @@ check "windsurf install has SETUP_MODE variable" grep -q 'SETUP_MODE = quick | c
 
 # Quick Setup must be preserved across all 5 installable platforms
 TMP_QS=$(mktemp -d)
-trap "rm -rf $TMP_QS" EXIT
+trap 'rm -rf $TMP_QS' EXIT
 for p in windsurf claude opencode gemini codex; do
   mkdir -p "$TMP_QS/$p"
   node "$REPO_DIR/bin/install.js" "--$p" --target "$TMP_QS/$p" > /dev/null 2>&1
