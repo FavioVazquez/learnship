@@ -124,7 +124,7 @@ flowchart LR
     PP["/plan-phase N<br/>Vertical slice plans"]
     EP["/execute-phase N<br/>Build + commit"]
     VW["/verify-work N<br/>UAT + diagnose"]
-    RV["/review<br/>Multi-persona review"]
+    RV["/review<br/>Two-pass review"]
     SH["/ship<br/>Test → PR"]
     CP["/compound<br/>Capture knowledge"]
 
@@ -179,6 +179,8 @@ Each platform gets the best experience it supports:
 | Skills (native `@invoke`) | ✓ | — | — | — | — |
 | Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
 
+**Cursor** uses context injection via `cursor-rules/learnship.mdc` — it gets the full workflow library, design system, and learning partner, but does not appear in the feature matrix above because it has no first-class slash command or subagent API (rules load automatically as context).
+
 **Parallel subagents:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor per plan within a wave, each with its own 200k context budget. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json`. Up to 5 concurrent agents per wave by default. All platforms default to sequential (always safe).
 
 ---
@@ -230,7 +232,7 @@ It's the right tool if:
 - You're **building a real project** and want the AI to stay aligned across sessions
 - You're **learning while building** and want to actually understand what gets shipped
 - You care about **code quality and UI quality** beyond "it works"
-- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI
+- You want **parallel agent execution** on Claude Code, OpenCode, Gemini CLI, or Codex CLI
 - You've felt the frustration of **context loss**: repeating yourself while the agent forgets
 
 It's probably overkill for one-off scripts. Use `/quick` for that.
@@ -308,7 +310,7 @@ v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
 
 | Category | New workflows |
 |----------|--------------|
-| **Security** | `/secure-phase` — per-phase STRIDE + OWASP Top 10 security verification |
+| **Security** | `/secure-phase` — per-phase STRIDE threat-model security verification |
 | **Documentation** | `/docs-update` — generate and verify project docs against codebase |
 | **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
 | **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
@@ -321,7 +323,7 @@ Enhanced: `/discuss-phase` (scope guardrails + domain probes + `--deep` extended
 
 ---
 
-##  Agentic Engineering vs Vibe Coding
+## ⚡ Agentic Engineering vs Vibe Coding
 
 ![Vibe coding vs Agentic engineering](assets/vibe-vs-agentic.png)
 
@@ -596,7 +598,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | Challenger | large | medium | medium |
 | Ideation Agent | large | medium | small |
 
-> **Platform note:** Tiers map to the best available model on your platform: `large` = Claude Opus 4.6 / Gemini 3.1 Pro / GPT-5.4, `medium` = Claude Sonnet 4.6 / Gemini 3.1 Flash / GPT-5.4-mini, `small` = Claude Haiku 4.5 / Gemini 3.1 Flash-Lite / GPT-5.4-nano. Windsurf, Cursor, and OpenCode use the platform default model — tiers signal intended task complexity.
+> **Platform note:** Tiers map to the best available model on your platform. On Claude Code: `large` = Opus, `medium` = Sonnet, `small` = Haiku. On Gemini CLI and Codex CLI the installer maps tiers to the best available model at install time. Windsurf, Cursor, and OpenCode use the platform default model — tiers signal intended task complexity.
 
 ### Speed vs. Quality Presets
 
@@ -665,9 +667,12 @@ The **impeccable** skill suite is always active as project context for any UI wo
 | `/quieter` | Tone down overly aggressive designs to reduce intensity and gain refinement |
 | `/distill` | Strip to essence: remove complexity, clarify what matters |
 | `/clarify` | Improve UX copy, error messages, microcopy, labels |
+| `/typeset` | Improve typography: font choices, hierarchy, sizing, weight, and readability |
+| `/arrange` | Improve layout, spacing, and visual rhythm; fix monotonous grids and weak hierarchy |
 | `/optimize` | Performance: loading speed, rendering, animations, bundle size |
 | `/harden` | Resilience: error handling, i18n, text overflow, edge cases |
 | `/delight` | Add moments of joy and personality that make interfaces memorable |
+| `/overdrive` | Push past conventional limits — shaders, spring physics, scroll-driven reveals |
 | `/extract` | Extract reusable components and design tokens into your design system |
 | `/adapt` | Adapt designs across screen sizes, devices, and contexts |
 | `/onboard` | Design onboarding flows, empty states, first-time user experiences |
@@ -919,7 +924,7 @@ learnship/
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
 ├── tests/
-│   └── run_all.sh               # 15 test suites, 1200+ checks across 6 platforms
+│   └── run_all.sh               # 16 test suites, 1200+ checks across 6 platforms
 ├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
 ├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)
