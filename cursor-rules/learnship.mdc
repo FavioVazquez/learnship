@@ -101,6 +101,34 @@ Suggest the appropriate workflow slash command when relevant:
 | `/knowledge-base` | Aggregate learnings across sessions into searchable KNOWLEDGE.md |
 | `/transition` | Hand off project context to a new session or collaborator |
 
+## Secondary Workflows
+
+The 20 less-frequently-used workflows below are also available on Cursor. Suggest them in the matching situation; the user can also discover them via `/help`.
+
+| Workflow | When to suggest |
+|----------|----------------|
+| `/help` | User asks "what commands exist?" or wants the full reference |
+| `/add-phase [description]` | Append a new phase to the end of the roadmap |
+| `/insert-phase [N] [description]` | Insert urgent work between existing phases |
+| `/remove-phase [N]` | Remove a future phase and renumber |
+| `/research-phase [N]` | Deep phase research only — no plans yet |
+| `/list-phase-assumptions [N]` | Preview intended approach before planning the phase |
+| `/discovery-phase [N]` | Map an unfamiliar code area — files, deps, risks — before planning |
+| `/audit-milestone` | Pre-release audit — requirement coverage + stub detection |
+| `/plan-milestone-gaps` | Create fix phases from audit findings |
+| `/milestone-retrospective` | 5-question retrospective after `/complete-milestone` |
+| `/decision-log [description]` | Capture a decision with context, alternatives, rationale |
+| `/execute-plan [N] [id]` | Re-run a single PLAN.md in isolation (e.g., after a failure) |
+| `/validate-phase [N]` | (Listed in Core — also reachable here) retroactive coverage audit |
+| `/add-todo [description]` | Capture an idea without interrupting flow |
+| `/check-todos` | Review and act on captured todos |
+| `/add-tests [N]` | Generate unit + E2E tests for a completed phase |
+| `/cleanup` | Archive completed milestone phase directories |
+| `/set-profile [quality\|balanced\|budget]` | One-step model-profile switch |
+| `/update` | Update the learnship platform itself to the latest version |
+| `/reapply-patches` | Restore local edits after an `/update` |
+| `/release` | Cut a release after `/complete-milestone` (tagging, npm publish, etc.) |
+
 ## Planning Artifacts
 
 All project state lives in `.planning/`. Key files:
