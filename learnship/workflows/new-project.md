@@ -134,7 +134,7 @@ AskUserQuestion([
     question: "How do you want to configure this project?",
     multiSelect: false,
     options: [
-      { label: "Quick — use recommended defaults (Recommended)", description: "Skip the 15 customization questions. Uses: auto mode, coarse phases, balanced models, all workflow agents on, ship pipeline + conventional commits + PR template, auto-commit planning docs, parallelization off (you can flip it later in .planning/config.json). Best for: most projects." },
+      { label: "Quick — use recommended defaults (Recommended)", description: "Skip the 15 customization questions. Uses: auto mode, coarse phases, balanced models, all workflow agents on, ship pipeline + conventional commits + PR template, auto-commit planning docs, parallelization on (on this platform). Best for: most projects." },
       { label: "Customize — walk through every setting", description: "Answer ~15 questions across 4 rounds to tune working style, granularity, model profile, workflow agents, pipeline, git, and (on supported platforms) parallel subagents. Best for: teams with specific conventions or unusual project shapes." }
     ]
   }
@@ -330,7 +330,7 @@ AskUserQuestion([
 ### Step 2c — Write Config
 
 > This step runs in **both modes**:
-> - If `SETUP_MODE = quick`: use the **recommended defaults** for every field (the values labeled "(Recommended)" in the Step 2b questions, and `parallelization.enabled = false`).
+> - If `SETUP_MODE = quick`: use the **recommended defaults** for every field (the values labeled "(Recommended)" in the Step 2b questions, and `parallelization.enabled = true` for this platform).
 > - If `SETUP_MODE = custom`: use the user's answers from Rounds 1–4.
 
 **Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers (or recommended defaults) to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.

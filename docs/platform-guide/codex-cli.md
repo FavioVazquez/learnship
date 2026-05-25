@@ -58,10 +58,12 @@ Run the impeccable /audit skill on this component
 
 ## Parallel subagents
 
-Codex CLI supports real parallel subagents. Enable:
+Codex CLI runs parallel subagents by default. Every new project created with `$learnship-new-project` starts with `parallelization.enabled: true`.
+
+To disable and run sequentially:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
 
 ## Capabilities
@@ -71,8 +73,8 @@ Codex CLI supports real parallel subagents. Enable:
 | Slash commands | ✅ `$learnship-*` prefix |
 | `@agentic-learning` skill | ✅ Context file |
 | `impeccable` skill suite | ✅ Context file |
-| Parallel subagents | ✅ opt-in |
-| Wave execution | ✅ opt-in |
+| Parallel subagents | ✅ on by default |
+| Wave execution | ✅ on by default |
 | Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
 | Interactive questions | ✅ `request_user_input` |
 | Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |

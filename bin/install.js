@@ -726,13 +726,25 @@ function rewriteNewProject(content, platform) {
   // Parallel execution block
   let parallelBlock;
   if (supportsParallel) {
-    parallelBlock = `**Group D — Parallel execution:**\n\n${label} supports real parallel subagents. Ask:\n\n"Do you want to enable parallel subagent execution?"\n- **No** (recommended default) — Plans execute sequentially, one at a time. Safer, easier to follow.\n- **Yes** — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Faster, but uses more tokens.`;
+    parallelBlock = `**Group D — Parallel execution:**\n\n${label} supports real parallel subagents. Ask:\n\n"Do you want to enable parallel subagent execution?"\n- **Yes** (recommended) — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Plans finish faster and each executor has a clean context with no accumulated noise.\n- **No** — Plans execute sequentially, one at a time. Predictable and easy to follow; useful when you want to review each plan before the next begins.`;
   } else if (platform === 'gemini') {
     parallelBlock = `**Group D — Parallel execution:**\n\nGemini CLI supports subagents but only runs them sequentially — parallel execution is not yet available. Parallelization is automatically set to \`false\`.`;
   } else {
     parallelBlock = `**Group D — Parallel execution:**\n\n${label} does not support real subagents. Parallelization is automatically set to \`false\`.`;
   }
   content = content.replace('<!-- LEARNSHIP_PARALLEL_BLOCK -->', parallelBlock);
+
+  // On platforms with real parallel subagents, flip Quick-mode default to parallel-on
+  if (supportsParallel) {
+    content = content.replace(
+      'parallelization off (you can flip it later in .planning/config.json)',
+      'parallelization on'
+    );
+    content = content.replace(
+      'and `parallelization.enabled = false`)',
+      'and `parallelization.enabled = true` for this platform)'
+    );
+  }
 
   // Platform-specific AGENTS.md note
   // Claude Code reads CLAUDE.md as primary; Gemini CLI reads GEMINI.md — copy so sessions have context
@@ -1662,8 +1674,11 @@ function install(platform, isGlobal) {
                    platform === 'gemini'   ? '/learnship:ls' : '$learnship-ls';
   console.log(`\n  ${green}Done!${reset} Open a project in ${label} and run ${cyan}${firstCmd}${reset}.`);
   console.log(`  ${dim}First time? Run ${cyan}${platform === 'windsurf' ? '/new-project' : platform === 'claude' ? '/learnship:new-project' : platform === 'opencode' ? '/learnship-new-project' : platform === 'gemini' ? '/learnship:new-project' : '$learnship-new-project'}${reset}${dim} to initialize your project and create AGENTS.md.${reset}`);
-  if (platform !== 'windsurf') {
-    console.log(`  ${dim}Enable parallel subagents: add ${cyan}"parallelization": true${reset}${dim} to .planning/config.json${reset}`);
+  const parallelSupported = platform === 'claude' || platform === 'opencode' || platform === 'codex';
+  if (parallelSupported) {
+    console.log(`  ${dim}Parallel subagents are ${green}on by default${reset}${dim}. To disable: set ${cyan}"parallelization": { "enabled": false }${reset}${dim} in .planning/config.json${reset}`);
+  } else if (platform !== 'windsurf') {
+    console.log(`  ${dim}Parallel subagents: not available on ${label}. Sequential execution is used.${reset}`);
   }
 }
 

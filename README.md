@@ -181,7 +181,7 @@ Each platform gets the best experience it supports:
 
 **Cursor** uses context injection via `cursor-rules/learnship.mdc` — it gets the full workflow library, design system, and learning partner, but does not appear in the feature matrix above because it has no first-class slash command or subagent API (rules load automatically as context).
 
-**Parallel subagents:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor per plan within a wave, each with its own 200k context budget. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json`. Up to 5 concurrent agents per wave by default. All platforms default to sequential (always safe).
+**Parallel subagents:** Claude Code, OpenCode, and Codex default to parallel execution — `execute-phase` spawns a dedicated executor per plan within a wave, each with its own 200k context budget. Up to 5 concurrent agents per wave. To run sequentially, set `"parallelization": { "enabled": false }` in `.planning/config.json`. Windsurf, Cursor, and Gemini CLI use sequential execution (no real subagent API on those platforms).
 
 ---
 
@@ -232,7 +232,7 @@ It's the right tool if:
 - You're **building a real project** and want the AI to stay aligned across sessions
 - You're **learning while building** and want to actually understand what gets shipped
 - You care about **code quality and UI quality** beyond "it works"
-- You want **parallel agent execution** on Claude Code, OpenCode, Gemini CLI, or Codex CLI
+- You want **parallel agent execution** — Claude Code, OpenCode, and Codex run it by default
 - You've felt the frustration of **context loss**: repeating yourself while the agent forgets
 
 It's probably overkill for one-off scripts. Use `/quick` for that.
@@ -548,7 +548,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
 | `context` | `dev`, `research`, `review` | `dev` | Output profile: `dev` (concise), `research` (detailed), `review` (audit-focused) |
-| `parallelization.enabled` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
+| `parallelization.enabled` | `true`, `false` | `true` (Claude Code, OpenCode, Codex) / `false` (others) | Parallel subagents per plan on supported platforms |
 | `test_first` | `true`, `false` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
 | `planning.commit_mode` | `auto`, `manual` | `auto` | `auto` commits after each workflow step; `manual` skips all git commits |
 

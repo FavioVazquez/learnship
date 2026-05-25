@@ -10,13 +10,14 @@ Execute all plans in a phase. Plans run in waves — ordered by dependencies. On
 
 **Core principle:** Orchestrate, don't implement directly. Describe each plan's objective clearly, execute each plan in sequence (or in parallel via subagents), collect results.
 
-> **Platform note:** This workflow detects whether subagent spawning is available by reading `parallelization.enabled` from `.planning/config.json`. Set `"parallelization": { "enabled": true }` to enable parallel agent spawning on supported platforms. Defaults to `false` (sequential — always safe). The legacy flat `"parallelization": true` is also honored for backward compatibility.
+> **Platform note:** This workflow detects whether subagent spawning is available by reading `parallelization.enabled` from `.planning/config.json`. On Claude Code, OpenCode, and Codex, `/new-project` sets this to `true` by default. To disable: `"parallelization": { "enabled": false }`. The legacy flat `"parallelization": true` is also honored for backward compatibility.
 
 <runtime_compatibility>
 **Subagent spawning is runtime-specific:**
 - **Claude Code:** Uses `Task(subagent_type=..., ...)` — blocks until complete, returns result
 - **OpenCode / Codex:** Subagent spawning supported with platform-native dispatch
-- **Windsurf / Cursor:** No subagent spawning — always use sequential inline execution
+- **Windsurf:** No subagent spawning — always use sequential inline execution
+- **Cursor:** Cursor 2.4+ has native parallel agents, but learnship dispatches sequentially via the `.mdc` rule context (no `Task()` API available in that execution model)
 - **Gemini CLI:** Subagents exist but parallel execution limited — default to sequential
 
 **Fallback rule:** If a spawned agent completes its work (commits visible, SUMMARY.md exists) but the orchestrator never receives the completion signal, treat it as successful based on spot-checks and continue to the next wave/plan. Never block indefinitely.
@@ -194,7 +195,7 @@ Task(
 
 Spawn all plans in the wave before waiting. Wait for all agents to complete, then proceed to spot-checks.
 
-**If parallelization is disabled (sequential mode — Windsurf, Cursor, Gemini CLI, or user preference):**
+**If parallelization is disabled (sequential mode — Windsurf, Cursor, Gemini CLI, or user preference on any platform):**
 
 <persona_context>
 You are now the **learnship executor**. Implement code from plans, one task at a time.
