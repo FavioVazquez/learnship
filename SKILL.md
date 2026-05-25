@@ -103,25 +103,46 @@ Read `learning_mode` from `.planning/config.json` (default: "auto"):
 - **`auto`** — Proactively offer learning actions at natural workflow checkpoints (after planning, execution, verification)
 - **`manual`** — Only activate `@agentic-learning` when the user explicitly asks
 
-Learning checkpoints:
-- After requirements approved → `@agentic-learning brainstorm`
-- After discuss-phase → `@agentic-learning either-or`
-- After plan-phase → `@agentic-learning cognitive-load`
-- After execute-phase → `@agentic-learning reflect`
-- After verify-work passes → `@agentic-learning space`
-- After `/review` → `@agentic-learning learn` (review findings as learning material)
+Learning checkpoints (auto mode triggers these; manual mode surfaces them as tips):
+
+**Core phase loop:**
+- After requirements approved → `@agentic-learning brainstorm` (design dialogue on the requirements)
+- After `/discuss-phase` → `@agentic-learning either-or` (capture the decisions made)
+- After `/plan-phase` → `@agentic-learning cognitive-load` (decompose if plan feels overwhelming)
+- After `/execute-phase` → `@agentic-learning reflect` (consolidate the cycle)
+- After `/verify-work` passes → `@agentic-learning space` (queue concepts for spaced revisit)
+
+**Quality gates:**
+- After `/review` → `@agentic-learning learn` (most significant finding as a learning topic)
+- After `/review` (on UI changes) → `@agentic-learning quiz` (gaps in recall predict future bugs)
 - After `/challenge` → `@agentic-learning either-or` (which lens was most valuable?)
-- After `/ship` → `@agentic-learning reflect` (what went well in this cycle?)
-- After `/ideate` → `@agentic-learning brainstorm` (explore top idea collaboratively)
-- During complex quick tasks → `@agentic-learning struggle`
-- After `/forensics` → `@agentic-learning reflect` (what caused the failure?)
-- After `/extract-learnings` → `@agentic-learning space` (schedule learnings for review)
 - After `/secure-phase` → `@agentic-learning learn` (security patterns)
+- After `/ship` → `@agentic-learning reflect` (what went well in this cycle?)
+
+**Discovery, mapping, comprehension:**
+- After `/map-codebase` or `/discovery-phase` → `@agentic-learning explain` (lock in the project knowledge log)
+- When studying an unfamiliar function or pattern → `@agentic-learning explain-first` (oracy-first comprehension check)
+- After absorbing research files (RESEARCH.md, STACK.md, etc.) → `@agentic-learning quiz` (test what stuck)
+
+**Ideation and complex tasks:**
+- After `/ideate` → `@agentic-learning brainstorm` (explore top idea collaboratively)
+- During complex `/quick` tasks → `@agentic-learning struggle` (productive struggle on hard parts)
+- When stuck across multiple domains in one session → `@agentic-learning interleave` (mixed retrieval forces transfer)
+
+**Recovery and reflection:**
+- After `/forensics` → `@agentic-learning reflect` (what caused the failure?)
+- After `/extract-learnings` → `@agentic-learning space` (schedule learnings for spaced review)
 - After `/session-report` → `@agentic-learning reflect` (session-level reflection)
 
 ## Design Skill
 
-The `impeccable` skill suite is always available for any UI work. Use its steering commands (`/audit`, `/critique`, `/polish`, `/colorize`, `/animate`, `/bolder`, `/quieter`, `/distill`, `/clarify`, `/optimize`, `/harden`, `/delight`, `/extract`, `/adapt`, `/onboard`, `/normalize`, `/teach-impeccable`) when reviewing or building user-facing interfaces.
+The `impeccable` skill suite is always available for any UI work. Use its 21 steering commands when reviewing or building user-facing interfaces:
+
+**Review & critique:** `/audit`, `/critique`, `/teach-impeccable`
+**Refine & elevate:** `/polish`, `/bolder`, `/quieter`, `/distill`, `/clarify`, `/normalize`, `/extract`, `/adapt`
+**Specific concerns:** `/colorize` (color/contrast), `/typeset` (typography), `/arrange` (layout/spacing), `/animate` (motion), `/onboard` (first-time UX), `/delight` (interaction polish)
+**Engineering attributes:** `/harden` (accessibility, resilience), `/optimize` (performance), `/overdrive` (push design quality to its ceiling)
+**Foundations:** `/frontend-design` (full design system reference: typography, color, spatial, motion, interaction, responsive, UX writing)
 
 ## Mandatory Gate — No Project, No Work
 
