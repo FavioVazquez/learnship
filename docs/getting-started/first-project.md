@@ -49,32 +49,22 @@ What platforms or environments will this run on?
 
 ### Configuration questions
 
-After the project questions, `/new-project` asks about your workflow preferences. These control how the agent behaves throughout the project:
+After the project questions, `/new-project` asks how you want to configure the project. The first question is a fast path:
 
 ```
-How should the agent behave?
-→ auto (auto-approve steps, no confirmation needed)
-
-How granular should phases be?
-→ standard (5-8 phases per milestone)
-
-Which model tier for agents?
-→ balanced (large for planning, medium for execution)
-
-Enable TDD mode (write failing tests first)?
-→ no
-
-Enable multi-persona code review after verification?
-→ yes
-
-Enable ship pipeline (test → lint → commit → push → PR)?
-→ yes
+How do you want to configure this project?
+→ Quick — use recommended defaults  (1 question, ~5 seconds)
+→ Customize — walk through every setting  (~15 questions, 4 rounds)
 ```
 
-All answers are written to `.planning/config.json` — a file every workflow reads. You can change any setting later with `/settings`.
+**Quick** writes a sensible default config and moves on. It uses: `mode: auto`, `granularity: coarse`, `model_profile: balanced`, all workflow agents on (research, plan-check, verifier, review, solutions-search), ship pipeline + conventional commits + PR template on, planning docs auto-committed, parallelization off. Best for most projects — you can change any setting later with `/settings`.
+
+**Customize** is the long form. It walks four rounds of questions covering working style, granularity, model profile, learning partner, questioning depth, output verbosity, workflow agents, TDD, ship pipeline, git tracking, commit mode, and (on Claude Code, OpenCode, Codex) opt-in parallel subagents. Use this when your project has unusual conventions or you want fine-grained control upfront.
+
+All answers — quick or custom — are written to `.planning/config.json`, which every workflow reads. You can change any setting later with `/settings`.
 
 !!! info "All 22 config keys"
-    `/new-project` covers the most important settings interactively. The full schema has 22 keys including `planning.commit_mode`, `workflow.solutions_search`, `review.auto_after_verify`, and `git.branching_strategy`. See [Configuration](../configuration.md) for the complete reference.
+    `/new-project` covers the most common settings interactively. The full schema has 22 keys including `planning.commit_mode`, `workflow.solutions_search`, `review.auto_after_verify`, and `git.branching_strategy`. See [Configuration](../configuration.md) for the complete reference.
 
 ---
 

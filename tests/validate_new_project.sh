@@ -196,6 +196,33 @@ if(errs.length){console.error(errs.join('\n'));process.exit(1);}
 " && { echo "  ✓ config verification gate checks all critical keys"; PASS=$((PASS+1)); } || { echo "  ✗ config verification gate missing checks"; FAIL=$((FAIL+1)); ERRORS+=("config verification gate missing checks"); }
 
 echo ""
+echo "─── Quick Setup Mode (Step 2a) ───────────────────────────────────"
+
+# new-project must offer a Quick Setup mode so users can opt out of the
+# 15-question wizard. This is the fastest path to a usable project.
+check "new-project source has Step 2a Setup Mode" grep -q '### Step 2a — Setup Mode' "$SRC"
+check "new-project source has SETUP_MODE variable" grep -q 'SETUP_MODE = quick | custom' "$SRC"
+check "new-project source has Step 2b Customize" grep -q '### Step 2b — Customize' "$SRC"
+check "new-project source has Step 2c Write Config" grep -q '### Step 2c — Write Config' "$SRC"
+check "new-project source documents quick-mode skip" grep -q 'SETUP_MODE = quick.*Skip Step 2b' "$SRC"
+check "windsurf install has Step 2a Setup Mode" grep -q '### Step 2a — Setup Mode' "$WS"
+check "windsurf install has SETUP_MODE variable" grep -q 'SETUP_MODE = quick | custom' "$WS"
+
+# Quick Setup must be preserved across all 5 installable platforms
+TMP_QS=$(mktemp -d)
+trap "rm -rf $TMP_QS" EXIT
+for p in windsurf claude opencode gemini codex; do
+  mkdir -p "$TMP_QS/$p"
+  node "$REPO_DIR/bin/install.js" "--$p" --target "$TMP_QS/$p" > /dev/null 2>&1
+  WF="$TMP_QS/$p/learnship/workflows/new-project.md"
+  [ "$p" = "windsurf" ] && WF="$TMP_QS/$p/workflows/new-project.md"
+  if [ -f "$WF" ]; then
+    check "$p: Step 2a Setup Mode preserved through install" grep -q 'Step 2a — Setup Mode' "$WF"
+    check "$p: SETUP_MODE variable preserved through install" grep -q 'SETUP_MODE = quick' "$WF"
+  fi
+done
+
+echo ""
 echo "─── All-Platform Question Tool Coverage ──────────────────────────"
 
 # Every platform's tool name must be mentioned in the enforcement header

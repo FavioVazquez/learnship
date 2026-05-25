@@ -23,7 +23,7 @@ Initialize a new project with full context gathering, optional research, require
 
 ## Step 1: Setup
 
-<!-- LEARNSHIP_PLATFORM_LABEL -->
+You are running on **Windsurf**. Platform config directory: `.windsurf/`
 
 > **Routing protocol suspended.** While this workflow is running, every user message is an answer to a workflow question — not a task to route. Do NOT apply the request routing protocol until `/new-project` is fully complete and `.planning/PROJECT.md` exists.
 
@@ -66,7 +66,7 @@ git init
 
 Add the platform config directory to `.gitignore` so AI platform files are not tracked in the project repo:
 ```bash
-<!-- LEARNSHIP_GITIGNORE_CMD -->
+grep -q '.windsurf/' .gitignore 2>/dev/null || echo '.windsurf/' >> .gitignore
 ```
 
 Create the planning directory:
@@ -106,7 +106,7 @@ ask_user_question([
 **Quick structural scan** (for "Quick scan only" or when map already exists):
 
 ```bash
-find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' -not -path './.windsurf/*' -not -path './.claude/*' -not -path './.cursor/*' -not -path './.codex/*' -not -path './.gemini/*' -not -path './.opencode/*' | sort | head -40
+find . -maxdepth 3 -not -path './.git/*' -not -path './node_modules/*' -not -path './.planning/*' -not -path './__pycache__/*' -not -path './.venv/*' -not -path './.windsurf/*' -not -path './.windsurf/*' -not -path './.cursor/*' -not -path './.codex/*' -not -path './.gemini/*' -not -path './.opencode/*' | sort | head -40
 # PowerShell: Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.FullName -notmatch '\.git|node_modules|\.planning|__pycache__|\.venv|\.windsurf|\.claude|\.cursor|\.codex|\.gemini|\.opencode' } | Select-Object -First 40
 ```
 
@@ -121,8 +121,34 @@ Note the tech stack, key directories, and any README content internally. Use thi
 
 ## Step 2: Configuration
 
-> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each round as a blocking question using `ask_user_question` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Each round is a SEPARATE blocking call. Do NOT combine all rounds into one. Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply after EACH round before showing the next round.**
->
+> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each question as a blocking call using `ask_user_question` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply before continuing.**
+
+### Step 2a — Setup Mode (1 question)
+
+> Ask this single blocking question first. Many users just want sensible defaults — this question lets them skip the 15-question customization wizard entirely.
+
+```
+ask_user_question([
+  {
+    header: "Setup Mode",
+    question: "How do you want to configure this project?",
+    multiSelect: false,
+    options: [
+      { label: "Quick — use recommended defaults (Recommended)", description: "Skip the 15 customization questions. Uses: auto mode, coarse phases, balanced models, all workflow agents on, ship pipeline + conventional commits + PR template, auto-commit planning docs, parallelization off (you can flip it later in .planning/config.json). Best for: most projects." },
+      { label: "Customize — walk through every setting", description: "Answer ~15 questions across 4 rounds to tune working style, granularity, model profile, workflow agents, pipeline, git, and (on supported platforms) parallel subagents. Best for: teams with specific conventions or unusual project shapes." }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for the user's reply. Record as `SETUP_MODE = quick | custom`.
+
+**If `SETUP_MODE = quick`:** Skip Step 2b entirely. Jump directly to **Step 2c — Write Config** below, using the recommended defaults documented there. Do NOT ask any of the Round 1–4 questions.
+
+**If `SETUP_MODE = custom`:** Proceed through Step 2b (Rounds 1–4 below). All questions must be answered before writing config.
+
+### Step 2b — Customize Configuration (only if `SETUP_MODE = custom`)
+
 > **🛑 FORBIDDEN:** Do NOT present all questions at once as a text wall. Do NOT skip any question. Do NOT invent answers. Do NOT proceed to the config.json write step until ALL 4 rounds have been answered by the user.
 
 **Round 1 — Core settings (6 questions):**
@@ -297,11 +323,19 @@ ask_user_question([
 
 > 🛑 STOP. Wait for the user's Round 3 reply before continuing.
 
-<!-- LEARNSHIP_PARALLEL_BLOCK -->
+**Group D — Parallel execution:**
 
-> 🛑 STOP. Wait for the user's Round 4 reply (parallelization) before continuing.
+Windsurf does not support real subagents. Parallelization is automatically set to `false`.
 
-**Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.
+> 🛑 STOP. **Only if the parallel block above actually asks a question:** wait for the user's Round 4 reply before continuing. If the parallel block is informational (parallelization auto-set to `false` for the platform), no answer is needed — proceed directly to Step 2c.
+
+### Step 2c — Write Config
+
+> This step runs in **both modes**:
+> - If `SETUP_MODE = quick`: use the **recommended defaults** for every field (the values labeled "(Recommended)" in the Step 2b questions, and `parallelization.enabled = false`).
+> - If `SETUP_MODE = custom`: use the user's answers from Rounds 1–4.
+
+**Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers (or recommended defaults) to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.
 
 **Key mapping from questions to config:**
 - Working Style → `"mode"`: `"auto"` or `"interactive"`
@@ -1269,7 +1303,7 @@ node -e "const fs=require('fs');if(!fs.existsSync('AGENTS.md')){console.log('AGE
 git add AGENTS.md && git commit -m "docs: add AGENTS.md with project context"
 ```
 
-<!-- LEARNSHIP_AGENTSMD_PLATFORM_NOTE -->
+
 
 ## Step 9: Done
 

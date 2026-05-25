@@ -63,7 +63,7 @@ For each identified concern:
 
 ## Output Format
 
-Write the SECURITY.md file using the template at `/home/ec2-user/favio/agentic-development/.windsurf/learnship/learnship/templates/security.md`. Fill in:
+Write the SECURITY.md file using the template at `/home/user/learnship/.windsurf/learnship/learnship/templates/security.md`. Fill in:
 - Trust boundaries from the analysis
 - Complete threat register with STRIDE categories
 - Status for each threat (open/closed)

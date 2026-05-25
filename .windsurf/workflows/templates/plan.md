@@ -113,6 +113,14 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 - Progress table updated by execute workflow
 - Plan count can be "TBD" initially, refined during planning
 
+**Vertical slice planning (enforced by plan-phase and plan-checker):**
+- Each PLAN.md is a tracer bullet — one user-facing behavior, all layers (data → logic → API → UI → test)
+- A completed plan is demoable without completing other plans
+- Plan descriptions in this roadmap should reflect what users experience, not which layer is being built
+  - ✗ "01-01: Create database schema" — horizontal, not demoable alone
+  - ✓ "01-01: User can register and receive confirmation email" — vertical, demoable
+- Exception: `single_layer_justified: true` in PLAN.md frontmatter for legitimately single-layer phases
+
 **Success criteria:**
 - 2-5 observable behaviors per phase (from user's perspective)
 - Cross-checked against requirements during roadmap creation

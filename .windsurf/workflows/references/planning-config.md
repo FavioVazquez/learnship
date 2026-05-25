@@ -210,7 +210,7 @@ New sections and fields added in v2.1.0 for security, parallelization control, g
 | Option | Default | Description |
 |--------|---------|-------------|
 | `workflow.security_enforcement` | `true` | Enable per-phase security verification via `/secure-phase` |
-| `workflow.discuss_mode` | `"discuss"` | Discussion mode for discuss-phase |
+| `workflow.discuss_mode` | `"discuss"` | Discussion depth for `discuss-phase` and `new-project` questioning. `"discuss"` = standard (4 focused exchanges). `"deep"` = extended questioning, walks every decision branch until shared understanding — equivalent to passing `--deep` flag |
 | `workflow.tdd_mode` | `false` | Instruct planner to apply `type: tdd` to eligible tasks |
 
 ### Parallelization Section (replaces flat boolean)
