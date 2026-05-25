@@ -102,6 +102,11 @@ Or just work normally — the rule file activates skills at workflow checkpoints
 | Agent personas (17) | ✅ Inline `<persona_context>` blocks |
 | Marketplace install | ✅ `/add-plugin learnship` |
 | Interactive questions | ✅ Text fallback |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 ## Manual rule install (before marketplace approval)
 

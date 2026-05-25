@@ -35,7 +35,7 @@ All learnship workflows use the `/learnship:` prefix:
 /learnship:verify-work 1
 /learnship:quick "fix the login bug"
 /learnship:help
-/learnship:review              # v2.0: multi-persona code review
+/learnship:review              # two-pass review: spec compliance + quality (v2.4.0)
 /learnship:ship                # v2.0: test → commit → push → PR
 /learnship:compound            # v2.0: capture solved problem as knowledge
 /learnship:challenge           # v2.0: stress-test scope
@@ -122,6 +122,11 @@ Hooks are installed to `~/.claude/settings.json` automatically. No configuration
 | Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
 | Session hooks | ✅ 4 hooks |
 | Interactive questions | ✅ `AskUserQuestion` |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 ## Tips
 

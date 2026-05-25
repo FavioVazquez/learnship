@@ -111,7 +111,7 @@ Use this any time you feel the project state might be inconsistent: after a long
 /plan-phase N
 /execute-phase N
 /verify-work N
-/review                      # multi-persona code review (v2.0)
+/review                      # two-pass review: spec compliance + quality (v2.4.0)
 /ship                        # test → commit → push → PR (v2.0)
 /compound                    # capture what you learned (v2.0)
 

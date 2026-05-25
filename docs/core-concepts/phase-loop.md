@@ -122,9 +122,10 @@ v2.1 adds **goal-backward verification** (checks what must be TRUE for the goal 
 
 ```
 /review
+/review --quality-only   # skip spec compliance, run quality review only
 ```
 
-Multi-persona code review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Only activates lenses relevant to the diff. Produces severity-ranked findings (P0–P3).
+Two-pass code review. **Pass 1** checks spec compliance — reads PLAN.md `must_haves` and classifies each deliverable as COVERED, PARTIAL, or MISSING before proceeding. **Pass 2** runs quality review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Only activates lenses relevant to the diff. Produces severity-ranked findings (P0–P3) with confidence scores.
 
 See [Workflow Reference → Compounding & Quality](../workflow-reference/compounding-quality.md) for details.
 

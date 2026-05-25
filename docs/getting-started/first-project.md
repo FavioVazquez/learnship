@@ -234,23 +234,24 @@ When everything passes:
 
 If `review.auto_after_verify` is `true` in your config, the agent automatically proceeds to the review step. Otherwise it suggests it in the done banner.
 
+**Optional live smoke test:** If `@playwright/mcp` is configured on your platform, `/verify-work` can walk the golden path for UI deliverables automatically — navigating to the app, walking through each test, and checking the browser console for JS errors. Supported on any MCP-enabled platform (all 6 platforms). See [Playwright MCP setup](https://github.com/microsoft/playwright-mcp).
+
 ---
 
 ## Step 10: Review Phase 1
 
 ```
-/review
+/review              # two-pass review (default)
+/review --quality-only   # skip spec compliance, quality review only
 ```
 
-Multi-persona code review through **6 lenses**: correctness, testing, security, performance, maintainability, and adversarial. Only lenses relevant to the diff are activated (e.g., no security lens for a CSS-only change).
+`/review` now runs two passes:
 
-The output is severity-ranked findings (P0–P3) with confidence scores. Address any P0 or P1 findings before shipping.
+**Pass 1 — Spec Compliance:** Checks whether the diff actually delivers what was planned. Reads PLAN.md `must_haves` and classifies each deliverable as COVERED, PARTIAL, or MISSING. If any are missing, you decide: stop and fix them, or continue to the quality pass with gaps flagged as P1 findings. This catches "we built the wrong thing" before you spend time reviewing how well it was built.
 
-```bash
-/review                # interactive: discuss findings
-/review --report       # report only, no conversation
-/review --autofix      # apply fixes automatically
-```
+**Pass 2 — Quality:** Multi-persona code review through 6 lenses: correctness, testing, security, performance, maintainability, and adversarial. Only lenses relevant to the diff are activated.
+
+The output is severity-ranked findings (P0–P3) with confidence scores. Address any P0 or P1 findings before shipping. Spec compliance result appears in the report header.
 
 ---
 

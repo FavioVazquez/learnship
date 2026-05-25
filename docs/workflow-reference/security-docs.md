@@ -25,7 +25,7 @@ Per-phase security verification using the STRIDE threat model.
 
 1. Reads PLAN.md threat data and SUMMARY.md security flags
 2. Scans files modified in the phase for common security patterns
-3. Builds a STRIDE threat register (Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation)
+3. Builds a STRIDE threat register AND cross-references OWASP Top 10 (A01–A10)
 4. Classifies each threat as OPEN or CLOSED
 5. Presents open threats for resolution (verify, accept, or review individually)
 6. Writes SECURITY.md using the security template
@@ -40,6 +40,25 @@ Per-phase security verification using the STRIDE threat model.
 | **I**nfo Disclosure | Can sensitive data leak? |
 | **D**enial of Service | Can the system be made unavailable? |
 | **E**levation of Privilege | Can someone gain unauthorized access? |
+
+**OWASP Top 10 (2021) cross-reference:**
+
+Every `/secure-phase` audit now cross-maps STRIDE findings against the OWASP Top 10. The security-auditor agent checks each category for relevance to the phase's changes:
+
+| # | Category | STRIDE mapping |
+|---|----------|---------------|
+| A01 | Broken Access Control | Elevation |
+| A02 | Cryptographic Failures | Info Disclosure |
+| A03 | Injection | Tampering |
+| A04 | Insecure Design | Spoofing/Tampering/Elevation |
+| A05 | Security Misconfiguration | Spoofing/Info Disclosure/Elevation |
+| A06 | Vulnerable Components | Tampering/Info Disclosure/Elevation |
+| A07 | Auth Failures | Spoofing |
+| A08 | Software/Data Integrity | Tampering |
+| A09 | Logging/Monitoring Failures | Repudiation |
+| A10 | SSRF | Tampering/Info Disclosure |
+
+**Output:** Every `SECURITY.md` now includes an OWASP coverage table marking each category as Relevant, N/A, or Found. This makes audits exhaustive and audit-trail-friendly — no category can be silently skipped.
 
 **Threat dispositions:**
 

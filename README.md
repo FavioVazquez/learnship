@@ -140,7 +140,7 @@ flowchart LR
 | **2. Plan** | `/plan-phase N` | Agent researches the domain, creates vertical slice plans (tracer bullets), verifies them — including horizontal slice detection (v2.3.4) |
 | **3. Execute** | `/execute-phase N` | Plans run in dependency order, one atomic commit per task |
 | **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
-| **5. Review** | `/review` | Multi-persona code review through 6 lenses (v2.0) |
+| **5. Review** | `/review` | Two-pass review: spec compliance check then 6-lens quality review (v2.4.0) |
 | **6. Ship** | `/ship` | Test → lint → commit → push → PR (v2.0) |
 | **7. Compound** | `/compound` | Capture what you learned as searchable documentation (v2.0) |
 
@@ -193,8 +193,8 @@ learnship gives you that harness as a portable, open-source layer that adds:
 
 - **Persistent memory.** `/new-project` generates an `AGENTS.md` loaded automatically every session. No more repeating yourself.
 - **Structured process.** A repeatable phase loop with spec-driven plans, wave-ordered execution, and UAT-driven verification.
-- **Knowledge compounding.** `/compound` captures solved problems. `/review` runs multi-persona code review. `/ship` runs the full delivery pipeline.
-- **Security & recovery.** `/secure-phase` for STRIDE verification. `/forensics` for post-mortem. `/undo` for safe revert.
+- **Knowledge compounding.** `/compound` captures solved problems. `/review` runs two-pass code review (spec compliance then quality). `/ship` runs the full delivery pipeline.
+- **Security & recovery.** `/secure-phase` for STRIDE + OWASP Top 10 verification. `/forensics` for post-mortem. `/undo` for safe revert.
 - **Session intelligence.** Hooks, context profiles, interactive questions, agent delegation. ([v2.2 details →](#whats-new-in-v22))
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped.
 
@@ -252,6 +252,18 @@ It's probably overkill for one-off scripts. Use `/quick` for that.
 
 ## 🆕 What's New
 
+### What's new in v2.4.0
+
+v2.4.0 adds spec compliance checking to `/review`, OWASP Top 10 coverage to `/secure-phase`, a numeric score to `/health`, and Playwright MCP smoke-test guidance to `/verify-work` and `/ship`:
+
+**Two-stage `/review`**: Pass 1 checks spec compliance — reads PLAN.md must-haves and classifies each as COVERED / PARTIAL / MISSING — before Pass 2 runs the existing 6-persona quality review. The spec compliance result appears in the report header. Use `--quality-only` to skip Pass 1 and run only the quality review.
+
+**OWASP Top 10 in `/secure-phase`**: The security-auditor agent now cross-maps STRIDE findings against OWASP Top 10 (A01–A10). Every SECURITY.md output includes an OWASP coverage table alongside the STRIDE analysis.
+
+**Numeric `/health` score**: The health check now outputs a 0–100 numeric score alongside the qualitative status. Starts at 100, deducts per issue found. Bands: HEALTHY (90–100), DEGRADED (70–89), BROKEN (0–69).
+
+**Playwright MCP guidance in `/verify-work` and `/ship`**: Optional live UI smoke-test sections activate when `@playwright/mcp` is configured. Supported on all 6 MCP-capable platforms (Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, Gemini CLI). In `/verify-work`, walks the golden path using `mcp__playwright__*` tools. In `/ship`, runs a quick smoke test before creating the PR.
+
 ### What's new in v2.3.4
 
 v2.3.4 adds two planning quality features:
@@ -296,7 +308,7 @@ v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
 
 | Category | New workflows |
 |----------|--------------|
-| **Security** | `/secure-phase` — per-phase STRIDE threat verification |
+| **Security** | `/secure-phase` — per-phase STRIDE + OWASP Top 10 security verification |
 | **Documentation** | `/docs-update` — generate and verify project docs against codebase |
 | **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
 | **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
@@ -373,7 +385,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | `/discuss-phase [N]` | Capture implementation decisions before planning | Before every phase |
 | `/plan-phase [N]` | Research + create + verify plans | After discussing a phase |
 | `/execute-phase [N]` | Wave-ordered execution of all plans | After planning |
-| `/verify-work [N]` | Manual UAT with auto-diagnosis and fix planning | After execution |
+| `/verify-work [N]` | Manual UAT with auto-diagnosis and fix planning. Optional Playwright MCP live UI smoke test when `@playwright/mcp` is configured. | After execution |
 | `/complete-milestone` | Archive milestone, tag release, prepare next | All phases verified |
 | `/audit-milestone` | Pre-release: requirement coverage, stub detection | Before completing milestone |
 | `/new-milestone [name]` | Start next version cycle | After completing a milestone |
@@ -436,9 +448,9 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | Workflow | Purpose | When to use |
 |----------|---------|-------------|
 | `/compound` | Capture solved problem as searchable documentation | After `/debug`, `/verify-work`, or any aha moment |
-| `/review` | Multi-persona code review (6 lenses) | After `/verify-work`, before shipping |
+| `/review` | Two-pass review: spec compliance check then 6-persona quality review. `--quality-only` skips spec compliance. | After `/verify-work`, before shipping |
 | `/challenge` | Stress-test scope through product + engineering lenses | Before committing to a milestone or large feature |
-| `/ship` | Test → lint → commit → push → PR | After review, ready to deploy |
+| `/ship` | Test → lint → commit → push → PR. Optional Playwright MCP smoke test before PR creation when `@playwright/mcp` is configured. | After review, ready to deploy |
 | `/ideate` | Codebase-grounded idea generation | Before `/discuss-milestone`, between milestones |
 | `/guard` | Safety mode: protect sensitive directories | Working on auth, payments, migrations |
 | `/sync-docs` | Detect stale documentation | Before `/complete-milestone`, after refactors |
@@ -449,7 +461,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 |----------|---------|-------------|
 | `/settings` | Interactive config editor | Change mode, toggle agents |
 | `/set-profile [quality\|balanced\|budget]` | One-step model profile switch | Quick cost/quality adjustment |
-| `/health` | Project health check | Stale files, missing artifacts |
+| `/health` | Project health check with numeric 0–100 score (HEALTHY ≥90, DEGRADED ≥70, BROKEN <70) | Stale files, missing artifacts |
 | `/cleanup` | Archive old artifacts | End of milestone |
 | `/update` | Update the platform itself | Check for new workflows |
 | `/reapply-patches` | Restore local edits after update | After `/update` if you had local changes |
@@ -687,7 +699,7 @@ The **impeccable** skill suite is always active as project context for any UI wo
 /plan-phase 1             # Research + plan + verify
 /execute-phase 1          # Wave-ordered execution
 /verify-work 1            # Manual UAT
-/review                   # v2.0: multi-persona code review
+/review                   # two-pass review: spec compliance + quality (v2.4.0)
 /ship                     # v2.0: test → commit → push → PR
 /compound                 # v2.0: capture what you learned
                           # Repeat for each phase
