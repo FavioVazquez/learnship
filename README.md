@@ -924,7 +924,7 @@ learnship/
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
 ├── tests/
-│   └── run_all.sh               # 16 test suites, 1200+ checks across 6 platforms
+│   └── run_all.sh               # 17 test suites, 1330+ checks across 6 platforms
 ├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
 ├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)

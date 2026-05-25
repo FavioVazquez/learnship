@@ -121,13 +121,39 @@ Note the tech stack, key directories, and any README content internally. Use thi
 
 ## Step 2: Configuration
 
-> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each round as a blocking question using `AskUserQuestion` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Each round is a SEPARATE blocking call. Do NOT combine all rounds into one. Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply after EACH round before showing the next round.**
->
+> **🔴 MANDATORY INTERACTIVE QUESTIONS — You MUST present each question as a blocking call using `AskUserQuestion` (or your platform's equivalent: `ask_user_question` on Windsurf, `ask_user` on Gemini, `request_user_input` on Codex). Do NOT render questions as plain text or markdown lists — you MUST use the interactive question tool so the user clicks options. Wait for the user's reply before continuing.**
+
+### Step 2a — Setup Mode (1 question)
+
+> Ask this single blocking question first. Many users just want sensible defaults — this question lets them skip the 15-question customization wizard entirely.
+
+```
+AskUserQuestion([
+  {
+    header: "Setup Mode",
+    question: "How do you want to configure this project?",
+    multiSelect: false,
+    options: [
+      { label: "Quick — use recommended defaults (Recommended)", description: "Skip the 15 customization questions. Uses: auto mode, coarse phases, balanced models, all workflow agents on, ship pipeline + conventional commits + PR template, auto-commit planning docs, parallelization off (you can flip it later in .planning/config.json). Best for: most projects." },
+      { label: "Customize — walk through every setting", description: "Answer ~15 questions across 4 rounds to tune working style, granularity, model profile, workflow agents, pipeline, git, and (on supported platforms) parallel subagents. Best for: teams with specific conventions or unusual project shapes." }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for the user's reply. Record as `SETUP_MODE = quick | custom`.
+
+**If `SETUP_MODE = quick`:** Skip Step 2b entirely. Jump directly to **Step 2c — Write Config** below, using the recommended defaults documented there. Do NOT ask any of the Round 1–4 questions.
+
+**If `SETUP_MODE = custom`:** Proceed through Step 2b (Rounds 1–4 below). All questions must be answered before writing config.
+
+### Step 2b — Customize Configuration (only if `SETUP_MODE = custom`)
+
 > **🛑 FORBIDDEN:** Do NOT present all questions at once as a text wall. Do NOT skip any question. Do NOT invent answers. Do NOT proceed to the config.json write step until ALL 4 rounds have been answered by the user.
 
-**Round 1 — Core settings (4 questions):**
+**Round 1 — Core settings (6 questions):**
 
-> Present these 4 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
+> Present these 6 questions as a SINGLE blocking `AskUserQuestion` call. STOP and wait for the user's reply before proceeding to Round 2.
 
 ```
 AskUserQuestion([
@@ -167,6 +193,25 @@ AskUserQuestion([
       { label: "Balanced (Recommended)", description: "Large for planning, medium for execution — good quality/cost ratio" },
       { label: "Quality", description: "Large-tier models for all agents (highest cost, best results)" },
       { label: "Budget", description: "Medium for code, small for research/verification (lowest cost)" }
+    ]
+  },
+  {
+    header: "Questioning Depth",
+    question: "How deep should discuss-phase and new-project question you?",
+    multiSelect: false,
+    options: [
+      { label: "Standard (Recommended)", description: "4 focused exchanges per area — fast and sufficient for most projects" },
+      { label: "Deep", description: "Extended questioning: walks every decision branch until shared understanding is reached. Produces richer CONTEXT.md and PROJECT.md. Good for complex or unfamiliar domains." }
+    ]
+  },
+  {
+    header: "Output Profile",
+    question: "How verbose should agent responses be?",
+    multiSelect: false,
+    options: [
+      { label: "Dev (Recommended)", description: "Concise, action-oriented — code first, brief rationale. Low verbosity." },
+      { label: "Research", description: "Detailed explanations, alternatives, and context. High verbosity." },
+      { label: "Review", description: "Audit-focused — findings, severity, recommendations. Medium verbosity." }
     ]
   }
 ])
@@ -280,15 +325,23 @@ AskUserQuestion([
 
 <!-- LEARNSHIP_PARALLEL_BLOCK -->
 
-> 🛑 STOP. Wait for the user's Round 4 reply (parallelization) before continuing.
+> 🛑 STOP. **Only if the parallel block above actually asks a question:** wait for the user's Round 4 reply before continuing. If the parallel block is informational (parallelization auto-set to `false` for the platform), no answer is needed — proceed directly to Step 2c.
 
-**Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.
+### Step 2c — Write Config
+
+> This step runs in **both modes**:
+> - If `SETUP_MODE = quick`: use the **recommended defaults** for every field (the values labeled "(Recommended)" in the Step 2b questions, and `parallelization.enabled = false`).
+> - If `SETUP_MODE = custom`: use the user's answers from Rounds 1–4.
+
+**Now create `.planning/config.json`** — use EXACTLY this schema. Map the user's answers (or recommended defaults) to these keys. Do NOT invent keys. Do NOT use flat keys like `working_style`, `model_tier`, `platform`, `milestone`, or `phases` — those are WRONG.
 
 **Key mapping from questions to config:**
 - Working Style → `"mode"`: `"auto"` or `"interactive"`
 - Granularity → `"granularity"`: `"coarse"`, `"standard"`, or `"fine"`
 - Learning Partner → `"learning_mode"`: `"auto"` or `"manual"`
 - AI Models → `"model_profile"`: `"balanced"`, `"quality"`, or `"budget"`
+- Questioning Depth → `"workflow.discuss_mode"`: `"discuss"` (Standard) or `"deep"` (Deep)
+- Output Profile → `"context"`: `"dev"` (Dev), `"research"` (Research), or `"review"` (Review)
 - Research → `"workflow.research"`: `true` or `false`
 - Plan Check → `"workflow.plan_check"`: `true` or `false`
 - Verifier → `"workflow.verifier"`: `true` or `false`
@@ -308,6 +361,7 @@ Create `.planning/config.json` with all settings:
   "granularity": "coarse|standard|fine",
   "model_profile": "quality|balanced|budget",
   "learning_mode": "auto|manual",
+  "context": "dev|research|review",
   "test_first": false|true,
   "planning": {
     "commit_docs": true|false,
@@ -322,7 +376,7 @@ Create `.planning/config.json` with all settings:
     "review": true|false,
     "solutions_search": true|false,
     "security_enforcement": true|false,
-    "discuss_mode": "discuss",
+    "discuss_mode": "discuss|deep",
     "tdd_mode": false|true
   },
   "parallelization": {
@@ -380,6 +434,8 @@ try{
   if(!['auto','manual'].includes(c.learning_mode)) errs.push('learning_mode must be auto|manual');
   if(typeof c.test_first!=='boolean') errs.push('test_first must be boolean');
   if(!c.planning||!['auto','manual'].includes(c.planning.commit_mode)) errs.push('planning.commit_mode must be auto|manual');
+  if(c.context&&!['dev','research','review'].includes(c.context)) errs.push('context must be dev|research|review');
+  if(c.workflow&&c.workflow.discuss_mode&&!['discuss','deep'].includes(c.workflow.discuss_mode)) errs.push('workflow.discuss_mode must be discuss|deep');
   if(!c.workflow||typeof c.workflow.research!=='boolean') errs.push('workflow.research must be boolean');
   if(!c.workflow||typeof c.workflow.plan_check!=='boolean') errs.push('workflow.plan_check must be boolean');
   if(!c.workflow||typeof c.workflow.verifier!=='boolean') errs.push('workflow.verifier must be boolean');
@@ -424,7 +480,25 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-This step is **strictly sequential**. You must complete each numbered exchange fully before moving to the next. Do not batch questions. Do not skip exchanges. Do not proceed to Step 4 until Exchange 4 is complete.
+**Detect questioning mode:** Check for `--deep` flag in the `/new-project` command. If not present, ask the user:
+
+```
+AskUserQuestion([
+  {
+    header: "Questioning Depth",
+    question: "How deep do you want me to go with questions before writing PROJECT.md?",
+    multiSelect: false,
+    options: [
+      { label: "Standard (Recommended)", description: "4 focused exchanges — enough for a sharp PROJECT.md" },
+      { label: "Deep", description: "Grill-me style — I walk every open branch until we reach shared understanding. Takes longer, produces a richer PROJECT.md" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for the user's reply. Record mode as `QUESTIONING_MODE = standard | deep`.
+
+This step is **strictly sequential**. You must complete each numbered exchange fully before moving to the next. Do not batch questions. Do not skip exchanges. Do not proceed to Step 4 until the gate check passes.
 
 **Exchange 1 — Opening question:**
 
@@ -465,12 +539,39 @@ Based on all previous answers, ask a third follow-up that clarifies scope, edge 
 >
 > If any count is wrong, go back and complete the missing exchanges. Do NOT proceed with fewer than 4 exchanges under any circumstances — even if the user's first answer was extremely detailed.
 
+**If `QUESTIONING_MODE = standard`:**
+
 Verify internally: do you have `ANSWER_1`, `ANSWER_2`, `ANSWER_3`, and `ANSWER_4` recorded? If any is missing, go back and ask it. Only after all four answers are in hand may you ask:
 
 "I think I have a solid picture of what you're building. Ready for me to write PROJECT.md, or is there more you want to cover first?"
 
 - **Write PROJECT.md** → proceed to Step 4
 - **More to cover** → continue asking follow-ups, then re-ask this gate question
+
+**If `QUESTIONING_MODE = deep`:**
+
+After Exchange 4, continue with the extended deep questioning loop:
+- Identify the single biggest remaining unknown that would change the direction, scope, or architecture of PROJECT.md. Ask it. Provide your recommended answer with each question.
+- If an answer opens a new branch (a sub-decision), follow that branch before moving on.
+- If you can explore the codebase to resolve a question yourself, do so instead of asking.
+- Continue until you judge that all major branches are resolved. Then ask:
+
+```
+AskUserQuestion([
+  {
+    header: "Shared Understanding Check",
+    question: "I've walked through every major open question I can identify. Do you feel we have a complete shared picture of what you want to build?",
+    multiSelect: false,
+    options: [
+      { label: "Yes — write PROJECT.md", description: "All key decisions and scope are clear" },
+      { label: "There's still something open", description: "Keep going on a specific area" },
+      { label: "Let me add context", description: "I have something to add before you write" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for user reply. If "Yes" → proceed to Step 4. Otherwise continue drilling.
 
 Use the questioning techniques from `@./references/questioning.md` and domain-aware probes from `@./references/domain-probes.md` to shape the follow-up questions. When the user mentions a known domain (auth, real-time, dashboard, API, database, search, file uploads, caching, testing, deployment, AI/ML), use the relevant probes to ask sharper questions.
 
@@ -586,13 +687,15 @@ Spawn 4 parallel researcher agents — one per research dimension. Each agent wr
 
 ```
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Stack research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
     Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
@@ -625,20 +728,32 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/STACK.md
     Required sections: ## Recommended Stack, ## Alternatives Considered, ## What NOT to Use, ## Versions
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write STACK.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/STACK.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/STACK.md';if(!fs.existsSync(f)){console.log('STACK_MISSING');process.exit(1);}console.log('STACK_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `STACK_MISSING`: write the file and re-run until `STACK_OK`.
   "
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Features research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
     Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
@@ -671,20 +786,32 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/FEATURES.md
     Required sections: ## Table Stakes, ## Differentiators, ## Anti-Features
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write FEATURES.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/FEATURES.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/FEATURES.md';if(!fs.existsSync(f)){console.log('FEATURES_MISSING');process.exit(1);}console.log('FEATURES_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `FEATURES_MISSING`: write the file and re-run until `FEATURES_OK`.
   "
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Architecture research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
     Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
@@ -717,20 +844,32 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/ARCHITECTURE.md
     Required sections: ## Component Boundaries, ## Data Flow, ## Build Order, ## Integration Points
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write ARCHITECTURE.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/ARCHITECTURE.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/ARCHITECTURE.md';if(!fs.existsSync(f)){console.log('ARCH_MISSING');process.exit(1);}console.log('ARCH_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `ARCH_MISSING`: write the file and re-run until `ARCH_OK`.
   "
 )
 
 Task(
-  subagent_type="learnship-researcher",
+  subagent_type="learnship-project-researcher",
   description="Pitfalls research",
   prompt="
     <agent_definition>
-    You are a learnship researcher. Your training data is 6-18 months stale — treat it as hypothesis, not fact.
-    Verify before asserting. Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
+    You are a learnship project researcher. You answer 'What does this domain ecosystem look like?' and produce research files that inform roadmap creation.
+    Your training data is 6-18 months stale — treat it as hypothesis, not fact. Verify before asserting.
+    Flag uncertainty with confidence levels (HIGH/MEDIUM/LOW). Be prescriptive: 'Use X because Y' not 'Options are X, Y, Z.'
     Tool priority: 1. WebSearch (ecosystem discovery — always include current year), 2. WebFetch (official docs), 3. Codebase scan.
+    Investigation, not confirmation — gather evidence first, recommend second.
     </agent_definition>
 
     <objective>
@@ -763,9 +902,19 @@ Task(
     </quality_gate>
 
     <output>
-    Write to: .planning/research/PITFALLS.md
     Required sections: ## Common Mistakes, ## Warning Signs, ## Prevention Strategies
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write PITFALLS.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/research/PITFALLS.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/PITFALLS.md';if(!fs.existsSync(f)){console.log('PITFALLS_MISSING');process.exit(1);}console.log('PITFALLS_OK — '+fs.readFileSync(f,'utf8').length+' chars');"
+    ```
+
+    If `PITFALLS_MISSING`: write the file and re-run until `PITFALLS_OK`.
   "
 )
 ```
@@ -774,12 +923,19 @@ After all 4 agents complete, spawn a synthesizer to create SUMMARY.md from the o
 
 ```
 Task(
-  subagent_type="learnship-researcher",
-  description="Synthesize research",
+  subagent_type="learnship-research-synthesizer",
+  description="Synthesize research into SUMMARY.md",
   prompt="
+    <agent_definition>
+    You are a learnship research synthesizer. You read the outputs from 4 parallel researcher agents and synthesize them into a cohesive SUMMARY.md.
+    Synthesize, don't concatenate — integrate findings across all 4 files into a unified narrative.
+    Be opinionated: the roadmapper needs clear recommendations, not wishy-washy summaries.
+    Derive roadmap implications from combined research. Identify confidence levels and gaps.
+    </agent_definition>
+
     <objective>
     Synthesize the 4 research files into a single SUMMARY.md.
-    Read all 4 files, extract the key findings, and write a cohesive summary.
+    Read all 4 files, extract the key findings, and write a cohesive summary that informs roadmap creation.
     </objective>
 
     <files_to_read>
@@ -789,10 +945,34 @@ Task(
     - .planning/research/PITFALLS.md
     </files_to_read>
 
+    <downstream_consumer>
+    Your SUMMARY.md is consumed by the roadmapper which uses it to structure phases.
+    Executive Summary → quick understanding. Key Findings → tech decisions. Implications → phase structure.
+    Research Flags → which phases need deeper research. Gaps → what to flag for validation.
+    </downstream_consumer>
+
     <output>
-    Write to: .planning/research/SUMMARY.md
-    Required sections: ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls
+    Required sections: ## Executive Summary, ## Recommended Stack, ## Table Stakes Features, ## Key Architecture Decisions, ## Top Pitfalls, ## Implications for Roadmap, ## Confidence Assessment, ## Gaps
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write SUMMARY.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the synthesized content to `.planning/research/SUMMARY.md` using your write tool now.
+
+    Then verify it was written:
+    ```
+    node -e "const fs=require('fs');const f='.planning/research/SUMMARY.md';if(!fs.existsSync(f)){console.log('SUMMARY_MISSING');process.exit(1);}const c=fs.readFileSync(f,'utf8');const secs=['Executive Summary','Recommended Stack','Top Pitfalls','Implications for Roadmap'];const missing=secs.filter(s=>!c.includes(s));if(missing.length){console.log('SUMMARY_INCOMPLETE — missing: '+missing.join(', '));process.exit(1);}console.log('SUMMARY_OK — '+c.length+' chars');"
+    ```
+
+    If `SUMMARY_MISSING` or `SUMMARY_INCOMPLETE`: write the file and re-run until `SUMMARY_OK`.
+
+    <quality_gate>
+    - [ ] File physically written to .planning/research/SUMMARY.md (verified by node -e above)
+    - [ ] Synthesized, not concatenated — findings are integrated
+    - [ ] Opinionated — clear recommendations emerge
+    - [ ] Actionable — roadmapper can structure phases from implications
+    - [ ] Honest — confidence levels reflect actual source quality
+    </quality_gate>
   "
 )
 ```
@@ -809,6 +989,11 @@ Be comprehensive but opinionated — "Use X because Y" not "Options are X, Y, Z.
 Investigation, not confirmation — gather evidence first, recommend second.
 Your research feeds the roadmapper: STACK.md → tech decisions, FEATURES.md → what to build, ARCHITECTURE.md → system structure, PITFALLS.md → risk flags.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[36m  learnship-project-researcher(Your training data is 6–18 months stale — verify before asserting)\033[0m\n\n"
+> ```
 
 Read `@./agents/project-researcher.md` for the full persona definition.
 
@@ -984,6 +1169,11 @@ Every v1 requirement maps to exactly one phase. Every phase has observable succe
 Goal-backward: start from what the user needs, work backward to what must be built first.
 Dependencies drive order. Phases should be deliverable — each produces something testable.
 </persona_context>
+
+> **Announce persona** — print this before proceeding:
+> ```bash
+> printf "\n  \033[35m  learnship-roadmapper(Transform requirements into a phased roadmap)\033[0m\n\n"
+> ```
 
 Read `@./agents/roadmapper.md` for the full persona definition.
 

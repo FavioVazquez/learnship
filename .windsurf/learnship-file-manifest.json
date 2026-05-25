@@ -1,6 +1,6 @@
 {
   "version": "2.4.0",
-  "timestamp": "2026-05-25T07:17:14.964Z",
+  "timestamp": "2026-05-25T09:44:10.863Z",
   "files": {
     "learnship/VERSION": "07b7164b80b10ee59f56ad6465e3b6c2cf127bfec26fc2b71638020b19d7f5c8",
     "learnship/agents/challenger.md": "765d15997aeeb0c79008b53ff387d865510572600d8c6450bd97e090a8fc464d",
@@ -17,7 +17,7 @@
     "learnship/agents/research-synthesizer.md": "e96f5b6bbab7971c076a4961b349c73d09299ed239a05eeb65fbe1d132d5fd33",
     "learnship/agents/researcher.md": "8c1ce8595a0f4451b8428d6140f39953461eea1c84dedd60fcbe24b95b463832",
     "learnship/agents/roadmapper.md": "9cf1f8f6912b107835b3d449549153c894e3582e7583875ff8671ab37420b388",
-    "learnship/agents/security-auditor.md": "f44f08e1ee5f6c295d4310307ea3dc7f2582da27729a72bcc8f2d2954c7650b3",
+    "learnship/agents/security-auditor.md": "22c1c120fce67269212c21ab33e966bd6d100f9c8aec659d4167b55df6f6cda5",
     "learnship/agents/solution-writer.md": "1cc12d32e74c1c0859371302d1596d1b1feaa79d61bd2ed957ba80ec264b160c",
     "learnship/agents/verifier.md": "b2016e338586a6902274bd3789cfdbd78bb1d81e30c1e8738866346401a8f02f",
     "learnship/contexts/dev.md": "dcb0de9dce33cf41cf4cf356a382ec5832d6be99054367925614d4b50349ca61",
@@ -69,12 +69,12 @@
     "learnship/workflows/discuss-milestone.md": "3dd9aa254aecd4ac2916cc4fd5095c20619b582bfc8cf1bde0720f66559a6be8",
     "learnship/workflows/discuss-phase.md": "841458d1f305cfb715d25e7afd34ce6282d4861ad42c4ec38a199d60b35effe9",
     "learnship/workflows/docs-update.md": "32e1925fc6c7ba176b61e57c86de7f5b8cac66be7dd71717737d910015a48528",
-    "learnship/workflows/execute-phase.md": "7b16ca7e1a591a840b300d1de01b2bf7ddf00052d16bada59c51553ca3cbaf44",
+    "learnship/workflows/execute-phase.md": "06778c3eccf3b81893ea55f1b32ebfe389edcd3871059bbb7d48fb8afb7c2ce9",
     "learnship/workflows/execute-plan.md": "2583431986108e0fff61944939646b8121787da901e5b2970c93e0e5f6b74861",
     "learnship/workflows/extract-learnings.md": "665626cb596794934848abaf5c7e12f799ac1071eaf787392bd7d1f7361f9efa",
     "learnship/workflows/forensics.md": "be46ca6b01666ccf2a4f440466f577af6759a01f791caf7914e4aca0a9dd860f",
     "learnship/workflows/guard.md": "78042dc9f944c9454b82b6e52fcaa1795e96a4fc5d9ca7bddd7160f05fcf4574",
-    "learnship/workflows/health.md": "06c9e9dd456a1db805247649e2d91deef69c341f851bbfbc64ea96498c1dab61",
+    "learnship/workflows/health.md": "5486a80feb7bf3f4f44db8e2bcfcbc47dd7a8d2f3e547128117baee83131a98f",
     "learnship/workflows/help.md": "fdeca96b9bea410b4df47cbb2e6655a3bb3efcb9ce57da6e8d60ed434223e8fb",
     "learnship/workflows/ideate.md": "baad2755310030b8a809bf6d6082c22959d413be07d483a7fa2dd342c3fef943",
     "learnship/workflows/insert-phase.md": "5e86c99feebac3858876ed69b9a47eb8468ae36babe7b048830890659cbb5121",
@@ -98,17 +98,17 @@
     "learnship/workflows/remove-phase.md": "1452de002e22d782bc75c8ed6ddc393e0035e1fc3f53627c3b76fa0aa237b571",
     "learnship/workflows/research-phase.md": "b3cddab17a85f67f9f31406c2d50faca7f3f4a90d2cb4e9caf3678513a2fa517",
     "learnship/workflows/resume-work.md": "e33312561d31d5915cff93b7310072a2ef99b1efd31dafb9b815e26293ebd2f3",
-    "learnship/workflows/review.md": "b73b41f7fbb836959dac2a8dd3bc6c0771f449e81543d9fa9ceedf71f6afc344",
-    "learnship/workflows/secure-phase.md": "59d392bf246b4f051b4ce857653de6c76b2589938959ab8b2866e2d4854e6263",
+    "learnship/workflows/review.md": "5b1119657a0ff4dfd5c9eb4e65301dcc7a9090595ecd6e3a4b1ef5c2083c9a6e",
+    "learnship/workflows/secure-phase.md": "130fbc8bb185e109a98e413237fb24e6eec7a7c5df25a58cdf0ddceb45709b02",
     "learnship/workflows/session-report.md": "965ccc8315796c072f522d21d3cf874f1e2b64da4d5bce193b56e28cdc6afdcb",
     "learnship/workflows/set-profile.md": "3612116527439fc83528d2f37fdd7fdd727c546ceb2b3fd45ce9a5478afe6179",
     "learnship/workflows/settings.md": "bb16c50be3085b7a12fa695b463354edd50af2e7f270966351f9a3d31ff2a27d",
-    "learnship/workflows/ship.md": "79b68149d1ad3c9b5c4cab88147edb85033d02758def8446725ba97596fc8506",
+    "learnship/workflows/ship.md": "41b28aae87bf8ea540f63d56373cf72872aef7d3ef4422a94d1e62940caf8dcd",
     "learnship/workflows/sync-docs.md": "07500b6bb06833c5a0df03d9bb5ff6d8785e4d6b4d38ee88b4f01347501c8ea5",
     "learnship/workflows/transition.md": "10ac92be1d82e96a154e70f2a29f37005e12dad21f8ee85ba84c5bfe00adce20",
     "learnship/workflows/undo.md": "37c0854b754825784c0c9721ef4a8a0a541fb6f998319bd98dafbfa775ff9619",
     "learnship/workflows/update.md": "06c0e5329bc586398d5bdee47937bc989279968c04135f82b02cf4ee4f01b8a6",
     "learnship/workflows/validate-phase.md": "58489dc5d0a816ca16f8868b3c45370e8eec933dd4574488b03001517ac738b1",
-    "learnship/workflows/verify-work.md": "5427d6efec390908f70f560cd98039debbd7f674823483877c4e6a0aaa2cb4ef"
+    "learnship/workflows/verify-work.md": "8cea9ef7e75ca66d3408c6efc66c2c71dad73d3e2ba358a01613a17f5d701ee4"
   }
 }
