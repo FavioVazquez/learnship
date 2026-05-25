@@ -80,21 +80,17 @@ Before planning, `/discuss-phase` writes your implementation preferences to `.pl
 
 ![Parallel execution](../assets/parallel-execution.png)
 
-On Claude Code, OpenCode, Gemini CLI, and Codex CLI, you can enable parallel subagents:
-
-```json title=".planning/config.json"
-{ "parallelization": true }
-```
-
-When enabled, `execute-phase` dispatches each independent plan to its own dedicated executor agent: each with a full 200k token context budget. Plans in the same wave run in parallel.
+On Claude Code, OpenCode, and Codex CLI, parallel subagents are on by default: `execute-phase` dispatches each independent plan to its own dedicated executor agent with a full 200k token context budget. Plans in the same wave run in parallel.
 
 | Mode | Context per agent | Speed |
 |------|-----------------|-------|
-| Sequential (default) | Shared | Safe, predictable |
-| Parallel (`parallelization: true`) | 200k each | Faster, more thorough |
+| Parallel (default on Claude Code, OpenCode, Codex) | 200k each | Faster, more thorough |
+| Sequential | Shared | Predictable, one plan at a time |
 
-!!! note "Windsurf"
-    Windsurf doesn't support real parallel subagents: execution is always sequential. All other capabilities are identical.
+To disable parallel execution: set `"parallelization": { "enabled": false }` in `.planning/config.json`.
+
+!!! note "Windsurf, Cursor, and Gemini CLI"
+    These platforms use sequential execution. Windsurf and Cursor have no `Task()` subagent API available to learnship workflows. Gemini CLI's parallel execution is experimental and disabled by default.
 
 ---
 

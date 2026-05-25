@@ -172,7 +172,7 @@ Each platform gets the best experience it supports:
 |---------|----------|-------------|----------|------------|-----------|
 | Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
 | Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
-| Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
+| Parallel wave execution | — | ✓ | ✓ | ⚠️ experimental | ✓ |
 | Agent personas (17) | `model_decision` rules | `Task()` subagents | `Task()` subagents | `Task()` subagents | `Task()` subagents |
 | Interactive questions | `ask_user_question` | `AskUserQuestion` | `question` | `ask_user` | `request_user_input` |
 | Session hooks | — | ✓ | — | ✓ | — |

@@ -83,10 +83,10 @@ v2.3.4 enforces **vertical slice planning**: the plan-checker flags any plan tha
 
 Plans run in **wave order**: independent plans in the same wave execute before dependent ones. Each task produces an atomic git commit.
 
-By default execution is sequential (safe for all platforms). On Claude Code, OpenCode, and Codex CLI, you can enable parallel subagents:
+On Claude Code, OpenCode, and Codex CLI, parallel subagents are on by default — plans in the same wave each get a dedicated executor with a fresh context budget. To run sequentially instead:
 
 ```json title=".planning/config.json"
-{ "parallelization": { "enabled": true } }
+{ "parallelization": { "enabled": false } }
 ```
 
 v2.1 adds `--wave N` to execute a single wave, and context window scaling that adapts read depth automatically.

@@ -57,9 +57,9 @@ How do you want to configure this project?
 → Customize — walk through every setting  (~15 questions, 4 rounds)
 ```
 
-**Quick** writes a sensible default config and moves on. It uses: `mode: auto`, `granularity: coarse`, `model_profile: balanced`, all workflow agents on (research, plan-check, verifier, review, solutions-search), ship pipeline + conventional commits + PR template on, planning docs auto-committed, parallelization off. Best for most projects — you can change any setting later with `/settings`.
+**Quick** writes a sensible default config and moves on. It uses: `mode: auto`, `granularity: coarse`, `model_profile: balanced`, all workflow agents on (research, plan-check, verifier, review, solutions-search), ship pipeline + conventional commits + PR template on, planning docs auto-committed, parallelization on (Claude Code, OpenCode, Codex) or off (Windsurf, Cursor, Gemini). Best for most projects — you can change any setting later with `/settings`.
 
-**Customize** is the long form. It walks four rounds of questions covering working style, granularity, model profile, learning partner, questioning depth, output verbosity, workflow agents, TDD, ship pipeline, git tracking, commit mode, and (on Claude Code, OpenCode, Codex) opt-in parallel subagents. Use this when your project has unusual conventions or you want fine-grained control upfront.
+**Customize** is the long form. It walks four rounds of questions covering working style, granularity, model profile, learning partner, questioning depth, output verbosity, workflow agents, TDD, ship pipeline, git tracking, commit mode, and (on Claude Code, OpenCode, Codex) parallel subagents — on by default, you can turn them off. Use this when your project has unusual conventions or you want fine-grained control upfront.
 
 All answers — quick or custom — are written to `.planning/config.json`, which every workflow reads. You can change any setting later with `/settings`.
 
@@ -202,10 +202,10 @@ Each plan describes concrete tasks with enough detail that an executor agent can
 
 Plans run in **wave order**: independent plans in the same wave execute before dependent ones. Each task produces an atomic git commit.
 
-By default execution is sequential (safe on all platforms). On Claude Code, OpenCode, Gemini CLI, and Codex CLI, enable parallel subagents for faster execution:
+On Claude Code, OpenCode, and Codex CLI, plans in the same wave run in parallel by default — each gets its own executor with a fresh 200k context budget. To run sequentially, set:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
 
 Watch the output — the executor narrates what it's doing and surfaces questions if anything is ambiguous.
