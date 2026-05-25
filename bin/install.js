@@ -30,24 +30,27 @@ const pkg = require('../package.json');
 // Codex config.toml marker — used to identify learnship-managed section
 const LEARNSHIP_CODEX_MARKER = '# learnship Agent Configuration — managed by learnship installer';
 
-// Per-agent Codex sandbox modes (read-only for checkers, workspace-write for executors)
+// Per-agent Codex sandbox modes (read-only for checkers, workspace-write for executors).
+// All 17 agents must be listed explicitly — agents missing from this map silently
+// fall back to whatever Codex's default is, which is wrong for read-only roles.
 const CODEX_AGENT_SANDBOX = {
-  'learnship-executor':          'workspace-write',
-  'learnship-planner':           'workspace-write',
-  'learnship-verifier':          'workspace-write',
-  'learnship-debugger':          'workspace-write',
-  'learnship-plan-checker':      'read-only',
-  'learnship-solution-writer':   'workspace-write',
-  'learnship-code-reviewer':     'read-only',
-  'learnship-challenger':        'read-only',
-  'learnship-ideation-agent':    'read-only',
-  'learnship-security-auditor':  'read-only',
-  'learnship-doc-writer':        'workspace-write',
-  'learnship-project-researcher': 'workspace-write',
+  'learnship-executor':             'workspace-write',
+  'learnship-planner':              'workspace-write',
+  'learnship-verifier':             'workspace-write',
+  'learnship-debugger':             'workspace-write',
+  'learnship-plan-checker':         'read-only',
+  'learnship-solution-writer':      'workspace-write',
+  'learnship-code-reviewer':        'read-only',
+  'learnship-challenger':           'read-only',
+  'learnship-ideation-agent':       'read-only',
+  'learnship-security-auditor':     'read-only',
+  'learnship-doc-writer':           'workspace-write',
+  'learnship-doc-verifier':         'read-only',
+  'learnship-researcher':           'workspace-write',
+  'learnship-project-researcher':   'workspace-write',
   'learnship-research-synthesizer': 'workspace-write',
-  'learnship-roadmapper':         'workspace-write',
-  'learnship-phase-researcher':   'workspace-write',
-  'learnship-doc-verifier':       'read-only',
+  'learnship-roadmapper':           'workspace-write',
+  'learnship-phase-researcher':     'workspace-write',
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────

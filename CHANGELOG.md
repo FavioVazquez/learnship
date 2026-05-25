@@ -11,6 +11,21 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ## [Unreleased]
 
+### Fixed (audit pass — workflows, agents, skills, docs)
+
+- **`verifier` agent was missing the `Write` tool** — Its spec required it to produce `VERIFICATION.md`, but its declared tools (`Read, Bash, Glob, Grep`) made that impossible on platforms that enforce the tool list. Now declares `Read, Write, Bash, Glob, Grep` in both source (`learnship/agents/verifier.md`) and wrapper (`agents/learnship-verifier.md`).
+- **`learnship-researcher` was missing from `CODEX_AGENT_SANDBOX`** — Silently fell back to whatever Codex's default was. All 17 agents are now explicitly listed in the sandbox map.
+- **Double-`learnship/` path in security-auditor wrapper** — `agents/learnship-security-auditor.md` referenced `~/.claude/learnship/templates/security.md`. After install.js rewrote `~/.claude/` → `<targetDir>/learnship/`, the path became `<targetDir>/learnship/learnship/templates/security.md` — pointing to a non-existent file. Fixed by changing the source to `~/.claude/templates/security.md`. Added a regression test in `validate_cross_platform.sh` that scans every installed wrapper for double-`learnship/` paths across Claude/OpenCode/Gemini.
+- **Root `SKILL.md` listed only 17 of 21 impeccable commands** — Missing `arrange`, `typeset`, `overdrive`, `frontend-design`. Now lists all 21, grouped by purpose (review/critique, refine/elevate, specific concerns, engineering attributes, foundations) so the agent can find the right action faster.
+- **`marketplace/README.md` claimed "49 structured workflows"** — Stale. Now correctly says 57.
+
+### Added (audit pass)
+
+- **All 17 agents now in `model-profiles.md` tier table** — Previously only 10 of 17 were listed, leaving researcher / project-researcher / research-synthesizer / roadmapper / doc-writer / doc-verifier / security-auditor without tier assignment. Each agent now has a row across `quality` / `balanced` / `budget` plus a "Notes" column explaining why that tier is appropriate for the role.
+- **Design-quality gate in `/review` and `/ship` workflows** — `/review` now suggests `@impeccable critique` / `polish` / `audit` when the review touched any UI files; `/ship` runs the same check on staged UI changes before opening the PR. Catches design regressions that code review and tests don't.
+- **4 additional agentic-learning checkpoints surfaced in root `SKILL.md`** — Previously the checkpoint list referenced only 7 of 11 actions. Added contextual triggers for `quiz` (after research/review), `explain-first` (when studying unfamiliar code), `explain` (after map-codebase / discovery-phase), and `interleave` (when stuck across multiple domains in one session). All 11 actions are now discoverable through the checkpoint list, not just through manual invocation.
+- **Explicit "Boundaries — what this persona does NOT do" sections** on 7 agents that lacked them — `challenger`, `executor`, `ideation-agent`, `research-synthesizer`, `roadmapper`, `security-auditor`, `solution-writer`. Each agent now spells out the 3–4 things it must NOT do, mirroring the explicit "do NOT" patterns already present in `planner.md` and `code-reviewer.md`. Synced to both source `learnship/agents/*.md` and wrappers `agents/learnship-*.md`.
+
 ### Added
 
 - **Quick Setup mode in `/new-project`** — `/new-project` now opens Step 2 with a single setup-mode question: pick **Quick — use recommended defaults** to write `.planning/config.json` immediately, or pick **Customize** to walk through the four-round, 15-question wizard. Saves users ~14 questions on the happy path while leaving full customization one click away. Implemented as Steps 2a (setup mode) → 2b (custom rounds, skipped in quick mode) → 2c (write config, runs in both modes). Documented in `docs/getting-started/first-project.md`.

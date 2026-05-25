@@ -58,7 +58,7 @@ For each identified concern:
 
 ## Output Format
 
-Write the SECURITY.md file using the template at `~/.claude/learnship/templates/security.md`. Fill in:
+Write the SECURITY.md file using the template at `~/.claude/templates/security.md`. Fill in:
 - Trust boundaries from the analysis
 - Complete threat register with STRIDE categories
 - Status for each threat (open/closed)

@@ -355,6 +355,21 @@ if [ -d "$GM_CMD" ]; then
 fi
 
 echo ""
+echo "─── Agent Template/Reference Paths (regression test) ─────────────"
+
+# Bug found in audit: agent wrappers that say "~/.claude/learnship/templates/..."
+# get rewritten to "<targetDir>/learnship/learnship/templates/..." (double learnship)
+# because replacePaths replaces "~/.claude/" with "<targetDir>/learnship/".
+# Source agent wrappers should use "~/.claude/templates/..." instead.
+for p in claude opencode gemini; do
+  WRAPPERS_DIR="$TMPBASE/$p/agents"
+  [ ! -d "$WRAPPERS_DIR" ] && continue
+  # Look for double-learnship paths in installed agent wrappers
+  bad=$(grep -l '/learnship/learnship/templates/\|/learnship/learnship/references/' "$WRAPPERS_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
+  check "$p: no double-learnship paths in installed agent wrappers (found $bad)" test "$bad" -eq 0
+done
+
+echo ""
 echo "─── Results ──────────────────────────────────────────────────────"
 echo "  Passed: $PASS"
 echo "  Failed: $FAIL"

@@ -230,6 +230,20 @@ git commit -m "fix([scope]): [description from finding]"
 
 ---
 
+## Design Quality Gate (UI changes only)
+
+If the review touched any user-facing UI files (frontend components, templates, stylesheets, public HTML), suggest running a design pass as a final lens — code correctness does not catch design regressions:
+
+> 🎨 **Design pass:** This review touched UI files. Run one of these `impeccable` actions on the changed views to catch issues code review misses (visual hierarchy, accessibility, motion, copy):
+>
+> - `@impeccable critique [component or view]` — Multi-frame critique (typography, color, spatial, motion, copy)
+> - `@impeccable polish [component or view]` — Apply small refinements before shipping
+> - `@impeccable audit [view]` — Scan for accessibility, contrast, and layout issues
+>
+> Skip if no UI files changed.
+
+---
+
 ## Learning Checkpoint
 
 Read `learning_mode` from `.planning/config.json`.

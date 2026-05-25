@@ -208,6 +208,26 @@ or patterns while context is fresh.
 
 ---
 
+## Pre-Ship Design Pass (UI changes only)
+
+Before opening the PR, if the staged changes touch any user-facing UI files, run a final design pass — this catches issues that tests and code review don't:
+
+```bash
+git diff --name-only --cached | grep -E '\.(tsx?|jsx?|vue|svelte|html|css|scss|less)$' | head -5
+```
+
+If UI files appear in the diff, suggest:
+
+> 🎨 **Design pass before ship:** Staged changes include UI files. Run one of these to catch design regressions before opening the PR:
+>
+> - `@impeccable polish [view]` — Quick refinement pass: typography, spacing, color, copy
+> - `@impeccable audit [view]` — Accessibility + contrast + layout scan
+> - `@impeccable harden [view]` — Edge-case resilience (small viewport, RTL, screen reader)
+>
+> Skip on non-UI changes.
+
+---
+
 ## Learning Checkpoint
 
 Read `learning_mode` from `.planning/config.json`.

@@ -4,18 +4,25 @@ Model profiles control which AI model tier each learnship agent uses. Profiles a
 
 ## Profile Definitions
 
-| Agent | `quality` | `balanced` | `budget` |
-|-------|-----------|------------|----------|
-| planner | large | large | medium |
-| executor | large | medium | medium |
-| phase-researcher | large | medium | small |
-| debugger | large | medium | medium |
-| verifier | medium | medium | small |
-| plan-checker | medium | medium | small |
-| solution-writer | medium | medium | small |
-| code-reviewer | large | medium | medium |
-| challenger | large | medium | medium |
-| ideation-agent | large | medium | small |
+| Agent | `quality` | `balanced` | `budget` | Notes |
+|-------|-----------|------------|----------|-------|
+| planner | large | large | medium | Always large — planning is where architecture decisions happen. |
+| executor | large | medium | medium | Follows explicit PLAN.md; reasoning is in the plan, not the agent. |
+| phase-researcher | large | medium | small | Codebase-only research; no web search needed. |
+| project-researcher | large | medium | small | Greenfield research; uses web search to discover ecosystem. |
+| research-synthesizer | medium | medium | small | Reads research files and produces SUMMARY.md. |
+| researcher | large | medium | small | General-purpose research used across many workflows. |
+| roadmapper | large | medium | small | Maps requirements to phases; needs strong scope reasoning. |
+| debugger | large | medium | medium | Root-cause investigation needs broad reasoning. |
+| verifier | medium | medium | small | Goal-backward checking, mostly structural. |
+| plan-checker | medium | medium | small | Plan completeness checks (vertical-slice, wave correctness). |
+| solution-writer | medium | medium | small | Captures solved problems while context is fresh. |
+| code-reviewer | large | medium | medium | Multi-persona review; needs to reason about correctness + security + perf. |
+| challenger | large | medium | medium | Stress-tests proposals; needs strong adversarial reasoning. |
+| ideation-agent | large | medium | small | Generates ideas across creative frames. |
+| security-auditor | large | medium | medium | STRIDE threat modeling; rigorous reasoning required. |
+| doc-writer | medium | medium | small | Writes/updates docs from live code; structural task. |
+| doc-verifier | medium | medium | small | Checks docs match code; pattern matching. |
 
 ## Platform Model Resolution
 

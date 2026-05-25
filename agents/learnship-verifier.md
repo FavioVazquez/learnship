@@ -1,7 +1,7 @@
 ---
 name: learnship-verifier
 description: Verifies that a phase goal was actually achieved after execution — checks must_haves, requirement coverage, and integration links. Spawned by execute-phase on platforms with subagent support.
-tools: Read, Bash, Glob, Grep
+tools: Read, Write, Bash, Glob, Grep
 color: purple
 ---
 
