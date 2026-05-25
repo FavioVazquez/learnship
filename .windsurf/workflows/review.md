@@ -1,15 +1,16 @@
 ---
-description: Multi-persona code review — correctness, testing, security, performance, maintainability
+description: Two-pass code review — spec compliance then multi-persona quality review
 ---
 
 # Review
 
-Multi-persona code review that examines changes through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Produces a severity-ranked findings report with confidence scores.
+Two-pass code review. **Pass 1** confirms the change matches its spec (planned deliverables). **Pass 2** examines quality through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Produces a severity-ranked findings report with confidence scores.
 
 **Usage:** `review` — review current branch changes
 **Usage:** `review [mode]` — modes: `interactive` (default), `report-only`, `autofix`
+**Usage:** `review --quality-only` — skip spec compliance pass, run quality review only
 
-**Sequencing:** Run after `verify-work` (spec compliance) and before `/ship` (deploy pipeline).
+**Sequencing:** Run after `verify-work` (acceptance testing) and before `/ship` (deploy pipeline).
 
 ## Step 1: Determine Scope
 
@@ -48,9 +49,89 @@ Combined with conversation context and any SUMMARY.md files from the current pha
 Intent: [what the changes are trying to accomplish]
 ```
 
-## Step 3: Select Personas
+## Step 3: Pass 1 — Spec Compliance
 
-Read the diff and file list. Select which review personas to activate:
+> Skip this pass entirely if `--quality-only` flag was given.
+
+Check whether the diff actually delivers what was planned. This is the "did we build the right thing?" gate — it runs before quality review because a spec failure is more important than any quality finding.
+
+### 3a. Load the Spec
+
+Try to find the spec in order of precedence:
+
+```bash
+# 1. Current phase PLAN.md files
+find .planning/phases -name "*-PLAN.md" -newer .git/refs/heads/$(git rev-parse --abbrev-ref HEAD 2>/dev/null) 2>/dev/null | head -5
+
+# 2. Most recently modified phase
+ls -t .planning/phases/ 2>/dev/null | head -3
+
+# 3. Commit messages as fallback spec
+git log --oneline ${BASE}..HEAD
+```
+
+If PLAN.md files found: read their `must_haves` frontmatter fields — these are the spec.
+If no PLAN.md: use commit message summaries as a lightweight spec.
+If no commits at all: spec compliance is N/A — skip to Pass 2.
+
+### 3b. Check Spec Coverage
+
+For each must-have deliverable or commit-described feature:
+
+1. Does the diff contain files that plausibly implement it?
+2. Are there test files covering it?
+3. Is it mentioned in any SUMMARY.md for the current phase?
+
+Classify each item as:
+- **COVERED** — evidence in diff matches the deliverable
+- **PARTIAL** — diff touches the right area but coverage seems incomplete
+- **MISSING** — no evidence in diff that this was implemented
+
+### 3c. Report Spec Compliance
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ learnship ► PASS 1: SPEC COMPLIANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Spec source: [PLAN.md path | commit messages]
+
+| Deliverable | Status | Evidence |
+|-------------|--------|----------|
+| [item 1]    | COVERED | [file/lines] |
+| [item 2]    | PARTIAL | [what's missing] |
+| [item 3]    | MISSING | — |
+
+Result: PASS | PARTIAL | FAIL
+```
+
+**If FAIL or PARTIAL:**
+```
+ask_user_question([
+  {
+    header: "Spec Gap",
+    question: "[N] planned deliverable(s) not found in this diff. Continue to quality review anyway?",
+    multiSelect: false,
+    options: [
+      { label: "Continue anyway", description: "Run quality review on what exists — spec gaps noted in report" },
+      { label: "Stop — fix spec gaps first", description: "Come back and re-run /review after completing missing deliverables" }
+    ]
+  }
+])
+```
+
+> 🛑 STOP. Wait for reply before continuing.
+
+If "Stop": output the missing items as a task list and stop.
+If "Continue": add spec gap findings to the final report as P1 items.
+
+**If PASS:** continue directly to Pass 2.
+
+---
+
+## Step 4: Pass 2 — Select Quality Personas
+
+Read the diff and file list. Select which quality review personas to activate:
 
 **Always-on (every review):**
 
@@ -81,7 +162,7 @@ Review team:
 - adversarial — [justification if selected]
 ```
 
-## Step 4: Run Review
+## Step 5: Run Quality Review
 
 Read `parallelization` from `.planning/config.json` (defaults to `false`).
 
@@ -138,7 +219,7 @@ Read `@./agents/code-reviewer.md` for the full persona definition. Run each sele
 2. Read the diff through that lens
 3. Record findings with severity and confidence
 
-## Step 5: Merge & Deduplicate Findings
+## Step 6: Merge & Deduplicate Findings
 
 Combine findings from all personas:
 
@@ -147,7 +228,7 @@ Combine findings from all personas:
 3. **Cross-persona agreement** — when 2+ personas flag the same issue, boost confidence by 0.10 (capped at 1.0).
 4. **Sort** — order by severity (P0 first) → confidence (descending) → file path → line number.
 
-## Step 6: Present Report
+## Step 7: Present Report
 
 ### Severity Scale
 
@@ -165,6 +246,7 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Intent: [intent summary]
+Spec compliance: PASS | PARTIAL ([N] gaps carried as P1) | SKIPPED (--quality-only)
 Reviewers: [list]
 Mode: [interactive | report-only | autofix]
 
@@ -195,7 +277,7 @@ Mode: [interactive | report-only | autofix]
 Total: [N] findings ([P0 count] critical, [P1 count] high, [P2 count] moderate, [P3 count] low)
 ```
 
-## Step 7: Handle Mode
+## Step 8: Handle Mode
 
 **Interactive (default):**
 For each P0/P1 finding, ask: "Fix this now, or defer?"
@@ -212,7 +294,7 @@ git add [files]
 git commit -m "fix([scope]): [description from finding]"
 ```
 
-## Step 8: Suggest Next Steps
+## Step 9: Suggest Next Steps
 
 ```
 ▶ Next steps:

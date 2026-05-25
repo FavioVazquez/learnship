@@ -161,7 +161,7 @@ const secretPatterns=[
 
   // Passwords in connection strings
   {re:/(?:password|passwd|pwd)\s*[:=]\s*['\"][^'\"]{8,}/gi, desc:'password literal'},
-  {re:/[a-z]+:\/\/[^:\[]+:[^@\[]{8,}@/g, desc:'credentials in URL'},
+  {re:/[a-z]+:\/\/[^:\[\n]+:[^@\[\n]{8,}@/g, desc:'credentials in URL'},
 ];
 
 function scanDir(dir){

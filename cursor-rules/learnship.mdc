@@ -69,8 +69,8 @@ Suggest the appropriate workflow slash command when relevant:
 | `/discuss-milestone` | Capture milestone-level goals before `/new-milestone` |
 | `/plan-phase [N]` | After discussing a phase — create executable plans |
 | `/execute-phase [N]` | Plans exist and are ready to run |
-| `/verify-work [N]` | Phase execution complete — user acceptance testing |
-| `/review` | Code ready for review — multi-persona quality check |
+| `/verify-work [N]` | Phase execution complete — user acceptance testing (+ live UI smoke test on any MCP-enabled platform when @playwright/mcp is configured) |
+| `/review` | Code ready for review — spec compliance pass then 6-persona quality review |
 | `/ship` | Tests pass, code reviewed — ship it (test → lint → commit → push → PR) |
 | `/complete-milestone` | All phases in the current milestone are done |
 | `/ls` | User asks "where are we?", "what's next?", or starts a new session |
@@ -82,14 +82,14 @@ Suggest the appropriate workflow slash command when relevant:
 | `/ideate` | Codebase-grounded idea generation (`--explore` for Socratic mode) |
 | `/challenge` | Stress-test a proposal with product + engineering forcing questions |
 | `/settings` | Change project configuration after setup |
-| `/health` | Project health check — stale files, uncommitted changes, config drift |
+| `/health` | Project health check — stale files, uncommitted changes, config drift, numeric score 0–100 |
 | `/compound` | Just solved a problem or learned a pattern — capture it while fresh |
 | `/pause-work` | User is stopping mid-phase |
 | `/resume-work` | User is returning to an in-progress project |
 | `/guard` | Working on sensitive files — enable safety mode |
 | `/note [text]` | Quick idea capture — zero friction, no questions |
 | `/session-report` | End of session — generate summary for stakeholders |
-| `/secure-phase [N]` | After execution — per-phase STRIDE security verification |
+| `/secure-phase [N]` | After execution — per-phase STRIDE + OWASP Top 10 security verification |
 | `/validate-phase [N]` | Retroactive test coverage audit for a completed phase |
 | `/diagnose-issues` | Batch-diagnose multiple UAT issues after `/verify-work` |
 | `/docs-update` | Generate or update project documentation |

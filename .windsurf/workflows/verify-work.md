@@ -351,6 +351,39 @@ Present when ready:
 
 ---
 
+## Live UI Smoke Test (when Playwright MCP is available)
+
+**Supported on:** Any platform with MCP support configured (Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, Gemini CLI). Optional enhancement layer — the conversational UAT above is the primary mechanism on all platforms.
+
+After UAT passes, if the tested deliverables include any user-facing UI **and** your tool list includes `mcp__playwright__*` tools (or equivalents), run a quick live smoke test before committing the UAT as complete:
+
+**1. Find the entry point:**
+```bash
+# Check common dev server patterns
+grep -E '"(dev|start|serve)"' package.json 2>/dev/null | head -3
+cat README.md 2>/dev/null | grep -i "http://localhost" | head -3
+```
+
+**2. Verify the server is running:**
+```bash
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || \
+curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 2>/dev/null || \
+echo "not-running"
+```
+
+**3. Walk the golden path via Playwright:**
+- Navigate to the primary entry point
+- Walk through each UI deliverable from the UAT list once
+- Take a screenshot at each key step
+- Check the browser console for JS errors
+
+**4. Record the result:**
+If any Playwright step fails (HTTP error, JS exception, visual regression), treat it as a UAT issue with severity `blocker` and add it to the Gaps section.
+
+> **Platform note:** Playwright MCP is supported wherever MCP is available — Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, and Gemini CLI all support MCP servers. To enable it: install `@playwright/mcp` and add it to your platform's MCP config. On Claude Code: `claude mcp add playwright npx @playwright/mcp`. On Cursor/Windsurf: add `@playwright/mcp` as an MCP server in your IDE settings. Once configured, learnship workflows detect and use it automatically.
+
+---
+
 ## Learning Checkpoint
 
 Read `learning_mode` from `.planning/config.json`.
