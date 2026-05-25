@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// learnship-hook-version: 2.2.0
+// learnship-hook-version: 2.4.0
 // learnship Statusline — shows model, project state, directory, and context usage
 // Installed by learnship for Claude Code and Gemini CLI.
 
