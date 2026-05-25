@@ -23,7 +23,7 @@ Each tier resolves to the best available model on your platform:
 
 | Tier | Anthropic (Claude Code) | Google (Gemini CLI) | OpenAI (Codex CLI) | Windsurf / Cursor / OpenCode |
 |------|------------------------|--------------------|--------------------|-----------------------------|
-| `large` | Claude Opus 4.6 | Gemini 3.1 Pro | GPT-5.4 | Uses platform default (best available) |
+| `large` | Claude Opus 4.7 | Gemini 3.1 Pro | GPT-5.4 | Uses platform default (best available) |
 | `medium` | Claude Sonnet 4.6 | Gemini 3.1 Flash | GPT-5.4-mini | Uses platform default |
 | `small` | Claude Haiku 4.5 | Gemini 3.1 Flash-Lite | GPT-5.4-nano | Uses platform default |
 
