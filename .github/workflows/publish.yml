@@ -57,11 +57,10 @@ jobs:
           done
           echo "All plugin manifests match package.json version $PKG_VERSION ✓"
 
-      - name: Upgrade npm
-        run: npm install -g npm@latest
-
       - name: Publish
-        run: npm publish --access public --provenance
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm publish --access public
 
       - name: Update learnship-marketplace
         env:
