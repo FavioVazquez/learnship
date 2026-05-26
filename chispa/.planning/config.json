@@ -1,0 +1,60 @@
+{
+  "mode": "auto",
+  "granularity": "coarse",
+  "model_profile": "balanced",
+  "learning_mode": "auto",
+  "context": "dev",
+  "test_first": false,
+  "planning": {
+    "commit_docs": true,
+    "commit_mode": "auto",
+    "search_gitignored": false
+  },
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "validation": true,
+    "review": true,
+    "solutions_search": true,
+    "security_enforcement": true,
+    "discuss_mode": "discuss",
+    "tdd_mode": false
+  },
+  "parallelization": {
+    "enabled": true,
+    "plan_level": true,
+    "task_level": false,
+    "max_concurrent_agents": 5,
+    "min_plans_for_parallel": 2
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
+  },
+  "review": {
+    "auto_after_verify": true
+  },
+  "ship": {
+    "auto_test": true,
+    "conventional_commits": true,
+    "pr_template": true
+  },
+  "hooks": {
+    "context_warnings": true
+  },
+  "git": {
+    "branching_strategy": "phase",
+    "phase_branch_template": "phase-{phase}-{slug}",
+    "milestone_branch_template": "{milestone}-{slug}"
+  }
+}
