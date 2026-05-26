@@ -46,13 +46,20 @@ Captures a recently solved problem or learned pattern while context is fresh.
 
 ## `/review`
 
-Multi-persona code review through six lenses.
+Two-pass code review: spec compliance first, then six-lens quality review.
 
 ```bash
 /review                     # interactive mode (default)
 /review --report            # report-only, no conversation
 /review --autofix           # apply fixes automatically
+/review --quality-only      # skip spec compliance pass, run quality review only
 ```
+
+**Two-pass review:**
+
+**Pass 1 — Spec Compliance:** Reads PLAN.md `must_haves` (or commit messages as fallback) and classifies each planned deliverable as **COVERED**, **PARTIAL**, or **MISSING**. If gaps exist, asks whether to proceed or stop. This runs first — finding the wrong thing built is more important than finding it well-built.
+
+**Pass 2 — Quality:** The existing 6-persona review below.
 
 **The 6 review lenses:**
 
@@ -122,6 +129,8 @@ End-to-end ship pipeline: test → lint → commit → push → PR.
 6. **Push:** `git push` to current branch
 7. **PR:** Creates pull request with auto-generated description when `ship.pr_template: true`
 8. **Confirm:** Shows summary and suggests `/compound` for notable patterns
+
+**Optional: Live smoke test (before PR):** When `@playwright/mcp` is configured on any MCP-enabled platform, `/ship` runs a quick smoke test on the changed flows before creating the PR. Catches rendering failures that tests don't. If the smoke test fails, the ship pipeline stops.
 
 **Config options:**
 

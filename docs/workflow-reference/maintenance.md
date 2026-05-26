@@ -39,16 +39,51 @@ Only changes `model_profile` in `config.json`. For full preset changes (mode, gr
 
 ## `/health`
 
-Project health check: surfaces issues before they become blockers.
+Project health check with numeric score — surfaces issues before they become blockers.
+
+```
+/health           # check and report
+/health --repair  # check and auto-fix repairable issues
+```
 
 **What it checks:**
-- Stale planning files (last modified > 30 days with no activity)
+- Required planning files (PROJECT.md, ROADMAP.md, STATE.md, config.json)
+- Config validity and completeness
+- State/roadmap consistency (current phase exists in roadmap)
+- Phase directories match roadmap phases
+- Plans without summaries
 - Uncommitted changes to planning artifacts
-- Missing artifacts (phase with PLAN but no SUMMARY)
-- Config drift (settings that contradict each other)
-- `AGENTS.md` is up to date with current phase
 
-Run this any time you feel the project state might be inconsistent.
+**Numeric score (0–100):**
+
+Health computes a deterministic score. Start at 100, then deduct per issue:
+
+| Issue | Deduction |
+|-------|-----------|
+| PROJECT.md missing | −25 |
+| ROADMAP.md missing | −20 |
+| config.json missing | −10 |
+| config.json parse error | −15 |
+| STATE.md missing | −10 |
+| State/roadmap mismatch | −5 |
+| Missing config fields | −2/field (max −10) |
+| Phase dir missing | −4/phase (max −12) |
+| Plan without summary | −1/plan (max −5) |
+| Uncommitted .planning/ changes | −5 |
+
+**Status bands:**
+- **HEALTHY** (90–100) ✓ — project artifacts are clean
+- **DEGRADED** (70–89) ⚠ — issues present but project is functional
+- **BROKEN** (0–69) ✗ — critical artifacts missing or inconsistent
+
+The repair footer shows `[N] issue(s) can be auto-repaired (+N points). Run: health --repair`.
+
+**Auto-repairable issues:**
+- STATE.md missing → regenerate from ROADMAP.md
+- config.json missing or parse error → reset to defaults
+- config.json missing fields → add missing fields with defaults
+
+Run this any time you feel the project state might be inconsistent. It's also suggested automatically by `/ls` when planning artifacts drift.
 
 ---
 

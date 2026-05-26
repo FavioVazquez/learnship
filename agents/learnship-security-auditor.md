@@ -50,6 +50,25 @@ For each file modified in this phase:
 5. **Error handling** — Do errors leak implementation details?
 6. **Dependencies** — Are there known vulnerabilities in new dependencies?
 
+## OWASP Top 10 (2021) Cross-Reference
+
+For every audit, cross-map STRIDE findings against the OWASP Top 10. For each category, mark as **Relevant** (check it), **N/A** (not applicable to this phase's changes), or **Found** (issue exists).
+
+| # | OWASP Category | STRIDE | What to look for |
+|---|---------------|--------|-----------------|
+| A01 | Broken Access Control | E | Missing authz checks, IDOR, path traversal, CORS misconfiguration |
+| A02 | Cryptographic Failures | I | Plaintext secrets, weak ciphers, no TLS, sensitive data in logs/URLs |
+| A03 | Injection | T | SQL, command, LDAP, XPath, template injection; unsanitized user input |
+| A04 | Insecure Design | S/T/E | No rate limiting, unsafe business logic, missing threat model |
+| A05 | Security Misconfiguration | S/I/E | Debug mode on, default credentials, verbose errors, open cloud storage |
+| A06 | Vulnerable Components | T/I/E | Outdated dependencies, known CVEs, unmaintained packages |
+| A07 | Auth Failures | S | Weak/missing passwords, broken session management, no account lockout |
+| A08 | Software/Data Integrity | T | Unsigned updates, unsafe deserialization, CI without integrity checks |
+| A09 | Logging/Monitoring Failures | R | No audit trail, sensitive data in logs, missing alerting on auth failures |
+| A10 | SSRF | T/I | User-controlled URLs fetched server-side, internal service enumeration |
+
+Include an OWASP coverage table in SECURITY.md. For irrelevant categories, a single "N/A — [reason]" is sufficient. Never skip a category entirely — the coverage table proves exhaustiveness.
+
 ## Threat Classification
 
 For each identified concern:
@@ -58,7 +77,7 @@ For each identified concern:
 
 ## Output Format
 
-Write the SECURITY.md file using the template at `~/.claude/learnship/templates/security.md`. Fill in:
+Write the SECURITY.md file using the template at `~/.claude/templates/security.md`. Fill in:
 - Trust boundaries from the analysis
 - Complete threat register with STRIDE categories
 - Status for each threat (open/closed)

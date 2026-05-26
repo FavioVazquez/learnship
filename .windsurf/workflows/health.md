@@ -109,14 +109,42 @@ try{
 "
 ```
 
-## Step 4: Format Output
+## Step 4: Compute Health Score
+
+Based on all findings from Step 3, compute a numeric score (0–100):
+
+**Start at 100. Apply deductions:**
+
+| Code | Issue | Deduction |
+|------|-------|-----------|
+| E002 | PROJECT.md missing | −25 |
+| E003 | ROADMAP.md missing | −20 |
+| E004 | STATE.md missing | −10 |
+| E005 | config.json parse error | −15 |
+| W003 | config.json missing | −10 |
+| W002 | state/roadmap phase mismatch | −5 |
+| W004 | missing config fields | −2 per missing field, max −10 |
+| W006 | phase in roadmap but no directory | −4 per phase, max −12 |
+| W007 | orphaned phase directory | −2 per dir, max −6 |
+| I001 | PLAN.md without SUMMARY.md | −1 per plan, max −5 |
+| (uncommitted) | .planning/ has unstaged changes | −5 |
+
+`Score = max(0, 100 − total_deductions)`
+
+**Status bands:**
+- 90–100 → **HEALTHY** ✓
+- 70–89 → **DEGRADED** ⚠
+- 0–69 → **BROKEN** ✗
+
+## Step 5: Format Output
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  learnship ► HEALTH CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Status: HEALTHY | DEGRADED | BROKEN
+Score:  [N]/100
+Status: HEALTHY ✓ | DEGRADED ⚠ | BROKEN ✗
 Errors: [N]   Warnings: [N]   Info: [N]
 ```
 
@@ -155,10 +183,10 @@ Consider: git add .planning/ && git commit -m "docs: update planning artifacts"
 
 **Footer if repairable issues and --repair not used:**
 ```
-[N] issue(s) can be auto-repaired. Run: health --repair
+[N] issue(s) can be auto-repaired (+[N] points). Run: health --repair
 ```
 
-## Step 5: Repair (if --repair flag)
+## Step 6: Repair (if --repair flag)
 
 Run repairs for each repairable issue found:
 

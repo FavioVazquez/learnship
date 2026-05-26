@@ -35,7 +35,7 @@ All learnship workflows use the `/learnship:` prefix:
 /learnship:verify-work 1
 /learnship:quick "fix the login bug"
 /learnship:help
-/learnship:review              # v2.0: multi-persona code review
+/learnship:review              # two-pass review: spec compliance + quality (v2.4.0)
 /learnship:ship                # v2.0: test → commit → push → PR
 /learnship:compound            # v2.0: capture solved problem as knowledge
 /learnship:challenge           # v2.0: stress-test scope
@@ -71,13 +71,15 @@ Or just work normally: skills activate at workflow checkpoints when `learning_mo
 
 ## Parallel subagents
 
-Claude Code supports real parallel subagents. Enable in your project:
+Claude Code runs parallel subagents by default. Every new project created with `/new-project` (Quick or Customize mode) starts with `parallelization.enabled: true`.
+
+To disable and run sequentially:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
 
-When enabled:
+When parallelization is on:
 - `new-project` spawns a project-researcher for domain research, then a roadmapper for phase planning
 - `plan-phase` spawns three dedicated subagents (phase-researcher, planner, plan-checker) each with a fresh 200k context budget
 - `execute-phase` dispatches each independent plan to its own executor agent: plans in the same wave run in parallel
@@ -117,14 +119,19 @@ Hooks are installed to `~/.claude/settings.json` automatically. No configuration
 | Slash commands | ✅ `/learnship:*` prefix |
 | `/agentic-learning` skill | ✅ Native skill (`~/.claude/skills/`) |
 | `/impeccable` skill suite | ✅ Native skill, all 21 actions inlined |
-| Parallel subagents | ✅ opt-in |
-| Wave execution | ✅ opt-in |
+| Parallel subagents | ✅ on by default |
+| Wave execution | ✅ on by default |
 | Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
 | Session hooks | ✅ 4 hooks |
 | Interactive questions | ✅ `AskUserQuestion` |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 ## Tips
 
 - **`AGENTS.md` is auto-loaded** by Claude Code as a project rule if placed at the project root.
 - **Slash command prefix** is `/learnship:`: not `/learnship-` (that's OpenCode).
-- **Subagents are opt-in.** Default is sequential which is always safe. Enable parallelization only after your first project works end-to-end.
+- **Subagents are on by default.** To run sequentially, set `"parallelization": { "enabled": false }` in `.planning/config.json`. Sequential mode is always safe if you prefer one plan at a time.

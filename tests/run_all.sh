@@ -36,6 +36,8 @@ run_suite "Learnship Features"   "$TESTS_DIR/validate_learnship_features.sh"
 run_suite "Simulations"          "$TESTS_DIR/validate_simulations.sh"
 run_suite "Hooks & Commands"     "$TESTS_DIR/validate_hooks_and_commands.sh"
 run_suite "Platform-Specific"    "$TESTS_DIR/validate_platform_specific.sh"
+run_suite "v2.4.0 Features"      "$TESTS_DIR/validate_v240_features.sh"
+run_suite "Platform Wiring"      "$TESTS_DIR/validate_platform_wiring.sh"
 
 echo ""
 echo "════════════════════════════════════════════════════════════════════════"

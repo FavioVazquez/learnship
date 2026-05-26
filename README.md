@@ -124,7 +124,7 @@ flowchart LR
     PP["/plan-phase N<br/>Vertical slice plans"]
     EP["/execute-phase N<br/>Build + commit"]
     VW["/verify-work N<br/>UAT + diagnose"]
-    RV["/review<br/>Multi-persona review"]
+    RV["/review<br/>Two-pass review"]
     SH["/ship<br/>Test → PR"]
     CP["/compound<br/>Capture knowledge"]
 
@@ -140,7 +140,7 @@ flowchart LR
 | **2. Plan** | `/plan-phase N` | Agent researches the domain, creates vertical slice plans (tracer bullets), verifies them — including horizontal slice detection (v2.3.4) |
 | **3. Execute** | `/execute-phase N` | Plans run in dependency order, one atomic commit per task |
 | **4. Verify** | `/verify-work N` | You do UAT; agent diagnoses any gaps and creates fix plans |
-| **5. Review** | `/review` | Multi-persona code review through 6 lenses (v2.0) |
+| **5. Review** | `/review` | Two-pass review: spec compliance check then 6-lens quality review (v2.4.0) |
 | **6. Ship** | `/ship` | Test → lint → commit → push → PR (v2.0) |
 | **7. Compound** | `/compound` | Capture what you learned as searchable documentation (v2.0) |
 
@@ -172,14 +172,16 @@ Each platform gets the best experience it supports:
 |---------|----------|-------------|----------|------------|-----------|
 | Slash commands | ✓ | ✓ | ✓ | ✓ | `$skills` |
 | Real parallel subagents | — | ✓ | ✓ | ✓ | ✓ |
-| Parallel wave execution | — | ✓ opt-in | ✓ opt-in | ✓ | ✓ opt-in |
+| Parallel wave execution | — | ✓ | ✓ | ⚠️ experimental | ✓ |
 | Agent personas (17) | `model_decision` rules | `Task()` subagents | `Task()` subagents | `Task()` subagents | `Task()` subagents |
 | Interactive questions | `ask_user_question` | `AskUserQuestion` | `question` | `ask_user` | `request_user_input` |
 | Session hooks | — | ✓ | — | ✓ | — |
 | Skills (native `@invoke`) | ✓ | — | — | — | — |
 | Skills (context files) | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-**Parallel subagents:** On Claude Code, OpenCode, and Codex, `execute-phase` can spawn a dedicated executor per plan within a wave, each with its own 200k context budget. Enable with `"parallelization": { "enabled": true }` in `.planning/config.json`. Up to 5 concurrent agents per wave by default. All platforms default to sequential (always safe).
+**Cursor** uses context injection via `cursor-rules/learnship.mdc` — it gets the full workflow library, design system, and learning partner, but does not appear in the feature matrix above because it has no first-class slash command or subagent API (rules load automatically as context).
+
+**Parallel subagents:** Claude Code, OpenCode, and Codex default to parallel execution — `execute-phase` spawns a dedicated executor per plan within a wave, each with its own 200k context budget. Up to 5 concurrent agents per wave. To run sequentially, set `"parallelization": { "enabled": false }` in `.planning/config.json`. Windsurf, Cursor, and Gemini CLI use sequential execution (no real subagent API on those platforms).
 
 ---
 
@@ -193,8 +195,8 @@ learnship gives you that harness as a portable, open-source layer that adds:
 
 - **Persistent memory.** `/new-project` generates an `AGENTS.md` loaded automatically every session. No more repeating yourself.
 - **Structured process.** A repeatable phase loop with spec-driven plans, wave-ordered execution, and UAT-driven verification.
-- **Knowledge compounding.** `/compound` captures solved problems. `/review` runs multi-persona code review. `/ship` runs the full delivery pipeline.
-- **Security & recovery.** `/secure-phase` for STRIDE verification. `/forensics` for post-mortem. `/undo` for safe revert.
+- **Knowledge compounding.** `/compound` captures solved problems. `/review` runs two-pass code review (spec compliance then quality). `/ship` runs the full delivery pipeline.
+- **Security & recovery.** `/secure-phase` for STRIDE + OWASP Top 10 verification. `/forensics` for post-mortem. `/undo` for safe revert.
 - **Session intelligence.** Hooks, context profiles, interactive questions, agent delegation. ([v2.2 details →](#whats-new-in-v22))
 - **Built-in learning.** Neuroscience-backed checkpoints at every phase transition so you understand what you shipped.
 
@@ -230,7 +232,7 @@ It's the right tool if:
 - You're **building a real project** and want the AI to stay aligned across sessions
 - You're **learning while building** and want to actually understand what gets shipped
 - You care about **code quality and UI quality** beyond "it works"
-- You want **parallel agent execution** on Claude Code, OpenCode, or Gemini CLI
+- You want **parallel agent execution** — Claude Code, OpenCode, and Codex run it by default
 - You've felt the frustration of **context loss**: repeating yourself while the agent forgets
 
 It's probably overkill for one-off scripts. Use `/quick` for that.
@@ -251,6 +253,18 @@ It's probably overkill for one-off scripts. Use `/quick` for that.
 ---
 
 ## 🆕 What's New
+
+### What's new in v2.4.0
+
+v2.4.0 adds spec compliance checking to `/review`, OWASP Top 10 coverage to `/secure-phase`, a numeric score to `/health`, and Playwright MCP smoke-test guidance to `/verify-work` and `/ship`:
+
+**Two-stage `/review`**: Pass 1 checks spec compliance — reads PLAN.md must-haves and classifies each as COVERED / PARTIAL / MISSING — before Pass 2 runs the existing 6-persona quality review. The spec compliance result appears in the report header. Use `--quality-only` to skip Pass 1 and run only the quality review.
+
+**OWASP Top 10 in `/secure-phase`**: The security-auditor agent now cross-maps STRIDE findings against OWASP Top 10 (A01–A10). Every SECURITY.md output includes an OWASP coverage table alongside the STRIDE analysis.
+
+**Numeric `/health` score**: The health check now outputs a 0–100 numeric score alongside the qualitative status. Starts at 100, deducts per issue found. Bands: HEALTHY (90–100), DEGRADED (70–89), BROKEN (0–69).
+
+**Playwright MCP guidance in `/verify-work` and `/ship`**: Optional live UI smoke-test sections activate when `@playwright/mcp` is configured. Supported on all 6 MCP-capable platforms (Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, Gemini CLI). In `/verify-work`, walks the golden path using `mcp__playwright__*` tools. In `/ship`, runs a quick smoke test before creating the PR.
 
 ### What's new in v2.3.4
 
@@ -296,7 +310,7 @@ v2.1 adds 8 new workflows, 5 new references, 3 new templates, and 2 new agents:
 
 | Category | New workflows |
 |----------|--------------|
-| **Security** | `/secure-phase` — per-phase STRIDE threat verification |
+| **Security** | `/secure-phase` — per-phase STRIDE threat-model security verification |
 | **Documentation** | `/docs-update` — generate and verify project docs against codebase |
 | **Recovery** | `/forensics` — post-mortem investigation · `/undo` — safe git revert |
 | **Session** | `/note` — zero-friction capture · `/session-report` — stakeholder summaries |
@@ -309,7 +323,7 @@ Enhanced: `/discuss-phase` (scope guardrails + domain probes + `--deep` extended
 
 ---
 
-##  Agentic Engineering vs Vibe Coding
+## ⚡ Agentic Engineering vs Vibe Coding
 
 ![Vibe coding vs Agentic engineering](assets/vibe-vs-agentic.png)
 
@@ -373,7 +387,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | `/discuss-phase [N]` | Capture implementation decisions before planning | Before every phase |
 | `/plan-phase [N]` | Research + create + verify plans | After discussing a phase |
 | `/execute-phase [N]` | Wave-ordered execution of all plans | After planning |
-| `/verify-work [N]` | Manual UAT with auto-diagnosis and fix planning | After execution |
+| `/verify-work [N]` | Manual UAT with auto-diagnosis and fix planning. Optional Playwright MCP live UI smoke test when `@playwright/mcp` is configured. | After execution |
 | `/complete-milestone` | Archive milestone, tag release, prepare next | All phases verified |
 | `/audit-milestone` | Pre-release: requirement coverage, stub detection | Before completing milestone |
 | `/new-milestone [name]` | Start next version cycle | After completing a milestone |
@@ -436,9 +450,9 @@ AGENTS.md                   ← your AI agent reads this every conversation
 | Workflow | Purpose | When to use |
 |----------|---------|-------------|
 | `/compound` | Capture solved problem as searchable documentation | After `/debug`, `/verify-work`, or any aha moment |
-| `/review` | Multi-persona code review (6 lenses) | After `/verify-work`, before shipping |
+| `/review` | Two-pass review: spec compliance check then 6-persona quality review. `--quality-only` skips spec compliance. | After `/verify-work`, before shipping |
 | `/challenge` | Stress-test scope through product + engineering lenses | Before committing to a milestone or large feature |
-| `/ship` | Test → lint → commit → push → PR | After review, ready to deploy |
+| `/ship` | Test → lint → commit → push → PR. Optional Playwright MCP smoke test before PR creation when `@playwright/mcp` is configured. | After review, ready to deploy |
 | `/ideate` | Codebase-grounded idea generation | Before `/discuss-milestone`, between milestones |
 | `/guard` | Safety mode: protect sensitive directories | Working on auth, payments, migrations |
 | `/sync-docs` | Detect stale documentation | Before `/complete-milestone`, after refactors |
@@ -449,7 +463,7 @@ AGENTS.md                   ← your AI agent reads this every conversation
 |----------|---------|-------------|
 | `/settings` | Interactive config editor | Change mode, toggle agents |
 | `/set-profile [quality\|balanced\|budget]` | One-step model profile switch | Quick cost/quality adjustment |
-| `/health` | Project health check | Stale files, missing artifacts |
+| `/health` | Project health check with numeric 0–100 score (HEALTHY ≥90, DEGRADED ≥70, BROKEN <70) | Stale files, missing artifacts |
 | `/cleanup` | Archive old artifacts | End of milestone |
 | `/update` | Update the platform itself | Check for new workflows |
 | `/reapply-patches` | Restore local edits after update | After `/update` if you had local changes |
@@ -534,7 +548,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | `model_profile` | `quality`, `balanced`, `budget` | `balanced` | Agent model tier (see table below) |
 | `learning_mode` | `auto`, `manual` | `auto` | `auto` offers learning at checkpoints; `manual` requires explicit invocation |
 | `context` | `dev`, `research`, `review` | `dev` | Output profile: `dev` (concise), `research` (detailed), `review` (audit-focused) |
-| `parallelization.enabled` | `true`, `false` | `false` | Parallel subagents per plan on supported platforms |
+| `parallelization.enabled` | `true`, `false` | `true` (Claude Code, OpenCode, Codex) / `false` (others) | Parallel subagents per plan on supported platforms |
 | `test_first` | `true`, `false` | `false` | TDD mode: write failing test first, verify red, implement, verify green |
 | `planning.commit_mode` | `auto`, `manual` | `auto` | `auto` commits after each workflow step; `manual` skips all git commits |
 
@@ -584,7 +598,7 @@ Project settings live in `.planning/config.json`. Set during `/new-project` or e
 | Challenger | large | medium | medium |
 | Ideation Agent | large | medium | small |
 
-> **Platform note:** Tiers map to the best available model on your platform: `large` = Claude Opus 4.6 / Gemini 3.1 Pro / GPT-5.4, `medium` = Claude Sonnet 4.6 / Gemini 3.1 Flash / GPT-5.4-mini, `small` = Claude Haiku 4.5 / Gemini 3.1 Flash-Lite / GPT-5.4-nano. Windsurf, Cursor, and OpenCode use the platform default model — tiers signal intended task complexity.
+> **Platform note:** Tiers map to the best available model on your platform. On Claude Code: `large` = Opus, `medium` = Sonnet, `small` = Haiku. On Gemini CLI and Codex CLI the installer maps tiers to the best available model at install time. Windsurf, Cursor, and OpenCode use the platform default model — tiers signal intended task complexity.
 
 ### Speed vs. Quality Presets
 
@@ -653,9 +667,12 @@ The **impeccable** skill suite is always active as project context for any UI wo
 | `/quieter` | Tone down overly aggressive designs to reduce intensity and gain refinement |
 | `/distill` | Strip to essence: remove complexity, clarify what matters |
 | `/clarify` | Improve UX copy, error messages, microcopy, labels |
+| `/typeset` | Improve typography: font choices, hierarchy, sizing, weight, and readability |
+| `/arrange` | Improve layout, spacing, and visual rhythm; fix monotonous grids and weak hierarchy |
 | `/optimize` | Performance: loading speed, rendering, animations, bundle size |
 | `/harden` | Resilience: error handling, i18n, text overflow, edge cases |
 | `/delight` | Add moments of joy and personality that make interfaces memorable |
+| `/overdrive` | Push past conventional limits — shaders, spring physics, scroll-driven reveals |
 | `/extract` | Extract reusable components and design tokens into your design system |
 | `/adapt` | Adapt designs across screen sizes, devices, and contexts |
 | `/onboard` | Design onboarding flows, empty states, first-time user experiences |
@@ -687,7 +704,7 @@ The **impeccable** skill suite is always active as project context for any UI wo
 /plan-phase 1             # Research + plan + verify
 /execute-phase 1          # Wave-ordered execution
 /verify-work 1            # Manual UAT
-/review                   # v2.0: multi-persona code review
+/review                   # two-pass review: spec compliance + quality (v2.4.0)
 /ship                     # v2.0: test → commit → push → PR
 /compound                 # v2.0: capture what you learned
                           # Repeat for each phase
@@ -907,7 +924,7 @@ learnship/
 ├── bin/
 │   └── install.js          # Multi-platform installer (Claude Code, OpenCode, Gemini CLI, Codex CLI, Windsurf)
 ├── tests/
-│   └── run_all.sh               # 15 test suites, 1200+ checks across 6 platforms
+│   └── run_all.sh               # 17 test suites, 1330+ checks across 6 platforms
 ├── SKILL.md                # Meta-skill: platform context loaded by Cascade / AI agents
 ├── install.sh              # Shell installer wrapper
 ├── package.json            # npm package (npx learnship)

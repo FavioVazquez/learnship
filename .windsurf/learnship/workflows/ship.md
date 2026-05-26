@@ -208,6 +208,49 @@ or patterns while context is fresh.
 
 ---
 
+## Pre-Ship Design Pass (UI changes only)
+
+Before opening the PR, if the staged changes touch any user-facing UI files, run a final design pass — this catches issues that tests and code review don't:
+
+```bash
+git diff --name-only --cached | grep -E '\.(tsx?|jsx?|vue|svelte|html|css|scss|less)$' | head -5
+```
+
+If UI files appear in the diff, suggest:
+
+> 🎨 **Design pass before ship:** Staged changes include UI files. Run one of these to catch design regressions before opening the PR:
+>
+> - `@impeccable polish [view]` — Quick refinement pass: typography, spacing, color, copy
+> - `@impeccable audit [view]` — Accessibility + contrast + layout scan
+> - `@impeccable harden [view]` — Edge-case resilience (small viewport, RTL, screen reader)
+>
+> Skip on non-UI changes.
+
+---
+
+## Live Smoke Test Before PR (when Playwright MCP is available)
+
+**Supported on:** Any platform with MCP support configured (Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, Gemini CLI).
+
+If `mcp__playwright__*` tools are available and the staged changes touch a web UI, run a quick smoke test before creating the PR — catches rendering failures that tests don't:
+
+```bash
+# Check server is running
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || echo "not-running"
+```
+
+If the server is running and Playwright is available:
+1. Navigate to the primary page
+2. Walk the changed flow once (the golden path for this change)
+3. Take a screenshot — verify it matches expectations
+4. Check the browser console — zero JS errors required
+
+**If smoke test fails:** Stop the ship pipeline. Fix before pushing.
+
+If Playwright is not configured or the server is not running: skip this step and note it in the PR description. To configure: see the `verify-work` workflow for Playwright MCP setup instructions per platform.
+
+---
+
 ## Learning Checkpoint
 
 Read `learning_mode` from `.planning/config.json`.

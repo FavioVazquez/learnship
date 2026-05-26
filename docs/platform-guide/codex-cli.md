@@ -28,7 +28,7 @@ $learnship-execute-phase 1
 $learnship-verify-work 1
 $learnship-quick "fix the login bug"
 $learnship-help
-$learnship-review              # v2.0: multi-persona code review
+$learnship-review              # two-pass review: spec compliance + quality (v2.4.0)
 $learnship-ship                # v2.0: test → commit → push → PR
 $learnship-compound            # v2.0: capture solved problem as knowledge
 $learnship-challenge           # v2.0: stress-test scope
@@ -58,10 +58,12 @@ Run the impeccable /audit skill on this component
 
 ## Parallel subagents
 
-Codex CLI supports real parallel subagents. Enable:
+Codex CLI runs parallel subagents by default. Every new project created with `$learnship-new-project` starts with `parallelization.enabled: true`.
+
+To disable and run sequentially:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
 
 ## Capabilities
@@ -71,10 +73,15 @@ Codex CLI supports real parallel subagents. Enable:
 | Slash commands | ✅ `$learnship-*` prefix |
 | `@agentic-learning` skill | ✅ Context file |
 | `impeccable` skill suite | ✅ Context file |
-| Parallel subagents | ✅ opt-in |
-| Wave execution | ✅ opt-in |
+| Parallel subagents | ✅ on by default |
+| Wave execution | ✅ on by default |
 | Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
 | Interactive questions | ✅ `request_user_input` |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 !!! tip
     Codex CLI uses `$learnship-` (dollar sign prefix) rather than `/learnship:` or `/learnship-`. This matches Codex CLI's native skill invocation convention.

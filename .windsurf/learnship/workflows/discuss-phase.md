@@ -7,6 +7,7 @@ description: Capture implementation decisions for a phase before planning starts
 Extract implementation decisions that downstream planning needs. Analyze the phase to identify gray areas, let the user choose what to discuss, then deep-dive each selected area until satisfied.
 
 **Usage:** Run `discuss-phase [N]` before `plan-phase [N]`.
+**Usage:** Run `discuss-phase [N] --deep` for extended deep questioning — walks every decision branch until shared understanding is reached, with a recommended answer for each question.
 
 **You are a thinking partner, not an interviewer.** The user is the visionary — you are the builder. Your job is to capture decisions that will guide research and planning, not to figure out implementation yourself.
 
@@ -19,7 +20,7 @@ Extract implementation decisions that downstream planning needs. Analyze the pha
 
 2. **Planner** — Reads CONTEXT.md to know WHAT decisions are locked
    - "Pull-to-refresh on mobile" → planner includes that in task specs
-   - "Claude's Discretion: loading skeleton" → planner can decide approach
+   - "Agent's Discretion: loading skeleton" → planner can decide approach
 
 **Your job:** Capture decisions clearly enough that downstream agents can act on them without asking the user again.
 
@@ -27,6 +28,12 @@ Extract implementation decisions that downstream planning needs. Analyze the pha
 </downstream_awareness>
 
 ## Step 1: Load Phase
+
+**Detect mode:** Check for `--deep` flag in the command. If not present, check `workflow.discuss_mode` in `.planning/config.json` — if it is `"deep"`, activate deep mode. Otherwise, use standard mode.
+
+```
+DEEP_MODE = "--deep" flag present OR config.workflow.discuss_mode == "deep"
+```
 
 Read `.planning/ROADMAP.md` and find the requested phase number. If not found, stop and show available phases.
 
@@ -175,7 +182,7 @@ If "All clear" → skip to Step 6.
 **For each selected area, discuss:**
 
 1. Announce: "Let's talk about [Area]."
-2. Ask focused questions with concrete options using structured questions where possible:
+2. Ask focused questions with concrete options using structured questions where possible. **Always include a recommended answer** — state which option you'd pick and why:
 
 ```
 ask_user_question([
@@ -184,7 +191,7 @@ ask_user_question([
     question: "[Specific implementation question]",
     multiSelect: false,
     options: [
-      { label: "[Option A] (Recommended)", description: "[Why, with code context if relevant]" },
+      { label: "[Option A] (Recommended)", description: "[Why this is recommended, with code context if relevant]" },
       { label: "[Option B]", description: "[Why]" },
       { label: "[Option C]", description: "[Why]" }
     ]
@@ -194,13 +201,23 @@ ask_user_question([
 
 > 🛑 STOP. Wait for the user's reply before continuing.
 
-3. After 4 questions, ask: "More questions about [area], or move to next?"
+**Standard mode** (default):
+3. After 4 questions per area, ask: "More questions about [area], or move to next?"
 4. If more → ask 4 more, then check again
+
+**Deep mode** (`--deep` or `discuss_mode: "deep"`):
+3. After each answer, analyze: what is the single biggest remaining unknown in this area that could change how it's implemented? Ask that next. Provide your recommended answer.
+4. Continue drilling down each decision branch — if an answer opens a sub-branch, follow it. Do NOT move on until the branch is fully resolved.
+5. Only move to the next area when you judge that the current area has no remaining decision branches that would change the implementation.
+6. If you can explore the codebase to answer a question yourself, do so instead of asking the user.
+
+> **Deep mode intent:** Walk the full decision tree. Resolve every fork. The CONTEXT.md produced should leave no ambiguity that downstream agents would need to guess about.
 
 After all selected areas:
 - Summarize decisions captured
 - Present final check:
 
+**Standard mode:**
 ```
 ask_user_question([
   {
@@ -210,6 +227,22 @@ ask_user_question([
     options: [
       { label: "Ready", description: "Generate CONTEXT.md with captured decisions" },
       { label: "Explore more", description: "Discuss additional areas before writing context" }
+    ]
+  }
+])
+```
+
+**Deep mode:**
+```
+ask_user_question([
+  {
+    header: "Shared Understanding Check",
+    question: "I've walked through every decision branch I can identify. Do you feel we've reached shared understanding on how to implement this phase?",
+    multiSelect: false,
+    options: [
+      { label: "Yes — write CONTEXT.md", description: "All key decisions are captured" },
+      { label: "There's still [area] to discuss", description: "Keep going on a specific area" },
+      { label: "Let me add something", description: "I have context to add before you write" }
     ]
   }
 ])
@@ -256,6 +289,7 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 # Phase [X]: [Name] - Context
 
 **Gathered:** [date]
+**Mode:** [standard | deep]
 **Status:** Ready for planning
 
 <domain>
@@ -271,7 +305,7 @@ Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-CONTEXT.md`:
 ### [Category discussed]
 - [Decision captured]
 
-### Claude's Discretion
+### Agent's Discretion
 [Areas where user said "you decide"]
 
 </decisions>
@@ -331,7 +365,7 @@ Also write a discussion log for audit purposes using `@./templates/discussion-lo
 Write `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-DISCUSSION-LOG.md` with:
 - All options considered for each area (not just the selected one)
 - The user's verbatim choice and rationale
-- Areas delegated to Claude's discretion
+- Areas delegated to agent's discretion
 - Deferred ideas
 
 This file is for human audit trails only — it is NOT referenced by downstream agents.
@@ -368,6 +402,7 @@ Created: .planning/phases/[padded_phase]-[slug]/[padded_phase]-CONTEXT.md
 
 💡 Ambitious scope? `/challenge` — stress-test the approach before planning
 💡 Made important decisions? `/compound` — capture them while context is fresh
+💡 Want to go deeper? Re-run `discuss-phase [X] --deep` for relentless branch-walking until full shared understanding
 ```
 
 ---

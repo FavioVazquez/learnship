@@ -55,6 +55,8 @@ For each file, check for:
 - Hardcoded credentials
 - Insecure defaults
 
+**OWASP Top 10 surface scan:** As part of codebase analysis, note which OWASP categories are relevant to this phase's changes (see security-auditor agent for the full checklist). The SECURITY.md output must include an OWASP coverage table — marking each category as Relevant/N/A/Found. This makes the audit exhaustive and audit-trail-friendly.
+
 ## Step 3: Build Threat Register
 
 For each identified concern, create a threat entry:

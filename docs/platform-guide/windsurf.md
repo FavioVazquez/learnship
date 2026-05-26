@@ -28,7 +28,7 @@ All learnship workflows are available as slash commands directly:
 /verify-work 1
 /quick "fix the search bug"
 /help
-/review              # v2.0: multi-persona code review
+/review              # two-pass review: spec compliance + quality (v2.4.0)
 /ship                # v2.0: test → commit → push → PR
 /compound            # v2.0: capture solved problem as knowledge
 /challenge           # v2.0: stress-test scope
@@ -65,6 +65,7 @@ No prefix needed, no "use the skill" phrasing required. Just invoke.
 | Wave execution | Sequential only |
 | Agent personas | ✅ 17 `model_decision` rules |
 | Interactive questions | ✅ `ask_user_question` |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
 
 ## Agent personas via `model_decision` rules
 
@@ -109,6 +110,10 @@ The combination of `model_decision` rules + inline persona instructions gives Wi
 
 !!! note "Sequential execution"
     Windsurf always runs plans sequentially (no parallel waves). All context engineering, planning, verification, and learning features are fully available. The agent personas ensure the same quality of work whether running in parallel on Claude Code or sequentially on Windsurf.
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 ## Tips for Cascade
 

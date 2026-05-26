@@ -28,7 +28,7 @@ All learnship workflows use the `/learnship-` prefix (hyphen, not colon):
 /learnship-verify-work 1
 /learnship-quick "fix the login bug"
 /learnship-help
-/learnship-review              # v2.0: multi-persona code review
+/learnship-review              # two-pass review: spec compliance + quality (v2.4.0)
 /learnship-ship                # v2.0: test → commit → push → PR
 /learnship-compound            # v2.0: capture solved problem as knowledge
 /learnship-challenge           # v2.0: stress-test scope
@@ -58,13 +58,15 @@ Run the impeccable /audit skill on this component
 
 ## Parallel subagents
 
-OpenCode supports real parallel subagents. Enable:
+OpenCode runs parallel subagents by default. Every new project created with `/new-project` starts with `parallelization.enabled: true`.
+
+When parallelization is on, `execute-phase` dispatches each plan in a wave to its own dedicated agent with a fresh context budget.
+
+To disable and run sequentially:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
-
-When enabled, `execute-phase` dispatches each plan in a wave to its own dedicated agent with a fresh context budget.
 
 ## Capabilities
 
@@ -73,10 +75,15 @@ When enabled, `execute-phase` dispatches each plan in a wave to its own dedicate
 | Slash commands | ✅ `/learnship-*` prefix |
 | `@agentic-learning` skill | ✅ Context file |
 | `impeccable` skill suite | ✅ Context file |
-| Parallel subagents | ✅ opt-in |
-| Wave execution | ✅ opt-in |
+| Parallel subagents | ✅ on by default |
+| Wave execution | ✅ on by default |
 | Agent personas (17) | ✅ `Task()` subagents + inline `<persona_context>` |
 | Interactive questions | ✅ `question` |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 !!! tip
     Note the **hyphen** separator in OpenCode commands (`/learnship-ls`) vs the **colon** in Claude Code and Gemini CLI (`/learnship:ls`).

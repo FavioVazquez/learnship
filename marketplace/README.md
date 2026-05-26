@@ -18,7 +18,7 @@ Then install learnship:
 
 ## What you get
 
-- **49 structured workflows** — full project lifecycle from `/new-project` to `/complete-milestone`
+- **57 structured workflows** — full project lifecycle from `/new-project` to `/complete-milestone`
 - **Persistent memory** — `AGENTS.md` and `DECISIONS.md` survive across sessions
 - **Learning partner** — neuroscience-backed `agentic-learning` skill
 - **Design system** — 21 `impeccable` commands for production-grade UI quality

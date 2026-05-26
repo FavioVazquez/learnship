@@ -30,24 +30,27 @@ const pkg = require('../package.json');
 // Codex config.toml marker — used to identify learnship-managed section
 const LEARNSHIP_CODEX_MARKER = '# learnship Agent Configuration — managed by learnship installer';
 
-// Per-agent Codex sandbox modes (read-only for checkers, workspace-write for executors)
+// Per-agent Codex sandbox modes (read-only for checkers, workspace-write for executors).
+// All 17 agents must be listed explicitly — agents missing from this map silently
+// fall back to whatever Codex's default is, which is wrong for read-only roles.
 const CODEX_AGENT_SANDBOX = {
-  'learnship-executor':          'workspace-write',
-  'learnship-planner':           'workspace-write',
-  'learnship-verifier':          'workspace-write',
-  'learnship-debugger':          'workspace-write',
-  'learnship-plan-checker':      'read-only',
-  'learnship-solution-writer':   'workspace-write',
-  'learnship-code-reviewer':     'read-only',
-  'learnship-challenger':        'read-only',
-  'learnship-ideation-agent':    'read-only',
-  'learnship-security-auditor':  'read-only',
-  'learnship-doc-writer':        'workspace-write',
-  'learnship-project-researcher': 'workspace-write',
+  'learnship-executor':             'workspace-write',
+  'learnship-planner':              'workspace-write',
+  'learnship-verifier':             'workspace-write',
+  'learnship-debugger':             'workspace-write',
+  'learnship-plan-checker':         'read-only',
+  'learnship-solution-writer':      'workspace-write',
+  'learnship-code-reviewer':        'read-only',
+  'learnship-challenger':           'read-only',
+  'learnship-ideation-agent':       'read-only',
+  'learnship-security-auditor':     'read-only',
+  'learnship-doc-writer':           'workspace-write',
+  'learnship-doc-verifier':         'read-only',
+  'learnship-researcher':           'workspace-write',
+  'learnship-project-researcher':   'workspace-write',
   'learnship-research-synthesizer': 'workspace-write',
-  'learnship-roadmapper':         'workspace-write',
-  'learnship-phase-researcher':   'workspace-write',
-  'learnship-doc-verifier':       'read-only',
+  'learnship-roadmapper':           'workspace-write',
+  'learnship-phase-researcher':     'workspace-write',
 };
 
 // ─── Colors ────────────────────────────────────────────────────────────────
@@ -72,7 +75,40 @@ const hasLocal     = args.includes('--local')  || args.includes('-l');
 const hasUninstall = args.includes('--uninstall') || args.includes('-u');
 const hasHelp      = args.includes('--help') || args.includes('-h');
 const targetIdx    = args.indexOf('--target');
-const targetOverride = targetIdx !== -1 && args[targetIdx + 1] ? path.resolve(args[targetIdx + 1]) : null;
+
+// Refuse high-risk --target paths. We never want a typo or malicious arg
+// to make the installer rmSync / overwrite something like /, /etc, or $HOME.
+// Allowed: anywhere under $HOME, anywhere under /tmp (test installs), anywhere
+// under the current working directory (project-local installs). Reject the rest.
+function validateTargetPath(raw) {
+  if (!raw) return null;
+  const resolved = path.resolve(raw);
+  const home = os.homedir();
+  const cwd  = process.cwd();
+  const tmp  = os.tmpdir();
+  // Forbid the literal root and common system dirs outright
+  const forbidden = ['/', '/etc', '/usr', '/var', '/bin', '/sbin', '/lib', '/lib64', '/boot', '/dev', '/proc', '/sys', '/root'];
+  if (forbidden.includes(resolved)) {
+    console.error(`  Error: refusing to install to system path: ${resolved}`);
+    process.exit(1);
+  }
+  // Refuse if it equals $HOME exactly (installing directly into ~ would clobber dotfiles)
+  if (resolved === home) {
+    console.error(`  Error: refusing to install directly to $HOME (${resolved}). Use a subdirectory like $HOME/.claude or pass --global.`);
+    process.exit(1);
+  }
+  // Otherwise must be inside one of the allowed roots
+  const insideHome = resolved === home || resolved.startsWith(home + path.sep);
+  const insideTmp  = resolved === tmp  || resolved.startsWith(tmp + path.sep);
+  const insideCwd  = resolved === cwd  || resolved.startsWith(cwd + path.sep);
+  if (!insideHome && !insideTmp && !insideCwd) {
+    console.error(`  Error: --target must be inside $HOME, /tmp, or the current directory. Got: ${resolved}`);
+    process.exit(1);
+  }
+  return resolved;
+}
+
+const targetOverride = targetIdx !== -1 && args[targetIdx + 1] ? validateTargetPath(args[targetIdx + 1]) : null;
 
 let selectedPlatforms = [];
 if (hasAll) {
@@ -299,13 +335,17 @@ function convertToOpencode(content) {
       }
       continue;
     }
-    // Convert color names to hex
+    // Convert color names to hex (OpenCode requires hex)
     if (t.startsWith('color:')) {
-      const colorVal = t.substring(6).trim().toLowerCase();
+      const colorVal = t.substring(6).trim().toLowerCase().replace(/^['"]|['"]$/g, '');
       const hex = colorNameToHex[colorVal];
       if (hex) { newLines.push(`color: "${hex}"`); }
       else if (colorVal.startsWith('#')) { newLines.push(line); }
-      // skip unknown color names entirely
+      else {
+        // Unknown color: warn rather than silently drop, so installs are debuggable.
+        console.warn(`  ${yellow}⚠${reset} Unknown OpenCode color "${colorVal}" — defaulting to #808080 (gray). Add it to colorNameToHex in bin/install.js to fix.`);
+        newLines.push(`color: "#808080"`);
+      }
       continue;
     }
     if (inTools) {
@@ -686,13 +726,25 @@ function rewriteNewProject(content, platform) {
   // Parallel execution block
   let parallelBlock;
   if (supportsParallel) {
-    parallelBlock = `**Group D — Parallel execution:**\n\n${label} supports real parallel subagents. Ask:\n\n"Do you want to enable parallel subagent execution?"\n- **No** (recommended default) — Plans execute sequentially, one at a time. Safer, easier to follow.\n- **Yes** — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Faster, but uses more tokens.`;
+    parallelBlock = `**Group D — Parallel execution:**\n\n${label} supports real parallel subagents. Ask:\n\n"Do you want to enable parallel subagent execution?"\n- **Yes** (recommended) — Each independent plan in a wave gets its own dedicated subagent with a fresh context budget. Plans finish faster and each executor has a clean context with no accumulated noise.\n- **No** — Plans execute sequentially, one at a time. Predictable and easy to follow; useful when you want to review each plan before the next begins.`;
   } else if (platform === 'gemini') {
     parallelBlock = `**Group D — Parallel execution:**\n\nGemini CLI supports subagents but only runs them sequentially — parallel execution is not yet available. Parallelization is automatically set to \`false\`.`;
   } else {
     parallelBlock = `**Group D — Parallel execution:**\n\n${label} does not support real subagents. Parallelization is automatically set to \`false\`.`;
   }
   content = content.replace('<!-- LEARNSHIP_PARALLEL_BLOCK -->', parallelBlock);
+
+  // On platforms with real parallel subagents, flip Quick-mode default to parallel-on
+  if (supportsParallel) {
+    content = content.replace(
+      'parallelization off (you can flip it later in .planning/config.json)',
+      'parallelization on'
+    );
+    content = content.replace(
+      'and `parallelization.enabled = false`)',
+      'and `parallelization.enabled = true` for this platform)'
+    );
+  }
 
   // Platform-specific AGENTS.md note
   // Claude Code reads CLAUDE.md as primary; Gemini CLI reads GEMINI.md — copy so sessions have context
@@ -1401,12 +1453,27 @@ function saveLocalPatches(targetDir) {
   const patchesDir = path.join(targetDir, 'learnship-local-patches');
   const modified = [];
 
+  // Reject any manifest entry whose relative path escapes the install root.
+  // A malicious or corrupted manifest could otherwise read/copy arbitrary files
+  // via "../" segments before they're caught by fs operations.
+  const targetResolved = path.resolve(targetDir);
+  const patchesResolved = path.resolve(patchesDir);
+
   for (const [relPath, originalHash] of Object.entries(manifest.files || {})) {
-    const fullPath = path.join(targetDir, relPath);
+    if (typeof relPath !== 'string' || typeof originalHash !== 'string') continue;
+    // Block absolute paths, parent-dir traversal, and null bytes.
+    if (path.isAbsolute(relPath) || relPath.includes('\0') || /(^|[\\/])\.\.([\\/]|$)/.test(relPath)) {
+      console.warn(`  ${yellow}⚠${reset} Skipping unsafe manifest path: ${relPath}`);
+      continue;
+    }
+    const fullPath = path.resolve(targetResolved, relPath);
+    const backupPath = path.resolve(patchesResolved, relPath);
+    // Belt-and-braces: confirm both resolved paths land inside their roots.
+    if (!fullPath.startsWith(targetResolved + path.sep) && fullPath !== targetResolved) continue;
+    if (!backupPath.startsWith(patchesResolved + path.sep) && backupPath !== patchesResolved) continue;
     if (!fs.existsSync(fullPath)) continue;
     const currentHash = fileHash(fullPath);
     if (currentHash !== originalHash) {
-      const backupPath = path.join(patchesDir, relPath);
       fs.mkdirSync(path.dirname(backupPath), { recursive: true });
       fs.copyFileSync(fullPath, backupPath);
       modified.push(relPath);
@@ -1607,8 +1674,11 @@ function install(platform, isGlobal) {
                    platform === 'gemini'   ? '/learnship:ls' : '$learnship-ls';
   console.log(`\n  ${green}Done!${reset} Open a project in ${label} and run ${cyan}${firstCmd}${reset}.`);
   console.log(`  ${dim}First time? Run ${cyan}${platform === 'windsurf' ? '/new-project' : platform === 'claude' ? '/learnship:new-project' : platform === 'opencode' ? '/learnship-new-project' : platform === 'gemini' ? '/learnship:new-project' : '$learnship-new-project'}${reset}${dim} to initialize your project and create AGENTS.md.${reset}`);
-  if (platform !== 'windsurf') {
-    console.log(`  ${dim}Enable parallel subagents: add ${cyan}"parallelization": true${reset}${dim} to .planning/config.json${reset}`);
+  const parallelSupported = platform === 'claude' || platform === 'opencode' || platform === 'codex';
+  if (parallelSupported) {
+    console.log(`  ${dim}Parallel subagents are ${green}on by default${reset}${dim}. To disable: set ${cyan}"parallelization": { "enabled": false }${reset}${dim} in .planning/config.json${reset}`);
+  } else if (platform !== 'windsurf') {
+    console.log(`  ${dim}Parallel subagents: not available on ${label}. Sequential execution is used.${reset}`);
   }
 }
 

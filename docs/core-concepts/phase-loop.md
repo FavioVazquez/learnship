@@ -83,10 +83,10 @@ v2.3.4 enforces **vertical slice planning**: the plan-checker flags any plan tha
 
 Plans run in **wave order**: independent plans in the same wave execute before dependent ones. Each task produces an atomic git commit.
 
-By default execution is sequential (safe for all platforms). On Claude Code, OpenCode, and Codex CLI, you can enable parallel subagents:
+On Claude Code, OpenCode, and Codex CLI, parallel subagents are on by default — plans in the same wave each get a dedicated executor with a fresh context budget. To run sequentially instead:
 
 ```json title=".planning/config.json"
-{ "parallelization": { "enabled": true } }
+{ "parallelization": { "enabled": false } }
 ```
 
 v2.1 adds `--wave N` to execute a single wave, and context window scaling that adapts read depth automatically.
@@ -122,9 +122,10 @@ v2.1 adds **goal-backward verification** (checks what must be TRUE for the goal 
 
 ```
 /review
+/review --quality-only   # skip spec compliance, run quality review only
 ```
 
-Multi-persona code review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Only activates lenses relevant to the diff. Produces severity-ranked findings (P0–P3).
+Two-pass code review. **Pass 1** checks spec compliance — reads PLAN.md `must_haves` and classifies each deliverable as COVERED, PARTIAL, or MISSING before proceeding. **Pass 2** runs quality review through six lenses: correctness, testing, security, performance, maintainability, and adversarial. Only activates lenses relevant to the diff. Produces severity-ranked findings (P0–P3) with confidence scores.
 
 See [Workflow Reference → Compounding & Quality](../workflow-reference/compounding-quality.md) for details.
 

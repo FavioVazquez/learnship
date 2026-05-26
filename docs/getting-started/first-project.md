@@ -49,32 +49,22 @@ What platforms or environments will this run on?
 
 ### Configuration questions
 
-After the project questions, `/new-project` asks about your workflow preferences. These control how the agent behaves throughout the project:
+After the project questions, `/new-project` asks how you want to configure the project. The first question is a fast path:
 
 ```
-How should the agent behave?
-→ auto (auto-approve steps, no confirmation needed)
-
-How granular should phases be?
-→ standard (5-8 phases per milestone)
-
-Which model tier for agents?
-→ balanced (large for planning, medium for execution)
-
-Enable TDD mode (write failing tests first)?
-→ no
-
-Enable multi-persona code review after verification?
-→ yes
-
-Enable ship pipeline (test → lint → commit → push → PR)?
-→ yes
+How do you want to configure this project?
+→ Quick — use recommended defaults  (1 question, ~5 seconds)
+→ Customize — walk through every setting  (~15 questions, 4 rounds)
 ```
 
-All answers are written to `.planning/config.json` — a file every workflow reads. You can change any setting later with `/settings`.
+**Quick** writes a sensible default config and moves on. It uses: `mode: auto`, `granularity: coarse`, `model_profile: balanced`, all workflow agents on (research, plan-check, verifier, review, solutions-search), ship pipeline + conventional commits + PR template on, planning docs auto-committed, parallelization on (Claude Code, OpenCode, Codex) or off (Windsurf, Cursor, Gemini). Best for most projects — you can change any setting later with `/settings`.
+
+**Customize** is the long form. It walks four rounds of questions covering working style, granularity, model profile, learning partner, questioning depth, output verbosity, workflow agents, TDD, ship pipeline, git tracking, commit mode, and (on Claude Code, OpenCode, Codex) parallel subagents — on by default, you can turn them off. Use this when your project has unusual conventions or you want fine-grained control upfront.
+
+All answers — quick or custom — are written to `.planning/config.json`, which every workflow reads. You can change any setting later with `/settings`.
 
 !!! info "All 22 config keys"
-    `/new-project` covers the most important settings interactively. The full schema has 22 keys including `planning.commit_mode`, `workflow.solutions_search`, `review.auto_after_verify`, and `git.branching_strategy`. See [Configuration](../configuration.md) for the complete reference.
+    `/new-project` covers the most common settings interactively. The full schema has 22 keys including `planning.commit_mode`, `workflow.solutions_search`, `review.auto_after_verify`, and `git.branching_strategy`. See [Configuration](../configuration.md) for the complete reference.
 
 ---
 
@@ -212,10 +202,10 @@ Each plan describes concrete tasks with enough detail that an executor agent can
 
 Plans run in **wave order**: independent plans in the same wave execute before dependent ones. Each task produces an atomic git commit.
 
-By default execution is sequential (safe on all platforms). On Claude Code, OpenCode, Gemini CLI, and Codex CLI, enable parallel subagents for faster execution:
+On Claude Code, OpenCode, and Codex CLI, plans in the same wave run in parallel by default — each gets its own executor with a fresh 200k context budget. To run sequentially, set:
 
 ```json title=".planning/config.json"
-{ "parallelization": true }
+{ "parallelization": { "enabled": false } }
 ```
 
 Watch the output — the executor narrates what it's doing and surfaces questions if anything is ambiguous.
@@ -244,23 +234,24 @@ When everything passes:
 
 If `review.auto_after_verify` is `true` in your config, the agent automatically proceeds to the review step. Otherwise it suggests it in the done banner.
 
+**Optional live smoke test:** If `@playwright/mcp` is configured on your platform, `/verify-work` can walk the golden path for UI deliverables automatically — navigating to the app, walking through each test, and checking the browser console for JS errors. Supported on any MCP-enabled platform (all 6 platforms). See [Playwright MCP setup](https://github.com/microsoft/playwright-mcp).
+
 ---
 
 ## Step 10: Review Phase 1
 
 ```
-/review
+/review              # two-pass review (default)
+/review --quality-only   # skip spec compliance, quality review only
 ```
 
-Multi-persona code review through **6 lenses**: correctness, testing, security, performance, maintainability, and adversarial. Only lenses relevant to the diff are activated (e.g., no security lens for a CSS-only change).
+`/review` now runs two passes:
 
-The output is severity-ranked findings (P0–P3) with confidence scores. Address any P0 or P1 findings before shipping.
+**Pass 1 — Spec Compliance:** Checks whether the diff actually delivers what was planned. Reads PLAN.md `must_haves` and classifies each deliverable as COVERED, PARTIAL, or MISSING. If any are missing, you decide: stop and fix them, or continue to the quality pass with gaps flagged as P1 findings. This catches "we built the wrong thing" before you spend time reviewing how well it was built.
 
-```bash
-/review                # interactive: discuss findings
-/review --report       # report only, no conversation
-/review --autofix      # apply fixes automatically
-```
+**Pass 2 — Quality:** Multi-persona code review through 6 lenses: correctness, testing, security, performance, maintainability, and adversarial. Only lenses relevant to the diff are activated.
+
+The output is severity-ranked findings (P0–P3) with confidence scores. Address any P0 or P1 findings before shipping. Spec compliance result appears in the report header.
 
 ---
 

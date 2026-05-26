@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// learnship-hook-version: 2.2.0
+// learnship-hook-version: 2.4.0
 // Prompt Injection Guard — PreToolUse hook
 // Scans file content being written to .planning/ for prompt injection patterns.
 // Defense-in-depth: catches injected instructions before they enter agent context.

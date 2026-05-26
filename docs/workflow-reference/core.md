@@ -102,6 +102,19 @@ Manual UAT for phase N with goal-backward verification, agent-assisted diagnosis
 4. Agent diagnoses root causes and creates targeted fix plans
 5. You execute fixes and re-verify
 
+**Optional: Live UI smoke test (MCP-enabled platforms)**
+
+If `@playwright/mcp` is configured (works on any MCP-supporting platform: Claude Code, OpenCode, Cursor, Windsurf, Codex CLI, Gemini CLI), learnship can walk the golden path for UI deliverables automatically instead of relying solely on manual testing:
+
+- Navigates to the app's entry point
+- Walks through each UI deliverable from the test list
+- Takes screenshots at each step
+- Checks the browser console for JS errors
+
+Any Playwright failure is treated as a UAT issue (severity: blocker) and added to the Gaps section.
+
+To configure: `claude mcp add playwright npx @playwright/mcp` (Claude Code), or add `@playwright/mcp` as an MCP server in your IDE settings.
+
 **When to use:** After `/execute-phase N` completes.
 
 **Learning checkpoint:**
@@ -164,7 +177,7 @@ Starts a new milestone version cycle.
 /plan-phase N
 /execute-phase N
 /verify-work N
-/review              # multi-persona code review (v2.0)
+/review              # two-pass review: spec compliance + quality (v2.4.0)
 /ship                # test → lint → commit → push → PR (v2.0)
 /compound            # capture what you learned (v2.0)
 

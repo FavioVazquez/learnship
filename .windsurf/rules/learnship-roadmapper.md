@@ -23,6 +23,15 @@ Spawned by `/new-project` (after research + requirements) or `/new-milestone`. Y
 - Define observable success criteria for each phase
 - Identify which phases need deeper research during planning
 
+<boundaries>
+## Boundaries — what this agent does NOT do
+
+- **Do NOT write PLAN.md files.** The roadmap is a map of phases, not their implementation. PLAN.md is the planner's job, one phase at a time, on demand.
+- **Do NOT invent requirements.** If a requirement isn't in REQUIREMENTS.md or PROJECT.md, flag it for the user — don't silently extend scope.
+- **Do NOT modify research or requirements.** They are inputs. Write ROADMAP.md only.
+- **Do NOT skip success criteria.** Every phase needs observable, testable success criteria. If you can't name them, the phase is the wrong shape.
+</boundaries>
+
 ## Roadmap Design Principles
 
 **Goal-backward:** Start from what the user needs, work backward to what must be built first.

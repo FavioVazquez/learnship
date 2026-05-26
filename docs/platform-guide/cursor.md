@@ -15,13 +15,15 @@ Cursor gets learnship via the plugin marketplace — no terminal required. The `
 /add-plugin learnship
 ```
 
-**Or install manually (before marketplace approval):**
+**Or print manual install instructions:**
 
 ```bash
-npx learnship          # installs Claude Code, Windsurf, Gemini, OpenCode, or Codex
+npx learnship --cursor
 ```
 
-For Cursor specifically, copy the rule file into your project:
+The `--cursor` flag prints the steps below — it does not run an install, because Cursor loads rule files from your project, not from a global config directory.
+
+**Manual install (copy the rule file into your project):**
 
 ```bash
 mkdir -p .cursor/rules
@@ -29,13 +31,13 @@ cp node_modules/learnship/cursor-rules/learnship.mdc .cursor/rules/
 ```
 
 !!! note "Marketplace status"
-    learnship has been submitted to the Cursor marketplace. Until approved, copy `cursor-rules/learnship.mdc` into your project's `.cursor/rules/` directory. The `npx learnship` CLI does not have a `--cursor` flag — Cursor installs via the plugin marketplace or by copying the `.mdc` rule file directly.
+    learnship has been submitted to the Cursor marketplace. Until approved, copy `cursor-rules/learnship.mdc` into your project's `.cursor/rules/` directory using the steps above.
 
 ## How it works on Cursor
 
 Cursor uses `.mdc` rule files to inject persistent context into every agent session. The `learnship.mdc` rule:
 
-- Loads all 57 workflow commands with when-to-use guidance
+- Loads all 57 workflow commands with when-to-use guidance (37 Core + 20 Secondary, both grouped in the rule file)
 - Explains `.planning/` artifact structure so the agent always knows where state lives
 - Activates learning mode and design system behaviors
 - Defines key agent behaviors (atomic commits, no scope creep, goal-backward verification)
@@ -95,11 +97,16 @@ Or just work normally — the rule file activates skills at workflow checkpoints
 | Slash commands | ✅ Via `.mdc` rule context |
 | `@agentic-learning` skill | ✅ Context-file |
 | `impeccable` skill suite | ✅ Context-file |
-| Parallel subagents | ✅ Supported since Cursor 2.4 |
-| Wave execution | ✅ Parallel (Cursor 2.4+) |
+| Parallel subagents | ✅ Native in Cursor 2.4+ — learnship dispatches sequentially via `.mdc` rule context |
+| Wave execution | ✅ Sequential via `.mdc` rule context (Cursor's native parallel available to you directly) |
 | Agent personas (17) | ✅ Inline `<persona_context>` blocks |
 | Marketplace install | ✅ `/add-plugin learnship` |
 | Interactive questions | ✅ Text fallback |
+| Playwright MCP smoke tests | ✅ Via @playwright/mcp MCP server |
+
+## Playwright MCP smoke tests
+
+Live UI smoke tests via Playwright MCP are supported when `@playwright/mcp` is configured. The `/verify-work` and `/ship` workflows will use it automatically for UI verification when available.
 
 ## Manual rule install (before marketplace approval)
 

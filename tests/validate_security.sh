@@ -161,7 +161,7 @@ const secretPatterns=[
 
   // Passwords in connection strings
   {re:/(?:password|passwd|pwd)\s*[:=]\s*['\"][^'\"]{8,}/gi, desc:'password literal'},
-  {re:/[a-z]+:\/\/[^:\[]+:[^@\[]{8,}@/g, desc:'credentials in URL'},
+  {re:/[a-z]+:\/\/[^:\[\n]+:[^@\[\n]{8,}@/g, desc:'credentials in URL'},
 ];
 
 function scanDir(dir){
@@ -707,6 +707,90 @@ check "bin/install.js: not world-writable" node -e "
   const mode=fs.statSync('$REPO_DIR/bin/install.js').mode;
   if(mode&0o002)process.exit(1);
 "
+
+# ─── 17. --target Path Boundary Enforcement ───────────────────────────
+# install.js must refuse system paths and bare $HOME so a typo or hostile
+# arg can't trigger fs.rmSync on something important.
+
+echo ""
+echo "─── --target Path Boundary Enforcement ───────────────────────────"
+
+INSTALLER="$REPO_DIR/bin/install.js"
+
+# Refuses root filesystem
+check_must_fail() {
+  local description="$1"
+  shift
+  if "$@" > /dev/null 2>&1; then
+    echo "  ✗ $description (expected exit !=0 but got 0)"
+    FAIL=$((FAIL+1))
+    ERRORS+=("$description")
+  else
+    echo "  ✓ $description"
+    PASS=$((PASS+1))
+  fi
+}
+
+check_must_fail "install.js: refuses --target /" node "$INSTALLER" --claude --target /
+check_must_fail "install.js: refuses --target /etc" node "$INSTALLER" --claude --target /etc
+check_must_fail "install.js: refuses --target /usr/local" node "$INSTALLER" --claude --target /usr/local
+check_must_fail "install.js: refuses --target \$HOME directly" node "$INSTALLER" --claude --target "$HOME"
+
+# Accepts valid paths (under /tmp and under cwd)
+TMPGOOD=$(mktemp -d)
+check "install.js: accepts --target under /tmp" node "$INSTALLER" --claude --target "$TMPGOOD"
+rm -rf "$TMPGOOD"
+
+# ─── 18. Manifest Path-Traversal Protection ───────────────────────────
+# saveLocalPatches must refuse manifest entries with '../' or absolute paths
+# so a malicious learnship-file-manifest.json can't be used to back up
+# sensitive files outside the install root.
+
+echo ""
+echo "─── Manifest Path-Traversal Protection ───────────────────────────"
+
+TMPMANI=$(mktemp -d)
+# Set up a fake install with a corrupted manifest containing dangerous paths
+mkdir -p "$TMPMANI/learnship"
+echo "ok" > "$TMPMANI/learnship/safe.md"
+# Create a target file outside the install root that a traversal would expose
+echo "SECRET" > "$TMPMANI/secret.txt"
+cat > "$TMPMANI/learnship-file-manifest.json" <<'EOF'
+{
+  "version": "test",
+  "files": {
+    "learnship/safe.md": "deadbeef0000000000000000000000000000000000000000000000000000beef",
+    "../secret.txt": "deadbeef0000000000000000000000000000000000000000000000000000beef",
+    "/etc/passwd": "deadbeef0000000000000000000000000000000000000000000000000000beef"
+  }
+}
+EOF
+
+# Run saveLocalPatches via LEARNSHIP_TEST_MODE export
+LEARNSHIP_TEST_MODE=1 node -e "
+const { saveLocalPatches } = require('$INSTALLER');
+const modified = saveLocalPatches('$TMPMANI');
+// safe.md should be backed up (hash mismatch), but '../secret.txt' must be skipped
+const fs = require('fs');
+const path = require('path');
+const escaped = fs.existsSync(path.join('$TMPMANI', 'secret.txt-backup'))
+  || fs.existsSync(path.join('$TMPMANI', '..', 'secret.txt-backup'));
+if (escaped) { console.error('Path traversal succeeded'); process.exit(1); }
+// Refused entries must NOT appear in the modified list
+if (modified.includes('../secret.txt') || modified.includes('/etc/passwd')) {
+  console.error('Unsafe manifest entry was processed: ' + modified.filter(m => m.includes('..') || m.startsWith('/')).join(', '));
+  process.exit(1);
+}
+" 2>&1
+if [ $? -eq 0 ]; then
+  echo "  ✓ saveLocalPatches refuses ../ and absolute manifest paths"
+  PASS=$((PASS+1))
+else
+  echo "  ✗ saveLocalPatches allowed path traversal"
+  FAIL=$((FAIL+1))
+  ERRORS+=("saveLocalPatches allowed path traversal")
+fi
+rm -rf "$TMPMANI"
 
 echo ""
 echo "─── Results ──────────────────────────────────────────────────────"

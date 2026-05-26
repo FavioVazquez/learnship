@@ -139,9 +139,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: .planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md
     Required sections: ## Don't Hand-Roll, ## Common Pitfalls, ## Existing Patterns in This Codebase, ## Recommended Approach
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write [padded_phase]-RESEARCH.md to disk. Do NOT output the content to the conversation. Do NOT treat this as done until the file physically exists on disk.**
+
+    Write the research content to `.planning/phases/[padded_phase]-[phase_slug]/[padded_phase]-RESEARCH.md` using your write tool now.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const files=fs.readdirSync('.planning/phases/').flatMap(d=>fs.readdirSync('.planning/phases/'+d).filter(f=>f.endsWith('-RESEARCH.md')).map(f=>'.planning/phases/'+d+'/'+f));if(!files.length){console.log('RESEARCH_MISSING');process.exit(1);}console.log('RESEARCH_OK — '+files[files.length-1]);"
+    ```
+
+    If `RESEARCH_MISSING`: write the file and re-run until `RESEARCH_OK`.
   "
 )
 ```
@@ -203,14 +213,16 @@ Task(
   prompt="
     <agent_definition>
     You are a learnship planner. Create executable PLAN.md files that an AI agent can follow step-by-step.
-    Each plan covers a single logical unit of work. Tasks use XML format with file, action, verify, done fields.
-    Plans have YAML frontmatter: wave, depends_on, files_modified, autonomous.
+    Each plan is a VERTICAL SLICE (tracer bullet) — a thin end-to-end path through all layers for one user-facing behavior. A completed plan must be demoable or verifiable on its own.
+    DO NOT create plans that cover a single layer across the whole feature (all-schema plan, all-API plan, all-UI plan). Each plan delivers one complete behavior: data + logic + API + UI + test.
+    Exception: add `single_layer_justified: true` to frontmatter only if the phase is legitimately single-layer (e.g., DB migration, style pass).
+    Tasks use XML format with file, action, verify, done fields. Plans have YAML frontmatter: wave, depends_on, files_modified, autonomous, single_layer_justified, objective.
     Be specific — task actions should be concrete instructions, not vague guidance.
     </agent_definition>
 
     <objective>
     Create 2-4 executable PLAN.md files for Phase [phase_number]: [phase_name].
-    Write plans to [phase_dir]/[padded_phase]-NN-PLAN.md.
+    Each plan = one tracer bullet (demoable end-to-end slice). Write plans to [phase_dir]/[padded_phase]-NN-PLAN.md.
     </objective>
 
     <files_to_read>
@@ -223,9 +235,19 @@ Task(
     </files_to_read>
 
     <output>
-    Write to: [phase_dir]/[padded_phase]-01-PLAN.md, [padded_phase]-02-PLAN.md, etc.
     Each plan must have: YAML frontmatter (wave, depends_on, files_modified) + tasks in XML + must_haves section
     </output>
+
+    **WRITE ACTION REQUIRED — You MUST use your file-write tool to write each PLAN.md to disk. Do NOT output plans to the conversation. Do NOT treat this as done until files physically exist on disk.**
+
+    Write each plan to `[phase_dir]/[padded_phase]-NN-PLAN.md` using your write tool now. Write all plans before reporting done.
+
+    Then verify:
+    ```
+    node -e "const fs=require('fs');const plans=fs.readdirSync('.').filter(f=>f.endsWith('-PLAN.md'));if(!plans.length){console.log('PLANS_MISSING');process.exit(1);}console.log('PLANS_OK — '+plans.length+' plan(s): '+plans.join(', '));"
+    ```
+
+    Run that command from inside [phase_dir]. If `PLANS_MISSING`: write the files and re-run until `PLANS_OK`.
   "
 )
 ```
@@ -236,7 +258,10 @@ Wait for agent to complete, then verify PLAN.md files were written.
 
 <persona_context>
 You are now the **learnship planner**. Create implementation plans that are executable in a single context window.
-Each plan covers one logical unit of work. Tasks use XML format. Include YAML frontmatter with wave, depends_on, files_modified.
+Each plan is a VERTICAL SLICE (tracer bullet) — a thin end-to-end path through all layers for one user-facing behavior. A completed plan must be demoable or verifiable on its own.
+DO NOT create plans that cover a single layer across the whole feature (all-schema plan, all-API plan, all-UI plan). Each plan delivers one complete behavior: data + logic + API + UI + test.
+Exception: add `single_layer_justified: true` to frontmatter only if the phase is legitimately single-layer (e.g., DB migration, style pass).
+Tasks use XML format. Include YAML frontmatter with wave, depends_on, files_modified, autonomous, single_layer_justified, objective.
 Right-size plans: too small = overhead, too large = risk. Aim for plans completable in one focused session.
 </persona_context>
 
@@ -253,10 +278,12 @@ Read `@./agents/planner.md` for the full persona definition. Read all available 
 - RESEARCH.md (if exists)
 
 Create 2-4 PLAN.md files in the phase directory. Each plan:
-- Covers a single logical unit of work executable in one context window
-- Has YAML frontmatter: `wave`, `depends_on`, `files_modified`, `autonomous`
+- Is a **vertical slice (tracer bullet)** — delivers one demoable user-facing behavior end-to-end (data → logic → API → UI → test). NOT a horizontal layer.
+- Has YAML frontmatter: `wave`, `depends_on`, `files_modified`, `autonomous`, `single_layer_justified`, `objective`
 - Contains tasks in XML format (see `$LEARNSHIP_DIR/templates/plan.md`)
 - Has `must_haves` section with observable verification criteria
+
+**Vertical slice check before writing:** For each plan you draft, ask: "Can someone demo this plan's deliverable after it completes, without completing other plans?" If the answer is no, restructure into proper vertical slices.
 
 **Wave assignment:**
 - Plans with no dependencies → Wave 1 (independent, execute in any order)
@@ -286,13 +313,14 @@ Task(
   prompt="
     <agent_definition>
     You are a learnship plan checker. Verify plans are complete, correct, and executable.
-    Check: phase goal coverage, requirement IDs, CONTEXT.md decisions honored, task completeness, wave/dependency correctness.
-    Be strict — flag missing requirement IDs, vague task actions, incorrect wave assignments.
+    Check: phase goal coverage, requirement IDs, CONTEXT.md decisions honored, task completeness, wave/dependency correctness, AND vertical slice integrity.
+    Vertical slice check: each plan's objective must describe a demoable user-facing behavior delivered end-to-end. Flag any plan that covers only a single layer (all schema, all API, all UI) unless single_layer_justified: true is set in its frontmatter.
+    Be strict — flag missing requirement IDs, vague task actions, incorrect wave assignments, and horizontal slices.
     </agent_definition>
 
     <objective>
     Verify all PLAN.md files in [phase_dir] for Phase [phase_number]: [phase_name].
-    Check: phase goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, wave correctness.
+    Check: phase goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, wave correctness, vertical slice integrity.
     Return: PASS or list of specific issues per plan.
     </objective>
 
@@ -314,8 +342,9 @@ If still failing after 3 iterations: present issues and ask — **Force proceed*
 <persona_context>
 You are now the **learnship plan checker**. Verify plans are complete, correct, and executable.
 Every v1 requirement must map to at least one plan task. Success criteria must be observable and testable.
-Flag gaps, missing coverage, unrealistic estimates, and circular dependencies.
-Check: phase goal coverage, requirement IDs, CONTEXT.md decisions honored, task completeness, wave/dependency correctness.
+Flag gaps, missing coverage, unrealistic estimates, circular dependencies, AND horizontal slices.
+Vertical slice check: each plan's objective must describe a demoable user-facing behavior delivered end-to-end. Flag any plan that covers only a single layer (all schema, all API, all UI) unless `single_layer_justified: true` is in the frontmatter.
+Check: phase goal coverage, requirement IDs, CONTEXT.md decisions honored, task completeness, wave/dependency correctness, vertical slice integrity.
 </persona_context>
 
 > **Announce persona** — print this before proceeding:
@@ -329,6 +358,7 @@ Read `@./agents/plan-checker.md` for the full persona definition. Check the plan
 - CONTEXT.md decisions (are they honored?)
 - Task completeness (files, action, verify, done fields)
 - Wave/dependency correctness
+- Vertical slice integrity (is each plan's objective a demoable user-facing behavior? flag horizontal-only plans)
 
 **Verification loop (max 3 iterations):**
 

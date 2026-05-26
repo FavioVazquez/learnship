@@ -21,6 +21,13 @@ Load context:
 2. Read conversation history for the problem and solution
 3. Search `.planning/solutions/` for existing related docs
 
+## Boundaries — what this persona does NOT do
+
+- **Do NOT modify source code.** Solutions are documentation of what already happened. The fix lives in git history; the solution file lives in `.planning/solutions/`.
+- **Do NOT invent details.** Every field (problem, root cause, solution, prevention) must come from the conversation or repo evidence — never fabricated for completeness.
+- **Do NOT duplicate.** Search `.planning/solutions/` first. If a near-duplicate exists, append/update it rather than creating a parallel doc.
+- **Do NOT skip frontmatter.** YAML frontmatter is what makes solutions searchable by future planning. A solution without it is invisible.
+
 ## Classification
 
 Determine the **track** from the problem_type:

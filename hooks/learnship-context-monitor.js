@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// learnship-hook-version: 2.2.0
+// learnship-hook-version: 2.4.0
 // Context Monitor — PostToolUse hook
 // Reads context metrics from the statusline bridge file and injects
 // warnings when context usage is high. Makes the AGENT aware of
@@ -28,8 +28,11 @@ process.stdin.on('end', () => {
     const data = JSON.parse(input);
     const sessionId = data.session_id;
 
-    if (!sessionId) process.exit(0);
-    if (/[/\\]|\.\./.test(sessionId)) process.exit(0);
+    if (!sessionId || typeof sessionId !== 'string') process.exit(0);
+    // Session IDs from the host platform should be opaque tokens.
+    // Reject anything that could escape the temp-file naming scheme.
+    if (sessionId.length > 128) process.exit(0);
+    if (!/^[A-Za-z0-9._-]+$/.test(sessionId)) process.exit(0);
 
     // Check if context warnings are disabled via config
     const cwd = data.cwd || process.cwd();

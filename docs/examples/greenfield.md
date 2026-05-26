@@ -130,7 +130,7 @@ All pass clean.
 /review
 ```
 
-Multi-persona code review across 6 lenses. Findings:
+Two-pass review: spec compliance pass (all deliverables COVERED), then 6-lens quality review. Findings:
 
 ```
 P1 (security): Rate limiter on /auth/login allows 100 req/s — should be 10

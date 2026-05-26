@@ -118,7 +118,7 @@ Write `CONTEXT.md` to the task directory:
 ### [Area discussed]
 - [Decision captured]
 
-### Claude's Discretion
+### Agent's Discretion
 [Areas not discussed or "you decide" answers]
 
 </decisions>
