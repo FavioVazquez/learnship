@@ -35,11 +35,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up Node.js with npm registry
+      - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
           node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Verify tag matches package.json version
         run: |
@@ -59,7 +58,9 @@ jobs:
           echo "All plugin manifests match package.json version $PKG_VERSION ✓"
 
       - name: Publish
-        run: npm publish --access public --provenance
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm publish --access public --provenance
 
       - name: Update learnship-marketplace
         env:
