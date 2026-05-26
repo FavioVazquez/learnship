@@ -9,15 +9,11 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
-## [v2.4.1] — 2026-05-25
+## [v2.4.0] — 2026-05-25
 
 ### Changed
 
 - **Parallel subagents are now on by default** on Claude Code, OpenCode, and Codex CLI. Previously the `/new-project` setup wizard defaulted to sequential (`parallelization.enabled: false`) on all platforms and required the user to opt in. Now, on the three platforms with real parallel subagent APIs, Quick Setup and the Customize-mode default both set `parallelization.enabled: true`. The round-4 question in Customize mode still appears — it now recommends **Yes** instead of No. Users who prefer sequential execution can choose No during setup or set `"parallelization": { "enabled": false }` in `.planning/config.json` at any time. Windsurf, Cursor, and Gemini CLI are unchanged (sequential-only or experimental).
-
----
-
-## [v2.4.0] — 2026-05-25
 
 ### Added
 
