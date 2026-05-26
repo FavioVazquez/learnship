@@ -59,7 +59,9 @@ jobs:
           echo "All plugin manifests match package.json version $PKG_VERSION ✓"
 
       - name: Publish
-        run: npm publish --access public --provenance
+        run: |
+          npm config delete //registry.npmjs.org/:_authToken || true
+          npm publish --access public --provenance
 
       - name: Update learnship-marketplace
         env:
