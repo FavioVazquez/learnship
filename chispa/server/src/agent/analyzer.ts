@@ -44,7 +44,8 @@ const STEP_TEXTS = [
 
 export async function* analyzeIdea(
   idea: string,
-  country?: string
+  country?: string,
+  signal?: AbortSignal
 ): AsyncGenerator<SSEMessage> {
   try {
     const countryContext = country
@@ -56,10 +57,11 @@ export async function* analyzeIdea(
       model: 'claude-opus-4-7',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
+      // web_search_20250305 is not yet in the SDK's tool type union
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tools: [{ type: 'web_search_20250305', name: 'web_search' }] as any,
       messages: [{ role: 'user', content: userMessage }],
-    })
+    }, { signal })
 
     let stepCount = 0
 
@@ -121,9 +123,18 @@ export async function* analyzeIdea(
 
     yield { type: 'result', data: result }
   } catch (err: unknown) {
-    yield {
-      type: 'error',
-      message: err instanceof Error ? err.message : String(err),
+    // Ignore abort errors — the client disconnected, no response needed
+    if (err instanceof Error && err.name === 'AbortError') return
+
+    const msg = err instanceof Error ? err.message : ''
+    let userMessage = 'Error interno del servidor. Intenta de nuevo.'
+    if (msg.includes('timeout') || msg.includes('timed out')) {
+      userMessage = 'El análisis tardó demasiado. Intenta de nuevo.'
+    } else if (msg.includes('No JSON object found') || msg.includes('JSON')) {
+      userMessage = 'El modelo no devolvió un resultado válido. Intenta de nuevo.'
+    } else if (msg.includes('rate_limit') || msg.includes('429')) {
+      userMessage = 'El servicio de IA está saturado. Intenta en unos minutos.'
     }
+    yield { type: 'error', message: userMessage }
   }
 }

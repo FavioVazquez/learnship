@@ -14,7 +14,7 @@ export function ActivityFeed({ steps }: ActivityFeedProps) {
 
   // Auto-scroll to bottom when new steps arrive
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: 'instant' })
   }, [steps.length])
 
   if (steps.length === 0) {
@@ -41,9 +41,9 @@ export function ActivityFeed({ steps }: ActivityFeedProps) {
           aria-live="polite"
           aria-label="Pasos del análisis en curso"
         >
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <motion.div
-              key={index}
+              key={step.text}
               initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -8 }}
               animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
               transition={{

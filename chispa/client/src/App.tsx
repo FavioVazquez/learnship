@@ -126,12 +126,9 @@ export default function App() {
             <p className="text-red-300 text-sm">{error}</p>
             {(error.startsWith('Error de conexión') || error.startsWith('Demasiados análisis en curso')) ? (
               <button
-                onClick={() => {
-                  if (lastIdea) {
-                    submit(lastIdea, lastCountry)
-                  }
-                }}
-                className="text-sm px-4 py-2 rounded-lg bg-surface border border-border text-gray-300 hover:border-primary hover:text-primary-light transition-colors"
+                onClick={() => submit(lastIdea, lastCountry)}
+                disabled={!lastIdea}
+                className="text-sm px-4 py-2 rounded-lg bg-surface border border-border text-gray-300 hover:border-primary hover:text-primary-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Reintentar
               </button>

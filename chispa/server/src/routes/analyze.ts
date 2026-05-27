@@ -32,15 +32,21 @@ router.post('/api/analyze', async (req: Request, res: Response): Promise<void> =
   res.setHeader('X-Accel-Buffering', 'no')
   res.flushHeaders()
 
+  const abortController = new AbortController()
+  req.on('close', () => abortController.abort())
+
   try {
-    for await (const msg of analyzeIdea(idea, country)) {
+    for await (const msg of analyzeIdea(idea, country, abortController.signal)) {
+      if (abortController.signal.aborted) break
       sendSSE(res, msg)
     }
   } catch (err: unknown) {
-    sendSSE(res, {
-      type: 'error',
-      message: err instanceof Error ? err.message : String(err),
-    })
+    if (!abortController.signal.aborted) {
+      sendSSE(res, {
+        type: 'error',
+        message: 'Error interno del servidor. Intenta de nuevo.',
+      })
+    }
   } finally {
     activeAnalyses--
     res.end()
