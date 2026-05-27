@@ -1,7 +1,7 @@
 # Multi-Persona Code Review — Chispa v1.0
 
-**Date:** 2026-05-26
-**Scope:** Full codebase quality review (no remote diff; quality-only pass)
+**Date:** 2026-05-26 (post-test hotfixes: 2026-05-27)
+**Scope:** Full codebase quality review (no remote diff; quality-only pass) + live-test findings
 **Reviewers:** correctness · testing · security · performance · maintainability · adversarial
 
 ---
@@ -56,11 +56,25 @@ SKIPPED — no remote; reviewing full codebase quality.
 
 ---
 
+## Post-Test Findings (2026-05-27)
+
+Three additional P0 bugs found during live testing with a real API key. All fixed same day.
+
+| # | File | Issue | Status |
+|---|------|-------|--------|
+| 14 | `server/src/routes/analyze.ts` | **`req.on('close')` aborted every request immediately** — `req` fires close after POST body parsing (milliseconds after headers flush), not on client disconnect. Every SSE stream was aborted before Claude received it. Fix: `res.on('close', () => { if (!res.writableEnded) abort() })` | ✅ FIXED |
+| 15 | `server/src/agent/analyzer.ts` | **`APIUserAbortError` not silenced** — Anthropic SDK throws its own error class (not native `AbortError`) on signal abort; the guard only checked `AbortError`, so disconnected clients saw "Error interno del servidor". Fix: added `err.name === 'APIUserAbortError'` to the guard. | ✅ FIXED |
+| 16 | `server/src/agent/analyzer.ts` | **JSON parse failed on every real analysis** — With `web_search_20250305`, Claude interleaves `server_tool_use` blocks between text fragments; `.at(-1)?.text` grabbed only the last fragment (partial JSON). Fix: `textBlocks.map(b => b.text).join('')` | ✅ FIXED |
+
+Also: **Vite `^5.3.2` → `6.4.2`** to patch 2 moderate CVEs (esbuild dev-server + path traversal).
+
+---
+
 ## Verdict
 
-**PASS** — All P1 findings resolved. All P2 findings resolved except #7 (prompt injection — acceptable for demo, document for public deployment). P3 #9 (tests) and #10 (startsWith) are low-risk deferred items.
+**PASS** — All P1 findings resolved. All post-test P0 bugs resolved. P2 #7 (prompt injection) acceptable for demo. P3 #9 (tests) and #10 (startsWith) low-risk deferred.
 
-**Total: 13 findings** — 10 resolved, 3 open (all acceptable for demo scope)
+**Total: 16 findings** — 13 resolved, 3 open (all acceptable for demo scope)
 
 ---
 

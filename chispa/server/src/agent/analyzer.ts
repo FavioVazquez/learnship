@@ -91,7 +91,9 @@ export async function* analyzeIdea(
     }
 
     const textBlocks = finalMsg.content.filter((b) => b.type === 'text')
-    const rawText = textBlocks.at(-1)?.text ?? ''
+    // Join ALL text blocks — web_search interleaves server_tool_use blocks between
+    // text fragments, so .at(-1) only gets the last fragment (partial JSON).
+    const rawText = textBlocks.map((b) => b.text).join('')
 
     // Extract the JSON object by finding the outermost braces — more reliable than
     // stripping markdown fences with regexes, which break when Claude adds preamble.
@@ -123,8 +125,9 @@ export async function* analyzeIdea(
 
     yield { type: 'result', data: result }
   } catch (err: unknown) {
-    // Ignore abort errors — the client disconnected, no response needed
-    if (err instanceof Error && err.name === 'AbortError') return
+    // Ignore abort errors — client disconnected, no response needed.
+    // The Anthropic SDK throws APIUserAbortError (not the native AbortError).
+    if (err instanceof Error && (err.name === 'AbortError' || err.name === 'APIUserAbortError')) return
 
     const msg = err instanceof Error ? err.message : ''
     let userMessage = 'Error interno del servidor. Intenta de nuevo.'

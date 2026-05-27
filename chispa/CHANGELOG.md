@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-05-27 — Live-test bug fixes (3 critical, 1 security)
+
+**Fixes**
+- `analyze.ts`: `req.on('close')` → `res.on('close', () => { if (!res.writableEnded) abort() })` — `req` fires close immediately after POST body parsing, aborting every request before the Anthropic call even started. `res` fires only when the client disconnects from the SSE stream.
+- `analyzer.ts`: Add `APIUserAbortError` to abort guard — the Anthropic SDK throws its own error class (not the native `AbortError`) when a stream is cancelled via signal; unguarded, this leaked as a user-facing "Error interno" message.
+- `analyzer.ts`: `textBlocks.at(-1)?.text` → `textBlocks.map(b => b.text).join('')` — with `web_search_20250305` active, Claude interleaves `server_tool_use` blocks between text fragments; grabbing only the last fragment produced partial JSON that always failed parsing.
+- `client/package.json`: Vite `^5.3.2` → `6.4.2` — patches 2 moderate CVEs (esbuild dev-server request smuggling, path traversal in static file serving).
+
+**Learnings**
+- `req.on('close')` and `res.on('close')` are not the same event on an SSE endpoint. `req` closes when the body is parsed (immediately); `res` closes when the client drops the connection. Always use `res` for SSE disconnect detection.
+- The Anthropic SDK wraps native AbortError in `APIUserAbortError`. When guarding against abort, check both `.name` values.
+- Claude with active tools returns interleaved content blocks. Never use `.at(-1)` on text blocks — always join all of them.
+
 ## 2026-05-27 — Pre-workshop review pass
 
 **Fixes**

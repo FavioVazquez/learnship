@@ -76,4 +76,5 @@ if (
 - **Always check `stop_reason` before parsing.** A truncated JSON object will never parse successfully.
 - **Always validate shape after `JSON.parse`.** TypeScript `as SomeType` is a cast, not a runtime check. An invalid verdict string will crash downstream components that index into config maps.
 - **Strip fences even when the prompt says "return raw JSON".** Claude's instruction adherence is not 100% reliable across model versions.
+- **With tools active, Claude returns multiple text blocks.** When `web_search_20250305` (or any tool) is used, the response `content` array is interleaved: `[text, server_tool_use, text, server_tool_use, ..., text]`. Each text block is a fragment; the last one alone is partial JSON. Always do `textBlocks.map(b => b.text).join('')`, never `.at(-1)?.text`.
 - Consider using `JSON5.parse()` or `jsonrepair` as a fallback for minor JSON formatting issues (trailing commas, unquoted keys) if strict compliance is not required.

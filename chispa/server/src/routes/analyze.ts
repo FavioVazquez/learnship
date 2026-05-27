@@ -33,7 +33,11 @@ router.post('/api/analyze', async (req: Request, res: Response): Promise<void> =
   res.flushHeaders()
 
   const abortController = new AbortController()
-  req.on('close', () => abortController.abort())
+  // res.on('close') fires when the client disconnects from the SSE stream.
+  // req.on('close') fires when the POST body is fully parsed — too early.
+  res.on('close', () => {
+    if (!res.writableEnded) abortController.abort()
+  })
 
   try {
     for await (const msg of analyzeIdea(idea, country, abortController.signal)) {

@@ -293,4 +293,36 @@ Context fades fast. If a solution was worth finding, it's worth capturing.
 <!-- Updated automatically by the debug workflow after each resolved session -->
 <!-- Add entries in reverse chronological order: ### YYYY-MM-DD: Short description -->
 
-> No regressions logged yet. When bugs are fixed via `/debug`, lessons are recorded here.
+### 2026-05-27: Every SSE analysis aborted immediately (req vs res close event)
+
+**Symptom:** Every analysis attempt failed instantly — the SSE stream opened then closed before any steps appeared. No errors in the UI, just a silent stream-closed-without-result transition to the error state.
+
+**Root cause:** `req.on('close')` fires when the HTTP request body is fully parsed and buffered — which happens immediately after `res.flushHeaders()` on a POST with a small JSON body. We were aborting the Anthropic call milliseconds after starting it. The correct event is `res.on('close')`, which fires when the *response stream* is closed (i.e. the client actually disconnects).
+
+**Fix:** `req.on('close', ...)` → `res.on('close', () => { if (!res.writableEnded) abort() })`
+
+**Principle:** On an SSE endpoint, `req` and `res` have different lifetimes. `req` closes after body parsing. `res` stays open for the duration of the stream. Client-disconnect detection must use `res`.
+
+---
+
+### 2026-05-27: Abort leaked through as user-facing error (APIUserAbortError vs AbortError)
+
+**Symptom:** When a client disconnected mid-stream, the user saw "Error interno del servidor" instead of a silent abort.
+
+**Root cause:** The Anthropic SDK throws `APIUserAbortError` (its own error class) when a stream is aborted via `signal`. The guard only checked `err.name === 'AbortError'` (the native Web API name). The SDK error has a different `.name`, so it fell through to the user-facing error mapping.
+
+**Fix:** `err.name === 'AbortError' || err.name === 'APIUserAbortError'`
+
+**Principle:** When using third-party SDK abort semantics, always check the SDK's error class name, not just the native AbortError. Log `err.name` and `err.constructor.name` when debugging unexpected error paths.
+
+---
+
+### 2026-05-27: JSON parse failed on every real analysis (text block fragmentation)
+
+**Symptom:** All analyses returned "El modelo no devolvió un resultado válido" — the JSON was found but `.indexOf('{')` / `.lastIndexOf('}')` succeeded yet the extracted string was partial JSON that failed `JSON.parse`.
+
+**Root cause:** When Claude uses `web_search_20250305`, the response content array is interleaved: `[text_block, server_tool_use, text_block, server_tool_use, ..., text_block]`. The final text block is only the last fragment of the JSON response. `textBlocks.at(-1)?.text` grabbed that fragment — partial JSON, always a parse failure.
+
+**Fix:** `textBlocks.map(b => b.text).join('')` — concatenate all text blocks before extraction.
+
+**Principle:** Never assume the model's text response is in a single content block when tools are involved. Always join all text blocks. The interleaved structure is documented in the Messages API but easy to miss when testing without real tool calls.

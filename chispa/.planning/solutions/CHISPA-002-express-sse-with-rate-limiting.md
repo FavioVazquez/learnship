@@ -5,6 +5,7 @@ tags: [express, sse, server-sent-events, rate-limiting, typescript]
 problem_domain: "HTTP streaming / API protection"
 severity_when_wrong: high
 discovery_date: 2026-05-26
+updated: 2026-05-27
 project: chispa
 ---
 
@@ -74,3 +75,4 @@ router.post('/analyze', async (req, res) => {
 - The in-memory counter resets on process restart and does not work across multiple Node processes. Use Redis or a proper rate-limit store for multi-instance deployments.
 - Always call `res.end()` in the `finally` block — if you throw before `res.end()`, the client connection hangs open until timeout.
 - `express-rate-limit` by default counts requests, not concurrent connections. Use it for per-minute caps; use the counter pattern for concurrency caps.
+- **`req.on('close')` ≠ `res.on('close')` on an SSE endpoint.** `req` fires `close` as soon as the POST request body is fully parsed and buffered — which happens within milliseconds of `res.flushHeaders()`. Using `req.on('close')` to detect client disconnect will abort the stream immediately on every request. Use `res.on('close')`, which fires when the client actually disconnects from the response stream. Guard with `if (!res.writableEnded)` to avoid aborting after a clean completion.
