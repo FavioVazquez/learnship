@@ -74,7 +74,7 @@ None.
 None. Deployment target still undecided — consider Railway, Render, or Fly.io for conference demo if sharing URLs across devices is needed.
 
 ### Phase 4 Decisions
-- process.cwd() over __dirname for production static file serving — stable regardless of TS compilation depth
+- __dirname (via fileURLToPath) over process.cwd() for production static file serving — more robust when process CWD isn't the project root
 - server/package.json start script was pointing to dist/src/index.js but compiled output is at dist/index.js (rootDir:src strips prefix) — fixed
 - Kept existing README (better than plan template) and added Demo Script section only
 

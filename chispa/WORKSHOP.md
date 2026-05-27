@@ -446,6 +446,6 @@ Key decisions:
 ## Resources to Share with the Audience
 
 - **learnship**: `npx learnship --claude --global`
-- **Chispa source**: github.com/FavioVazquez/chispa
+- **Chispa source**: github.com/FavioVazquez/chispa  *(standalone repo — publish before the talk)*
 - **Anthropic API key**: console.anthropic.com
 - **Claude Code**: code.claude.com

@@ -33,7 +33,7 @@ No accounts. No database. Stateless by design.
 
 ```bash
 # 1. Clone
-git clone https://github.com/FavioVazquez/chispa.git
+git clone https://github.com/FavioVazquez/chispa.git  # standalone repo — coming soon
 cd chispa
 
 # 2. Install
