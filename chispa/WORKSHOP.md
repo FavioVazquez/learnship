@@ -39,7 +39,10 @@ mkdir ~/chispa-live && cd ~/chispa-live
 **Terminal B** — the finished Chispa (already running, for the opening demo):
 ```bash
 cd /path/to/finished/chispa
-ANTHROPIC_API_KEY=your_key npm start
+cp server/.env.example server/.env
+# Edit server/.env — set ANTHROPIC_API_KEY=sk-ant-...
+npm start
+# The server validates the key on boot and exits with a clear error if it's missing.
 # Verify: open http://localhost:3001
 ```
 
@@ -348,7 +351,7 @@ AnalysisResult shape:
   marketSize: string,
   marketGrowth: string,
   marketTiming: "too_early" | "right_time" | "too_late",
-  risks: [{ title, severity: "high"|"medium"|"low", mitigation }],
+  risks: [{ title, severity: "high"|"medium"|"low", mitigation, category: "Mercado"|"Competencia"|"Técnico"|"Regulatorio"|"Timing"|"Capital" }],
   verdict: "LAUNCH" | "VALIDATE" | "PIVOT" | "AVOID",
   verdictReason: string,
   firstSteps: string[] (5 items, only for LAUNCH or VALIDATE)
@@ -371,7 +374,7 @@ Key decisions:
   shows source badge (domain) when present, scrolls automatically
 - Dashboard reveal: when type="result" received, slide up with staggered card animation
 - RadarChart: 6 axes — Mercado, Competencia, Técnico, Regulatorio, Timing, Capital
-  Each risk maps to an axis; severity high=0.9, medium=0.6, low=0.3; animate on mount
+  Each risk maps to an axis via the `category` field; severity high=90, medium=60, low=30 (0–100 scale); animate on mount
 - VerdictCard: LANZA (green), VALIDA (amber), PIVOTA (orange), EVITA (red)
   Large font, flip-in animation, 2-3 sentence reasoning below
 - CompetitorCard: favicon from https://www.google.com/s2/favicons?domain=X, name, description,
@@ -400,7 +403,8 @@ Key decisions:
   (no NODE_ENV conditional — simpler and more reliable)
 - npm run build: cd client && npm run build, then cd server && npm run build (tsc)
 - npm start: node dist/index.js (production)
-- .env.example: ANTHROPIC_API_KEY=your_key_here, PORT=3001
+- .env.example: ANTHROPIC_API_KEY=your_key_here, PORT=3001, CORS_ORIGIN (optional, for cross-domain production)
+- server/src/index.ts: validate ANTHROPIC_API_KEY at startup — process.exit(1) with a clear message if missing
 - README: setup instructions, architecture diagram, how to get API key, demo instructions
 - Final impeccable pass: spacing, mobile responsiveness, loading states, empty states
 - /api/health enhancement: include uptime, model name, version
