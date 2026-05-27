@@ -5,6 +5,12 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import router from './routes/index.js'
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error('ERROR: ANTHROPIC_API_KEY is not set.')
+  console.error('Copy server/.env.example to server/.env and add your key.')
+  process.exit(1)
+}
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 

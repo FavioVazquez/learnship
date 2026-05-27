@@ -51,7 +51,19 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173)
 
-> **Note:** You need an [Anthropic API key](https://console.anthropic.com/). The app uses `claude-opus-4-7` with web search tool access.
+---
+
+## Environment Variables
+
+All server configuration lives in `server/.env` (gitignored, never committed).
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `ANTHROPIC_API_KEY` | **Yes** | — | Your Anthropic API key. Get one at [console.anthropic.com](https://console.anthropic.com/). The server exits immediately on startup if this is missing. |
+| `PORT` | No | `3001` | Port the Express server listens on. |
+| `CORS_ORIGIN` | No | `localhost:5173, localhost:3001` | Allowed origin(s) for the API. Only needed in production when the client and server are on different domains (e.g. `https://chispa.yourdomain.com`). |
+
+The `ANTHROPIC_API_KEY` is **only read by the server** — it is never sent to the browser or included in the client bundle.
 
 ---
 
