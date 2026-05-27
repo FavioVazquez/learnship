@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export function ShareButton() {
   const [copied, setCopied] = useState(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleShare = () => {
     // URL is already set by App.tsx on completion — just copy it to clipboard
     navigator.clipboard.writeText(window.location.href).catch(() => {
       // Clipboard API may be blocked in non-HTTPS contexts; silently ignore
     })
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    timeoutRef.current = setTimeout(() => setCopied(false), 2000)
   }
 
   return (

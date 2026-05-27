@@ -25,7 +25,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques de código markdown, si
   "marketGrowth": "...",
   "marketTiming": "right_time",
   "risks": [
-    { "title": "...", "severity": "high|medium|low", "mitigation": "..." }
+    { "title": "...", "severity": "high|medium|low", "mitigation": "...", "category": "Mercado|Competencia|Técnico|Regulatorio|Timing|Capital" }
   ],
   "verdict": "LAUNCH|VALIDATE|PIVOT|AVOID",
   "verdictReason": "...",
@@ -33,7 +33,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques de código markdown, si
   "searchedAt": ""
 }
 
-CRÍTICO: firstSteps debe contener EXACTAMENTE 5 elementos concretos y accionables. verdict debe ser exactamente uno de: LAUNCH, VALIDATE, PIVOT, AVOID. marketTiming debe ser exactamente uno de: too_early, right_time, too_late.`
+CRÍTICO: firstSteps debe contener EXACTAMENTE 5 elementos concretos y accionables. verdict debe ser exactamente uno de: LAUNCH, VALIDATE, PIVOT, AVOID. marketTiming debe ser exactamente uno de: too_early, right_time, too_late. Para cada riesgo, category debe ser exactamente uno de: Mercado, Competencia, Técnico, Regulatorio, Timing, Capital.`
 
 const STEP_TEXTS = [
   'Buscando competidores directos...',

@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { AnalysisResult } from '../types/analysis'
 
@@ -19,7 +18,7 @@ export function VerdictCard({ verdict, verdictReason }: VerdictCardProps) {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <div style={{ transformPerspective: 1000 } as React.CSSProperties} className="w-full">
+    <div style={{ perspective: '1000px' }} className="w-full">
       <motion.div
         initial={shouldReduceMotion ? { opacity: 0 } : { rotateX: 90, opacity: 0 }}
         animate={shouldReduceMotion ? { opacity: 1 } : { rotateX: 0, opacity: 1 }}

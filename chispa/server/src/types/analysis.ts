@@ -10,6 +10,7 @@ export interface Risk {
   title: string
   severity: 'high' | 'medium' | 'low'
   mitigation: string
+  category?: 'Mercado' | 'Competencia' | 'Técnico' | 'Regulatorio' | 'Timing' | 'Capital'
 }
 
 export interface AnalysisResult {

@@ -22,16 +22,13 @@ const SEVERITY_VALUE: Record<Risk['severity'] | 'missing', number> = {
 }
 
 function buildChartData(risks: Risk[]) {
-  // Build lookup by title (case-sensitive match first, then partial match)
-  const riskMap = new Map(risks.map((r) => [r.title, r.severity]))
-
   return AXES.map((axis) => {
-    // Try exact match first, then case-insensitive
-    const exactSeverity = riskMap.get(axis)
-    if (exactSeverity) {
-      return { axis, value: SEVERITY_VALUE[exactSeverity] }
+    // Prefer the explicit category field — reliable when Claude follows the prompt
+    const categoryMatch = risks.find((r) => r.category === axis)
+    if (categoryMatch) {
+      return { axis, value: SEVERITY_VALUE[categoryMatch.severity] }
     }
-    // Try case-insensitive partial match
+    // Fallback: case-insensitive partial match on title for older/incomplete responses
     const partialMatch = risks.find((r) =>
       r.title.toLowerCase().includes(axis.toLowerCase()) ||
       axis.toLowerCase().includes(r.title.toLowerCase())
