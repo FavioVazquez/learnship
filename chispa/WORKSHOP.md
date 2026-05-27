@@ -138,7 +138,7 @@ npx learnship --claude --global
 ```
 
 **Say:**
-> "learnship is an agentic engineering platform — 58 workflows, 17 specialist AI agents, all running in parallel. It's how we go from vibe to production. Let's start."
+> "learnship is an agentic engineering platform — 57 workflows, 17 specialist AI agents, all running in parallel. It's how we go from vibe to production. Let's start."
 
 ---
 
@@ -396,11 +396,11 @@ Key decisions:
 - Error states: network failure shows retry button, Claude timeout (>120s) shows specific message,
   JSON parse error falls back to showing raw text with "analysis incomplete" warning
 - Loading skeleton: while streaming, show pulsing placeholder cards where dashboard will appear
-- Production build: client builds to client/dist/, server serves it via express.static
-  in production (when NODE_ENV=production), otherwise just serves API
+- Production build: client builds to client/dist/, server always serves it via express.static
+  (no NODE_ENV conditional — simpler and more reliable)
 - npm run build: cd client && npm run build, then cd server && npm run build (tsc)
 - npm start: node dist/index.js (production)
-- .env.example: ANTHROPIC_API_KEY=your_key_here, PORT=3001, NODE_ENV=production
+- .env.example: ANTHROPIC_API_KEY=your_key_here, PORT=3001
 - README: setup instructions, architecture diagram, how to get API key, demo instructions
 - Final impeccable pass: spacing, mobile responsiveness, loading states, empty states
 - /api/health enhancement: include uptime, model name, version

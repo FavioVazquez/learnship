@@ -19,7 +19,7 @@ _Date: 2026-05-26 | Auditor: impeccable/audit_
 - **[MAJOR — FIXED]** `VerdictCard` flip animation (`rotateX: 90 → 0`) had no `prefers-reduced-motion` guard. A jarring 3D rotation is exactly what motion-sensitive users need to avoid. Fixed: used Framer Motion's `useReducedMotion()` hook to collapse the animation to a simple opacity fade (0.15 s) when the user preference is set.
 - **[MAJOR — FIXED]** `Dashboard` slide-up animation (`y: 40 → 0`) also lacked reduced-motion handling. Fixed: same pattern — `useReducedMotion()` collapses to opacity-only fade.
 - **[MAJOR — FIXED]** `ActivityFeed` per-step slide-in (`x: -8 → 0`) had no reduced-motion guard. Fixed: `useReducedMotion()` used to skip horizontal translate and shorten duration to 0.1 s.
-- **[MAJOR — FIXED]** `RiskRadarChart` had `isAnimationActive={true}` hardcoded, enabling Recharts' built-in draw animation regardless of system preference. Fixed: reads `window.matchMedia('(prefers-reduced-motion: reduce)')` via `useMemo` and passes the result to `isAnimationActive`.
+- **[MAJOR — FIXED]** `RiskRadarChart` had `isAnimationActive={true}` hardcoded, enabling Recharts' built-in draw animation regardless of system preference. Fixed: uses Framer Motion's `useReducedMotion()` hook (same pattern as other animated components) and passes `!prefersReducedMotion` to `isAnimationActive`. (Initial fix used `useMemo(matchMedia)` — subsequently upgraded to `useReducedMotion()` for consistency and SSR safety.)
 
 ---
 
