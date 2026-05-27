@@ -11,10 +11,12 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const PORT = process.env.PORT ?? 3001
 
-app.use(cors())
+app.use(cors({
+  origin: process.env.CORS_ORIGIN ?? ['http://localhost:5173', 'http://localhost:3001'],
+}))
 app.use(express.json())
 
-app.use(express.static(path.join(process.cwd(), '../client/dist')))
+app.use(express.static(path.join(__dirname, '../../client/dist')))
 
 app.use(router)
 
@@ -22,7 +24,7 @@ app.use((req, res) => {
   if (req.path.startsWith('/api/')) {
     res.status(404).json({ error: 'Not found' })
   } else {
-    res.sendFile(path.join(process.cwd(), '../client/dist/index.html'))
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
   }
 })
 

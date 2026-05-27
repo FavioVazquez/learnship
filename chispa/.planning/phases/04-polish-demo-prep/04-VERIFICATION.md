@@ -73,7 +73,7 @@
 | `curl localhost:3001/` returns HTML (SPA served) | PASS |
 | `curl localhost:3001/some/deep/route` returns `index.html` (SPA fallback) | PASS |
 | `curl localhost:3001/api/notfound` returns `{"error":"Not found"}` JSON | PASS |
-| `curl localhost:3001/api/health` returns `{"status":"ok","uptime":...,"version":"1.0.0","nodeVersion":"..."}` | PASS |
+| `curl localhost:3001/api/health` returns `{"status":"ok","model":"claude-opus-4-7","version":"1.0.0","timestamp":"...","uptime":N}` | PASS |
 
 ---
 

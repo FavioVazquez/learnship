@@ -33,7 +33,7 @@ No accounts. No database. Stateless by design.
 
 ```bash
 # 1. Clone
-git clone https://github.com/YOUR_USERNAME/chispa.git
+git clone https://github.com/FavioVazquez/chispa.git
 cd chispa
 
 # 2. Install
@@ -98,7 +98,7 @@ chispa/
 │       │   ├── IdeaForm.tsx   Submission form
 │       │   ├── ActivityFeed.tsx  Live Claude tool calls
 │       │   ├── Dashboard.tsx  Full results view
-│       │   ├── RadarChart.tsx Recharts radar (6 risk axes)
+│       │   ├── RiskRadarChart.tsx Recharts radar (6 risk axes)
 │       │   ├── CompetitorCard.tsx
 │       │   └── VerdictCard.tsx
 │       └── hooks/
@@ -109,7 +109,12 @@ chispa/
     ├── PROJECT.md            Project context
     ├── REQUIREMENTS.md       Feature requirements
     ├── ROADMAP.md            Phase breakdown
-    └── phases/               Per-phase plans and artifacts
+    ├── STATE.md              Current milestone / phase status
+    ├── SECURITY.md           STRIDE threat register
+    ├── LEARNINGS.md          Engineering learnings from the build
+    ├── IMPECCABLE-AUDIT.md   UI quality audit findings
+    ├── research/             Domain research from new-project
+    └── phases/               Per-phase plans, summaries, and verification
 ```
 
 ---
@@ -119,9 +124,9 @@ chispa/
 The server streams JSON events line-by-line:
 
 ```typescript
-// While Claude is working:
-{ "type": "step",   "text": "Buscando competidores directos...", "source": "perplexity.ai" }
-{ "type": "step",   "text": "Leyendo reporte de mercado...",    "source": "statista.com"   }
+// While Claude is working (source is the tool name, e.g. "web_search"):
+{ "type": "step",   "text": "Buscando competidores directos...", "source": "web_search" }
+{ "type": "step",   "text": "Analizando el mercado...",          "source": "web_search" }
 
 // On completion:
 { "type": "result", "data": { ...AnalysisResult } }

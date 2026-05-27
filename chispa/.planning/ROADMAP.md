@@ -7,7 +7,7 @@
 
 ---
 
-## Phase 1 — Foundation
+## Phase 1 — Foundation ✓ Complete (2026-05-26)
 
 **Goal:** A working monorepo where `npm run dev` starts both Express and Vite, the health endpoint responds, and the Anthropic SDK is imported and authenticated.
 
@@ -28,7 +28,7 @@
 
 ---
 
-## Phase 2 — Analysis Engine
+## Phase 2 — Analysis Engine ✓ Complete (2026-05-26)
 
 **Goal:** `POST /api/analyze` streams a complete Claude analysis via SSE, verified with `curl -N`. No frontend yet.
 

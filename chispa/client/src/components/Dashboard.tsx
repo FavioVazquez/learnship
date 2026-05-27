@@ -47,8 +47,8 @@ export function Dashboard({ result }: DashboardProps) {
             Competidores
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {result.competitors.map((competitor, index) => (
-              <CompetitorCard key={index} competitor={competitor} />
+            {result.competitors.map((competitor) => (
+              <CompetitorCard key={competitor.name} competitor={competitor} />
             ))}
           </div>
         </div>

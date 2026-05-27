@@ -13,7 +13,7 @@ export function CompetitorCard({ competitor }: CompetitorCardProps) {
       <div className="flex items-center gap-3">
         {website && (
           <img
-            src={`https://www.google.com/s2/favicons?domain=${website}&sz=32`}
+            src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(website)}&sz=32`}
             alt=""
             width={20}
             height={20}

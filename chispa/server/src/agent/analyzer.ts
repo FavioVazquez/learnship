@@ -91,12 +91,29 @@ export async function* analyzeIdea(
     const textBlocks = finalMsg.content.filter((b) => b.type === 'text')
     const rawText = textBlocks.at(-1)?.text ?? ''
 
-    const cleaned = rawText
-      .replace(/^```(?:json)?\s*/m, '')
-      .replace(/\s*```\s*$/m, '')
-      .trim()
+    // Extract the JSON object by finding the outermost braces — more reliable than
+    // stripping markdown fences with regexes, which break when Claude adds preamble.
+    const start = rawText.indexOf('{')
+    const end = rawText.lastIndexOf('}')
+    if (start === -1 || end === -1 || end < start) {
+      throw new Error('No JSON object found in model response')
+    }
+    const cleaned = rawText.slice(start, end + 1)
 
     const result = JSON.parse(cleaned) as AnalysisResult
+
+    // Runtime shape guard — TypeScript casts don't validate at runtime
+    if (
+      !['LAUNCH', 'VALIDATE', 'PIVOT', 'AVOID'].includes(result.verdict) ||
+      !Array.isArray(result.competitors) ||
+      !Array.isArray(result.risks) ||
+      !Array.isArray(result.firstSteps) ||
+      !result.marketTiming ||
+      !result.marketSize
+    ) {
+      yield { type: 'error', message: 'Respuesta incompleta del modelo. Intenta de nuevo.' }
+      return
+    }
 
     if (!result.searchedAt) {
       result.searchedAt = new Date().toISOString()

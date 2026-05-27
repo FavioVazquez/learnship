@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useReducedMotion } from 'framer-motion'
 import {
   RadarChart,
   Radar,
@@ -45,10 +45,7 @@ function buildChartData(risks: Risk[]) {
 
 export function RiskRadarChart({ risks }: RiskRadarChartProps) {
   const data = buildChartData(risks)
-  const prefersReducedMotion = useMemo(
-    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    []
-  )
+  const prefersReducedMotion = useReducedMotion()
 
   return (
     <div className="bg-surface border border-border rounded-xl p-6">

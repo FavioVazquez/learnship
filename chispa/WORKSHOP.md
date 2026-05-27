@@ -59,7 +59,17 @@ claude --version
 - Tab 2: will open `http://localhost:5173` after the live build
 - Tab 3: `.planning/` folder in your file explorer or VS Code
 
-### 5. Have these ready to paste (see "Copy-Paste Prompts" below)
+### 5. Decide: localhost or deployed?
+
+> **⚠️ IMPORTANT — Read before the conference:**
+> The `?r=` shareable URLs contain the full analysis as compressed data client-side. They work across devices **only if the app is deployed to a public URL**. On localhost, only your machine can open them.
+>
+> - **Safest for demo:** Deploy to Railway/Render/Fly.io (~15 min). Set `ANTHROPIC_API_KEY` as an env var. Change the narration at minute 0–3 to share the public URL.
+> - **Localhost only:** Fine for showing the UX — just don't say "share with anyone." Adjust the closing line accordingly.
+>
+> Also: set a **spend limit** in [console.anthropic.com](https://console.anthropic.com) before the session. Each analysis costs ~$0.05–0.15. If you deploy and the URL gets circulated in the room, 100 people × $0.10 = $10 per wave. A $5–10 limit prevents surprises.
+
+### 6. Have these ready to paste (see "Copy-Paste Prompts" below)
 
 ---
 
@@ -80,7 +90,9 @@ donde el acceso bancario es limitado pero los teléfonos Android son comunes."
 
 Let Claude research live — the activity feed will show tool calls appearing. When the dashboard loads:
 
-> "Real competitors. Real market data. A verdict with reasoning. And I can share this URL with anyone."
+> "Real competitors. Real market data. A verdict with reasoning. And I can share this URL — the result is encoded right in the link, no server needed."
+
+> *(Note to presenter: the ?r= URL contains the full analysis as compressed data. Audience can load it in their own browser **if the app is deployed**. On localhost, the URL only works on your machine — see Pre-Demo Setup step 5.)*
 
 Point out the activity feed:
 > "This is not a black box. You can see every tool call Claude made. That transparency is what agentic engineering looks like."
@@ -89,7 +101,7 @@ Point out the activity feed:
 
 ### [3–6 min] The vibe-coded equivalent
 
-Open a file called `vibe.py` (pre-written, already on your machine):
+Open `vibe.py` from the repo root (it's committed — copy it to your demo machine beforehand):
 
 ```python
 # vibe.py — "quick validation tool" (vibe coded)
@@ -126,7 +138,7 @@ npx learnship --claude --global
 ```
 
 **Say:**
-> "learnship is an agentic engineering platform — 57 workflows, 17 specialist AI agents, all running in parallel. It's how we go from vibe to production. Let's start."
+> "learnship is an agentic engineering platform — 58 workflows, 17 specialist AI agents, all running in parallel. It's how we go from vibe to production. Let's start."
 
 ---
 
@@ -234,7 +246,7 @@ curl http://localhost:3001/api/health
 
 Show the result:
 ```json
-{"status":"ok","model":"claude-opus-4-7","timestamp":"..."}
+{"status":"ok","model":"claude-opus-4-7","version":"1.0.0","timestamp":"...","uptime":12.34}
 ```
 
 > "Working foundation. TypeScript compiles. Health endpoint responds. In 15 minutes of execution, we have the same thing that would take a developer half a day to set up manually — and every file has proper error handling, the types are correct, the configuration follows best practices."
@@ -251,7 +263,7 @@ Open `.planning/phases/` in VS Code:
 > "This is the difference between vibe coding and agentic engineering. Not just the code — the artifacts, the decisions, the audit trail."
 
 Final line:
-> "Chispa is now live. If you want to validate an idea before you leave the conference — URL is on the screen."
+> "Chispa is now live. The source code is on GitHub — you can run it with your own API key in 5 minutes." *(If you deployed before the talk, replace with: "The URL is on the screen — try it on your phone.")*
 
 ---
 
@@ -324,7 +336,7 @@ Key decisions:
 - Validate: idea must be 20–500 chars, return 400 otherwise
 - SSE: set headers immediately (Content-Type: text/event-stream, Cache-Control: no-cache)
 - Claude loop: use streaming messages API with web_search_20250305 tool
-- On each tool call: emit { type: "step", text, source? } where source is the domain searched
+- On each tool call: emit { type: "step", text, source? } where source is the tool name (e.g. "web_search")
 - On final message: parse assistant text as JSON, emit { type: "result", data: AnalysisResult }
 - Error handling: any thrown error emits { type: "error", message } then closes stream
 - Rate limiting: in-memory counter, max 3 concurrent, return 429 if exceeded
@@ -387,7 +399,7 @@ Key decisions:
 - Production build: client builds to client/dist/, server serves it via express.static
   in production (when NODE_ENV=production), otherwise just serves API
 - npm run build: cd client && npm run build, then cd server && npm run build (tsc)
-- npm start: node dist/src/index.js (production)
+- npm start: node dist/index.js (production)
 - .env.example: ANTHROPIC_API_KEY=your_key_here, PORT=3001, NODE_ENV=production
 - README: setup instructions, architecture diagram, how to get API key, demo instructions
 - Final impeccable pass: spacing, mobile responsiveness, loading states, empty states
@@ -408,7 +420,7 @@ Key decisions:
 > Yes. Claude handles both natively. The web search results come back in English but Claude summarizes in context. You could force Spanish output by adding a language instruction to the system prompt.
 
 **"Can I use this with my team's Claude subscription instead of an API key?"**
-> For server-side use, you need an API key. But the Claude Agent SDK (`@anthropic-ai/claude-agent-sdk`) lets you use your authenticated Claude Code account programmatically — same subscription, different pool.
+> For server-side use, you need an API key from console.anthropic.com. The `@anthropic-ai/sdk` package is the official SDK — the same one used in this project.
 
 **"What if Claude hallucinates competitors that don't exist?"**
 > Web search grounding reduces this significantly — Claude reads actual URLs and reports what it finds. You'll still want a disclaimer: "Validation is a starting point, not a substitute for market research." The transparency (showing sources in the activity feed) helps users evaluate the output.
@@ -434,6 +446,6 @@ Key decisions:
 ## Resources to Share with the Audience
 
 - **learnship**: `npx learnship --claude --global`
-- **Chispa source**: github.com/YOUR_USERNAME/chispa
+- **Chispa source**: github.com/FavioVazquez/chispa
 - **Anthropic API key**: console.anthropic.com
 - **Claude Code**: code.claude.com

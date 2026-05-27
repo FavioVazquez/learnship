@@ -35,8 +35,12 @@ export default function App() {
       const decompressed = lzstring.decompressFromEncodedURIComponent(param)
       if (!decompressed) throw new Error('Decompression returned empty string')
       const parsed = JSON.parse(decompressed) as AnalysisResult
-      // Validate minimal shape — if these fields are missing, it's a corrupt URL
-      if (!parsed.verdict || !parsed.competitors || !parsed.risks) {
+      // Validate minimal shape — unknown verdict would crash VerdictCard
+      if (
+        !['LAUNCH', 'VALIDATE', 'PIVOT', 'AVOID'].includes(parsed.verdict) ||
+        !Array.isArray(parsed.competitors) ||
+        !Array.isArray(parsed.risks)
+      ) {
         throw new Error('Resultado inválido en la URL')
       }
       // Load the shared result by submitting a synthetic complete state
@@ -53,6 +57,8 @@ export default function App() {
   // Determine what to display — URL-loaded result takes precedence over hook state
   const displayResult = urlResult ?? result
   const displayState = urlResult ? 'complete' : state
+  // Form uses actual analysis state — keeps form enabled when viewing a URL-loaded result
+  const formState = urlResult ? 'idle' : state
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,11 +89,13 @@ export default function App() {
 
         {/* IdeaForm — always shown, disabled when streaming or complete */}
         <IdeaForm
-          state={displayState}
+          state={formState}
           onSubmit={(idea, country) => {
             setLastIdea(idea)
             setLastCountry(country)
             setUrlResult(null)
+            // Clear the ?r= param immediately so a mid-stream refresh doesn't reload stale data
+            window.history.replaceState({}, '', '/')
             submit(idea, country)
           }}
         />

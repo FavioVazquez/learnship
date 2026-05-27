@@ -33,7 +33,7 @@
 | DASH-04 | PASS | `VerdictCard.tsx` has `VERDICT_CONFIG` map for all 4 verdicts with distinct `color` and `bg` values; Framer Motion `rotateX` flip-in animation |
 | DASH-05 | PASS | `MarketSnapshot.tsx` renders `marketSize`, `marketGrowth`, and `marketTiming` as a colored badge (too_early / right_time / too_late) |
 | DASH-06 | PASS | `FirstSteps.tsx` renders up to 5 steps (`firstSteps.slice(0, 5)`); prompt enforces `EXACTAMENTE 5 elementos`; shown for LAUNCH/VALIDATE only (requirement says minimum 3) |
-| SHARE-01 | FAIL | Requirement: "URL updates to `/?r=<base64-encoded-result>` **after analysis completes**". Implementation: URL only updates when the user **clicks the ShareButton** (`window.history.pushState` is inside `handleShare()`). No automatic URL push on analysis completion. |
+| SHARE-01 | PASS | `App.tsx` `useEffect` watching `result` state (lines 17–27): calls `lzstring.compressToEncodedURIComponent(JSON.stringify(result))` + `window.history.replaceState({}, '', '/?r=' + encoded)` automatically when `result` becomes non-null. No user action required. **Fixed post-UAT.** |
 | SHARE-02 | PASS | `App.tsx` `useEffect` (lines 18–39): reads `?r=` param on mount, decompresses with `lzstring.decompressFromEncodedURIComponent`, parses JSON, sets `urlResult` → renders dashboard immediately without re-analysis |
 | SHARE-03 | PASS | `App.tsx` lines 23–38: `try/catch` around decompression and `JSON.parse`; shape validation (`!parsed.verdict || !parsed.competitors || !parsed.risks`); on failure sets `urlLoadError` state and clears the bad URL with `replaceState('/', ...)` — no crash |
 
@@ -43,8 +43,8 @@
 
 | | Count |
 |---|---|
-| **PASS** | **22** |
-| **FAIL** | **4** |
+| **PASS** | **23** |
+| **FAIL** | **3** |
 | **Total** | **26** |
 
 ---
