@@ -28,7 +28,7 @@ Progress: [██████████] 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 14 (2+3+5+4 across phases)
 - Average duration: —
 - Total execution time: —
 
@@ -36,8 +36,10 @@ Progress: [██████████] 100%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 — Foundation | 1 | — | — |
+| 1 — Foundation | 2 | — | — |
+| 2 — Analysis Engine | 3 | — | — |
 | 3 — Web Frontend | 5 | — | — |
+| 4 — Polish & Demo Prep | 4 | — | — |
 
 **Recent Trend:**
 - Last 5 plans: 03-01, 03-02, 03-03, 03-04, 03-05 (all COMPLETE)

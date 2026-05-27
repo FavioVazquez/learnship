@@ -18,7 +18,7 @@
 - After this phase, `curl localhost:3001/api/health` returns `{"status":"ok"}`
 - After this phase, the React app renders at localhost:5173 with the Vite proxy routing `/api/*` to Express
 - After this phase, `new Anthropic()` constructs without error in the server (API key loaded from `.env`)
-- After this phase, all three mandatory package upgrades are applied (@anthropic-ai/sdk ^0.98, recharts ^3, framer-motion ^12)
+- After this phase, all three mandatory package upgrades are applied (@anthropic-ai/sdk ^0.30.0, recharts ^3, framer-motion ^12)
 
 **Notes from research:**
 - Shared TypeScript types (`AnalysisResult`, `SSEMessage`) must be defined here — they are the Phase 2/3 contract
