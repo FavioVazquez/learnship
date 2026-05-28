@@ -1,134 +1,94 @@
-# Roadmap: Chispa
+# Roadmap: Chispa v1.1 — Impeccable UI
 
-**Milestone:** v1.0 — Demo-Ready for AI Week Summit Guatemala 2026
-**Total phases:** 4
-**Total v1 requirements:** 26
-**Coverage:** 26/26 ✓
-
----
-
-## Phase 1 — Foundation ✓ Complete (2026-05-26)
-
-**Goal:** A working monorepo where `npm run dev` starts both Express and Vite, the health endpoint responds, and the Anthropic SDK is imported and authenticated.
-
-**Requirements covered:** INFRA-01, INFRA-02, INFRA-04
-
-**Success criteria:**
-- After this phase, `npm run dev` starts both processes with a single command
-- After this phase, `curl localhost:3001/api/health` returns `{"status":"ok"}`
-- After this phase, the React app renders at localhost:5173 with the Vite proxy routing `/api/*` to Express
-- After this phase, `new Anthropic()` constructs without error in the server (API key loaded from `.env`)
-- After this phase, all three mandatory package upgrades are applied (@anthropic-ai/sdk ^0.30.0, recharts ^3, framer-motion ^12)
-
-**Notes from research:**
-- Shared TypeScript types (`AnalysisResult`, `SSEMessage`) must be defined here — they are the Phase 2/3 contract
-- Vite proxy must be configured for SSE (default config is not SSE-safe; add `X-Accel-Buffering: no`)
-- Use `tsx` not `ts-node` for server execution (ts-node has ESM bugs on Node 20+)
-- Use `concurrently` for running both dev servers
+**Milestone:** v1.1 — Impeccable UI
+**Total phases:** 2 (phases 5–6, continuing from v1.0 phases 1–4)
+**Total v1.1 requirements:** 15
+**Coverage:** 15/15 ✓ (planned)
 
 ---
 
-## Phase 2 — Analysis Engine ✓ Complete (2026-05-26)
+## Phase 5 — Design Foundation *(in progress)*
 
-**Goal:** `POST /api/analyze` streams a complete Claude analysis via SSE, verified with `curl -N`. No frontend yet.
+**Goal:** Establish the design system — distinctive display font, refined color tokens,
+improved surface depth, and a redesigned brand header. Everything downstream builds on this.
 
-**Requirements covered:** ANLYS-02, ANLYS-03, ANLYS-04, ANLYS-05, STRM-01, STRM-02, STRM-04, STRM-05, SAFE-01, SAFE-02, SAFE-03
+**Requirements covered:** UI-01, UI-02, UI-03, UI-04, UI-05, UI-06
 
 **Success criteria:**
-- After this phase, `curl -N -X POST -d '{"idea":"..."}' localhost:3001/api/analyze` streams SSE events to the terminal
-- After this phase, each Claude tool call produces a `step` SSE event with a human-readable Spanish message
-- After this phase, the stream ends with a `result` SSE event containing valid `AnalysisResult` JSON
-- After this phase, a 4th concurrent request receives a 429 response immediately
-- After this phase, an Anthropic API error produces an `error` SSE event (not a server crash)
+- After this phase, `Space Grotesk` appears in the App header and `Plus Jakarta Sans` is the body font
+- After this phase, the App header is visually commanding — legible from 10 feet at a conference
+- After this phase, dashboard cards have clear depth against the background (not the same gray)
+- After this phase, borders are visible without hovering — structural, not invisible
+- After this phase, a type scale is applied: heading/subheading/body/caption are visually distinct
 
-**Notes from research (critical pitfall prevention):**
-- Tool_use JSON must be accumulated into a buffer; `JSON.parse()` only on `content_block_stop` — NOT on `input_json_delta`
-- Set `timeout: 90_000` on Anthropic SDK client constructor before concurrency testing
-- `res.flushHeaders()` must fire before any `await` call in the SSE handler
-- In-memory counter must use synchronous check-and-increment; `try/finally` guarantees decrement
-- LatAm competitor search instruction must be in the prompt at this phase (not deferred to Phase 3)
+**Plans:**
+- `05-01`: Font system + color tokens (index.html, tailwind.config.js, index.css)
+- `05-02`: App header redesign (App.tsx)
+
+**Notes:**
+- Google Fonts with `display=swap` + `preconnect` — acceptable for conference localhost demo
+- No new npm packages — lucide-react already installed, fonts via CDN link
+- Keep primary purple `#7c3aed` unchanged — brand color that's already in demos
 
 ---
 
-## Phase 3 — Web Frontend ✓ Complete (2026-05-26)
+## Phase 6 — Component Polish
 
-**Goal:** A complete, animated browser UI — form → live activity feed → animated dashboard.
+**Goal:** Apply the design system to every component. The activity feed needs visual
+energy. The verdict needs to feel like a reveal. Each card needs its own visual identity
+rather than being interchangeable gray boxes.
 
-**Requirements covered:** ANLYS-01, STRM-03, DASH-01, DASH-02, DASH-03, DASH-04, DASH-05, DASH-06
-
-**Success criteria:**
-- After this phase, user submits an idea in the form and sees a live activity feed of Claude's tool calls
-- After this phase, when analysis completes, the dashboard animates in (Framer Motion transitions)
-- After this phase, the radar chart renders with 6 axes and animates on mount (Recharts RadarChart)
-- After this phase, competitor cards display with name, description, and positioning for each competitor
-- After this phase, the verdict card (LAUNCH/VALIDATE/PIVOT/AVOID) is color-coded and visually dominant
-- After this phase, the market snapshot and first steps sections render correctly
-
-**Notes from research:**
-- Build the `fetch` + `ReadableStream` SSE consumer BEFORE any UI components — it is the foundation
-- Use `AbortController` in `useEffect` cleanup to prevent connection leaks on unmount
-- Build the state machine (idle → loading → streaming → complete → error) before individual components
-- Build RadarChart with mock data first, then wire to live results
-- Dark theme: `#0a0a0f` background, `#7c3aed` purple accent throughout
-
----
-
-## Phase 4 — Polish & Demo Prep ✓ Complete (2026-05-26)
-
-**Goal:** Production build runs, README is complete, deployment target confirmed.
-
-**Requirements covered:** INFRA-03, SHARE-01*, SHARE-02*, SHARE-03*
-
-> *SHARE-01/02/03 were pulled forward into Phase 3 (Plan 05) by explicit user decision — ShareButton + ?r= URL loader are already implemented. Phase 4 must NOT re-implement these.
+**Requirements covered:** UI-07, UI-08, UI-09, UI-10, UI-11, UI-12, UI-13, UI-14, UI-15
 
 **Success criteria:**
-- After this phase, completing an analysis updates the URL to `/?r=<encoded>` without page reload
-- After this phase, loading `/?r=<encoded>` in a new tab renders the dashboard instantly (no re-analysis)
-- After this phase, a corrupt `?r=` param shows a graceful error message (not a crash)
-- After this phase, `npm run build && npm start` serves the production app on port 3001
-- After this phase, the README has setup instructions, env variable documentation, and a demo script
+- After this phase, IdeaForm has a visible select chevron and a submit button that feels intentional
+- After this phase, ActivityFeed steps feel live — the feed has energy, not a plain list
+- After this phase, VerdictCard verdict text uses Space Grotesk and fills the visual space
+- After this phase, MarketSnapshot shows market size as a prominent stat, not a label/value pair
+- After this phase, CompetitorCard has a larger favicon and clearer name hierarchy
+- After this phase, RiskRadarChart grid is visible and fill is readable
+- After this phase, FirstSteps list items animate in with stagger (0–4 items, 50ms apart)
+- After this phase, ShareButton shows Link2 icon from lucide-react
 
-**Notes from research:**
-- Use `lz-string` compression before base64 encoding (Claude web search output can exceed nginx's 8KB header limit)
-- Pattern: `lzstring.compressToEncodedURIComponent(JSON.stringify(result))` → URL; reverse on load
-- Test shareable URL load with both valid and malformed base64 before demo day
-- Verify `res.flushHeaders()` works behind production proxy (not just Vite dev proxy)
-- Decide deployment target before this phase (localhost = shareable URLs don't work across devices at the conference)
+**Plans:**
+- `06-01`: IdeaForm + ActivityFeed
+- `06-02`: VerdictCard + MarketSnapshot + CompetitorCard
+- `06-03`: RiskRadarChart + FirstSteps + ShareButton + Dashboard sections
+
+**Notes:**
+- All animations respect `useReducedMotion()` — already used throughout codebase
+- Do NOT change server code, types, or analysis logic — UI-only changes
+- Test `typecheck` after each plan to catch Tailwind class typos (JSX string literals)
 
 ---
 
 ## Requirement → Phase Mapping
 
-| Req | Phase | Description |
-|-----|-------|-------------|
-| INFRA-01 | 1 | Single `npm run dev` command |
-| INFRA-02 | 1 | Port 3001 + Vite proxy |
-| INFRA-04 | 1 | `/api/health` endpoint |
-| ANLYS-02 | 2 | Claude with web_search_20250305 |
-| ANLYS-03 | 2 | Structured JSON output |
-| ANLYS-04 | 2 | <120 second analysis |
-| ANLYS-05 | 2 | API key never exposed |
-| STRM-01 | 2 | SSE from server |
-| STRM-02 | 2 | Human-readable activity messages |
-| STRM-04 | 2 | `result` SSE event |
-| STRM-05 | 2 | `error` SSE event (never crash) |
-| SAFE-01 | 2 | Max 3 concurrent (429 on 4th) |
-| SAFE-02 | 2 | Counter always decremented |
-| SAFE-03 | 2 | 90s timeout on Anthropic client |
-| ANLYS-01 | 3 | Idea submission form |
-| STRM-03 | 3 | Live activity feed in browser |
-| DASH-01 | 3 | Animated transition to dashboard |
-| DASH-02 | 3 | Radar chart (6 axes) |
-| DASH-03 | 3 | Competitor cards |
-| DASH-04 | 3 | Verdict card |
-| DASH-05 | 3 | Market snapshot |
-| DASH-06 | 3 | First steps list |
-| INFRA-03 | 4 | Production build |
-| SHARE-01 | 4 | URL update after analysis |
-| SHARE-02 | 4 | Load dashboard from `?r=` |
-| SHARE-03 | 4 | Graceful error on corrupt URL |
+| Req | Phase | Component |
+|-----|-------|-----------|
+| UI-01 | 5 | index.html, tailwind.config.js |
+| UI-02 | 5 | index.html, tailwind.config.js, index.css |
+| UI-03 | 5 | App.tsx, all components |
+| UI-04 | 5 | App.tsx |
+| UI-05 | 5 | tailwind.config.js |
+| UI-06 | 5 | tailwind.config.js |
+| UI-07 | 6 | IdeaForm.tsx |
+| UI-08 | 6 | ActivityFeed.tsx |
+| UI-09 | 6 | VerdictCard.tsx |
+| UI-10 | 6 | Dashboard.tsx |
+| UI-11 | 6 | CompetitorCard.tsx |
+| UI-12 | 6 | MarketSnapshot.tsx |
+| UI-13 | 6 | RiskRadarChart.tsx |
+| UI-14 | 6 | FirstSteps.tsx |
+| UI-15 | 6 | ShareButton.tsx |
 
-**Coverage: 26/26 ✓**
+**Coverage: 15/15 ✓**
 
 ---
-*Roadmap created: 2026-05-26*
+
+## v1.0 Roadmap (archived)
+
+See milestones/v1.0-SUMMARY.md for the v1.0 phase breakdown.
+
+---
+*Roadmap created: 2026-05-27*

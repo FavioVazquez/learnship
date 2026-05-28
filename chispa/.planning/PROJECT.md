@@ -10,31 +10,48 @@ Chispa is a web platform that gives entrepreneurs a data-backed startup idea val
 
 When a user submits an idea, they get a real, research-backed competitive landscape and verdict in under 90 seconds — not hallucinated guesses, but actual web-searched data surfaced live.
 
+## Current Milestone: v1.1 — Impeccable UI
+
+**Goal:** Transform the functionally correct v1.0 UI into a polished, visually
+distinctive interface that commands attention on a conference projection screen.
+
+**Target features:**
+- Distinctive display typography (Space Grotesk) for brand header and verdict moments
+- Proper typographic hierarchy throughout — not all `text-sm`
+- Redesigned App header as a genuine brand moment
+- Improved color system: clear surface/background differentiation, more visible borders
+- ActivityFeed visual redesign — the "wow" SSE moment needs visual energy
+- VerdictCard more commanding: larger, better-proportioned, display font
+- IdeaForm: select chevron, better input styling, stronger CTA
+- Dashboard section differentiation — not all identical gray cards
+- CompetitorCard, MarketSnapshot, RiskRadarChart, FirstSteps all polished
+- ShareButton with proper icon and polished copy state
+
 ## Requirements
 
-### Validated
+### Validated (v1.0 — shipped 2026-05-27)
 
-(None yet — ship to validate)
+- [x] Idea submission form (textarea + optional country field)
+- [x] Live SSE activity feed showing each Claude tool call in real-time
+- [x] Claude agent uses `web_search_20250305` to find REAL competitors
+- [x] Structured JSON output with AnalysisResult shape
+- [x] Animated dashboard: radar chart, competitor cards, verdict card, market snapshot
+- [x] Shareable URL via lz-string compression
+- [x] Error handling: graceful SSE error events, never crash server
+- [x] Rate limiting: max 3 concurrent analyses
+- [x] Single-command dev: `npm run dev`
 
-### Active
+### Active (v1.1)
 
-- [ ] Idea submission form (textarea + optional country field)
-- [ ] Live SSE activity feed showing each Claude tool call in real-time ("Searching competitors...", "Reading market report...")
-- [ ] Claude agent uses `web_search_20250305` to find REAL competitors (not hallucinated)
-- [ ] Structured JSON output: competitors[], marketSize, marketGrowth, marketTiming, risks[], verdict (LAUNCH/VALIDATE/PIVOT/AVOID), verdictReason, firstSteps[]
-- [ ] Animated dashboard: radar chart (6 risk axes), competitor cards, verdict card, market snapshot
-- [ ] Shareable URL: base64-encoded result → `/?r=<encoded>` → auto-loads dashboard
-- [ ] Error handling: graceful SSE error events, never crash server
-- [ ] Rate limiting: max 3 concurrent analyses
-- [ ] Single-command dev: `npm run dev` starts both server and client
+See REQUIREMENTS.md for the full v1.1 requirement list.
 
 ### Out of Scope
 
-- User authentication — stateless by design; no accounts needed for demo use case
-- Database / persistent storage — results live in shareable URLs only; adds infra complexity with no demo benefit
-- Email reports — out of scope for v1; adds backend complexity
-- Dark/light mode toggle — dark theme only for demo polish
-- Mobile-responsive layout — desktop-first for the demo presentation context
+- User authentication — stateless by design
+- Database / persistent storage
+- Email reports
+- Dark/light mode toggle — dark theme only
+- Mobile-responsive layout — desktop-first for demo
 
 ## Context
 
@@ -73,4 +90,4 @@ When a user submits an idea, they get a real, research-backed competitive landsc
 | Framer Motion for animations | Best-in-class React animation library; critical for demo wow factor | — Pending |
 
 ---
-*Last updated: 2026-05-26 — initial project setup*
+*Last updated: 2026-05-27 — v1.1 milestone started*
