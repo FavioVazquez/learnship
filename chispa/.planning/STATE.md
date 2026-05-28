@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 Phase: 6 of 6 (Component Polish)
 Plan: 3 of 3 in current phase
 Status: Complete
-Last activity: 2026-05-28 — Completed quick task 003: Add requirements.txt for vibe.py
+Last activity: 2026-05-28 — Completed quick task 004: vibe.py loads .env via python-dotenv (completes 003)
 
 ### Quick Tasks Completed
 
@@ -20,7 +20,8 @@ Last activity: 2026-05-28 — Completed quick task 003: Add requirements.txt for
 |---|-------------|------|---------|-----------|
 | 001 | Upgrade Anthropic SDK to 0.99.0, switch to claude-sonnet-4-6 | 2026-05-28 | 7c631aa, 254d433 | .planning/quick/001-upgrade-sdk-model-sonnet/ |
 | 002 | Fix vibe.py key check + model + WORKSHOP.md sync | 2026-05-28 | 0bf0105, 87cc07c | .planning/quick/002-fix-vibe-py-key-check-model/ |
-| 003 | Add requirements.txt for vibe.py (anthropic>=0.104.1) | 2026-05-28 | 61edf9d, 6504425 | .planning/quick/003-vibe-py-requirements-txt/ |
+| 003 | Add requirements.txt for vibe.py (anthropic>=0.104.1) ⚠️ incomplete — see 004 | 2026-05-28 | 61edf9d, 6504425 | .planning/quick/003-vibe-py-requirements-txt/ |
+| 004 | vibe.py loads .env via python-dotenv — completes 003 | 2026-05-28 | f67883b, 4c4a376 | .planning/quick/004-vibe-py-dotenv-load/ |
 
 Progress: [██████████] 100% — v1.0 and v1.1 both complete
 
