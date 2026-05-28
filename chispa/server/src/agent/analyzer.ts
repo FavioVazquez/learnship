@@ -54,12 +54,10 @@ export async function* analyzeIdea(
     const userMessage = `Analiza esta idea de negocio:${countryContext}\n\n${idea}`
 
     const stream = client.messages.stream({
-      model: 'claude-opus-4-7',
+      model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
-      // web_search_20250305 is not yet in the SDK's tool type union
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }] as any,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
       messages: [{ role: 'user', content: userMessage }],
     }, { signal })
 

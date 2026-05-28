@@ -6,7 +6,7 @@ const router = Router()
 router.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
-    model: 'claude-opus-4-7',
+    model: 'claude-sonnet-4-6',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
