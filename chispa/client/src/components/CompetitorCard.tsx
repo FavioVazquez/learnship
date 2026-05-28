@@ -15,15 +15,15 @@ export function CompetitorCard({ competitor }: CompetitorCardProps) {
           <img
             src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(website)}&sz=32`}
             alt=""
-            width={20}
-            height={20}
+            width={28}
+            height={28}
             className="rounded-sm flex-shrink-0"
             onError={(e) => {
               ;(e.target as HTMLImageElement).style.display = 'none'
             }}
           />
         )}
-        <h4 className="font-semibold text-white text-sm leading-tight">{name}</h4>
+        <h4 className="font-semibold text-white text-base leading-tight">{name}</h4>
       </div>
 
       {/* Description */}

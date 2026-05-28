@@ -43,7 +43,7 @@ export function Dashboard({ result }: DashboardProps) {
       {/* Competitors */}
       {result.competitors.length > 0 ? (
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-300 uppercase tracking-widest">
+          <h3 className="text-sm font-medium text-gray-300 uppercase tracking-widest pl-3 border-l-2 border-primary">
             Competidores
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,7 +54,7 @@ export function Dashboard({ result }: DashboardProps) {
         </div>
       ) : (
         <div className="bg-surface border border-border rounded-xl p-6">
-          <h3 className="text-sm font-medium text-gray-300 uppercase tracking-widest mb-2">
+          <h3 className="text-sm font-medium text-gray-300 uppercase tracking-widest pl-3 border-l-2 border-primary mb-2">
             Competidores
           </h3>
           <p className="text-gray-400 text-sm">

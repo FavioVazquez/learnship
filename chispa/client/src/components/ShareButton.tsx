@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Link2 } from 'lucide-react'
 
 export function ShareButton() {
   const [copied, setCopied] = useState(false)
@@ -27,7 +28,7 @@ export function ShareButton() {
         </>
       ) : (
         <>
-          <span aria-hidden="true">↗</span>
+          <Link2 className="w-4 h-4" aria-hidden="true" />
           Compartir análisis
         </>
       )}

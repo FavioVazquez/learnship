@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ChevronDown } from 'lucide-react'
 import type { AppState } from '../hooks/useAnalysis'
 
 interface IdeaFormProps {
@@ -59,7 +59,7 @@ export function IdeaForm({ state, onSubmit }: IdeaFormProps) {
           placeholder="Ej: Una plataforma de delivery de comida saludable para oficinas en Ciudad de Guatemala, con suscripciones semanales y opciones veganas..."
           aria-describedby={validationError ? 'idea-error' : 'idea-counter'}
           aria-invalid={validationError ? 'true' : undefined}
-          className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-white placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+          className="w-full bg-surface-elevated border border-border rounded-lg px-4 py-3 text-white placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
         />
         <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
           <span
@@ -79,19 +79,25 @@ export function IdeaForm({ state, onSubmit }: IdeaFormProps) {
         <label htmlFor="country" className="block text-sm font-medium text-gray-300">
           País objetivo
         </label>
-        <select
-          id="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          disabled={isDisabled}
-          className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed appearance-none"
-        >
-          {COUNTRY_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            id="country"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            disabled={isDisabled}
+            className="w-full bg-surface-elevated border border-border rounded-lg px-4 py-3 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed appearance-none"
+          >
+            {COUNTRY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+            aria-hidden="true"
+          />
+        </div>
       </div>
 
       <button
@@ -99,7 +105,7 @@ export function IdeaForm({ state, onSubmit }: IdeaFormProps) {
         disabled={isDisabled}
         aria-busy={isStreaming}
         aria-label={isStreaming ? 'Analizando tu idea, por favor espera' : undefined}
-        className="w-full bg-primary hover:bg-primary-light disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-primary hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
       >
         {isStreaming ? (
           <>

@@ -23,14 +23,14 @@ export function VerdictCard({ verdict, verdictReason }: VerdictCardProps) {
         initial={shouldReduceMotion ? { opacity: 0 } : { rotateX: 90, opacity: 0 }}
         animate={shouldReduceMotion ? { opacity: 1 } : { rotateX: 0, opacity: 1 }}
         transition={{ duration: shouldReduceMotion ? 0.15 : 0.5, ease: 'easeOut' }}
-        className="bg-surface border border-border rounded-xl p-6"
-        style={{ backgroundColor: config.bg, borderColor: config.color + '40' }}
+        className="bg-surface border-2 border-border rounded-xl p-8"
+        style={{ backgroundColor: config.bg, borderColor: config.color + '60' }}
       >
         <p className="text-xs font-medium uppercase tracking-widest mb-2" style={{ color: config.color }}>
           Veredicto
         </p>
         <h2
-          className="text-5xl font-black mb-4 tracking-tight"
+          className="font-display text-7xl font-bold mb-4 tracking-tight"
           style={{ color: config.color }}
         >
           {config.label}

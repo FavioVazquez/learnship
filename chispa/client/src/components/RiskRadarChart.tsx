@@ -49,7 +49,7 @@ export function RiskRadarChart({ risks }: RiskRadarChartProps) {
       <h3 className="text-sm font-medium text-gray-300 mb-4">Análisis de Riesgos</h3>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
-          <PolarGrid stroke="#1f1f2e" />
+          <PolarGrid stroke="#2a2a42" />
           <PolarAngleAxis
             dataKey="axis"
             tick={{ fill: '#9ca3af', fontSize: 12 }}
@@ -58,7 +58,7 @@ export function RiskRadarChart({ risks }: RiskRadarChartProps) {
             dataKey="value"
             stroke="#7c3aed"
             fill="#7c3aed"
-            fillOpacity={0.3}
+            fillOpacity={0.45}
             isAnimationActive={!prefersReducedMotion}
           />
         </RadarChart>

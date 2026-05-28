@@ -27,13 +27,13 @@ export function MarketSnapshot({ marketSize, marketGrowth, marketTiming }: Marke
         {/* Market size */}
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Tamaño de mercado</p>
-          <p className="text-white font-medium text-sm leading-snug">{marketSize}</p>
+          <p className="text-white font-semibold text-xl leading-snug">{marketSize}</p>
         </div>
 
         {/* Market growth */}
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Crecimiento</p>
-          <p className="text-white font-medium text-sm leading-snug">{marketGrowth}</p>
+          <p className="text-white font-semibold text-xl leading-snug">{marketGrowth}</p>
         </div>
 
         {/* Timing badge */}
