@@ -12,7 +12,13 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 Phase: 6 of 6 (Component Polish)
 Plan: 3 of 3 in current phase
 Status: Complete
-Last activity: 2026-05-28 — Milestone v1.1 fully shipped
+Last activity: 2026-05-28 — Completed quick task 001: Upgrade SDK to 0.99.0, switch to claude-sonnet-4-6
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commits | Directory |
+|---|-------------|------|---------|-----------|
+| 001 | Upgrade Anthropic SDK to 0.99.0, switch to claude-sonnet-4-6 | 2026-05-28 | 7c631aa, 254d433 | .planning/quick/001-upgrade-sdk-model-sonnet/ |
 
 Progress: [██████████] 100% — v1.0 and v1.1 both complete
 
