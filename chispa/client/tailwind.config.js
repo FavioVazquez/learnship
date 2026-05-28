@@ -5,13 +5,16 @@ export default {
     extend: {
       colors: {
         background: '#0a0a0f',
-        surface: '#13131a',
-        border: '#1f1f2e',
+        surface: '#0e0e18',
+        'surface-elevated': '#151523',
+        border: '#252538',
+        'border-strong': '#3b3b55',
         primary: '#7c3aed',
         'primary-light': '#a855f7',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
       },
     },
   },

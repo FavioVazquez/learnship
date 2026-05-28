@@ -63,11 +63,23 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="px-6 py-8 text-center">
-        <h1 className="text-4xl font-black text-white tracking-tight mb-1">
-          ✦ Chispa
-        </h1>
-        <p className="text-gray-400 text-base">Valida tu idea. En segundos.</p>
+      <header className="relative px-6 pt-14 pb-10 text-center overflow-hidden">
+        {/* Subtle radial depth behind header */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-40 bg-primary/[0.08] blur-3xl rounded-full" />
+        </div>
+        <div className="relative space-y-3">
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-primary text-3xl leading-none select-none" aria-hidden="true">✦</span>
+            <h1 className="font-display text-6xl font-bold text-white tracking-tight">
+              Chispa
+            </h1>
+          </div>
+          <p className="text-gray-300 text-base max-w-sm mx-auto leading-relaxed">
+            Valida tu idea de startup con IA.{' '}
+            <span className="text-gray-500">Real. En segundos.</span>
+          </p>
+        </div>
       </header>
 
       {/* Main content */}

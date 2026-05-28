@@ -4,18 +4,22 @@
 
 body {
   background-color: #0a0a0f;
-  color: #f8fafc;
-  font-family: 'Inter', system-ui, sans-serif;
+  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #13131a;
+  background: #0e0e18;
 }
 ::-webkit-scrollbar-thumb {
-  background: #7c3aed;
+  background: #3b3b55;
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
 }
