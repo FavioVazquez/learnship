@@ -5,10 +5,13 @@
 import anthropic
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 if not os.environ.get('ANTHROPIC_API_KEY'):
     print("Error: ANTHROPIC_API_KEY not set.")
-    print("  export ANTHROPIC_API_KEY=sk-ant-...")
+    print("  cp .env.example .env  # then fill in your key")
     sys.exit(1)
 
 client = anthropic.Anthropic()
