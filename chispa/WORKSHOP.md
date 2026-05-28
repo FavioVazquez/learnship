@@ -53,6 +53,12 @@ npm start
 npx learnship --claude --global
 ```
 
+### 2b. Install vibe.py dependency
+```bash
+pip install -r requirements.txt
+```
+Requires Python 3.8+ and pip. This installs the Anthropic Python SDK used by `vibe.py`.
+
 ### 3. Test Claude Code is authenticated
 ```bash
 claude --version
@@ -132,6 +138,11 @@ response = client.messages.create(
     messages=[{"role": "user", "content": f"Analyze this startup idea: {idea}"}]
 )
 print(response.content[0].text)
+```
+
+First time only:
+```bash
+pip install -r requirements.txt
 ```
 
 Run it:
