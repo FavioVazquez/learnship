@@ -12,13 +12,14 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 Phase: 6 of 6 (Component Polish)
 Plan: 3 of 3 in current phase
 Status: Complete
-Last activity: 2026-05-28 — Completed quick task 001: Upgrade SDK to 0.99.0, switch to claude-sonnet-4-6
+Last activity: 2026-05-28 — Completed quick task 002: Fix vibe.py key check + model + WORKSHOP.md sync
 
 ### Quick Tasks Completed
 
 | # | Description | Date | Commits | Directory |
 |---|-------------|------|---------|-----------|
 | 001 | Upgrade Anthropic SDK to 0.99.0, switch to claude-sonnet-4-6 | 2026-05-28 | 7c631aa, 254d433 | .planning/quick/001-upgrade-sdk-model-sonnet/ |
+| 002 | Fix vibe.py key check + model + WORKSHOP.md sync | 2026-05-28 | 0bf0105, 87cc07c | .planning/quick/002-fix-vibe-py-key-check-model/ |
 
 Progress: [██████████] 100% — v1.0 and v1.1 both complete
 
