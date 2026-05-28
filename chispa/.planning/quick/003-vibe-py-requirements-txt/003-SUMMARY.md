@@ -16,3 +16,7 @@ Created `requirements.txt` at the chispa root with `anthropic>=0.104.1` (latest 
 
 - `61edf9d` — feat(quick-003): requirements.txt
 - `6504425` — docs(quick-003): WORKSHOP.md pip install steps
+
+---
+
+> **Amended by quick 004 (2026-05-28):** This task was incomplete — .env loading via `python-dotenv` was not included. Quick 004 completed the setup: added `python-dotenv>=1.2.2` to `requirements.txt`, wired `load_dotenv()` into `vibe.py`, fleshed out root `.env.example`, and updated WORKSHOP.md to use the `cp .env.example .env` workflow throughout.

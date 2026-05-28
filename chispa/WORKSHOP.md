@@ -53,11 +53,13 @@ npm start
 npx learnship --claude --global
 ```
 
-### 2b. Install vibe.py dependency
+### 2b. Set up vibe.py
 ```bash
 pip install -r requirements.txt
+cp .env.example .env
+# Edit .env — add your ANTHROPIC_API_KEY
 ```
-Requires Python 3.8+ and pip. This installs the Anthropic Python SDK used by `vibe.py`.
+Requires Python 3.8+ and pip. `vibe.py` reads the key from `.env` via python-dotenv.
 
 ### 3. Test Claude Code is authenticated
 ```bash
@@ -119,10 +121,13 @@ Open `vibe.py` from the repo root (it's committed — copy it to your demo machi
 import anthropic
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 if not os.environ.get('ANTHROPIC_API_KEY'):
     print("Error: ANTHROPIC_API_KEY not set.")
-    print("  export ANTHROPIC_API_KEY=sk-ant-...")
+    print("  cp .env.example .env  # then fill in your key")
     sys.exit(1)
 
 client = anthropic.Anthropic()
@@ -143,6 +148,8 @@ print(response.content[0].text)
 First time only:
 ```bash
 pip install -r requirements.txt
+cp .env.example .env
+# Edit .env — add your ANTHROPIC_API_KEY
 ```
 
 Run it:
