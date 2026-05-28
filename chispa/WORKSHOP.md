@@ -111,11 +111,21 @@ Open `vibe.py` from the repo root (it's committed — copy it to your demo machi
 ```python
 # vibe.py — "quick validation tool" (vibe coded)
 import anthropic
+import os
 import sys
+
+if not os.environ.get('ANTHROPIC_API_KEY'):
+    print("Error: ANTHROPIC_API_KEY not set.")
+    print("  export ANTHROPIC_API_KEY=sk-ant-...")
+    sys.exit(1)
 
 client = anthropic.Anthropic()
 
 idea = " ".join(sys.argv[1:])
+if not idea:
+    print("Usage: python vibe.py <your startup idea>")
+    sys.exit(1)
+
 response = client.messages.create(
     model="claude-sonnet-4-6",
     max_tokens=1000,
