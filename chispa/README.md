@@ -6,6 +6,8 @@ Chispa is a startup idea validator powered by Claude. Describe your idea in plai
 
 Built live at [AI Week Summit Guatemala 2026](https://panamericanlatam.com/ai-week-summit-guatemala-2026/) using [learnship](https://github.com/FavioVazquez/learnship) — a demo of agentic engineering in action.
 
+**v1.1** — UI redesigned with Space Grotesk + Plus Jakarta Sans typography, deeper dark color system, and per-component design polish for conference-scale legibility.
+
 ---
 
 ## How it works
@@ -159,6 +161,7 @@ The server streams JSON events line-by-line:
 | Charts | Recharts |
 | AI | Anthropic SDK, `claude-opus-4-7`, `web_search_20250305` |
 | Real-time | Server-Sent Events (SSE) |
+| Typography | Space Grotesk 700 (display/brand) + Plus Jakarta Sans 400–700 (body) |
 
 ---
 

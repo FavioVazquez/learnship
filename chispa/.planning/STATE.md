@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-27)
 
 **Core value:** When a user submits an idea, they get a real, research-backed competitive landscape and verdict in under 90 seconds — not hallucinated guesses, but actual web-searched data surfaced live.
-**Current focus:** v1.1 — Impeccable UI
+**Current focus:** v1.1 — Impeccable UI (COMPLETE)
 
 ## Current Position
 
-Phase: 5 of 6 (Design Foundation)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-05-27 — Milestone v1.1 started, design foundation in progress
+Phase: 6 of 6 (Component Polish)
+Plan: 3 of 3 in current phase
+Status: Complete
+Last activity: 2026-05-28 — Milestone v1.1 fully shipped
 
-Progress: [████████░░] 80% — v1.0 complete, v1.1 executing
+Progress: [██████████] 100% — v1.0 and v1.1 both complete
 
 ## Phase Completion (v1.0 + v1.1)
 
@@ -24,8 +24,8 @@ Progress: [████████░░] 80% — v1.0 complete, v1.1 executing
 | 2 — Analysis Engine | ✓ COMPLETE | 3 | 2026-05-26 |
 | 3 — Web Frontend | ✓ COMPLETE | 5 | 2026-05-26 |
 | 4 — Polish & Demo Prep | ✓ COMPLETE | 4 | 2026-05-26 |
-| 5 — Design Foundation | ▶ IN PROGRESS | 2 | — |
-| 6 — Component Polish | ⬜ PENDING | 3 | — |
+| 5 — Design Foundation | ✓ COMPLETE | 2 | 2026-05-27 |
+| 6 — Component Polish | ✓ COMPLETE | 3 | 2026-05-28 |
 
 ## Performance Metrics
 
@@ -34,8 +34,8 @@ Progress: [████████░░] 80% — v1.0 complete, v1.1 executing
 - Total execution time: ~1 day (2026-05-26)
 
 **v1.1 Velocity:**
-- Plans completed: 0 of 5
-- Total execution time: in progress
+- Plans completed: 5 of 5
+- Total execution time: ~2 days (2026-05-27–28)
 
 ## Accumulated Context
 
@@ -53,6 +53,9 @@ v1.1 additions:
 - Color tokens: surface `#0e0e18`, surface-elevated `#151523`, border `#252538`, border-strong `#3b3b55`
 - No new npm packages — fonts via Google Fonts CDN, icons from lucide-react (already installed)
 - UI-only milestone — zero server changes
+- Green `bg-green-400` dot for "En vivo" — universal live status signal, distinct from primary purple
+- `font-display` reserved for brand moments only (header + verdict word)
+- `animate-pulse` only on latest ActivityFeed bullet — not all bullets
 
 ### Pending Todos
 
@@ -64,6 +67,6 @@ None. Deployment target still undecided — consider Railway, Render, or Fly.io 
 
 ## Session Continuity
 
-Last session: 2026-05-27
-Stopped at: Milestone v1.1 started — executing Phase 5 (design foundation)
+Last session: 2026-05-28
+Stopped at: Milestone v1.1 fully complete
 Resume file: None

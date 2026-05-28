@@ -2,6 +2,8 @@
 ## "From Vibe Coding to Agentic Engineering"
 ### AI Week Summit Guatemala 2026 — 45 minutes
 
+> **v1.1 update:** The finished app now uses Space Grotesk + Plus Jakarta Sans typography, a deeper dark color system, and per-component design polish for conference-scale legibility. No functional changes — the demo script below is unchanged.
+
 ---
 
 ## The Story Arc

@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-05-28 — v1.1 Impeccable UI complete
+
+**Features**
+
+- **Typography system**: Plus Jakarta Sans (400–700) replaces Inter as body font; Space Grotesk 700 added as display font for brand/verdict moments. Both loaded via Google Fonts CDN with `display=swap`.
+- **App header**: Space Grotesk `text-6xl` brand name, `✦` spark icon, subtle radial glow (8% primary opacity), two-tone tagline.
+- **VerdictCard**: `font-display text-7xl` verdict word (Space Grotesk), `border-2`, `p-8`, 60% border color opacity — the verdict reveal now dominates the screen.
+- **ActivityFeed**: Left primary accent border (`border-l-2 border-l-primary`), "En vivo" header with green pulsing dot, `animate-pulse` only on the latest step bullet.
+- **MarketSnapshot**: Market size and growth values promoted to `text-xl font-semibold` — readable at conference projection distance.
+- **CompetitorCard**: Favicon 28px, competitor name `text-base`.
+- **RiskRadarChart**: PolarGrid stroke `#2a2a42` (more visible), fill opacity 0.45.
+- **FirstSteps**: Framer Motion stagger entrance — each item animates in with 70ms delay, x:-12 → 0. `useReducedMotion()` respected.
+- **ShareButton**: `Link2` icon from lucide-react replaces plain text arrow.
+- **Dashboard**: "Competidores" heading gets `pl-3 border-l-2 border-primary` accent left border.
+- **IdeaForm**: `bg-surface-elevated` on textarea and select, `ChevronDown` icon on select, `hover:brightness-110` button.
+- **Color tokens**: `surface`, `surface-elevated`, `border`, `border-strong` deepened for better layering on dark backgrounds.
+
+**Learnings**
+
+- `border-l-2` layered over `border` in Tailwind works correctly — the more-specific utility overrides the shorthand for that side only.
+- `animate-pulse` on only the latest item in a live list is far more effective than pulsing every item. Restricting motion to the active element makes the feed feel alive without being noisy.
+- `font-display` as a Tailwind utility class requires `fontFamily.display` in the config — not a built-in class. Easy to miss when first setting up a dual-font system.
+
+---
+
 ## 2026-05-27 — Live-test bug fixes (3 critical, 1 security)
 
 **Fixes**
