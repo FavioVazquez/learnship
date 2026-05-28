@@ -259,7 +259,7 @@ chispa/
 - **Language:** TypeScript (strict mode) — server and client
 - **Backend:** Node.js + Express ^4.19.2, port 3001
 - **Frontend:** React ^18.3.1 + Vite (dev port 5173, proxied to 3001)
-- **AI:** @anthropic-ai/sdk ^0.30.0 — model `claude-opus-4-7`, tool `web_search_20250305`
+- **AI:** @anthropic-ai/sdk ^0.99.0 — model `claude-sonnet-4-6`, tool `web_search_20250305`
 - **Real-time:** Server-Sent Events via `fetch()` + `ReadableStream` (NOT `EventSource` — POST not supported)
 - **Charts:** Recharts ^3.8.1 (RadarChart for 6-axis risk visualization)
 - **Animations:** Framer Motion ^12.40.0

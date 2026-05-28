@@ -159,7 +159,7 @@ The server streams JSON events line-by-line:
 | Frontend | React 18, Vite, TypeScript |
 | Styling | Tailwind CSS, Framer Motion |
 | Charts | Recharts |
-| AI | Anthropic SDK, `claude-opus-4-7`, `web_search_20250305` |
+| AI | Anthropic SDK 0.99.x, `claude-sonnet-4-6`, `web_search_20250305` |
 | Real-time | Server-Sent Events (SSE) |
 | Typography | Space Grotesk 700 (display/brand) + Plus Jakarta Sans 400–700 (body) |
 

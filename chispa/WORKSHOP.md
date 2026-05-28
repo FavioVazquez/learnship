@@ -117,7 +117,7 @@ client = anthropic.Anthropic()
 
 idea = " ".join(sys.argv[1:])
 response = client.messages.create(
-    model="claude-opus-4-7",
+    model="claude-sonnet-4-6",
     max_tokens=1000,
     messages=[{"role": "user", "content": f"Analyze this startup idea: {idea}"}]
 )
@@ -251,7 +251,7 @@ curl http://localhost:3001/api/health
 
 Show the result:
 ```json
-{"status":"ok","model":"claude-opus-4-7","version":"1.0.0","timestamp":"...","uptime":12.34}
+{"status":"ok","model":"claude-sonnet-4-6","version":"1.0.0","timestamp":"...","uptime":12.34}
 ```
 
 > "Working foundation. TypeScript compiles. Health endpoint responds. In 15 minutes of execution, we have the same thing that would take a developer half a day to set up manually — and every file has proper error handling, the types are correct, the configuration follows best practices."
@@ -295,7 +295,7 @@ Tech stack:
 - Styling: Tailwind CSS, dark theme (#0a0a0f background, #7c3aed accent)
 - Animations: Framer Motion
 - Charts: Recharts (RadarChart)
-- AI: @anthropic-ai/sdk, claude-opus-4-7, web_search_20250305 tool
+- AI: @anthropic-ai/sdk, claude-sonnet-4-6, web_search_20250305 tool
 - Real-time: Server-Sent Events (SSE), text/event-stream
 
 Constraints:
@@ -417,7 +417,7 @@ Key decisions:
 ## Audience Q&A — Expected Questions
 
 **"How much does this cost to run?"**
-> Each analysis uses roughly 2,000–5,000 tokens for web search + reasoning. At claude-opus-4-7 pricing, that's about $0.05–0.15 per analysis. You could add a free tier of 5 analyses/day, then charge for more.
+> Each analysis uses roughly 2,000–5,000 tokens for web search + reasoning. At claude-sonnet-4-6 pricing, that's about $0.05–0.15 per analysis. You could add a free tier of 5 analyses/day, then charge for more.
 
 **"Can I deploy this publicly?"**
 > Yes — it's a standard Node.js app. Vercel for the frontend, Railway or Render for the backend, or a single VPS running `npm start`. Add rate limiting and you're good.

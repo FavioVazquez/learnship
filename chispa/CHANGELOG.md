@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-05-28 — SDK upgrade + model switch to claude-sonnet-4-6
+
+**Changes**
+- `@anthropic-ai/sdk` upgraded from `^0.30.0` to `^0.99.0`
+- Model switched from `claude-opus-4-7` to `claude-sonnet-4-6` — same capability for this task, meaningfully cheaper
+- Removed `as any` cast on `web_search_20250305` tool — `WebSearchTool20250305` is now a first-class type in SDK 0.99.0
+- README, WORKSHOP.md, AGENTS.md, CLAUDE.md updated to reflect new SDK and model
+
+**Learnings**
+- SDK 0.99.0 properly exports `WebSearchTool20250305` with `type: 'web_search_20250305'` and `name: 'web_search'` as required fields — the `as any` workaround is no longer needed
+- The interface also added `allowed_domains`, `blocked_domains`, `max_uses`, and `user_location` as optional fields — useful for production hardening
+
+---
+
 ## 2026-05-28 — v1.1 Impeccable UI complete
 
 **Features**
