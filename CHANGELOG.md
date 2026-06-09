@@ -9,6 +9,14 @@ This project uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Codex agent `.toml` files with backslashes failed to parse** — `bin/install.js` (`installCodexAgents`) wrapped each agent persona body in a TOML *basic* multi-line string (`""" … """`), which interprets backslash escape sequences. Personas whose markdown contained shell/regex backslashes — `doc-writer` (`\.` in a `grep -oE` snippet) and `solution-writer` (`\|` in a `grep` alternation) — produced `.toml` files Codex rejected with `TOML parse error: missing escaped value` / `Unescaped '\' in a string`, so Codex silently dropped those two agent roles. The generator now emits a TOML *literal* multi-line string (`''' … '''`), which passes backslashes through verbatim (with an escaped-basic-string fallback for the rare body containing `'''`). Covered by REG-067 in `validate_regressions.sh`, which generates the Codex agents and asserts no `developer_instructions` block contains an unescaped backslash.
+
+---
+
 ## [v2.4.0] — 2026-05-25
 
 ### Changed
