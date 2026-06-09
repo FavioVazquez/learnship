@@ -434,6 +434,54 @@ check "REG-065: context.md template uses 'Agent's Discretion'" \
 check "REG-066: discussion-log.md template uses 'Agent's Discretion'" \
   grep -q "Agent's Discretion" "$REPO_DIR/learnship/templates/discussion-log.md"
 
+# ─── 6. Codex agent TOML escaping ─────────────────────────────────────
+#
+# Bug: installCodexAgents() wrapped each agent body in a TOML *basic* multi-line
+# string (""" … """) with no escaping. Personas whose markdown carried shell or
+# regex backslashes — doc-writer (`\.`) and solution-writer (`\|`) — generated
+# .toml files Codex could not parse ("missing escaped value" / "Unescaped '\'
+# in a string"), so Codex silently dropped those agent roles.
+#
+# Fix: emit a TOML *literal* multi-line string (''' … ''') so backslashes pass
+# through verbatim (escaped-basic-string fallback when the body contains ''').
+# This test generates the Codex agents and asserts every developer_instructions
+# block is free of unescaped backslashes. It is mechanism-agnostic: it passes
+# for either the literal-string or the escaped-basic-string fix.
+echo ""
+echo "─── Codex Agent TOML Escaping ────────────────────────────────────"
+
+CODEX_TMP=$(mktemp -d)
+LEARNSHIP_TEST_MODE=1 node -e 'const m = require(process.argv[1]); m.installCodexAgents(process.argv[2], process.argv[3], "~/.codex/");' "$REPO_DIR/bin/install.js" "$REPO_DIR/agents" "$CODEX_TMP" > /dev/null 2>&1
+node -e '
+const fs = require("fs"), path = require("path");
+const dir = path.join(process.argv[1], "agents");
+const files = fs.readdirSync(dir).filter(f => f.startsWith("learnship-") && f.endsWith(".toml"));
+if (files.length < 10) { console.error("expected Codex agents, found " + files.length); process.exit(1); }
+const VALID = new Set(["b", "t", "n", "f", "r", "\"", "\\", "u", "U"]);
+const bad = [];
+for (const f of files) {
+  const c = fs.readFileSync(path.join(dir, f), "utf8");
+  const eq = c.indexOf("=", c.indexOf("developer_instructions"));
+  const after = c.slice(eq + 1).replace(/^\s*/, "");
+  const code = after.charCodeAt(0);        // 34 = basic """, 39 = literal (safe)
+  if (code === 39) continue;
+  if (code !== 34) { bad.push(f + ": developer_instructions is not a multi-line string"); continue; }
+  const delim = after.slice(0, 3);
+  const end = after.indexOf(delim, 3);
+  const body = after.slice(3, end < 0 ? after.length : end);
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] !== "\\") continue;
+    const nxt = body[i + 1];
+    if (VALID.has(nxt)) { i++; continue; }
+    if (/^[ \t]*\r?\n/.test(body.slice(i + 1))) continue;   // line-ending backslash
+    bad.push(f + ": unescaped backslash before " + JSON.stringify(nxt));
+    break;
+  }
+}
+if (bad.length) { console.error(bad.join("\n")); process.exit(1); }
+' "$CODEX_TMP" && { echo "  ✓ REG-067: generated Codex agent .toml files have no unescaped backslashes"; PASS=$((PASS+1)); } || { echo "  ✗ REG-067: Codex agent .toml has an unescaped backslash (TOML parse failure)"; FAIL=$((FAIL+1)); ERRORS+=("REG-067: Codex agent TOML escaping"); }
+rm -rf "$CODEX_TMP"
+
 echo ""
 echo "─── Results ──────────────────────────────────────────────────────"
 echo "  Passed: $PASS"

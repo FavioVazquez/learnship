@@ -1054,7 +1054,15 @@ function installCodexAgents(agentsSrcDir, targetDir, pathPrefix) {
     const description = frontmatter ? (getFrontmatterField(frontmatter, 'description') || '').replace(/\s+/g,' ').trim() : '';
     agents.push({ name, description });
     const sandboxMode = CODEX_AGENT_SANDBOX[name] || 'workspace-write';
-    const tomlContent = `sandbox_mode = "${sandboxMode}"\ndeveloper_instructions = """\n${body.trim()}\n"""\n`;
+    // TOML multi-line: use a literal string ('''…''') so backslashes in embedded
+    // shell/regex snippets (e.g. \. \|) pass through verbatim. A basic ("""…""")
+    // string parses \. as an invalid escape and breaks the file. Fall back to an
+    // escaped basic string only if the body contains ''' (illegal in a literal).
+    const trimmedBody = body.trim();
+    const instr = trimmedBody.includes("'''")
+      ? `"""\n${trimmedBody.replace(/\\/g, '\\\\').replace(/"""/g, '\\"\\"\\"')}\n"""`
+      : `'''\n${trimmedBody}\n'''`;
+    const tomlContent = `sandbox_mode = "${sandboxMode}"\ndeveloper_instructions = ${instr}\n`;
     fs.writeFileSync(path.join(agentsDir, `${name}.toml`), tomlContent);
   }
   const learnshipBlock = generateCodexConfigBlock(agents);
