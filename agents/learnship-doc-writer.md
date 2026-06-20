@@ -1,8 +1,13 @@
 ---
 name: learnship-doc-writer
 description: Writes and updates project documentation files — grounded in the live codebase, verifies factual claims. Spawned by docs-update workflow.
-tools: Read, Write, Edit, Bash, Glob, Grep
-color: cyan
+tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>

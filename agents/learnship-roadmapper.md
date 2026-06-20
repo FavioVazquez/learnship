@@ -1,8 +1,12 @@
 ---
 name: learnship-roadmapper
 description: Creates project roadmaps with phase breakdown, requirement mapping, success criteria derivation, and coverage validation. Spawned by /new-project or /new-milestone.
-tools: Read, Write, Bash, Grep, Glob
-color: purple
+tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

@@ -1,8 +1,14 @@
 ---
 name: learnship-project-researcher
 description: Researches the domain ecosystem for a new project. Produces 5 research files (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) in .planning/research/ that inform roadmap creation. Spawned by /new-project or /new-milestone.
-tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch
-color: cyan
+tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+  - Glob
+  - WebSearch
+  - WebFetch
 ---
 
 <role>

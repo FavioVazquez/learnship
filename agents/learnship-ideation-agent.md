@@ -1,8 +1,11 @@
 ---
 name: learnship-ideation-agent
 description: Generates codebase-grounded improvement ideas through a specific thinking frame. Spawned by the ideate workflow on platforms with subagent support.
-tools: Read, Bash, Grep, Glob
-color: purple
+tools:
+  - Read
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

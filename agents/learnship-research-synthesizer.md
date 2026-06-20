@@ -1,8 +1,12 @@
 ---
 name: learnship-research-synthesizer
 description: Synthesizes 4 research files (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md) into a cohesive SUMMARY.md for roadmap creation. Spawned by /new-project after research completes.
-tools: Read, Write, Bash, Grep, Glob
-color: cyan
+tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

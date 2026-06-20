@@ -1,8 +1,11 @@
 ---
 name: learnship-code-reviewer
 description: Reviews code changes through a specific persona lens (correctness, testing, security, performance, maintainability, adversarial) and returns structured findings with severity and confidence. Spawned by the review workflow on platforms with subagent support.
-tools: Read, Bash, Grep, Glob
-color: red
+tools:
+  - Read
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

@@ -1,8 +1,12 @@
 ---
 name: learnship-planner
 description: Creates executable PLAN.md files for a phase — decomposes goals into vertical slice (tracer bullet) tasks with wave-ordered dependency analysis. Each plan delivers one demoable user-facing behavior end-to-end. Spawned by plan-phase on platforms with subagent support.
-tools: Read, Write, Bash, Glob, Grep
-color: green
+tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>

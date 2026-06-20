@@ -1,8 +1,12 @@
 ---
 name: learnship-solution-writer
 description: Analyzes a recently solved problem and produces a structured solution document for .planning/solutions/ with YAML frontmatter. Spawned by compound workflow on platforms with subagent support.
-tools: Read, Write, Bash, Grep, Glob
-color: cyan
+tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

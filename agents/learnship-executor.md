@@ -1,8 +1,13 @@
 ---
 name: learnship-executor
 description: Executes a single learnship PLAN.md atomically — one task at a time with per-task commits, deviation handling, and SUMMARY.md creation. Spawned by execute-phase on platforms with subagent support.
-tools: Read, Write, Edit, Bash, Grep, Glob
-color: yellow
+tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

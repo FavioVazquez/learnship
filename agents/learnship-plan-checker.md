@@ -1,8 +1,11 @@
 ---
 name: learnship-plan-checker
 description: Verifies PLAN.md files for a phase — checks goal coverage, requirement IDs, CONTEXT.md decisions, task completeness, wave correctness, and vertical slice integrity (each plan must be a demoable tracer bullet). Spawned by plan-phase on platforms with subagent support.
-tools: Read, Bash, Glob, Grep
-color: cyan
+tools:
+  - Read
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>

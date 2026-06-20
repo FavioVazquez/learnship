@@ -1,8 +1,12 @@
 ---
 name: learnship-phase-researcher
 description: Researches how to implement a phase well — identifies pitfalls, recommends existing solutions, and writes RESEARCH.md. Spawned by plan-phase on platforms with subagent support.
-tools: Read, Write, Bash, Glob, Grep
-color: blue
+tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>

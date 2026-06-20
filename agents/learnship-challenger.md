@@ -1,8 +1,11 @@
 ---
 name: learnship-challenger
 description: Stress-tests proposals through product and engineering lenses using forcing questions. Spawned by the challenge workflow on platforms with subagent support.
-tools: Read, Bash, Grep, Glob
-color: orange
+tools:
+  - Read
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

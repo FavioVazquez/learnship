@@ -1,8 +1,12 @@
 ---
 name: learnship-debugger
 description: Investigates bugs using systematic hypothesis testing — traces from symptoms to root cause, writes investigation findings to the debug session file. Spawned by debug workflow on platforms with subagent support.
-tools: Read, Write, Bash, Glob, Grep
-color: orange
+tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>

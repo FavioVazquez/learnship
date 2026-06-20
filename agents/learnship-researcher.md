@@ -1,8 +1,14 @@
 ---
 name: learnship-researcher
 description: Investigates a domain using web search, official documentation, and codebase analysis. Produces research files that inform planning decisions. Used by plan-phase, research-phase, quick, and other workflows.
-tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch
-color: cyan
+tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+  - Glob
+  - WebSearch
+  - WebFetch
 ---
 
 <role>

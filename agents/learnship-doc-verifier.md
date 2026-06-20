@@ -1,8 +1,11 @@
 ---
 name: learnship-doc-verifier
 description: Verifies documentation matches the live codebase — catches stale docs, missing sections, incorrect references. Spawned by /docs-update and /validate-phase.
-tools: Read, Bash, Grep, Glob
-color: green
+tools:
+  - Read
+  - Bash
+  - Grep
+  - Glob
 ---
 
 <role>

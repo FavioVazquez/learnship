@@ -1,8 +1,11 @@
 ---
 name: learnship-security-auditor
 description: Verifies threat mitigation coverage for a phase — reads PLAN.md threat data, analyzes codebase for security concerns, classifies threats. Read-only — does not modify source code.
-tools: Read, Bash, Glob, Grep
-color: red
+tools:
+  - Read
+  - Bash
+  - Glob
+  - Grep
 ---
 
 <role>
